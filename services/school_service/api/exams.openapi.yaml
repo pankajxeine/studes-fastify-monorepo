@@ -1,0 +1,94 @@
+﻿openapi: 3.0.3
+info:
+  title: School Service API - Exams
+  version: 0.1.0
+servers:
+  - url: http://localhost:3010
+paths:
+  /exams:
+    get:
+      operationId: listExams
+      tags: [exams]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExamList'
+    post:
+      operationId: createExam
+      tags: [exams]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExamCreateRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Exam'
+  /exams/{id}/results:
+    post:
+      operationId: recordExamResult
+      tags: [exams]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExamResultCreateRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExamResult'
+components:
+  schemas:
+    ExamCreateRequest:
+      type: object
+      properties:
+        offering_id: { type: string, format: uuid }
+        exam_type: { type: string, enum: [midterm, final, quiz, assignment, practical] }
+        date: { type: string, format: date }
+        max_score: { type: number }
+      required: [offering_id, exam_type, date, max_score]
+    Exam:
+      allOf:
+        - $ref: '#/components/schemas/ExamCreateRequest'
+        - type: object
+          properties:
+            id: { type: string, format: uuid }
+          required: [id]
+    ExamList:
+      type: object
+      properties:
+        items:
+          type: array
+          items: { $ref: '#/components/schemas/Exam' }
+      required: [items]
+    ExamResultCreateRequest:
+      type: object
+      properties:
+        student_id: { type: string, format: uuid }
+        score: { type: number }
+      required: [student_id, score]
+    ExamResult:
+      allOf:
+        - $ref: '#/components/schemas/ExamResultCreateRequest'
+        - type: object
+          properties:
+            id: { type: string, format: uuid }
+          required: [id]

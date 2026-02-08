@@ -1,0 +1,53 @@
+openapi: 3.0.3
+info:
+  title: Sales Agent CPanel Users API
+  version: 1.0.0
+servers:
+  - url: http://localhost:3020
+paths:
+  /sales/cpanel/users:
+    post:
+      operationId: createSalesCpanelUser
+      summary: Create cpanel user for sales agent
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCpanelUserRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CpanelUser'
+components:
+  schemas:
+    CpanelUser:
+      type: object
+      required: [id, agent_id, username, status]
+      properties:
+        id:
+          type: string
+        agent_id:
+          type: string
+        username:
+          type: string
+        status:
+          type: string
+          enum: [active, suspended]
+        created_at:
+          type: string
+          format: date-time
+    CreateCpanelUserRequest:
+      type: object
+      required: [agent_id, username, password]
+      properties:
+        agent_id:
+          type: string
+        username:
+          type: string
+        password:
+          type: string
+          format: password

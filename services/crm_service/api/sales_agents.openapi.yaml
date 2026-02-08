@@ -1,0 +1,110 @@
+openapi: 3.0.3
+info:
+  title: Sales Agents API
+  version: 1.0.0
+servers:
+  - url: http://localhost:3020
+paths:
+  /sales/agents:
+    get:
+      operationId: listSalesAgents
+      summary: List sales agents
+      responses:
+        '200':
+          description: Sales agent list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SalesAgentListResponse'
+    post:
+      operationId: createSalesAgent
+      summary: Create sales agent
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSalesAgentRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SalesAgent'
+  /sales/agents/{agentId}:
+    patch:
+      operationId: updateSalesAgent
+      summary: Update sales agent
+      parameters:
+        - in: path
+          name: agentId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateSalesAgentRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SalesAgent'
+components:
+  schemas:
+    SalesAgent:
+      type: object
+      required: [id, full_name, email, status]
+      properties:
+        id:
+          type: string
+        full_name:
+          type: string
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+        status:
+          type: string
+          enum: [active, inactive]
+        branch_id:
+          type: string
+    CreateSalesAgentRequest:
+      type: object
+      required: [full_name, email]
+      properties:
+        full_name:
+          type: string
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+        branch_id:
+          type: string
+    UpdateSalesAgentRequest:
+      type: object
+      properties:
+        full_name:
+          type: string
+        phone:
+          type: string
+        status:
+          type: string
+          enum: [active, inactive]
+        branch_id:
+          type: string
+    SalesAgentListResponse:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/SalesAgent'

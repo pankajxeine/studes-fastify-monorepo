@@ -1,0 +1,212 @@
+﻿openapi: 3.0.3
+info:
+  title: School Service API - Core
+  version: 0.1.0
+servers:
+  - url: http://localhost:3010
+paths:
+  /students:
+    get:
+      operationId: listStudents
+      tags: [core]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentList'
+    post:
+      operationId: createStudent
+      tags: [core]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudentCreateRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Student'
+  /teachers:
+    get:
+      operationId: listTeachers
+      tags: [core]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeacherList'
+    post:
+      operationId: createTeacher
+      tags: [core]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeacherCreateRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Teacher'
+  /parents:
+    get:
+      operationId: listParents
+      tags: [core]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParentList'
+    post:
+      operationId: createParent
+      tags: [core]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ParentCreateRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Parent'
+  /staff:
+    get:
+      operationId: listStaff
+      tags: [core]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StaffList'
+    post:
+      operationId: createStaff
+      tags: [core]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StaffCreateRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Staff'
+components:
+  schemas:
+    PersonBase:
+      type: object
+      properties:
+        first_name: { type: string }
+        last_name: { type: string }
+        email: { type: string, format: email }
+        phone: { type: string }
+      required: [first_name, last_name]
+    StudentCreateRequest:
+      allOf:
+        - $ref: '#/components/schemas/PersonBase'
+        - type: object
+          properties:
+            admission_no: { type: string }
+            grade_level: { type: string }
+            section: { type: string }
+          required: [admission_no]
+    Student:
+      allOf:
+        - $ref: '#/components/schemas/StudentCreateRequest'
+        - type: object
+          properties:
+            id: { type: string, format: uuid }
+          required: [id]
+    StudentList:
+      type: object
+      properties:
+        items:
+          type: array
+          items: { $ref: '#/components/schemas/Student' }
+      required: [items]
+    TeacherCreateRequest:
+      allOf:
+        - $ref: '#/components/schemas/PersonBase'
+        - type: object
+          properties:
+            employee_no: { type: string }
+            department: { type: string }
+          required: [employee_no]
+    Teacher:
+      allOf:
+        - $ref: '#/components/schemas/TeacherCreateRequest'
+        - type: object
+          properties:
+            id: { type: string, format: uuid }
+          required: [id]
+    TeacherList:
+      type: object
+      properties:
+        items:
+          type: array
+          items: { $ref: '#/components/schemas/Teacher' }
+      required: [items]
+    ParentCreateRequest:
+      allOf:
+        - $ref: '#/components/schemas/PersonBase'
+        - type: object
+          properties:
+            occupation: { type: string }
+    Parent:
+      allOf:
+        - $ref: '#/components/schemas/ParentCreateRequest'
+        - type: object
+          properties:
+            id: { type: string, format: uuid }
+          required: [id]
+    ParentList:
+      type: object
+      properties:
+        items:
+          type: array
+          items: { $ref: '#/components/schemas/Parent' }
+      required: [items]
+    StaffCreateRequest:
+      allOf:
+        - $ref: '#/components/schemas/PersonBase'
+        - type: object
+          properties:
+            employee_no: { type: string }
+            staff_type: { type: string }
+          required: [employee_no]
+    Staff:
+      allOf:
+        - $ref: '#/components/schemas/StaffCreateRequest'
+        - type: object
+          properties:
+            id: { type: string, format: uuid }
+          required: [id]
+    StaffList:
+      type: object
+      properties:
+        items:
+          type: array
+          items: { $ref: '#/components/schemas/Staff' }
+      required: [items]

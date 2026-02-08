@@ -1,0 +1,144 @@
+openapi: 3.0.3
+info:
+  title: Packages API
+  version: 1.0.0
+servers:
+  - url: http://localhost:3020
+paths:
+  /packages:
+    get:
+      operationId: listPackages
+      summary: List packages
+      responses:
+        '200':
+          description: Package list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PackageListResponse'
+    post:
+      operationId: createPackage
+      summary: Create package
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePackageRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Package'
+  /packages/{packageId}:
+    get:
+      operationId: getPackage
+      summary: Get package
+      parameters:
+        - in: path
+          name: packageId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Package
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Package'
+    patch:
+      operationId: updatePackage
+      summary: Update package
+      parameters:
+        - in: path
+          name: packageId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatePackageRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Package'
+    delete:
+      operationId: deletePackage
+      summary: Delete package
+      parameters:
+        - in: path
+          name: packageId
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Deleted
+components:
+  schemas:
+    Package:
+      type: object
+      required: [id, name, price, currency, status]
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        price:
+          type: number
+        currency:
+          type: string
+        status:
+          type: string
+          enum: [active, inactive]
+        features:
+          type: array
+          items:
+            type: string
+    CreatePackageRequest:
+      type: object
+      required: [name, price, currency]
+      properties:
+        name:
+          type: string
+        price:
+          type: number
+        currency:
+          type: string
+        features:
+          type: array
+          items:
+            type: string
+    UpdatePackageRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        price:
+          type: number
+        currency:
+          type: string
+        status:
+          type: string
+          enum: [active, inactive]
+        features:
+          type: array
+          items:
+            type: string
+    PackageListResponse:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Package'

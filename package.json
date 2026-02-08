@@ -1,0 +1,39 @@
+{
+  "name": "fastify-api",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "services/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "lint": "eslint . --ext .ts",
+    "format": "prettier --write .",
+    "db:init": "tsx scripts/db-init.ts",
+    "db:create-tenant": "tsx scripts/create-tenant.ts",
+    "dev:auth": "npm -w services/auth_service run dev",
+    "dev:billing": "npm -w services/billing_service run dev",
+    "dev:notification": "npm -w services/notification_service run dev",
+    "dev:gateway": "npm -w services/api_gateway run dev",
+    "openapi:gen": "tsx scripts/generate-openapi.ts",
+    "db:seed": "tsx scripts/db-seed.ts",
+    "db:seed:docker": "docker compose cp infra/sql/sample-data.sql postgres:/tmp/sample-data.sql && docker compose exec -T postgres psql -U postgres -d studes -f /tmp/sample-data.sql",
+    "db:init:docker": "docker compose cp infra/sql/bootstrap.sql postgres:/tmp/bootstrap.sql && docker compose exec -T postgres psql -U postgres -d studes -f /tmp/bootstrap.sql",
+    "db:tenant:create:school": "tsx scripts/tenant-create-school.ts",
+    "db:tenant:seed:school": "tsx scripts/tenant-seed-school.ts",
+    "db:tenant:create:school:docker": "docker compose exec -T postgres node /app/node_modules/tsx/dist/cli.mjs /app/scripts/tenant-create-school.ts",
+    "db:tenant:seed:school:docker": "docker compose exec -T postgres node /app/node_modules/tsx/dist/cli.mjs /app/scripts/tenant-seed-school.ts",
+    "dev:school": "npm -w services/school_service run dev"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
+    "@typescript-eslint/eslint-plugin": "^8.12.2",
+    "@typescript-eslint/parser": "^8.12.2",
+    "eslint": "^9.16.0",
+    "eslint-config-prettier": "^9.1.0",
+    "js-yaml": "^4.1.0",
+    "prettier": "^3.3.3",
+    "tsx": "^4.19.1",
+    "typescript": "^5.6.3"
+  }
+}

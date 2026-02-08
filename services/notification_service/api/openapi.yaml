@@ -1,0 +1,103 @@
+﻿openapi: 3.0.3
+info:
+  title: Notification Service API
+  version: 0.1.0
+servers:
+  - url: http://localhost:3003
+paths:
+  /health:
+    get:
+      operationId: notificationHealth
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+  /health/db:
+    get:
+      operationId: notificationHealthDb
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthDbResponse'
+  /notifications:
+    get:
+      operationId: listNotifications
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationList'
+    post:
+      operationId: createNotification
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationCreateRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+components:
+  schemas:
+    HealthResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+      required: [ok]
+    HealthDbResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+      required: [ok]
+    NotificationCreateRequest:
+      type: object
+      properties:
+        channel:
+          type: string
+          enum: [email, sms, push]
+        recipient:
+          type: string
+          minLength: 3
+        message:
+          type: string
+          minLength: 2
+      required: [channel, recipient, message]
+    Notification:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        channel:
+          type: string
+        recipient:
+          type: string
+        message:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+      required: [id, channel, recipient, message, created_at]
+    NotificationList:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Notification'
+      required: [items]

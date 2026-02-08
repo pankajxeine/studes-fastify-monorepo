@@ -1,0 +1,58 @@
+﻿openapi: 3.0.3
+info:
+  title: School Service API - Timetable
+  version: 0.1.0
+servers:
+  - url: http://localhost:3010
+paths:
+  /timetable:
+    get:
+      operationId: listTimetable
+      tags: [timetable]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TimetableList'
+    post:
+      operationId: createTimetableEntry
+      tags: [timetable]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TimetableCreateRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TimetableEntry'
+components:
+  schemas:
+    TimetableCreateRequest:
+      type: object
+      properties:
+        offering_id: { type: string, format: uuid }
+        day_of_week: { type: integer, minimum: 0, maximum: 6 }
+        start_time: { type: string, format: time }
+        end_time: { type: string, format: time }
+      required: [offering_id, day_of_week, start_time, end_time]
+    TimetableEntry:
+      allOf:
+        - $ref: '#/components/schemas/TimetableCreateRequest'
+        - type: object
+          properties:
+            id: { type: string, format: uuid }
+          required: [id]
+    TimetableList:
+      type: object
+      properties:
+        items:
+          type: array
+          items: { $ref: '#/components/schemas/TimetableEntry' }
+      required: [items]

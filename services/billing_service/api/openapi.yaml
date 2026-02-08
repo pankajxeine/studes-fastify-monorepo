@@ -1,0 +1,107 @@
+﻿openapi: 3.0.3
+info:
+  title: Billing Service API
+  version: 0.1.0
+servers:
+  - url: http://localhost:3002
+paths:
+  /health:
+    get:
+      operationId: billingHealth
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+  /health/db:
+    get:
+      operationId: billingHealthDb
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthDbResponse'
+  /billing/invoices:
+    get:
+      operationId: listInvoices
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvoiceList'
+    post:
+      operationId: createInvoice
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InvoiceCreateRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Invoice'
+components:
+  schemas:
+    HealthResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+      required: [ok]
+    HealthDbResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+      required: [ok]
+    InvoiceCreateRequest:
+      type: object
+      properties:
+        amount:
+          type: number
+          format: double
+        currency:
+          type: string
+          minLength: 3
+          maxLength: 3
+        description:
+          type: string
+          minLength: 2
+      required: [amount, currency, description]
+    Invoice:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        amount:
+          type: number
+          format: double
+        currency:
+          type: string
+          minLength: 3
+          maxLength: 3
+        description:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+      required: [id, amount, currency, description, created_at]
+    InvoiceList:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Invoice'
+      required: [items]

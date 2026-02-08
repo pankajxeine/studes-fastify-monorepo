@@ -1,0 +1,117 @@
+﻿openapi: 3.0.3
+info:
+  title: School Service API - Transport
+  version: 0.1.0
+servers:
+  - url: http://localhost:3010
+paths:
+  /transport/routes:
+    get:
+      operationId: listTransportRoutes
+      tags: [transport]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransportRouteList'
+    post:
+      operationId: createTransportRoute
+      tags: [transport]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransportRouteCreateRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransportRoute'
+  /transport/vehicles:
+    post:
+      operationId: createTransportVehicle
+      tags: [transport]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransportVehicleCreateRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransportVehicle'
+  /transport/assignments:
+    post:
+      operationId: assignTransport
+      tags: [transport]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransportAssignmentCreateRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransportAssignment'
+components:
+  schemas:
+    TransportRouteCreateRequest:
+      type: object
+      properties:
+        name: { type: string }
+      required: [name]
+    TransportRoute:
+      allOf:
+        - $ref: '#/components/schemas/TransportRouteCreateRequest'
+        - type: object
+          properties:
+            id: { type: string, format: uuid }
+          required: [id]
+    TransportRouteList:
+      type: object
+      properties:
+        items:
+          type: array
+          items: { $ref: '#/components/schemas/TransportRoute' }
+      required: [items]
+    TransportVehicleCreateRequest:
+      type: object
+      properties:
+        route_id: { type: string, format: uuid }
+        vehicle_no: { type: string }
+        driver_name: { type: string }
+        status: { type: string, enum: [active, inactive] }
+      required: [route_id, vehicle_no, driver_name]
+    TransportVehicle:
+      allOf:
+        - $ref: '#/components/schemas/TransportVehicleCreateRequest'
+        - type: object
+          properties:
+            id: { type: string, format: uuid }
+          required: [id]
+    TransportAssignmentCreateRequest:
+      type: object
+      properties:
+        student_id: { type: string, format: uuid }
+        vehicle_id: { type: string, format: uuid }
+      required: [student_id, vehicle_id]
+    TransportAssignment:
+      allOf:
+        - $ref: '#/components/schemas/TransportAssignmentCreateRequest'
+        - type: object
+          properties:
+            id: { type: string, format: uuid }
+          required: [id]

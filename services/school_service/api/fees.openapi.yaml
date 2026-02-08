@@ -1,0 +1,118 @@
+﻿openapi: 3.0.3
+info:
+  title: School Service API - Fees
+  version: 0.1.0
+servers:
+  - url: http://localhost:3010
+paths:
+  /fees/structures:
+    get:
+      operationId: listFeeStructures
+      tags: [fees]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeeStructureList'
+    post:
+      operationId: createFeeStructure
+      tags: [fees]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FeeStructureCreateRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeeStructure'
+  /fees/assignments:
+    post:
+      operationId: assignFeeToStudent
+      tags: [fees]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FeeAssignmentCreateRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeeAssignment'
+  /fees/payments:
+    post:
+      operationId: recordFeePayment
+      tags: [fees]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FeePaymentCreateRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeePayment'
+components:
+  schemas:
+    FeeStructureCreateRequest:
+      type: object
+      properties:
+        name: { type: string }
+        amount: { type: number }
+      required: [name, amount]
+    FeeStructure:
+      allOf:
+        - $ref: '#/components/schemas/FeeStructureCreateRequest'
+        - type: object
+          properties:
+            id: { type: string, format: uuid }
+          required: [id]
+    FeeStructureList:
+      type: object
+      properties:
+        items:
+          type: array
+          items: { $ref: '#/components/schemas/FeeStructure' }
+      required: [items]
+    FeeAssignmentCreateRequest:
+      type: object
+      properties:
+        student_id: { type: string, format: uuid }
+        fee_structure_id: { type: string, format: uuid }
+        status: { type: string, enum: [pending, paid, overdue, cancelled] }
+      required: [student_id, fee_structure_id]
+    FeeAssignment:
+      allOf:
+        - $ref: '#/components/schemas/FeeAssignmentCreateRequest'
+        - type: object
+          properties:
+            id: { type: string, format: uuid }
+          required: [id]
+    FeePaymentCreateRequest:
+      type: object
+      properties:
+        fee_assignment_id: { type: string, format: uuid }
+        amount: { type: number }
+        method: { type: string, enum: [cash, card, bank_transfer, upi, online] }
+      required: [fee_assignment_id, amount, method]
+    FeePayment:
+      allOf:
+        - $ref: '#/components/schemas/FeePaymentCreateRequest'
+        - type: object
+          properties:
+            id: { type: string, format: uuid }
+          required: [id]

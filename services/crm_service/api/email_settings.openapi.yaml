@@ -1,0 +1,74 @@
+openapi: 3.0.3
+info:
+  title: Email Settings API
+  version: 1.0.0
+servers:
+  - url: http://localhost:3020
+paths:
+  /email/settings:
+    get:
+      operationId: getEmailSettings
+      summary: Get email settings
+      responses:
+        '200':
+          description: Email settings
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailSettings'
+    put:
+      operationId: updateEmailSettings
+      summary: Update email settings
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateEmailSettingsRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailSettings'
+components:
+  schemas:
+    EmailSettings:
+      type: object
+      required: [provider, from_email]
+      properties:
+        provider:
+          type: string
+          enum: [smtp, sendgrid, ses]
+        from_email:
+          type: string
+          format: email
+        from_name:
+          type: string
+        smtp_host:
+          type: string
+        smtp_port:
+          type: integer
+        smtp_username:
+          type: string
+    UpdateEmailSettingsRequest:
+      type: object
+      properties:
+        provider:
+          type: string
+          enum: [smtp, sendgrid, ses]
+        from_email:
+          type: string
+          format: email
+        from_name:
+          type: string
+        smtp_host:
+          type: string
+        smtp_port:
+          type: integer
+        smtp_username:
+          type: string
+        smtp_password:
+          type: string
+          format: password

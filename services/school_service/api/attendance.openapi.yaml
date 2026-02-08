@@ -1,0 +1,74 @@
+﻿openapi: 3.0.3
+info:
+  title: School Service API - Attendance
+  version: 0.1.0
+servers:
+  - url: http://localhost:3010
+paths:
+  /attendance/students:
+    post:
+      operationId: markStudentAttendance
+      tags: [attendance]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudentAttendanceCreateRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentAttendance'
+  /attendance/staff:
+    post:
+      operationId: markStaffAttendance
+      tags: [attendance]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StaffAttendanceCreateRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StaffAttendance'
+components:
+  schemas:
+    StudentAttendanceCreateRequest:
+      type: object
+      properties:
+        student_id: { type: string, format: uuid }
+        session_id: { type: string, format: uuid }
+        attendance_date: { type: string, format: date }
+        status: { type: string, enum: [present, absent, late, excused] }
+        remark: { type: string }
+      required: [student_id, session_id, attendance_date, status]
+    StudentAttendance:
+      allOf:
+        - $ref: '#/components/schemas/StudentAttendanceCreateRequest'
+        - type: object
+          properties:
+            id: { type: string, format: uuid }
+          required: [id]
+    StaffAttendanceCreateRequest:
+      type: object
+      properties:
+        staff_person_id: { type: string, format: uuid }
+        attendance_date: { type: string, format: date }
+        status: { type: string, enum: [present, absent, late, excused] }
+        remark: { type: string }
+      required: [staff_person_id, attendance_date, status]
+    StaffAttendance:
+      allOf:
+        - $ref: '#/components/schemas/StaffAttendanceCreateRequest'
+        - type: object
+          properties:
+            id: { type: string, format: uuid }
+          required: [id]

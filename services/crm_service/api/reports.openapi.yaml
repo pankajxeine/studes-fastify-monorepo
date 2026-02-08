@@ -1,0 +1,49 @@
+openapi: 3.0.3
+info:
+  title: Reports API
+  version: 1.0.0
+servers:
+  - url: http://localhost:3020
+paths:
+  /reports/run:
+    post:
+      operationId: runReport
+      summary: Run report
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RunReportRequest'
+      responses:
+        '200':
+          description: Report result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RunReportResponse'
+components:
+  schemas:
+    RunReportRequest:
+      type: object
+      required: [report_key]
+      properties:
+        report_key:
+          type: string
+        filters:
+          type: object
+          additionalProperties: true
+    RunReportResponse:
+      type: object
+      required: [report_key, generated_at, rows]
+      properties:
+        report_key:
+          type: string
+        generated_at:
+          type: string
+          format: date-time
+        rows:
+          type: array
+          items:
+            type: object
+            additionalProperties: true

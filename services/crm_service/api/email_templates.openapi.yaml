@@ -1,0 +1,122 @@
+openapi: 3.0.3
+info:
+  title: Email Templates API
+  version: 1.0.0
+servers:
+  - url: http://localhost:3020
+paths:
+  /email/templates:
+    get:
+      operationId: listEmailTemplates
+      summary: List email templates
+      responses:
+        '200':
+          description: Template list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailTemplateListResponse'
+    post:
+      operationId: createEmailTemplate
+      summary: Create email template
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateEmailTemplateRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailTemplate'
+  /email/templates/{templateId}:
+    patch:
+      operationId: updateEmailTemplate
+      summary: Update email template
+      parameters:
+        - in: path
+          name: templateId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateEmailTemplateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailTemplate'
+    delete:
+      operationId: deleteEmailTemplate
+      summary: Delete email template
+      parameters:
+        - in: path
+          name: templateId
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Deleted
+components:
+  schemas:
+    EmailTemplate:
+      type: object
+      required: [id, name, subject, body_html, status]
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        subject:
+          type: string
+        body_html:
+          type: string
+        body_text:
+          type: string
+        status:
+          type: string
+          enum: [active, inactive]
+    CreateEmailTemplateRequest:
+      type: object
+      required: [name, subject, body_html]
+      properties:
+        name:
+          type: string
+        subject:
+          type: string
+        body_html:
+          type: string
+        body_text:
+          type: string
+    UpdateEmailTemplateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        subject:
+          type: string
+        body_html:
+          type: string
+        body_text:
+          type: string
+        status:
+          type: string
+          enum: [active, inactive]
+    EmailTemplateListResponse:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/EmailTemplate'

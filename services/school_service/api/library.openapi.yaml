@@ -1,0 +1,113 @@
+﻿openapi: 3.0.3
+info:
+  title: School Service API - Library
+  version: 0.1.0
+servers:
+  - url: http://localhost:3010
+paths:
+  /library/books:
+    get:
+      operationId: listLibraryBooks
+      tags: [library]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LibraryBookList'
+    post:
+      operationId: createLibraryBook
+      tags: [library]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LibraryBookCreateRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LibraryBook'
+  /library/loans:
+    post:
+      operationId: createLibraryLoan
+      tags: [library]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LibraryLoanCreateRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LibraryLoan'
+  /library/returns:
+    post:
+      operationId: returnLibraryBook
+      tags: [library]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LibraryReturnRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LibraryLoan'
+components:
+  schemas:
+    LibraryBookCreateRequest:
+      type: object
+      properties:
+        title: { type: string }
+        author: { type: string }
+        isbn: { type: string }
+      required: [title, author]
+    LibraryBook:
+      allOf:
+        - $ref: '#/components/schemas/LibraryBookCreateRequest'
+        - type: object
+          properties:
+            id: { type: string, format: uuid }
+          required: [id]
+    LibraryBookList:
+      type: object
+      properties:
+        items:
+          type: array
+          items: { $ref: '#/components/schemas/LibraryBook' }
+      required: [items]
+    LibraryLoanCreateRequest:
+      type: object
+      properties:
+        book_id: { type: string, format: uuid }
+        borrower_id: { type: string, format: uuid }
+        due_date: { type: string, format: date }
+      required: [book_id, borrower_id, due_date]
+    LibraryLoan:
+      allOf:
+        - $ref: '#/components/schemas/LibraryLoanCreateRequest'
+        - type: object
+          properties:
+            id: { type: string, format: uuid }
+            loaned_at: { type: string, format: date }
+            returned_at: { type: string, format: date }
+          required: [id]
+    LibraryReturnRequest:
+      type: object
+      properties:
+        loan_id: { type: string, format: uuid }
+        returned_at: { type: string, format: date }
+      required: [loan_id]

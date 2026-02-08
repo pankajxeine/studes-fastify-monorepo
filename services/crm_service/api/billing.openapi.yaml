@@ -1,0 +1,139 @@
+openapi: 3.0.3
+info:
+  title: Billing API
+  version: 1.0.0
+servers:
+  - url: http://localhost:3020
+paths:
+  /billing/invoices:
+    get:
+      operationId: listInvoices
+      summary: List invoices
+      responses:
+        '200':
+          description: Invoice list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvoiceListResponse'
+    post:
+      operationId: createInvoice
+      summary: Create invoice
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateInvoiceRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Invoice'
+  /billing/invoices/{invoiceId}:
+    get:
+      operationId: getInvoice
+      summary: Get invoice
+      parameters:
+        - in: path
+          name: invoiceId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Invoice
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Invoice'
+  /billing/payments:
+    post:
+      operationId: createPayment
+      summary: Record payment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePaymentRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payment'
+components:
+  schemas:
+    Invoice:
+      type: object
+      required: [id, tenant_id, amount, currency, status, issued_at]
+      properties:
+        id:
+          type: string
+        tenant_id:
+          type: string
+        amount:
+          type: number
+        currency:
+          type: string
+        status:
+          type: string
+          enum: [pending, paid, void]
+        issued_at:
+          type: string
+          format: date-time
+        due_at:
+          type: string
+          format: date-time
+    CreateInvoiceRequest:
+      type: object
+      required: [tenant_id, amount, currency]
+      properties:
+        tenant_id:
+          type: string
+        amount:
+          type: number
+        currency:
+          type: string
+        due_at:
+          type: string
+          format: date-time
+    Payment:
+      type: object
+      required: [id, invoice_id, amount, method, paid_at]
+      properties:
+        id:
+          type: string
+        invoice_id:
+          type: string
+        amount:
+          type: number
+        method:
+          type: string
+          enum: [card, bank_transfer, cash, online]
+        paid_at:
+          type: string
+          format: date-time
+    CreatePaymentRequest:
+      type: object
+      required: [invoice_id, amount, method]
+      properties:
+        invoice_id:
+          type: string
+        amount:
+          type: number
+        method:
+          type: string
+          enum: [card, bank_transfer, cash, online]
+    InvoiceListResponse:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Invoice'

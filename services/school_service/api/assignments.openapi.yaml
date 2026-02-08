@@ -1,0 +1,95 @@
+﻿openapi: 3.0.3
+info:
+  title: School Service API - Assignments
+  version: 0.1.0
+servers:
+  - url: http://localhost:3010
+paths:
+  /assignments:
+    get:
+      operationId: listAssignments
+      tags: [assignments]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssignmentList'
+    post:
+      operationId: createAssignment
+      tags: [assignments]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssignmentCreateRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Assignment'
+  /assignments/{id}/submissions:
+    post:
+      operationId: submitAssignment
+      tags: [assignments]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssignmentSubmissionCreateRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssignmentSubmission'
+components:
+  schemas:
+    AssignmentCreateRequest:
+      type: object
+      properties:
+        offering_id: { type: string, format: uuid }
+        title: { type: string }
+        description: { type: string }
+        due_date: { type: string, format: date-time }
+        status: { type: string, enum: [draft, published, archived] }
+      required: [offering_id, title]
+    Assignment:
+      allOf:
+        - $ref: '#/components/schemas/AssignmentCreateRequest'
+        - type: object
+          properties:
+            id: { type: string, format: uuid }
+          required: [id]
+    AssignmentList:
+      type: object
+      properties:
+        items:
+          type: array
+          items: { $ref: '#/components/schemas/Assignment' }
+      required: [items]
+    AssignmentSubmissionCreateRequest:
+      type: object
+      properties:
+        student_id: { type: string, format: uuid }
+        content_url: { type: string }
+      required: [student_id]
+    AssignmentSubmission:
+      allOf:
+        - $ref: '#/components/schemas/AssignmentSubmissionCreateRequest'
+        - type: object
+          properties:
+            id: { type: string, format: uuid }
+          required: [id]

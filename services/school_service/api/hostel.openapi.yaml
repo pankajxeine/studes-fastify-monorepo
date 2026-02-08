@@ -1,0 +1,88 @@
+﻿openapi: 3.0.3
+info:
+  title: School Service API - Hostel
+  version: 0.1.0
+servers:
+  - url: http://localhost:3010
+paths:
+  /hostel/rooms:
+    get:
+      operationId: listHostelRooms
+      tags: [hostel]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HostelRoomList'
+    post:
+      operationId: createHostelRoom
+      tags: [hostel]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HostelRoomCreateRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HostelRoom'
+  /hostel/allocations:
+    post:
+      operationId: allocateHostelRoom
+      tags: [hostel]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HostelAllocationCreateRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HostelAllocation'
+components:
+  schemas:
+    HostelRoomCreateRequest:
+      type: object
+      properties:
+        hostel_id: { type: string, format: uuid }
+        room_no: { type: string }
+        capacity: { type: integer }
+      required: [hostel_id, room_no, capacity]
+    HostelRoom:
+      allOf:
+        - $ref: '#/components/schemas/HostelRoomCreateRequest'
+        - type: object
+          properties:
+            id: { type: string, format: uuid }
+          required: [id]
+    HostelRoomList:
+      type: object
+      properties:
+        items:
+          type: array
+          items: { $ref: '#/components/schemas/HostelRoom' }
+      required: [items]
+    HostelAllocationCreateRequest:
+      type: object
+      properties:
+        student_id: { type: string, format: uuid }
+        room_id: { type: string, format: uuid }
+        status: { type: string, enum: [active, inactive] }
+      required: [student_id, room_id]
+    HostelAllocation:
+      allOf:
+        - $ref: '#/components/schemas/HostelAllocationCreateRequest'
+        - type: object
+          properties:
+            id: { type: string, format: uuid }
+          required: [id]

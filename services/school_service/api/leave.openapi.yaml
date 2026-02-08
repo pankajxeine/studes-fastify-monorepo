@@ -1,0 +1,59 @@
+﻿openapi: 3.0.3
+info:
+  title: School Service API - Leave
+  version: 0.1.0
+servers:
+  - url: http://localhost:3010
+paths:
+  /leave:
+    get:
+      operationId: listLeaveRequests
+      tags: [leave]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LeaveRequestList'
+    post:
+      operationId: createLeaveRequest
+      tags: [leave]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LeaveRequestCreateRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LeaveRequest'
+components:
+  schemas:
+    LeaveRequestCreateRequest:
+      type: object
+      properties:
+        requester_id: { type: string, format: uuid }
+        start_date: { type: string, format: date }
+        end_date: { type: string, format: date }
+        reason: { type: string }
+        status: { type: string, enum: [pending, approved, rejected, cancelled] }
+      required: [requester_id, start_date, end_date]
+    LeaveRequest:
+      allOf:
+        - $ref: '#/components/schemas/LeaveRequestCreateRequest'
+        - type: object
+          properties:
+            id: { type: string, format: uuid }
+          required: [id]
+    LeaveRequestList:
+      type: object
+      properties:
+        items:
+          type: array
+          items: { $ref: '#/components/schemas/LeaveRequest' }
+      required: [items]

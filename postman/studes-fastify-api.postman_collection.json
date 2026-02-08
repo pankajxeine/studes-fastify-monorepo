@@ -1,0 +1,349 @@
+﻿{
+  "info": {
+    "name": "studes-fastify-api",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Gateway",
+      "item": [
+        {
+          "name": "Gateway Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{gateway_url}}/health"
+          }
+        },
+        {
+          "name": "Gateway Health Services",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{gateway_url}}/health/services"
+          }
+        },
+        {
+          "name": "Gateway Health DB",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{gateway_url}}/health/db"
+          }
+        },
+        {
+          "name": "Gateway Metrics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{gateway_url}}/metrics"
+          }
+        },
+        {
+          "name": "Gateway Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "x-tenant-id", "value": "{{tenant_id}}" },
+              { "key": "x-tenant-slug", "value": "{{tenant_slug}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": "{{gateway_url}}/auth/register"
+          }
+        },
+        {
+          "name": "Gateway Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "x-tenant-id", "value": "{{tenant_id}}" },
+              { "key": "x-tenant-slug", "value": "{{tenant_slug}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": "{{gateway_url}}/auth/login"
+          }
+        },
+        {
+          "name": "Gateway Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{auth_token}}" },
+              { "key": "x-tenant-id", "value": "{{tenant_id}}" },
+              { "key": "x-tenant-slug", "value": "{{tenant_slug}}" }
+            ],
+            "url": "{{gateway_url}}/auth/logout"
+          }
+        },
+        {
+          "name": "Gateway Create Tenant",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Acme Inc\",\n  \"slug\": \"acme\",\n  \"primaryDomain\": \"acme.localtest.me\"\n}"
+            },
+            "url": "{{gateway_url}}/tenants"
+          }
+        },
+        {
+          "name": "Gateway List Invoices",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{auth_token}}" },
+              { "key": "x-tenant-id", "value": "{{tenant_id}}" },
+              { "key": "x-tenant-slug", "value": "{{tenant_slug}}" }
+            ],
+            "url": "{{gateway_url}}/billing/invoices"
+          }
+        },
+        {
+          "name": "Gateway Create Invoice",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{auth_token}}" },
+              { "key": "x-tenant-id", "value": "{{tenant_id}}" },
+              { "key": "x-tenant-slug", "value": "{{tenant_slug}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 49.99,\n  \"currency\": \"USD\",\n  \"description\": \"Sample invoice\"\n}"
+            },
+            "url": "{{gateway_url}}/billing/invoices"
+          }
+        },
+        {
+          "name": "Gateway List Notifications",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{auth_token}}" },
+              { "key": "x-tenant-id", "value": "{{tenant_id}}" },
+              { "key": "x-tenant-slug", "value": "{{tenant_slug}}" }
+            ],
+            "url": "{{gateway_url}}/notifications"
+          }
+        },
+        {
+          "name": "Gateway Create Notification",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{auth_token}}" },
+              { "key": "x-tenant-id", "value": "{{tenant_id}}" },
+              { "key": "x-tenant-slug", "value": "{{tenant_slug}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"channel\": \"email\",\n  \"recipient\": \"user@example.com\",\n  \"message\": \"Hello from gateway\"\n}"
+            },
+            "url": "{{gateway_url}}/notifications"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Auth Service",
+      "item": [
+        {
+          "name": "Auth Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{auth_url}}/health"
+          }
+        },
+        {
+          "name": "Auth Health DB",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{auth_url}}/health/db"
+          }
+        },
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "x-tenant-id", "value": "{{tenant_id}}" },
+              { "key": "x-tenant-slug", "value": "{{tenant_slug}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": "{{auth_url}}/auth/register"
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "x-tenant-id", "value": "{{tenant_id}}" },
+              { "key": "x-tenant-slug", "value": "{{tenant_slug}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": "{{auth_url}}/auth/login"
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{auth_token}}" },
+              { "key": "x-tenant-id", "value": "{{tenant_id}}" },
+              { "key": "x-tenant-slug", "value": "{{tenant_slug}}" }
+            ],
+            "url": "{{auth_url}}/auth/logout"
+          }
+        },
+        {
+          "name": "Create Tenant",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Acme Inc\",\n  \"slug\": \"acme\",\n  \"primaryDomain\": \"acme.localtest.me\"\n}"
+            },
+            "url": "{{auth_url}}/tenants"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Billing Service",
+      "item": [
+        {
+          "name": "Billing Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{billing_url}}/health"
+          }
+        },
+        {
+          "name": "Billing Health DB",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{billing_url}}/health/db"
+          }
+        },
+        {
+          "name": "List Invoices",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{auth_token}}" },
+              { "key": "x-tenant-id", "value": "{{tenant_id}}" },
+              { "key": "x-tenant-slug", "value": "{{tenant_slug}}" }
+            ],
+            "url": "{{billing_url}}/billing/invoices"
+          }
+        },
+        {
+          "name": "Create Invoice",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{auth_token}}" },
+              { "key": "x-tenant-id", "value": "{{tenant_id}}" },
+              { "key": "x-tenant-slug", "value": "{{tenant_slug}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 49.99,\n  \"currency\": \"USD\",\n  \"description\": \"Sample invoice\"\n}"
+            },
+            "url": "{{billing_url}}/billing/invoices"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Notification Service",
+      "item": [
+        {
+          "name": "Notification Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{notification_url}}/health"
+          }
+        },
+        {
+          "name": "Notification Health DB",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{notification_url}}/health/db"
+          }
+        },
+        {
+          "name": "List Notifications",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{auth_token}}" },
+              { "key": "x-tenant-id", "value": "{{tenant_id}}" },
+              { "key": "x-tenant-slug", "value": "{{tenant_slug}}" }
+            ],
+            "url": "{{notification_url}}/notifications"
+          }
+        },
+        {
+          "name": "Create Notification",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{auth_token}}" },
+              { "key": "x-tenant-id", "value": "{{tenant_id}}" },
+              { "key": "x-tenant-slug", "value": "{{tenant_slug}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"channel\": \"email\",\n  \"recipient\": \"user@example.com\",\n  \"message\": \"Hello from notifications\"\n}"
+            },
+            "url": "{{notification_url}}/notifications"
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    { "key": "gateway_url", "value": "http://localhost:3000" },
+    { "key": "auth_url", "value": "http://localhost:3001" },
+    { "key": "billing_url", "value": "http://localhost:3002" },
+    { "key": "notification_url", "value": "http://localhost:3003" },
+    { "key": "tenant_id", "value": "" },
+    { "key": "tenant_slug", "value": "acme" },
+    { "key": "auth_token", "value": "" }
+  ]
+}

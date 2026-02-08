@@ -1,0 +1,136 @@
+﻿openapi: 3.0.3
+info:
+  title: School Service API - Academics
+  version: 0.1.0
+servers:
+  - url: http://localhost:3010
+paths:
+  /courses:
+    get:
+      operationId: listCourses
+      tags: [academics]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CourseList'
+    post:
+      operationId: createCourse
+      tags: [academics]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CourseCreateRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Course'
+  /offerings:
+    get:
+      operationId: listOfferings
+      tags: [academics]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OfferingList'
+    post:
+      operationId: createOffering
+      tags: [academics]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OfferingCreateRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Offering'
+  /enrollments:
+    post:
+      operationId: createEnrollment
+      tags: [academics]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EnrollmentCreateRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Enrollment'
+components:
+  schemas:
+    CourseCreateRequest:
+      type: object
+      properties:
+        code: { type: string }
+        title: { type: string }
+        description: { type: string }
+      required: [code, title]
+    Course:
+      allOf:
+        - $ref: '#/components/schemas/CourseCreateRequest'
+        - type: object
+          properties:
+            id: { type: string, format: uuid }
+          required: [id]
+    CourseList:
+      type: object
+      properties:
+        items:
+          type: array
+          items: { $ref: '#/components/schemas/Course' }
+      required: [items]
+    OfferingCreateRequest:
+      type: object
+      properties:
+        course_id: { type: string, format: uuid }
+        session_id: { type: string, format: uuid }
+        grade_level: { type: string }
+        section: { type: string }
+      required: [course_id, session_id]
+    Offering:
+      allOf:
+        - $ref: '#/components/schemas/OfferingCreateRequest'
+        - type: object
+          properties:
+            id: { type: string, format: uuid }
+          required: [id]
+    OfferingList:
+      type: object
+      properties:
+        items:
+          type: array
+          items: { $ref: '#/components/schemas/Offering' }
+      required: [items]
+    EnrollmentCreateRequest:
+      type: object
+      properties:
+        student_id: { type: string, format: uuid }
+        offering_id: { type: string, format: uuid }
+      required: [student_id, offering_id]
+    Enrollment:
+      allOf:
+        - $ref: '#/components/schemas/EnrollmentCreateRequest'
+        - type: object
+          properties:
+            id: { type: string, format: uuid }
+          required: [id]

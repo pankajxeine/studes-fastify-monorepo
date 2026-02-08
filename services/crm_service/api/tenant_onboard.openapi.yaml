@@ -1,0 +1,66 @@
+openapi: 3.0.3
+info:
+  title: Tenant Onboard API
+  version: 1.0.0
+servers:
+  - url: http://localhost:3020
+paths:
+  /tenants/onboard:
+    post:
+      operationId: onboardTenant
+      summary: Onboard a tenant and create schema
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OnboardTenantRequest'
+      responses:
+        '201':
+          description: Tenant onboarded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OnboardTenantResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    OnboardTenantRequest:
+      type: object
+      required: [name, slug, plan_id]
+      properties:
+        name:
+          type: string
+        slug:
+          type: string
+        primary_domain:
+          type: string
+        plan_id:
+          type: string
+        tenant_type:
+          type: string
+          enum: [school, crm]
+        admin_email:
+          type: string
+          format: email
+    OnboardTenantResponse:
+      type: object
+      required: [tenant_id, schema_name]
+      properties:
+        tenant_id:
+          type: string
+        schema_name:
+          type: string
+        status:
+          type: string
+    ErrorResponse:
+      type: object
+      required: [message]
+      properties:
+        message:
+          type: string

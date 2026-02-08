@@ -1,0 +1,57 @@
+﻿openapi: 3.0.3
+info:
+  title: School Service API - Notifications
+  version: 0.1.0
+servers:
+  - url: http://localhost:3010
+paths:
+  /notifications:
+    get:
+      operationId: listNotifications
+      tags: [notifications]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationList'
+    post:
+      operationId: createNotification
+      tags: [notifications]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationCreateRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+components:
+  schemas:
+    NotificationCreateRequest:
+      type: object
+      properties:
+        title: { type: string }
+        message: { type: string }
+        channel: { type: string, enum: [email, sms, push, in_app] }
+      required: [title, message, channel]
+    Notification:
+      allOf:
+        - $ref: '#/components/schemas/NotificationCreateRequest'
+        - type: object
+          properties:
+            id: { type: string, format: uuid }
+          required: [id]
+    NotificationList:
+      type: object
+      properties:
+        items:
+          type: array
+          items: { $ref: '#/components/schemas/Notification' }
+      required: [items]

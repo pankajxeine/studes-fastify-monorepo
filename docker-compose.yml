@@ -1,0 +1,133 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: studes_postgres
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: studes
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  auth_service:
+    build:
+      context: ./services/auth_service
+      dockerfile: Dockerfile
+    environment:
+      PORT: 3001
+      DATABASE_URL: ${DATABASE_URL}
+      TENANT_BASE_DOMAIN: ${TENANT_BASE_DOMAIN}
+      TENANT_HEADER_NAME: ${TENANT_HEADER_NAME}
+      TENANT_HEADER_SLUG_NAME: ${TENANT_HEADER_SLUG_NAME}
+      TENANT_HEADER_PRECEDENCE: ${TENANT_HEADER_PRECEDENCE}
+      CORS_ORIGIN: ${CORS_ORIGIN}
+      JWT_SECRET: ${AUTH_JWT_SECRET}
+      SESSION_COOKIE_NAME: ${AUTH_SESSION_COOKIE_NAME}
+      SESSION_COOKIE_SECRET: ${AUTH_SESSION_COOKIE_SECRET}
+    ports:
+      - "3001:3001"
+    depends_on:
+      - postgres
+
+  billing_service:
+    build:
+      context: ./services/billing_service
+      dockerfile: Dockerfile
+    environment:
+      PORT: 3002
+      DATABASE_URL: ${DATABASE_URL}
+      TENANT_BASE_DOMAIN: ${TENANT_BASE_DOMAIN}
+      TENANT_HEADER_NAME: ${TENANT_HEADER_NAME}
+      TENANT_HEADER_SLUG_NAME: ${TENANT_HEADER_SLUG_NAME}
+      TENANT_HEADER_PRECEDENCE: ${TENANT_HEADER_PRECEDENCE}
+      CORS_ORIGIN: ${CORS_ORIGIN}
+      JWT_SECRET: ${AUTH_JWT_SECRET}
+    ports:
+      - "3002:3002"
+    depends_on:
+      - postgres
+
+  notification_service:
+    build:
+      context: ./services/notification_service
+      dockerfile: Dockerfile
+    environment:
+      PORT: 3003
+      DATABASE_URL: ${DATABASE_URL}
+      TENANT_BASE_DOMAIN: ${TENANT_BASE_DOMAIN}
+      TENANT_HEADER_NAME: ${TENANT_HEADER_NAME}
+      TENANT_HEADER_SLUG_NAME: ${TENANT_HEADER_SLUG_NAME}
+      TENANT_HEADER_PRECEDENCE: ${TENANT_HEADER_PRECEDENCE}
+      CORS_ORIGIN: ${CORS_ORIGIN}
+      JWT_SECRET: ${AUTH_JWT_SECRET}
+    ports:
+      - "3003:3003"
+    depends_on:
+      - postgres
+
+  school_service:
+    build:
+      context: ./services/school_service
+      dockerfile: Dockerfile
+    environment:
+      PORT: 3010
+      DATABASE_URL: ${DATABASE_URL}
+      TENANT_BASE_DOMAIN: ${TENANT_BASE_DOMAIN}
+      TENANT_HEADER_NAME: ${TENANT_HEADER_NAME}
+      TENANT_HEADER_SLUG_NAME: ${TENANT_HEADER_SLUG_NAME}
+      TENANT_HEADER_PRECEDENCE: ${TENANT_HEADER_PRECEDENCE}
+      CORS_ORIGIN: ${CORS_ORIGIN}
+      JWT_SECRET: ${AUTH_JWT_SECRET}
+    ports:
+      - "3010:3010"
+    depends_on:
+      - postgres
+
+  crm_service:
+    build:
+      context: ./services/crm_service
+      dockerfile: Dockerfile
+    environment:
+      PORT: 3020
+      DATABASE_URL: ${DATABASE_URL}
+      TENANT_BASE_DOMAIN: ${TENANT_BASE_DOMAIN}
+      TENANT_HEADER_NAME: ${TENANT_HEADER_NAME}
+      TENANT_HEADER_SLUG_NAME: ${TENANT_HEADER_SLUG_NAME}
+      TENANT_HEADER_PRECEDENCE: ${TENANT_HEADER_PRECEDENCE}
+      CORS_ORIGIN: ${CORS_ORIGIN}
+      JWT_SECRET: ${AUTH_JWT_SECRET}
+    ports:
+      - "3020:3020"
+    depends_on:
+      - postgres
+
+  api_gateway:
+    build:
+      context: ./services/api_gateway
+      dockerfile: Dockerfile
+    environment:
+      PORT: 3000
+      CORS_ORIGIN: ${CORS_ORIGIN}
+      SERVICE_AUTH_URL: ${SERVICE_AUTH_URL}
+      SERVICE_BILLING_URL: ${SERVICE_BILLING_URL}
+      SERVICE_NOTIFICATION_URL: ${SERVICE_NOTIFICATION_URL}
+      SERVICE_SCHOOL_URL: ${SERVICE_SCHOOL_URL}
+      SERVICE_CRM_URL: ${SERVICE_CRM_URL}
+      JWT_SECRET: ${AUTH_JWT_SECRET}
+      RATE_LIMIT_MAX: ${RATE_LIMIT_MAX}
+      RATE_LIMIT_WINDOW: ${RATE_LIMIT_WINDOW}
+    ports:
+      - "3000:3000"
+    depends_on:
+      - auth_service
+      - billing_service
+      - notification_service
+      - school_service
+      - crm_service
+
+volumes:
+  pgdata:

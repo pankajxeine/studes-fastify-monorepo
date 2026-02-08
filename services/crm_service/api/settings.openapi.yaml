@@ -1,0 +1,63 @@
+openapi: 3.0.3
+info:
+  title: Settings API
+  version: 1.0.0
+servers:
+  - url: http://localhost:3020
+paths:
+  /settings/global:
+    get:
+      operationId: getGlobalSettings
+      summary: Get global settings
+      responses:
+        '200':
+          description: Settings
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GlobalSettings'
+    put:
+      operationId: updateGlobalSettings
+      summary: Update global settings
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateGlobalSettingsRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GlobalSettings'
+components:
+  schemas:
+    GlobalSettings:
+      type: object
+      required: [timezone, locale, date_format]
+      properties:
+        timezone:
+          type: string
+        locale:
+          type: string
+        date_format:
+          type: string
+        currency:
+          type: string
+        enable_audit_log:
+          type: boolean
+    UpdateGlobalSettingsRequest:
+      type: object
+      properties:
+        timezone:
+          type: string
+        locale:
+          type: string
+        date_format:
+          type: string
+        currency:
+          type: string
+        enable_audit_log:
+          type: boolean
