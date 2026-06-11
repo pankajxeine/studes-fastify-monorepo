@@ -12,9 +12,18 @@ function isAppErrorLike(error: unknown): error is { statusCode: number; name: st
 }
 
 export function registerErrorHandler(app: FastifyInstance, options: ErrorHandlerOptions = {}) {
-  app.setErrorHandler((error: unknown, _req: FastifyRequest, reply: FastifyReply) => {
+  app.setErrorHandler((error: unknown, request: FastifyRequest, reply: FastifyReply) => {
     if (options.includeZod && error instanceof ZodError) {
       const zodError = error as ZodError
+      request.log.warn(
+        {
+          method: request.method,
+          url: request.url,
+          error: 'ValidationError',
+          details: zodError.flatten()
+        },
+        'request validation failed'
+      )
       reply.code(400).send({
         error: 'ValidationError',
         message: 'Invalid request',
@@ -24,6 +33,16 @@ export function registerErrorHandler(app: FastifyInstance, options: ErrorHandler
     }
 
     if (isAppErrorLike(error)) {
+      request.log.warn(
+        {
+          method: request.method,
+          url: request.url,
+          error: error.name,
+          statusCode: error.statusCode,
+          details: error.details ?? null
+        },
+        'request failed'
+      )
       reply.code(error.statusCode).send({
         error: error.name,
         message: error.message,
@@ -32,7 +51,14 @@ export function registerErrorHandler(app: FastifyInstance, options: ErrorHandler
       return
     }
 
-    app.log.error(error)
+    request.log.error(
+      {
+        method: request.method,
+        url: request.url,
+        err: error
+      },
+      'request failed unexpectedly'
+    )
     reply.code(500).send({
       error: 'InternalServerError',
       message: 'Unexpected error'

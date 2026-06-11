@@ -3,7 +3,15 @@ import envPlugin from './plugins/env'
 import dbPlugin from './plugins/db'
 import tenantPlugin from './plugins/tenant'
 import authPlugin from './plugins/auth'
-import { createMetricsPlugin, registerErrorHandler } from './core';
+import {
+  createMetricsPlugin,
+  registerErrorHandler,
+  requestBodyLoggerPlugin,
+  requestIdPlugin,
+  requestLoggerPlugin
+} from './core'
+import authRoutes from './routes/auth_service.router'
+
 import { readdirSync } from 'node:fs'
 import { join } from 'node:path'
 
@@ -26,6 +34,9 @@ export async function buildApp(): Promise<FastifyInstance> {
   await fastify.register(envPlugin)
 
   const corsOrigin = fastify.env?.CORS_ORIGIN ?? process.env.CORS_ORIGIN ?? '*'
+  await fastify.register(requestIdPlugin)
+  await fastify.register(requestBodyLoggerPlugin)
+  await fastify.register(requestLoggerPlugin)
   await fastify.register((await import('@fastify/helmet')).default)
   await fastify.register((await import('@fastify/cors')).default, {
     origin: corsOrigin
@@ -38,8 +49,11 @@ export async function buildApp(): Promise<FastifyInstance> {
 
   registerErrorHandler(fastify, { includeZod: true })
 
-  await registerGeneratedRoutes(fastify)
-
+  //await fastify.register(healthRoutes)
+  await fastify.register(authRoutes)
+  //await fastify.register(tenantRoutes)
+  
+  fastify.log.info({ routes: fastify.printRoutes() }, 'registered routes')
   return fastify
 }
 

@@ -1,11 +1,20 @@
 import fp from 'fastify-plugin'
 import { z } from 'zod'
+import type { RowDataPacket } from 'mysql2/promise'
+import type { MysqlConnection } from './db'
 import type { ContextConfigDefault, FastifyBaseLogger, FastifySchema, FastifyTypeProvider, FastifyTypeProviderDefault, RawRequestDefaultExpression, RawServerBase, RawServerDefault, RouteGenericInterface } from 'fastify'
 import type { FastifyRequestType, ResolveFastifyRequestType } from 'fastify/types/type-provider'
+import { BadRequestError } from '../core'
 
 const tenantConfigSchema = z.object({
   requireTenant: z.boolean().optional().default(true)
 })
+
+type TenantRow = RowDataPacket & {
+  id: string
+  slug: string
+  schema_name: string
+}
 
 export default fp(async (app) => {
   app.decorateRequest('tenant', null)
@@ -14,6 +23,7 @@ export default fp(async (app) => {
   app.addHook('onRequest', async (request, reply) => {
     const config = tenantConfigSchema.parse(request.routeOptions.config ?? {})
     if (!config.requireTenant) {
+      request.log.info({ route: request.routeOptions.url }, 'tenant resolution skipped')
       return
     }
 
@@ -42,24 +52,40 @@ export default fp(async (app) => {
     }
 
     if (!tenantIdOrSlug) {
+      request.log.warn(
+        { headerName, headerSlugName, hostname, baseDomain },
+        'tenant resolution failed: tenant not specified'
+      )
       reply.code(400)
-      throw new Error('Tenant not specified')
+      throw new BadRequestError('Tenant not specified')
     }
 
-    const client = await app.pg.connect()
+    request.log.info(
+      { tenantIdOrSlug, resolvedBy: from, hostname },
+      'tenant resolution started'
+    )
+
+    const client = await app.mysql.getConnection()
     try {
-      const tenantResult = await client.query(
-        `select id, slug, schema_name from public.tenants where id::text = $1 or slug = $1 limit 1`,
-        [tenantIdOrSlug]
+      await app.useTenantDatabase(client, app.mysqlDatabase)
+      request.log.info({ database: app.mysqlDatabase }, 'tenant lookup database selected')
+      const [tenantRows] = await client.execute<TenantRow[]>(
+        'select id, slug, schema_name from tenants where cast(id as char) = ? or slug = ? limit 1',
+        [tenantIdOrSlug, tenantIdOrSlug]
       )
 
-      if (tenantResult.rowCount === 0) {
+      if (tenantRows.length === 0) {
+        request.log.warn({ tenantIdOrSlug }, 'tenant resolution failed: tenant not found')
         reply.code(404)
         throw new Error('Tenant not found')
       }
 
-      const tenant = tenantResult.rows[0]
-      await client.query(`set search_path to ${tenant.schema_name}, public`)
+      const tenant = tenantRows[0]
+      await app.useTenantDatabase(client, tenant.schema_name)
+      request.log.info(
+        { tenantId: tenant.id, tenantSlug: tenant.slug, schema: tenant.schema_name, resolvedBy: from },
+        'tenant resolved'
+      )
 
       request.tenant = {
         id: tenant.id,
@@ -98,16 +124,12 @@ declare module 'fastify' {
       schema: string
       resolvedBy: 'header' | 'subdomain'
     }
-    db: import('pg').PoolClient | null
+    db: MysqlConnection | null
   }
 }
-
 
 declare module 'fastify' {
   interface FastifyRouteConfig {
     requireTenant?: boolean
   }
 }
-
-
-
