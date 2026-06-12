@@ -1,17 +1,17 @@
 import type { CompanyProfile } from '../openapi/types/CompanyProfile'
 import type { UpdateCompanyProfileRequest } from '../openapi/types/UpdateCompanyProfileRequest'
-import type { RequestHeaders } from '../openapi/types/RequestHeaders'
+import { FastifyInstance, FastifyRequest } from 'fastify'
 import type { CompanyController } from '../openapi/controller/CompanyController'
 
 export class CompanyService implements CompanyController {
-  public async getCompanyProfile(headers?: RequestHeaders): Promise<CompanyProfile> {
-    void headers
+  public async getCompanyProfile(app: FastifyInstance,request?: FastifyRequest): Promise<CompanyProfile> {
+    void request
     throw new Error('Not implemented')
   }
 
-  public async updateCompanyProfile(input: UpdateCompanyProfileRequest, headers?: RequestHeaders): Promise<CompanyProfile> {
+  public async updateCompanyProfile(app: FastifyInstance, input: UpdateCompanyProfileRequest, request?: FastifyRequest): Promise<CompanyProfile> {
     void input
-    void headers
+    void request
     throw new Error('Not implemented')
   }
 }

@@ -1,7 +1,7 @@
 import type { GetCpanelUsersResponse } from '../types/GetCpanelUsersResponse'
 import type { CpanelUser } from '../types/CpanelUser'
-import type { RequestHeaders } from '../types/RequestHeaders'
+import { FastifyInstance, FastifyRequest} from 'fastify'
 
 export interface CpanelController {
-  getCpanelUsers(headers?: RequestHeaders): Promise<GetCpanelUsersResponse>
+  getCpanelUsers(app: FastifyInstance, request?: FastifyRequest): Promise<GetCpanelUsersResponse>
 }

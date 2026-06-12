@@ -24,8 +24,7 @@ export type AdminUsersCreationAttributes = Optional<AdminUsersAttributes, "id" |
 
 export class AdminUsersEntity
   extends Model<AdminUsersAttributes, AdminUsersCreationAttributes>
-  implements AdminUsersAttributes
-{
+  implements AdminUsersAttributes {
   declare id: number
   declare institute_id: number
   declare username: string
@@ -52,7 +51,7 @@ export function initAdminUsersEntity(sequelize: Sequelize): typeof AdminUsersEnt
         type: DataTypes.INTEGER,
         field: 'id',
         allowNull: false,
-        primaryKey: true ,
+        primaryKey: true,
         autoIncrement: true,
       },
       institute_id: {
@@ -95,7 +94,7 @@ export function initAdminUsersEntity(sequelize: Sequelize): typeof AdminUsersEnt
         defaultValue: null,
       },
       role: {
-        type: DataTypes.ENUM('super admin','institute admin','finance admin','academics admin'),
+        type: DataTypes.ENUM('super admin', 'institute admin', 'finance admin', 'academics admin'),
         field: 'role',
         allowNull: false,
         defaultValue: "Institute Admin",
@@ -119,7 +118,7 @@ export function initAdminUsersEntity(sequelize: Sequelize): typeof AdminUsersEnt
         defaultValue: null,
       },
       status: {
-        type: DataTypes.ENUM('active','inactive','suspended'),
+        type: DataTypes.ENUM('active', 'inactive', 'suspended'),
         field: 'status',
         allowNull: false,
         defaultValue: "Active",
@@ -152,10 +151,10 @@ export function initAdminUsersEntity(sequelize: Sequelize): typeof AdminUsersEnt
     {
       sequelize,
       tableName: 'admin_users',
-      timestamps: true,
+      timestamps: false,
       underscored: true,
       freezeTableName: true,
-      paranoid: true
+      paranoid: false
     }
   )
   return AdminUsersEntity

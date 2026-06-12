@@ -11,51 +11,51 @@ import type { ParentList } from '../openapi/types/ParentList'
 import type { StaffCreateRequest } from '../openapi/types/StaffCreateRequest'
 import type { Staff } from '../openapi/types/Staff'
 import type { StaffList } from '../openapi/types/StaffList'
-import type { RequestHeaders } from '../openapi/types/RequestHeaders'
+import { FastifyInstance, FastifyRequest } from 'fastify'
 import type { CoreController } from '../openapi/controller/CoreController'
 
 export class CoreService implements CoreController {
-  public async listStudents(headers?: RequestHeaders): Promise<StudentList> {
-    void headers
+  public async listStudents(app: FastifyInstance,request?: FastifyRequest): Promise<StudentList> {
+    void request
     throw new Error('Not implemented')
   }
 
-  public async createStudent(input: StudentCreateRequest, headers?: RequestHeaders): Promise<Student> {
+  public async createStudent(app: FastifyInstance, input: StudentCreateRequest, request?: FastifyRequest): Promise<Student> {
     void input
-    void headers
+    void request
     throw new Error('Not implemented')
   }
 
-  public async listTeachers(headers?: RequestHeaders): Promise<TeacherList> {
-    void headers
+  public async listTeachers(app: FastifyInstance,request?: FastifyRequest): Promise<TeacherList> {
+    void request
     throw new Error('Not implemented')
   }
 
-  public async createTeacher(input: TeacherCreateRequest, headers?: RequestHeaders): Promise<Teacher> {
+  public async createTeacher(app: FastifyInstance, input: TeacherCreateRequest, request?: FastifyRequest): Promise<Teacher> {
     void input
-    void headers
+    void request
     throw new Error('Not implemented')
   }
 
-  public async listParents(headers?: RequestHeaders): Promise<ParentList> {
-    void headers
+  public async listParents(app: FastifyInstance,request?: FastifyRequest): Promise<ParentList> {
+    void request
     throw new Error('Not implemented')
   }
 
-  public async createParent(input: ParentCreateRequest, headers?: RequestHeaders): Promise<Parent> {
+  public async createParent(app: FastifyInstance, input: ParentCreateRequest, request?: FastifyRequest): Promise<Parent> {
     void input
-    void headers
+    void request
     throw new Error('Not implemented')
   }
 
-  public async listStaff(headers?: RequestHeaders): Promise<StaffList> {
-    void headers
+  public async listStaff(app: FastifyInstance,request?: FastifyRequest): Promise<StaffList> {
+    void request
     throw new Error('Not implemented')
   }
 
-  public async createStaff(input: StaffCreateRequest, headers?: RequestHeaders): Promise<Staff> {
+  public async createStaff(app: FastifyInstance, input: StaffCreateRequest, request?: FastifyRequest): Promise<Staff> {
     void input
-    void headers
+    void request
     throw new Error('Not implemented')
   }
 }

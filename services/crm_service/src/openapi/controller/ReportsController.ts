@@ -1,7 +1,7 @@
 import type { RunReportRequest } from '../types/RunReportRequest'
 import type { RunReportResponse } from '../types/RunReportResponse'
-import type { RequestHeaders } from '../types/RequestHeaders'
+import { FastifyInstance, FastifyRequest} from 'fastify'
 
 export interface ReportsController {
-  runReport(input: RunReportRequest, headers?: RequestHeaders): Promise<RunReportResponse>
+  runReport(app: FastifyInstance, input: RunReportRequest, request?: FastifyRequest): Promise<RunReportResponse>
 }

@@ -130,7 +130,7 @@ function toRoutePath(pathKey: string): string {
   return pathKey.replace(/{/g, ':').replace(/}/g, '')
 }
 
-// const headerType = '{ tenantId?: string; tenantSlug?: string; authorization?: string }'
+const headerType = '{ tenantId?: string; tenantSlug?: string; authorization?: string }'
 
 const serviceNames = fs
   .readdirSync(servicesDir, { withFileTypes: true })
@@ -153,7 +153,7 @@ for (const service of serviceNames) {
   fs.mkdirSync(servicesOutDir, { recursive: true })
   fs.mkdirSync(routesOutDir, { recursive: true })
 
-  // fs.writeFileSync(path.join(typesDir, 'RequestHeaders.ts'), `export type RequestHeaders = ${headerType}\n`, 'utf8')
+  fs.writeFileSync(path.join(typesDir, 'RequestHeaders.ts'), `export type RequestHeaders = ${headerType}\n`, 'utf8')
 
   for (const specPath of specs) {
     const raw = fs.readFileSync(specPath, 'utf8')
@@ -200,19 +200,19 @@ for (const service of serviceNames) {
         const responseType = typeFromResponse(pickSuccessResponse(operation.responses))
 
         if (requestType) {
-          methods.push(`  ${operation.operationId}(app: FastifyInstance, input: ${requestType}, request?: FastifyRequest): Promise<${responseType}>`)
+          methods.push(`  ${operation.operationId}(input: ${requestType}, headers?: RequestHeaders): Promise<${responseType}>`)
           methodStubs.push(
-            `  public async ${operation.operationId}(app: FastifyInstance, input: ${requestType}, request?: FastifyRequest): Promise<${responseType}> {\n` +
+            `  public async ${operation.operationId}(input: ${requestType}, headers?: RequestHeaders): Promise<${responseType}> {\n` +
             `    void input\n` +
-            `    void request\n` +
+            `    void headers\n` +
             `    throw new Error('Not implemented')\n` +
             `  }\n`
           )
         } else {
-          methods.push(`  ${operation.operationId}(app: FastifyInstance, request?: FastifyRequest): Promise<${responseType}>`)
+          methods.push(`  ${operation.operationId}(headers?: RequestHeaders): Promise<${responseType}>`)
           methodStubs.push(
-            `  public async ${operation.operationId}(app: FastifyInstance,request?: FastifyRequest): Promise<${responseType}> {\n` +
-            `    void request\n` +
+            `  public async ${operation.operationId}(headers?: RequestHeaders): Promise<${responseType}> {\n` +
+            `    void headers\n` +
             `    throw new Error('Not implemented')\n` +
             `  }\n`
           )
@@ -221,13 +221,13 @@ for (const service of serviceNames) {
         const httpMethod = httpMethodFromKey(methodKey)
         const routePath = toRoutePath(pathKey)
         const handlerArgs = requestType
-          ? 'request.body as any, request'
-          : 'request'
+          ? 'request.body as any, buildHeaders(request)'
+          : 'buildHeaders(request)'
         const responseLine = responseType === 'void' ? 'await' : 'return await'
 
         routeDefs.push(
           `app.${httpMethod}('${routePath}', async (request, reply) => {`,
-          `  ${responseLine} controller.${operation.operationId}(app, ${handlerArgs})`,
+          `  ${responseLine} controller.${operation.operationId}(${handlerArgs})`,
           `})`
         )
       }
@@ -239,44 +239,36 @@ for (const service of serviceNames) {
       .join('\n')
     const importLine =
       `${schemaImports}${schemaImports ? '\n' : ''}` +
-      `import { FastifyInstance, FastifyRequest} from 'fastify'\n\n`
+      `import type { RequestHeaders } from '../types/RequestHeaders'\n\n`
     const controllerOut = `${importLine}export interface ${controllerName} {\n${methods.join('\n')}\n}\n`
     fs.writeFileSync(path.join(controllerDir, `${controllerName}.ts`), controllerOut, 'utf8')
 
-    const shouldGenerateService = process.argv.includes('--generate-service')
-
-    // generate service implementation with stubs for each method if --generate-service flag is provided, otherwise skip if file already exists
-    // const serviceFilePath = path.join(servicesOutDir, serviceFileName)
-    if (shouldGenerateService) {
-      // TODO if file exist then get input to override or not, if not then create file with stub implementation
-      const serviceSchemaImports = schemaNames
-        .map((name) => `import type { ${name} } from '../openapi/types/${name}'`)
-        .join('\n')
-      const serviceImports =
-        `${serviceSchemaImports}${serviceSchemaImports ? '\n' : ''}` +
-        `import { FastifyInstance, FastifyRequest } from 'fastify'\n` +
-        `import type { ${controllerName} } from '../openapi/controller/${controllerName}'\n`
-      const controllerImpl =
-        `${serviceImports}\n` +
-        `export class ${controllerImplName} implements ${controllerName} {\n` +
-        `${methodStubs.join('\n')}` +
-        `}\n`
-      fs.writeFileSync(path.join(servicesOutDir, serviceFileName), controllerImpl, 'utf8')
-
-      // if (!fs.existsSync(serviceFilePath)) {
-
-      // } else {
-      //   console.log(`Skipping service creation: ${serviceFileName} already exists`)
-      // }
-    } else {
-      console.log(`Skipping service creation: ${serviceFileName} already exists`)
-    }
+    const serviceSchemaImports = schemaNames
+      .map((name) => `import type { ${name} } from '../openapi/types/${name}'`)
+      .join('\n')
+    const serviceImports =
+      `${serviceSchemaImports}${serviceSchemaImports ? '\n' : ''}` +
+      `import type { RequestHeaders } from '../openapi/types/RequestHeaders'\n` +
+      `import type { ${controllerName} } from '../openapi/controller/${controllerName}'\n`
+    const controllerImpl =
+      `${serviceImports}\n` +
+      `export class ${controllerImplName} implements ${controllerName} {\n` +
+      `${methodStubs.join('\n')}` +
+      `}\n`
+    fs.writeFileSync(path.join(servicesOutDir, serviceFileName), controllerImpl, 'utf8')
 
     const routeOut =
       `import type { FastifyPluginAsync } from 'fastify'\n` +
       `import { ${controllerImplName} } from '../services/${modulePascal}Service'\n` +
       `\n` +
-
+      `function buildHeaders(request: any) {\n` +
+      `  return {\n` +
+      `    tenantId: request.headers['x-tenant-id'] as string | undefined,\n` +
+      `    tenantSlug: request.headers['x-tenant-slug'] as string | undefined,\n` +
+      `    authorization: request.headers['authorization'] as string | undefined\n` +
+      `  }\n` +
+      `}\n` +
+      `\n` +
       `const ${modulePascal}Routes: FastifyPluginAsync = async (app) => {\n` +
       `  const controller = new ${controllerImplName}()\n` +
       `${routeDefs.map((l) => `  ${l}`).join('\n')}\n` +

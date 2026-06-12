@@ -53,6 +53,7 @@ import { initSubPackagesEntity } from './sub_packages/sub_packages.entity'
 import { initSubsEntity } from './subs/subs.entity'
 
 export function initGeneratedEntities(sequelize: Sequelize): void {
+  sequelize.authenticate()
   initCpanelCompaniesEntity(sequelize)
   initCustomerDiscountsEntity(sequelize)
   initCustomerDocumentsEntity(sequelize)

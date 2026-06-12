@@ -1,17 +1,17 @@
 import type { EmailSettings } from '../openapi/types/EmailSettings'
 import type { UpdateEmailSettingsRequest } from '../openapi/types/UpdateEmailSettingsRequest'
-import type { RequestHeaders } from '../openapi/types/RequestHeaders'
+import { FastifyInstance, FastifyRequest } from 'fastify'
 import type { EmailSettingsController } from '../openapi/controller/EmailSettingsController'
 
 export class EmailSettingsService implements EmailSettingsController {
-  public async getEmailSettings(headers?: RequestHeaders): Promise<EmailSettings> {
-    void headers
+  public async getEmailSettings(app: FastifyInstance,request?: FastifyRequest): Promise<EmailSettings> {
+    void request
     throw new Error('Not implemented')
   }
 
-  public async updateEmailSettings(input: UpdateEmailSettingsRequest, headers?: RequestHeaders): Promise<EmailSettings> {
+  public async updateEmailSettings(app: FastifyInstance, input: UpdateEmailSettingsRequest, request?: FastifyRequest): Promise<EmailSettings> {
     void input
-    void headers
+    void request
     throw new Error('Not implemented')
   }
 }

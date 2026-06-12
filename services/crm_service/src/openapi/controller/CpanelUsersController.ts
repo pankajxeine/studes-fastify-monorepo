@@ -1,7 +1,7 @@
 import type { CpanelUser } from '../types/CpanelUser'
 import type { CreateCpanelUserRequest } from '../types/CreateCpanelUserRequest'
-import type { RequestHeaders } from '../types/RequestHeaders'
+import { FastifyInstance, FastifyRequest} from 'fastify'
 
 export interface CpanelUsersController {
-  createSalesCpanelUser(input: CreateCpanelUserRequest, headers?: RequestHeaders): Promise<CpanelUser>
+  createSalesCpanelUser(app: FastifyInstance, input: CreateCpanelUserRequest, request?: FastifyRequest): Promise<CpanelUser>
 }

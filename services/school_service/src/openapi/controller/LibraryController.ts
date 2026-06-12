@@ -4,11 +4,11 @@ import type { LibraryBookList } from '../types/LibraryBookList'
 import type { LibraryLoanCreateRequest } from '../types/LibraryLoanCreateRequest'
 import type { LibraryLoan } from '../types/LibraryLoan'
 import type { LibraryReturnRequest } from '../types/LibraryReturnRequest'
-import type { RequestHeaders } from '../types/RequestHeaders'
+import { FastifyInstance, FastifyRequest} from 'fastify'
 
 export interface LibraryController {
-  listLibraryBooks(headers?: RequestHeaders): Promise<LibraryBookList>
-  createLibraryBook(input: LibraryBookCreateRequest, headers?: RequestHeaders): Promise<LibraryBook>
-  createLibraryLoan(input: LibraryLoanCreateRequest, headers?: RequestHeaders): Promise<LibraryLoan>
-  returnLibraryBook(input: LibraryReturnRequest, headers?: RequestHeaders): Promise<LibraryLoan>
+  listLibraryBooks(app: FastifyInstance, request?: FastifyRequest): Promise<LibraryBookList>
+  createLibraryBook(app: FastifyInstance, input: LibraryBookCreateRequest, request?: FastifyRequest): Promise<LibraryBook>
+  createLibraryLoan(app: FastifyInstance, input: LibraryLoanCreateRequest, request?: FastifyRequest): Promise<LibraryLoan>
+  returnLibraryBook(app: FastifyInstance, input: LibraryReturnRequest, request?: FastifyRequest): Promise<LibraryLoan>
 }

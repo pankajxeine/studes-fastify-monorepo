@@ -2,12 +2,12 @@ import type { Customer } from '../types/Customer'
 import type { CreateCustomerRequest } from '../types/CreateCustomerRequest'
 import type { UpdateCustomerRequest } from '../types/UpdateCustomerRequest'
 import type { CustomerListResponse } from '../types/CustomerListResponse'
-import type { RequestHeaders } from '../types/RequestHeaders'
+import { FastifyInstance, FastifyRequest} from 'fastify'
 
 export interface CustomersController {
-  listCustomers(headers?: RequestHeaders): Promise<CustomerListResponse>
-  createCustomer(input: CreateCustomerRequest, headers?: RequestHeaders): Promise<Customer>
-  getCustomer(headers?: RequestHeaders): Promise<Customer>
-  updateCustomer(input: UpdateCustomerRequest, headers?: RequestHeaders): Promise<Customer>
-  deleteCustomer(headers?: RequestHeaders): Promise<void>
+  listCustomers(app: FastifyInstance, request?: FastifyRequest): Promise<CustomerListResponse>
+  createCustomer(app: FastifyInstance, input: CreateCustomerRequest, request?: FastifyRequest): Promise<Customer>
+  getCustomer(app: FastifyInstance, request?: FastifyRequest): Promise<Customer>
+  updateCustomer(app: FastifyInstance, input: UpdateCustomerRequest, request?: FastifyRequest): Promise<Customer>
+  deleteCustomer(app: FastifyInstance, request?: FastifyRequest): Promise<void>
 }

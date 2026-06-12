@@ -6,35 +6,35 @@ import type { Offering } from '../openapi/types/Offering'
 import type { OfferingList } from '../openapi/types/OfferingList'
 import type { EnrollmentCreateRequest } from '../openapi/types/EnrollmentCreateRequest'
 import type { Enrollment } from '../openapi/types/Enrollment'
-import type { RequestHeaders } from '../openapi/types/RequestHeaders'
+import { FastifyInstance, FastifyRequest } from 'fastify'
 import type { AcademicsController } from '../openapi/controller/AcademicsController'
 
 export class AcademicsService implements AcademicsController {
-  public async listCourses(headers?: RequestHeaders): Promise<CourseList> {
-    void headers
+  public async listCourses(app: FastifyInstance,request?: FastifyRequest): Promise<CourseList> {
+    void request
     throw new Error('Not implemented')
   }
 
-  public async createCourse(input: CourseCreateRequest, headers?: RequestHeaders): Promise<Course> {
+  public async createCourse(app: FastifyInstance, input: CourseCreateRequest, request?: FastifyRequest): Promise<Course> {
     void input
-    void headers
+    void request
     throw new Error('Not implemented')
   }
 
-  public async listOfferings(headers?: RequestHeaders): Promise<OfferingList> {
-    void headers
+  public async listOfferings(app: FastifyInstance,request?: FastifyRequest): Promise<OfferingList> {
+    void request
     throw new Error('Not implemented')
   }
 
-  public async createOffering(input: OfferingCreateRequest, headers?: RequestHeaders): Promise<Offering> {
+  public async createOffering(app: FastifyInstance, input: OfferingCreateRequest, request?: FastifyRequest): Promise<Offering> {
     void input
-    void headers
+    void request
     throw new Error('Not implemented')
   }
 
-  public async createEnrollment(input: EnrollmentCreateRequest, headers?: RequestHeaders): Promise<Enrollment> {
+  public async createEnrollment(app: FastifyInstance, input: EnrollmentCreateRequest, request?: FastifyRequest): Promise<Enrollment> {
     void input
-    void headers
+    void request
     throw new Error('Not implemented')
   }
 }

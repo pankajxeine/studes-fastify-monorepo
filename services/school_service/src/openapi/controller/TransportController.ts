@@ -5,11 +5,11 @@ import type { TransportVehicleCreateRequest } from '../types/TransportVehicleCre
 import type { TransportVehicle } from '../types/TransportVehicle'
 import type { TransportAssignmentCreateRequest } from '../types/TransportAssignmentCreateRequest'
 import type { TransportAssignment } from '../types/TransportAssignment'
-import type { RequestHeaders } from '../types/RequestHeaders'
+import { FastifyInstance, FastifyRequest} from 'fastify'
 
 export interface TransportController {
-  listTransportRoutes(headers?: RequestHeaders): Promise<TransportRouteList>
-  createTransportRoute(input: TransportRouteCreateRequest, headers?: RequestHeaders): Promise<TransportRoute>
-  createTransportVehicle(input: TransportVehicleCreateRequest, headers?: RequestHeaders): Promise<TransportVehicle>
-  assignTransport(input: TransportAssignmentCreateRequest, headers?: RequestHeaders): Promise<TransportAssignment>
+  listTransportRoutes(app: FastifyInstance, request?: FastifyRequest): Promise<TransportRouteList>
+  createTransportRoute(app: FastifyInstance, input: TransportRouteCreateRequest, request?: FastifyRequest): Promise<TransportRoute>
+  createTransportVehicle(app: FastifyInstance, input: TransportVehicleCreateRequest, request?: FastifyRequest): Promise<TransportVehicle>
+  assignTransport(app: FastifyInstance, input: TransportAssignmentCreateRequest, request?: FastifyRequest): Promise<TransportAssignment>
 }

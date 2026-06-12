@@ -3,11 +3,11 @@ import type { HealthDbResponse } from '../types/HealthDbResponse'
 import type { NotificationCreateRequest } from '../types/NotificationCreateRequest'
 import type { Notification } from '../types/Notification'
 import type { NotificationList } from '../types/NotificationList'
-import type { RequestHeaders } from '../types/RequestHeaders'
+import { FastifyInstance, FastifyRequest} from 'fastify'
 
 export interface NotificationServiceController {
-  notificationHealth(headers?: RequestHeaders): Promise<HealthResponse>
-  notificationHealthDb(headers?: RequestHeaders): Promise<HealthDbResponse>
-  listNotifications(headers?: RequestHeaders): Promise<NotificationList>
-  createNotification(input: NotificationCreateRequest, headers?: RequestHeaders): Promise<Notification>
+  notificationHealth(app: FastifyInstance, request?: FastifyRequest): Promise<HealthResponse>
+  notificationHealthDb(app: FastifyInstance, request?: FastifyRequest): Promise<HealthDbResponse>
+  listNotifications(app: FastifyInstance, request?: FastifyRequest): Promise<NotificationList>
+  createNotification(app: FastifyInstance, input: NotificationCreateRequest, request?: FastifyRequest): Promise<Notification>
 }

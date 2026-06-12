@@ -6,12 +6,12 @@ import type { Offering } from '../types/Offering'
 import type { OfferingList } from '../types/OfferingList'
 import type { EnrollmentCreateRequest } from '../types/EnrollmentCreateRequest'
 import type { Enrollment } from '../types/Enrollment'
-import type { RequestHeaders } from '../types/RequestHeaders'
+import { FastifyInstance, FastifyRequest} from 'fastify'
 
 export interface AcademicsController {
-  listCourses(headers?: RequestHeaders): Promise<CourseList>
-  createCourse(input: CourseCreateRequest, headers?: RequestHeaders): Promise<Course>
-  listOfferings(headers?: RequestHeaders): Promise<OfferingList>
-  createOffering(input: OfferingCreateRequest, headers?: RequestHeaders): Promise<Offering>
-  createEnrollment(input: EnrollmentCreateRequest, headers?: RequestHeaders): Promise<Enrollment>
+  listCourses(app: FastifyInstance, request?: FastifyRequest): Promise<CourseList>
+  createCourse(app: FastifyInstance, input: CourseCreateRequest, request?: FastifyRequest): Promise<Course>
+  listOfferings(app: FastifyInstance, request?: FastifyRequest): Promise<OfferingList>
+  createOffering(app: FastifyInstance, input: OfferingCreateRequest, request?: FastifyRequest): Promise<Offering>
+  createEnrollment(app: FastifyInstance, input: EnrollmentCreateRequest, request?: FastifyRequest): Promise<Enrollment>
 }

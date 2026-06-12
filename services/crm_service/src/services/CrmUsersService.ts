@@ -3,34 +3,34 @@ import type { CreateCrmUserRequest } from '../openapi/types/CreateCrmUserRequest
 import type { UpdateCrmUserRequest } from '../openapi/types/UpdateCrmUserRequest'
 import type { CrmUserListResponse } from '../openapi/types/CrmUserListResponse'
 import type { ErrorResponse } from '../openapi/types/ErrorResponse'
-import type { RequestHeaders } from '../openapi/types/RequestHeaders'
+import { FastifyInstance, FastifyRequest } from 'fastify'
 import type { CrmUsersController } from '../openapi/controller/CrmUsersController'
 
 export class CrmUsersService implements CrmUsersController {
-  public async listCrmUsers(headers?: RequestHeaders): Promise<CrmUserListResponse> {
-    void headers
+  public async listCrmUsers(app: FastifyInstance,request?: FastifyRequest): Promise<CrmUserListResponse> {
+    void request
     throw new Error('Not implemented')
   }
 
-  public async createCrmUser(input: CreateCrmUserRequest, headers?: RequestHeaders): Promise<CrmUser> {
+  public async createCrmUser(app: FastifyInstance, input: CreateCrmUserRequest, request?: FastifyRequest): Promise<CrmUser> {
     void input
-    void headers
+    void request
     throw new Error('Not implemented')
   }
 
-  public async getCrmUser(headers?: RequestHeaders): Promise<CrmUser> {
-    void headers
+  public async getCrmUser(app: FastifyInstance,request?: FastifyRequest): Promise<CrmUser> {
+    void request
     throw new Error('Not implemented')
   }
 
-  public async updateCrmUser(input: UpdateCrmUserRequest, headers?: RequestHeaders): Promise<CrmUser> {
+  public async updateCrmUser(app: FastifyInstance, input: UpdateCrmUserRequest, request?: FastifyRequest): Promise<CrmUser> {
     void input
-    void headers
+    void request
     throw new Error('Not implemented')
   }
 
-  public async deleteCrmUser(headers?: RequestHeaders): Promise<void> {
-    void headers
+  public async deleteCrmUser(app: FastifyInstance,request?: FastifyRequest): Promise<void> {
+    void request
     throw new Error('Not implemented')
   }
 }

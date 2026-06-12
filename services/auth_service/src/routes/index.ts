@@ -1,6 +1,6 @@
 import { FastifyInstance } from "fastify";
 import AuthRoutes from "./auth.router";
-import CpanelRoutes from "./cpanel.router";
+import CpanelRoutes from "./cpanel-route.router";
 import Cpanels from "./cpanel.router";
 import HealthRoutes from "./health.router";
 

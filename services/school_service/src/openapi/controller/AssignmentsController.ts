@@ -3,10 +3,10 @@ import type { Assignment } from '../types/Assignment'
 import type { AssignmentList } from '../types/AssignmentList'
 import type { AssignmentSubmissionCreateRequest } from '../types/AssignmentSubmissionCreateRequest'
 import type { AssignmentSubmission } from '../types/AssignmentSubmission'
-import type { RequestHeaders } from '../types/RequestHeaders'
+import { FastifyInstance, FastifyRequest} from 'fastify'
 
 export interface AssignmentsController {
-  listAssignments(headers?: RequestHeaders): Promise<AssignmentList>
-  createAssignment(input: AssignmentCreateRequest, headers?: RequestHeaders): Promise<Assignment>
-  submitAssignment(input: AssignmentSubmissionCreateRequest, headers?: RequestHeaders): Promise<AssignmentSubmission>
+  listAssignments(app: FastifyInstance, request?: FastifyRequest): Promise<AssignmentList>
+  createAssignment(app: FastifyInstance, input: AssignmentCreateRequest, request?: FastifyRequest): Promise<Assignment>
+  submitAssignment(app: FastifyInstance, input: AssignmentSubmissionCreateRequest, request?: FastifyRequest): Promise<AssignmentSubmission>
 }

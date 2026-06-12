@@ -17,8 +17,7 @@ export type CustomerDocumentsCreationAttributes = Optional<CustomerDocumentsAttr
 
 export class CustomerDocumentsEntity
   extends Model<CustomerDocumentsAttributes, CustomerDocumentsCreationAttributes>
-  implements CustomerDocumentsAttributes
-{
+  implements CustomerDocumentsAttributes {
   declare id: number
   declare customer_id: number | null
   declare document_name: string | null
@@ -39,6 +38,7 @@ export function initCustomerDocumentsEntity(sequelize: Sequelize): typeof Custom
         field: 'id',
         allowNull: false,
         autoIncrement: true,
+        primaryKey: true,
       },
       customer_id: {
         type: DataTypes.INTEGER,

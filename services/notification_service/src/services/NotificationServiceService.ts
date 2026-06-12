@@ -3,28 +3,28 @@ import type { HealthDbResponse } from '../openapi/types/HealthDbResponse'
 import type { NotificationCreateRequest } from '../openapi/types/NotificationCreateRequest'
 import type { Notification } from '../openapi/types/Notification'
 import type { NotificationList } from '../openapi/types/NotificationList'
-import type { RequestHeaders } from '../openapi/types/RequestHeaders'
+import { FastifyInstance, FastifyRequest } from 'fastify'
 import type { NotificationServiceController } from '../openapi/controller/NotificationServiceController'
 
 export class NotificationServiceService implements NotificationServiceController {
-  public async notificationHealth(headers?: RequestHeaders): Promise<HealthResponse> {
-    void headers
+  public async notificationHealth(app: FastifyInstance,request?: FastifyRequest): Promise<HealthResponse> {
+    void request
     throw new Error('Not implemented')
   }
 
-  public async notificationHealthDb(headers?: RequestHeaders): Promise<HealthDbResponse> {
-    void headers
+  public async notificationHealthDb(app: FastifyInstance,request?: FastifyRequest): Promise<HealthDbResponse> {
+    void request
     throw new Error('Not implemented')
   }
 
-  public async listNotifications(headers?: RequestHeaders): Promise<NotificationList> {
-    void headers
+  public async listNotifications(app: FastifyInstance,request?: FastifyRequest): Promise<NotificationList> {
+    void request
     throw new Error('Not implemented')
   }
 
-  public async createNotification(input: NotificationCreateRequest, headers?: RequestHeaders): Promise<Notification> {
+  public async createNotification(app: FastifyInstance, input: NotificationCreateRequest, request?: FastifyRequest): Promise<Notification> {
     void input
-    void headers
+    void request
     throw new Error('Not implemented')
   }
 }

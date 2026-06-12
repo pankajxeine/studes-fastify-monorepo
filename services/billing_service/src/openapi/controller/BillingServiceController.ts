@@ -1,4 +1,4 @@
-import type { RequestHeaders } from '../types/RequestHeaders'
+import { FastifyInstance, FastifyRequest} from 'fastify'
 
 export interface BillingServiceController {
 

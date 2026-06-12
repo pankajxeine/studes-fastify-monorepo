@@ -2,34 +2,34 @@ import type { Customer } from '../openapi/types/Customer'
 import type { CreateCustomerRequest } from '../openapi/types/CreateCustomerRequest'
 import type { UpdateCustomerRequest } from '../openapi/types/UpdateCustomerRequest'
 import type { CustomerListResponse } from '../openapi/types/CustomerListResponse'
-import type { RequestHeaders } from '../openapi/types/RequestHeaders'
+import { FastifyInstance, FastifyRequest } from 'fastify'
 import type { CustomersController } from '../openapi/controller/CustomersController'
 
 export class CustomersService implements CustomersController {
-  public async listCustomers(headers?: RequestHeaders): Promise<CustomerListResponse> {
-    void headers
+  public async listCustomers(app: FastifyInstance,request?: FastifyRequest): Promise<CustomerListResponse> {
+    void request
     throw new Error('Not implemented')
   }
 
-  public async createCustomer(input: CreateCustomerRequest, headers?: RequestHeaders): Promise<Customer> {
+  public async createCustomer(app: FastifyInstance, input: CreateCustomerRequest, request?: FastifyRequest): Promise<Customer> {
     void input
-    void headers
+    void request
     throw new Error('Not implemented')
   }
 
-  public async getCustomer(headers?: RequestHeaders): Promise<Customer> {
-    void headers
+  public async getCustomer(app: FastifyInstance,request?: FastifyRequest): Promise<Customer> {
+    void request
     throw new Error('Not implemented')
   }
 
-  public async updateCustomer(input: UpdateCustomerRequest, headers?: RequestHeaders): Promise<Customer> {
+  public async updateCustomer(app: FastifyInstance, input: UpdateCustomerRequest, request?: FastifyRequest): Promise<Customer> {
     void input
-    void headers
+    void request
     throw new Error('Not implemented')
   }
 
-  public async deleteCustomer(headers?: RequestHeaders): Promise<void> {
-    void headers
+  public async deleteCustomer(app: FastifyInstance,request?: FastifyRequest): Promise<void> {
+    void request
     throw new Error('Not implemented')
   }
 }

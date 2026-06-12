@@ -1,30 +1,22 @@
 import type { FastifyPluginAsync } from 'fastify'
 import { PackagesService } from '../services/PackagesService'
 
-function buildHeaders(request: any) {
-  return {
-    tenantId: request.headers['x-tenant-id'] as string | undefined,
-    tenantSlug: request.headers['x-tenant-slug'] as string | undefined,
-    authorization: request.headers['authorization'] as string | undefined
-  }
-}
-
 const PackagesRoutes: FastifyPluginAsync = async (app) => {
   const controller = new PackagesService()
   app.get('/packages', async (request, reply) => {
-    return await controller.listPackages(buildHeaders(request))
+    return await controller.listPackages(app, request)
   })
   app.post('/packages', async (request, reply) => {
-    return await controller.createPackage(request.body as any, buildHeaders(request))
+    return await controller.createPackage(app, request.body as any, request)
   })
   app.get('/packages/:packageId', async (request, reply) => {
-    return await controller.getPackage(buildHeaders(request))
+    return await controller.getPackage(app, request)
   })
   app.patch('/packages/:packageId', async (request, reply) => {
-    return await controller.updatePackage(request.body as any, buildHeaders(request))
+    return await controller.updatePackage(app, request.body as any, request)
   })
   app.delete('/packages/:packageId', async (request, reply) => {
-    await controller.deletePackage(buildHeaders(request))
+    await controller.deletePackage(app, request)
   })
 }
 

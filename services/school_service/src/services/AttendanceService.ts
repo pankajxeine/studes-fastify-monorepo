@@ -2,19 +2,19 @@ import type { StudentAttendanceCreateRequest } from '../openapi/types/StudentAtt
 import type { StudentAttendance } from '../openapi/types/StudentAttendance'
 import type { StaffAttendanceCreateRequest } from '../openapi/types/StaffAttendanceCreateRequest'
 import type { StaffAttendance } from '../openapi/types/StaffAttendance'
-import type { RequestHeaders } from '../openapi/types/RequestHeaders'
+import { FastifyInstance, FastifyRequest } from 'fastify'
 import type { AttendanceController } from '../openapi/controller/AttendanceController'
 
 export class AttendanceService implements AttendanceController {
-  public async markStudentAttendance(input: StudentAttendanceCreateRequest, headers?: RequestHeaders): Promise<StudentAttendance> {
+  public async markStudentAttendance(app: FastifyInstance, input: StudentAttendanceCreateRequest, request?: FastifyRequest): Promise<StudentAttendance> {
     void input
-    void headers
+    void request
     throw new Error('Not implemented')
   }
 
-  public async markStaffAttendance(input: StaffAttendanceCreateRequest, headers?: RequestHeaders): Promise<StaffAttendance> {
+  public async markStaffAttendance(app: FastifyInstance, input: StaffAttendanceCreateRequest, request?: FastifyRequest): Promise<StaffAttendance> {
     void input
-    void headers
+    void request
     throw new Error('Not implemented')
   }
 }

@@ -13,19 +13,19 @@ import type { InvoiceList } from '../types/InvoiceList'
 import type { NotificationCreateRequest } from '../types/NotificationCreateRequest'
 import type { Notification } from '../types/Notification'
 import type { NotificationList } from '../types/NotificationList'
-import type { RequestHeaders } from '../types/RequestHeaders'
+import { FastifyInstance, FastifyRequest} from 'fastify'
 
 export interface ApiGatewayController {
-  gatewayHealth(headers?: RequestHeaders): Promise<HealthResponse>
-  gatewayHealthServices(headers?: RequestHeaders): Promise<GatewayServicesHealth>
-  gatewayHealthDb(headers?: RequestHeaders): Promise<GatewayServicesHealth>
-  gatewayMetrics(headers?: RequestHeaders): Promise<string>
-  gatewayAuthRegister(input: RegisterRequest, headers?: RequestHeaders): Promise<AuthUser>
-  gatewayAuthLogin(input: LoginRequest, headers?: RequestHeaders): Promise<LoginResponse>
-  gatewayAuthLogout(headers?: RequestHeaders): Promise<void>
-  gatewayCreateTenant(input: CreateTenantRequest, headers?: RequestHeaders): Promise<Tenant>
-  gatewayListInvoices(headers?: RequestHeaders): Promise<InvoiceList>
-  gatewayCreateInvoice(input: InvoiceCreateRequest, headers?: RequestHeaders): Promise<Invoice>
-  gatewayListNotifications(headers?: RequestHeaders): Promise<NotificationList>
-  gatewayCreateNotification(input: NotificationCreateRequest, headers?: RequestHeaders): Promise<Notification>
+  gatewayHealth(app: FastifyInstance, request?: FastifyRequest): Promise<HealthResponse>
+  gatewayHealthServices(app: FastifyInstance, request?: FastifyRequest): Promise<GatewayServicesHealth>
+  gatewayHealthDb(app: FastifyInstance, request?: FastifyRequest): Promise<GatewayServicesHealth>
+  gatewayMetrics(app: FastifyInstance, request?: FastifyRequest): Promise<string>
+  gatewayAuthRegister(app: FastifyInstance, input: RegisterRequest, request?: FastifyRequest): Promise<AuthUser>
+  gatewayAuthLogin(app: FastifyInstance, input: LoginRequest, request?: FastifyRequest): Promise<LoginResponse>
+  gatewayAuthLogout(app: FastifyInstance, request?: FastifyRequest): Promise<void>
+  gatewayCreateTenant(app: FastifyInstance, input: CreateTenantRequest, request?: FastifyRequest): Promise<Tenant>
+  gatewayListInvoices(app: FastifyInstance, request?: FastifyRequest): Promise<InvoiceList>
+  gatewayCreateInvoice(app: FastifyInstance, input: InvoiceCreateRequest, request?: FastifyRequest): Promise<Invoice>
+  gatewayListNotifications(app: FastifyInstance, request?: FastifyRequest): Promise<NotificationList>
+  gatewayCreateNotification(app: FastifyInstance, input: NotificationCreateRequest, request?: FastifyRequest): Promise<Notification>
 }

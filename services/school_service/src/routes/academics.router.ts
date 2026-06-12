@@ -1,30 +1,22 @@
 import type { FastifyPluginAsync } from 'fastify'
 import { AcademicsService } from '../services/AcademicsService'
 
-function buildHeaders(request: any) {
-  return {
-    tenantId: request.headers['x-tenant-id'] as string | undefined,
-    tenantSlug: request.headers['x-tenant-slug'] as string | undefined,
-    authorization: request.headers['authorization'] as string | undefined
-  }
-}
-
 const AcademicsRoutes: FastifyPluginAsync = async (app) => {
   const controller = new AcademicsService()
   app.get('/courses', async (request, reply) => {
-    return await controller.listCourses(buildHeaders(request))
+    return await controller.listCourses(app, request)
   })
   app.post('/courses', async (request, reply) => {
-    return await controller.createCourse(request.body as any, buildHeaders(request))
+    return await controller.createCourse(app, request.body as any, request)
   })
   app.get('/offerings', async (request, reply) => {
-    return await controller.listOfferings(buildHeaders(request))
+    return await controller.listOfferings(app, request)
   })
   app.post('/offerings', async (request, reply) => {
-    return await controller.createOffering(request.body as any, buildHeaders(request))
+    return await controller.createOffering(app, request.body as any, request)
   })
   app.post('/enrollments', async (request, reply) => {
-    return await controller.createEnrollment(request.body as any, buildHeaders(request))
+    return await controller.createEnrollment(app, request.body as any, request)
   })
 }
 

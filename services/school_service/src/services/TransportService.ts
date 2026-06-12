@@ -5,30 +5,30 @@ import type { TransportVehicleCreateRequest } from '../openapi/types/TransportVe
 import type { TransportVehicle } from '../openapi/types/TransportVehicle'
 import type { TransportAssignmentCreateRequest } from '../openapi/types/TransportAssignmentCreateRequest'
 import type { TransportAssignment } from '../openapi/types/TransportAssignment'
-import type { RequestHeaders } from '../openapi/types/RequestHeaders'
+import { FastifyInstance, FastifyRequest } from 'fastify'
 import type { TransportController } from '../openapi/controller/TransportController'
 
 export class TransportService implements TransportController {
-  public async listTransportRoutes(headers?: RequestHeaders): Promise<TransportRouteList> {
-    void headers
+  public async listTransportRoutes(app: FastifyInstance,request?: FastifyRequest): Promise<TransportRouteList> {
+    void request
     throw new Error('Not implemented')
   }
 
-  public async createTransportRoute(input: TransportRouteCreateRequest, headers?: RequestHeaders): Promise<TransportRoute> {
+  public async createTransportRoute(app: FastifyInstance, input: TransportRouteCreateRequest, request?: FastifyRequest): Promise<TransportRoute> {
     void input
-    void headers
+    void request
     throw new Error('Not implemented')
   }
 
-  public async createTransportVehicle(input: TransportVehicleCreateRequest, headers?: RequestHeaders): Promise<TransportVehicle> {
+  public async createTransportVehicle(app: FastifyInstance, input: TransportVehicleCreateRequest, request?: FastifyRequest): Promise<TransportVehicle> {
     void input
-    void headers
+    void request
     throw new Error('Not implemented')
   }
 
-  public async assignTransport(input: TransportAssignmentCreateRequest, headers?: RequestHeaders): Promise<TransportAssignment> {
+  public async assignTransport(app: FastifyInstance, input: TransportAssignmentCreateRequest, request?: FastifyRequest): Promise<TransportAssignment> {
     void input
-    void headers
+    void request
     throw new Error('Not implemented')
   }
 }

@@ -1,12 +1,12 @@
 import type { CpanelUser } from '../openapi/types/CpanelUser'
 import type { CreateCpanelUserRequest } from '../openapi/types/CreateCpanelUserRequest'
-import type { RequestHeaders } from '../openapi/types/RequestHeaders'
+import { FastifyInstance, FastifyRequest } from 'fastify'
 import type { CpanelUsersController } from '../openapi/controller/CpanelUsersController'
 
 export class CpanelUsersService implements CpanelUsersController {
-  public async createSalesCpanelUser(input: CreateCpanelUserRequest, headers?: RequestHeaders): Promise<CpanelUser> {
+  public async createSalesCpanelUser(app: FastifyInstance, input: CreateCpanelUserRequest, request?: FastifyRequest): Promise<CpanelUser> {
     void input
-    void headers
+    void request
     throw new Error('Not implemented')
   }
 }

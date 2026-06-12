@@ -1,8 +1,8 @@
 import type { HealthResponse } from '../types/HealthResponse'
 import type { HealthDbResponse } from '../types/HealthDbResponse'
-import type { RequestHeaders } from '../types/RequestHeaders'
+import { FastifyInstance, FastifyRequest} from 'fastify'
 
 export interface HealthController {
-  authHealth(headers?: RequestHeaders): Promise<HealthResponse>
-  authHealthDb(headers?: RequestHeaders): Promise<HealthDbResponse>
+  authHealth(app: FastifyInstance, request?: FastifyRequest): Promise<HealthResponse>
+  authHealthDb(app: FastifyInstance, request?: FastifyRequest): Promise<HealthDbResponse>
 }

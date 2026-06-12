@@ -5,11 +5,11 @@ import type { FeeAssignmentCreateRequest } from '../types/FeeAssignmentCreateReq
 import type { FeeAssignment } from '../types/FeeAssignment'
 import type { FeePaymentCreateRequest } from '../types/FeePaymentCreateRequest'
 import type { FeePayment } from '../types/FeePayment'
-import type { RequestHeaders } from '../types/RequestHeaders'
+import { FastifyInstance, FastifyRequest} from 'fastify'
 
 export interface FeesController {
-  listFeeStructures(headers?: RequestHeaders): Promise<FeeStructureList>
-  createFeeStructure(input: FeeStructureCreateRequest, headers?: RequestHeaders): Promise<FeeStructure>
-  assignFeeToStudent(input: FeeAssignmentCreateRequest, headers?: RequestHeaders): Promise<FeeAssignment>
-  recordFeePayment(input: FeePaymentCreateRequest, headers?: RequestHeaders): Promise<FeePayment>
+  listFeeStructures(app: FastifyInstance, request?: FastifyRequest): Promise<FeeStructureList>
+  createFeeStructure(app: FastifyInstance, input: FeeStructureCreateRequest, request?: FastifyRequest): Promise<FeeStructure>
+  assignFeeToStudent(app: FastifyInstance, input: FeeAssignmentCreateRequest, request?: FastifyRequest): Promise<FeeAssignment>
+  recordFeePayment(app: FastifyInstance, input: FeePaymentCreateRequest, request?: FastifyRequest): Promise<FeePayment>
 }

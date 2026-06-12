@@ -13,72 +13,72 @@ import type { InvoiceList } from '../openapi/types/InvoiceList'
 import type { NotificationCreateRequest } from '../openapi/types/NotificationCreateRequest'
 import type { Notification } from '../openapi/types/Notification'
 import type { NotificationList } from '../openapi/types/NotificationList'
-import type { RequestHeaders } from '../openapi/types/RequestHeaders'
+import { FastifyInstance, FastifyRequest } from 'fastify'
 import type { ApiGatewayController } from '../openapi/controller/ApiGatewayController'
 
 export class ApiGatewayService implements ApiGatewayController {
-  public async gatewayHealth(headers?: RequestHeaders): Promise<HealthResponse> {
-    void headers
+  public async gatewayHealth(app: FastifyInstance,request?: FastifyRequest): Promise<HealthResponse> {
+    void request
     throw new Error('Not implemented')
   }
 
-  public async gatewayHealthServices(headers?: RequestHeaders): Promise<GatewayServicesHealth> {
-    void headers
+  public async gatewayHealthServices(app: FastifyInstance,request?: FastifyRequest): Promise<GatewayServicesHealth> {
+    void request
     throw new Error('Not implemented')
   }
 
-  public async gatewayHealthDb(headers?: RequestHeaders): Promise<GatewayServicesHealth> {
-    void headers
+  public async gatewayHealthDb(app: FastifyInstance,request?: FastifyRequest): Promise<GatewayServicesHealth> {
+    void request
     throw new Error('Not implemented')
   }
 
-  public async gatewayMetrics(headers?: RequestHeaders): Promise<string> {
-    void headers
+  public async gatewayMetrics(app: FastifyInstance,request?: FastifyRequest): Promise<string> {
+    void request
     throw new Error('Not implemented')
   }
 
-  public async gatewayAuthRegister(input: RegisterRequest, headers?: RequestHeaders): Promise<AuthUser> {
+  public async gatewayAuthRegister(app: FastifyInstance, input: RegisterRequest, request?: FastifyRequest): Promise<AuthUser> {
     void input
-    void headers
+    void request
     throw new Error('Not implemented')
   }
 
-  public async gatewayAuthLogin(input: LoginRequest, headers?: RequestHeaders): Promise<LoginResponse> {
+  public async gatewayAuthLogin(app: FastifyInstance, input: LoginRequest, request?: FastifyRequest): Promise<LoginResponse> {
     void input
-    void headers
+    void request
     throw new Error('Not implemented')
   }
 
-  public async gatewayAuthLogout(headers?: RequestHeaders): Promise<void> {
-    void headers
+  public async gatewayAuthLogout(app: FastifyInstance,request?: FastifyRequest): Promise<void> {
+    void request
     throw new Error('Not implemented')
   }
 
-  public async gatewayCreateTenant(input: CreateTenantRequest, headers?: RequestHeaders): Promise<Tenant> {
+  public async gatewayCreateTenant(app: FastifyInstance, input: CreateTenantRequest, request?: FastifyRequest): Promise<Tenant> {
     void input
-    void headers
+    void request
     throw new Error('Not implemented')
   }
 
-  public async gatewayListInvoices(headers?: RequestHeaders): Promise<InvoiceList> {
-    void headers
+  public async gatewayListInvoices(app: FastifyInstance,request?: FastifyRequest): Promise<InvoiceList> {
+    void request
     throw new Error('Not implemented')
   }
 
-  public async gatewayCreateInvoice(input: InvoiceCreateRequest, headers?: RequestHeaders): Promise<Invoice> {
+  public async gatewayCreateInvoice(app: FastifyInstance, input: InvoiceCreateRequest, request?: FastifyRequest): Promise<Invoice> {
     void input
-    void headers
+    void request
     throw new Error('Not implemented')
   }
 
-  public async gatewayListNotifications(headers?: RequestHeaders): Promise<NotificationList> {
-    void headers
+  public async gatewayListNotifications(app: FastifyInstance,request?: FastifyRequest): Promise<NotificationList> {
+    void request
     throw new Error('Not implemented')
   }
 
-  public async gatewayCreateNotification(input: NotificationCreateRequest, headers?: RequestHeaders): Promise<Notification> {
+  public async gatewayCreateNotification(app: FastifyInstance, input: NotificationCreateRequest, request?: FastifyRequest): Promise<Notification> {
     void input
-    void headers
+    void request
     throw new Error('Not implemented')
   }
 }

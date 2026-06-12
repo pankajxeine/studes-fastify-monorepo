@@ -5,6 +5,7 @@ import type { Pool, PoolConnection } from 'mysql2/promise'
 import type { FastifyBaseLogger, FastifyTypeProvider, FastifyTypeProviderDefault, RawReplyDefaultExpression, RawRequestDefaultExpression, RawServerBase, RawServerDefault } from 'fastify'
 import { Sequelize } from 'sequelize'
 
+import { initGeneratedEntities } from '../entities'
 import config from '../config/db.config'
 const fs = require("fs");
 const path = require("path");
@@ -42,12 +43,16 @@ export default fp(async (app) => {
     host: ds.host,
     dialect: 'mysql',
     logging: false,
-  });
+  })
+  initGeneratedEntities(sequelize)
   app.decorate('sequelize', sequelize)
   app.decorate('mysql', pool)
   app.decorate('mysqlDatabase', database)
-  app.decorate('useTenantDatabase', async (connection: PoolConnection, database: string) => {
-    await connection.query(`use ${escapeId(database)}`)
+  app.decorate('useTenantDatabase', async (database: string) => {
+    await sequelize.query(`use ${escapeId(database)}`)
+  })
+  app.decorate('useCpanelDatabase', async (database: string) => {
+    await sequelize.query(`use ${escapeId(database)}`)
   })
 
   app.addHook('onClose', async () => {
@@ -66,6 +71,7 @@ declare module 'fastify' {
     sequelize: Sequelize
     mysql: Pool
     mysqlDatabase: string
-    useTenantDatabase: (connection: PoolConnection, database: string) => Promise<void>
+    useTenantDatabase: (database: string) => Promise<void>
+    useCpanelDatabase: (database: string) => Promise<void>
   }
 }

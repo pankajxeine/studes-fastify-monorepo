@@ -25,7 +25,7 @@ export default fp(async (app) => {
     if (request.routeOptions.url === '/health' ||
       request.routeOptions.url === '/auth' ||
       request.routeOptions.url === '/docs' ||
-      request.routeOptions.url === '/cpanel-routes') {
+      request.routeOptions.url === '/cpanelroutes') {
       return; // do nothing, skip DB logic
     }
 

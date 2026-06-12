@@ -5,30 +5,30 @@ import type { FeeAssignmentCreateRequest } from '../openapi/types/FeeAssignmentC
 import type { FeeAssignment } from '../openapi/types/FeeAssignment'
 import type { FeePaymentCreateRequest } from '../openapi/types/FeePaymentCreateRequest'
 import type { FeePayment } from '../openapi/types/FeePayment'
-import type { RequestHeaders } from '../openapi/types/RequestHeaders'
+import { FastifyInstance, FastifyRequest } from 'fastify'
 import type { FeesController } from '../openapi/controller/FeesController'
 
 export class FeesService implements FeesController {
-  public async listFeeStructures(headers?: RequestHeaders): Promise<FeeStructureList> {
-    void headers
+  public async listFeeStructures(app: FastifyInstance,request?: FastifyRequest): Promise<FeeStructureList> {
+    void request
     throw new Error('Not implemented')
   }
 
-  public async createFeeStructure(input: FeeStructureCreateRequest, headers?: RequestHeaders): Promise<FeeStructure> {
+  public async createFeeStructure(app: FastifyInstance, input: FeeStructureCreateRequest, request?: FastifyRequest): Promise<FeeStructure> {
     void input
-    void headers
+    void request
     throw new Error('Not implemented')
   }
 
-  public async assignFeeToStudent(input: FeeAssignmentCreateRequest, headers?: RequestHeaders): Promise<FeeAssignment> {
+  public async assignFeeToStudent(app: FastifyInstance, input: FeeAssignmentCreateRequest, request?: FastifyRequest): Promise<FeeAssignment> {
     void input
-    void headers
+    void request
     throw new Error('Not implemented')
   }
 
-  public async recordFeePayment(input: FeePaymentCreateRequest, headers?: RequestHeaders): Promise<FeePayment> {
+  public async recordFeePayment(app: FastifyInstance, input: FeePaymentCreateRequest, request?: FastifyRequest): Promise<FeePayment> {
     void input
-    void headers
+    void request
     throw new Error('Not implemented')
   }
 }

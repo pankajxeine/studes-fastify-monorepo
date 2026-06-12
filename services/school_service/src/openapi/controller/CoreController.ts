@@ -11,15 +11,15 @@ import type { ParentList } from '../types/ParentList'
 import type { StaffCreateRequest } from '../types/StaffCreateRequest'
 import type { Staff } from '../types/Staff'
 import type { StaffList } from '../types/StaffList'
-import type { RequestHeaders } from '../types/RequestHeaders'
+import { FastifyInstance, FastifyRequest} from 'fastify'
 
 export interface CoreController {
-  listStudents(headers?: RequestHeaders): Promise<StudentList>
-  createStudent(input: StudentCreateRequest, headers?: RequestHeaders): Promise<Student>
-  listTeachers(headers?: RequestHeaders): Promise<TeacherList>
-  createTeacher(input: TeacherCreateRequest, headers?: RequestHeaders): Promise<Teacher>
-  listParents(headers?: RequestHeaders): Promise<ParentList>
-  createParent(input: ParentCreateRequest, headers?: RequestHeaders): Promise<Parent>
-  listStaff(headers?: RequestHeaders): Promise<StaffList>
-  createStaff(input: StaffCreateRequest, headers?: RequestHeaders): Promise<Staff>
+  listStudents(app: FastifyInstance, request?: FastifyRequest): Promise<StudentList>
+  createStudent(app: FastifyInstance, input: StudentCreateRequest, request?: FastifyRequest): Promise<Student>
+  listTeachers(app: FastifyInstance, request?: FastifyRequest): Promise<TeacherList>
+  createTeacher(app: FastifyInstance, input: TeacherCreateRequest, request?: FastifyRequest): Promise<Teacher>
+  listParents(app: FastifyInstance, request?: FastifyRequest): Promise<ParentList>
+  createParent(app: FastifyInstance, input: ParentCreateRequest, request?: FastifyRequest): Promise<Parent>
+  listStaff(app: FastifyInstance, request?: FastifyRequest): Promise<StaffList>
+  createStaff(app: FastifyInstance, input: StaffCreateRequest, request?: FastifyRequest): Promise<Staff>
 }

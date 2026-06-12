@@ -1,6 +1,6 @@
 import type { GetCpanelRouteDomainResponse } from '../types/GetCpanelRouteDomainResponse'
-import type { RequestHeaders } from '../types/RequestHeaders'
+import { FastifyInstance, FastifyRequest} from 'fastify'
 
 export interface CpanelRouteController {
-  cpanelRouteDomain(headers?: RequestHeaders): Promise<GetCpanelRouteDomainResponse>
+  cpanelRouteDomain(app: FastifyInstance, request?: FastifyRequest): Promise<GetCpanelRouteDomainResponse>
 }

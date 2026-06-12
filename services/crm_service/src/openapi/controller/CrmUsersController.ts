@@ -3,12 +3,12 @@ import type { CreateCrmUserRequest } from '../types/CreateCrmUserRequest'
 import type { UpdateCrmUserRequest } from '../types/UpdateCrmUserRequest'
 import type { CrmUserListResponse } from '../types/CrmUserListResponse'
 import type { ErrorResponse } from '../types/ErrorResponse'
-import type { RequestHeaders } from '../types/RequestHeaders'
+import { FastifyInstance, FastifyRequest} from 'fastify'
 
 export interface CrmUsersController {
-  listCrmUsers(headers?: RequestHeaders): Promise<CrmUserListResponse>
-  createCrmUser(input: CreateCrmUserRequest, headers?: RequestHeaders): Promise<CrmUser>
-  getCrmUser(headers?: RequestHeaders): Promise<CrmUser>
-  updateCrmUser(input: UpdateCrmUserRequest, headers?: RequestHeaders): Promise<CrmUser>
-  deleteCrmUser(headers?: RequestHeaders): Promise<void>
+  listCrmUsers(app: FastifyInstance, request?: FastifyRequest): Promise<CrmUserListResponse>
+  createCrmUser(app: FastifyInstance, input: CreateCrmUserRequest, request?: FastifyRequest): Promise<CrmUser>
+  getCrmUser(app: FastifyInstance, request?: FastifyRequest): Promise<CrmUser>
+  updateCrmUser(app: FastifyInstance, input: UpdateCrmUserRequest, request?: FastifyRequest): Promise<CrmUser>
+  deleteCrmUser(app: FastifyInstance, request?: FastifyRequest): Promise<void>
 }

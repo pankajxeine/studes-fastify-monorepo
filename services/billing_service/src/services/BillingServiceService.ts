@@ -1,4 +1,4 @@
-import type { RequestHeaders } from '../openapi/types/RequestHeaders'
+import { FastifyInstance, FastifyRequest } from 'fastify'
 import type { BillingServiceController } from '../openapi/controller/BillingServiceController'
 
 export class BillingServiceService implements BillingServiceController {

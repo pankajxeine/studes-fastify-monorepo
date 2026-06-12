@@ -1,8 +1,8 @@
 import type { GlobalSettings } from '../types/GlobalSettings'
 import type { UpdateGlobalSettingsRequest } from '../types/UpdateGlobalSettingsRequest'
-import type { RequestHeaders } from '../types/RequestHeaders'
+import { FastifyInstance, FastifyRequest} from 'fastify'
 
 export interface SettingsController {
-  getGlobalSettings(headers?: RequestHeaders): Promise<GlobalSettings>
-  updateGlobalSettings(input: UpdateGlobalSettingsRequest, headers?: RequestHeaders): Promise<GlobalSettings>
+  getGlobalSettings(app: FastifyInstance, request?: FastifyRequest): Promise<GlobalSettings>
+  updateGlobalSettings(app: FastifyInstance, input: UpdateGlobalSettingsRequest, request?: FastifyRequest): Promise<GlobalSettings>
 }
