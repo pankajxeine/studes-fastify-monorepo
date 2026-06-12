@@ -12,6 +12,8 @@
 /build
 
 # misc
+*.sql
+*.pem
 .env
 .DS_Store
 .env.local
