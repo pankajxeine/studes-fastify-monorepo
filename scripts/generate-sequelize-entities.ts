@@ -44,11 +44,11 @@ function parseArgs(argv: string[]): Options {
 
   for (let i = 0; i < argv.length; i += 1) {
     const arg = argv[i]
-    if (arg === 'sql') options.sqlFile = argv[++i]
-    else if (arg === 'out') options.outDir = argv[++i]
-    else if (arg === 'schema') options.schemaName = argv[++i]
-    else if (arg === 'dry-run') options.dryRun = true
-    else if (arg === 'help' || arg === '-h') usage()
+    if (arg === '--sql') options.sqlFile = argv[++i]
+    else if (arg === '--out') options.outDir = argv[++i]
+    else if (arg === '--schema') options.schemaName = argv[++i]
+    else if (arg === '--dry-run') options.dryRun = true
+    else if (arg === '--help' || arg === '-h') usage()
     else {
       console.error(`Unknown option: ${arg}`)
       usage()
@@ -292,106 +292,218 @@ function tsTypeFor(sqlType: string): string {
   return 'string'
 }
 
+// function defaultValueFor(raw?: string): string | undefined {
+//   if (!raw) return undefined
+//   const value = raw.trim()
+//   const lower = value.toLowerCase()
+
+//   if (lower === 'null') return 'null'
+//   if (lower === 'current_timestamp' || lower === 'current_timestamp()' || lower === 'now()') return 'DataTypes.NOW'
+//   if (/^'.*'$/.test(value)) return JSON.stringify(value.slice(1, -1).replace(/\\'/g, "'"))
+//   if (/^-?\d+(?:\.\d+)?$/.test(value)) return value
+
+//   return undefined
+// }
+
 function defaultValueFor(raw?: string): string | undefined {
   if (!raw) return undefined
   const value = raw.trim()
   const lower = value.toLowerCase()
 
+  // NULL
   if (lower === 'null') return 'null'
-  if (lower === 'current_timestamp' || lower === 'current_timestamp()' || lower === 'now()') return 'DataTypes.NOW'
-  if (/^'.*'$/.test(value)) return JSON.stringify(value.slice(1, -1).replace(/\\'/g, "'"))
+
+  // CURRENT_TIMESTAMP / NOW()
+  if (
+    lower === 'current_timestamp' ||
+    lower === 'current_timestamp()' ||
+    lower === 'now()'
+  ) {
+    return 'DataTypes.NOW'
+  }
+
+  // Boolean defaults
+  if (lower === 'true') return 'true'
+  if (lower === 'false') return 'false'
+
+  // Numeric defaults
   if (/^-?\d+(?:\.\d+)?$/.test(value)) return value
 
-  return undefined
+  // String defaults (quoted)
+  if (/^'.*'$/.test(value)) {
+    // strip quotes and unescape
+    const inner = value.slice(1, -1).replace(/\\'/g, "'")
+    return JSON.stringify(inner)
+  }
+
+  // Function defaults like UUID()
+  if (/^uuid\(\)/i.test(value)) return 'Sequelize.fn("UUID")'
+
+  // Expressions (fallback)
+  return JSON.stringify(value)
 }
 
-function renderEntity(table: Table, schemaName?: string): string {
-  const className = `${toPascalCase(table.name)}Entity`
-  const attributesName = `${toPascalCase(table.name)}Attributes`
-  const creationName = `${toPascalCase(table.name)}CreationAttributes`
-  const initName = `init${toPascalCase(table.name)}Entity`
+// function renderEntity(table: Table, schemaName?: string): string {
+//   const className = `${toPascalCase(table.name)}Entity`
+//   const attributesName = `${toPascalCase(table.name)}Attributes`
+//   const creationName = `${toPascalCase(table.name)}CreationAttributes`
+//   const initName = `init${toPascalCase(table.name)}Entity`
 
-  const attributes = table.columns
-    .map((column) => {
-      const optional = column.allowNull || column.defaultValue || column.autoIncrement ? '?' : ''
-      const nullable = column.allowNull ? ' | null' : ''
-      return `  ${quoteObjectKey(toCamelCase(column.name))}${optional}: ${tsTypeFor(column.sqlType)}${nullable}`
-    })
-    .join('\n')
+//   const attributes = table.columns
+//     .map((column) => {
+//       const optional = column.allowNull || column.defaultValue || column.autoIncrement ? '?' : ''
+//       const nullable = column.allowNull ? ' | null' : ''
+//       return `  ${quoteObjectKey(toCamelCase(column.name))}${optional}: ${tsTypeFor(column.sqlType)}${nullable}`
+//     })
+//     .join('\n')
+
+//   const creationOptional = table.columns
+//     .filter((column) => column.allowNull || column.defaultValue || column.autoIncrement)
+//     .map((column) => JSON.stringify(toCamelCase(column.name)))
+//     .join(' | ')
+
+//   const fields = table.columns
+//     .map((column) => {
+//       const lines = [
+//         `    ${quoteObjectKey(toCamelCase(column.name))}: {
+//               type: ${dataTypeFor(column.sqlType)}`,
+//         `      field: ${JSON.stringify(column.name)}`,
+//         `      allowNull: ${column.allowNull}`
+//       ]
+
+//       if (column.primaryKey) lines.push('      primaryKey: true')
+//       if (column.autoIncrement) lines.push('      autoIncrement: true')
+//       if (column.unique) lines.push('      unique: true')
+
+//       const defaultValue = defaultValueFor(column.defaultValue)
+//       if (defaultValue !== undefined) lines.push(`      defaultValue: ${defaultValue}`)
+//       if (column.comment) lines.push(`      comment: ${JSON.stringify(column.comment)}`)
+
+//       return `${lines.join(',\n')}\n    }`
+//     })
+//     .join(',\n')
+
+//   const options = [
+//     `    tableName: ${JSON.stringify(table.name)}`,
+//     '    timestamps: false',
+//     '    underscored: true',
+//     '    freezeTableName: true'
+//   ]
+
+//   if (schemaName) options.push(`    schema: ${JSON.stringify(schemaName)}`)
+//   if (table.comment) options.push(`    comment: ${JSON.stringify(table.comment)}`)
+
+//   const optionalType = creationOptional || 'never'
+
+//   return `import { DataTypes, Model, Sequelize, type Optional } from 'sequelize'
+
+// export type ${attributesName} = {
+// ${attributes}
+// }
+
+// export type ${creationName} = Optional<${attributesName}, ${optionalType}>
+
+// export class ${className}
+//   extends Model<${attributesName}, ${creationName}>
+//   implements ${attributesName}
+// {
+// ${table.columns
+//   .map((column) => {
+//     const optional = column.allowNull || column.defaultValue || column.autoIncrement ? '!' : '!'
+//     const nullable = column.allowNull ? ' | null' : ''
+//     return `  declare ${quoteObjectKey(toCamelCase(column.name))}${optional}: ${tsTypeFor(column.sqlType)}${nullable}`
+//   })
+//   .join('\n')}
+// }
+
+// export function ${initName}(sequelize: Sequelize): typeof ${className} {
+//   ${className}.init(
+//   {
+// ${fields}
+//   },
+//   {
+// ${options.join(',\n')}
+//   }
+//   )
+
+//   return ${className}
+// }
+// `
+// }
+
+// --- Entity rendering ---
+function renderEntity(table: Table, schemaName?: string): string {
+  //const className = `${table.name[0].toUpperCase()}${table.name.slice(1)}Entity`
+  const className = `${toPascalCase(table.name)}Entity`
+  //const className = `${table.name[0].toUpperCase()}${table.name.slice(1)}Entity`
+  const attributesName = `${className.replace('Entity', '')}Attributes`
+  const creationName = `${className.replace('Entity', '')}CreationAttributes`
+  const initName = `init${className}`
+
+  const attributes = table.columns.map(col => {
+    const optional = col.allowNull || col.defaultValue || col.autoIncrement ? '?' : ''
+    const nullable = col.allowNull ? ' | null' : ''
+    return `  ${col.name}${optional}: ${tsTypeFor(col.sqlType)}${nullable}`
+  }).join('\n')
 
   const creationOptional = table.columns
-    .filter((column) => column.allowNull || column.defaultValue || column.autoIncrement)
-    .map((column) => JSON.stringify(toCamelCase(column.name)))
-    .join(' | ')
+    .filter(col => col.allowNull || col.defaultValue || col.autoIncrement)
+    .map(col => `"${col.name}"`)
+    .join(' | ') || 'never'
 
-  const fields = table.columns
-    .map((column) => {
-      const lines = [
-        `    ${quoteObjectKey(toCamelCase(column.name))}: {`,
-        `      type: ${dataTypeFor(column.sqlType)},`,
-        `      field: ${JSON.stringify(column.name)},`,
-        `      allowNull: ${column.allowNull}`
-      ]
+  const fields = table.columns.map(col => {
+    const lines = [
+      `      ${col.name}: {`,
+      `        type: ${dataTypeFor(col.sqlType)},`,
+      `        field: '${col.name}',`,
+      `        allowNull: ${col.allowNull},`
+    ]
+    if (col.primaryKey) lines.push('        primaryKey: true ,')
+    if (col.autoIncrement) lines.push('        autoIncrement: true,')
+    if (col.unique) lines.push('        unique: true,')
+    if (col.defaultValue) lines.push(`        defaultValue: ${defaultValueFor(col.defaultValue)},`)
+    if (col.comment) lines.push(`        comment: '${col.comment}'`)
+    lines.push('      }')
+    return lines.join('\n')
+  }).join(',\n')
 
-      if (column.primaryKey) lines.push('      primaryKey: true')
-      if (column.autoIncrement) lines.push('      autoIncrement: true')
-      if (column.unique) lines.push('      unique: true')
-
-      const defaultValue = defaultValueFor(column.defaultValue)
-      if (defaultValue !== undefined) lines.push(`      defaultValue: ${defaultValue}`)
-      if (column.comment) lines.push(`      comment: ${JSON.stringify(column.comment)}`)
-
-      return `${lines.join(',\n')}\n    }`
-    })
-    .join(',\n')
-
-  const options = [
-    `    tableName: ${JSON.stringify(table.name)}`,
-    '    timestamps: false',
-    '    underscored: true',
-    '    freezeTableName: true'
-  ]
-
-  if (schemaName) options.push(`    schema: ${JSON.stringify(schemaName)}`)
-  if (table.comment) options.push(`    comment: ${JSON.stringify(table.comment)}`)
-
-  const optionalType = creationOptional || 'never'
-
-  return `import { DataTypes, Model, Sequelize, type Optional } from 'sequelize'
+  return `import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type ${attributesName} = {
 ${attributes}
 }
 
-export type ${creationName} = Optional<${attributesName}, ${optionalType}>
+export type ${creationName} = Optional<${attributesName}, ${creationOptional}>
 
 export class ${className}
   extends Model<${attributesName}, ${creationName}>
   implements ${attributesName}
 {
-${table.columns
-  .map((column) => {
-    const optional = column.allowNull || column.defaultValue || column.autoIncrement ? '!' : '!'
-    const nullable = column.allowNull ? ' | null' : ''
-    return `  declare ${quoteObjectKey(toCamelCase(column.name))}${optional}: ${tsTypeFor(column.sqlType)}${nullable}`
-  })
-  .join('\n')}
+${table.columns.map(col => {
+  const nullable = col.allowNull ? ' | null' : ''
+  return `  declare ${col.name}: ${tsTypeFor(col.sqlType)}${nullable}`
+}).join('\n')}
 }
 
 export function ${initName}(sequelize: Sequelize): typeof ${className} {
   ${className}.init(
-  {
+    {
 ${fields}
-  },
-  {
-${options.join(',\n')}
-  }
+    },
+    {
+      sequelize,
+      tableName: '${table.name}',
+      timestamps: true,
+      underscored: true,
+      freezeTableName: true,
+      paranoid: true${schemaName ? `,\n      schema: '${schemaName}'` : ''}${table.comment ? `,\n      comment: '${table.comment}'` : ''}
+    }
   )
-
   return ${className}
 }
 `
 }
+
 
 function renderIndex(tables: Table[]): string {
   const imports = tables

@@ -21,6 +21,14 @@ export default fp(async (app) => {
   app.decorateRequest('db', null)
 
   app.addHook('onRequest', async (request, reply) => {
+    // Example: skip DB plugin logic for health check route
+    if (request.routeOptions.url === '/health' ||
+      request.routeOptions.url === '/auth' ||
+      request.routeOptions.url === '/docs' ||
+      request.routeOptions.url === '/cpanel-routes') {
+      return; // do nothing, skip DB logic
+    }
+
     const config = tenantConfigSchema.parse(request.routeOptions.config ?? {})
     if (!config.requireTenant) {
       request.log.info({ route: request.routeOptions.url }, 'tenant resolution skipped')

@@ -1,6 +1,6 @@
 import config from "./config"; // this is important!
 
-module.exports = {
+const dbConfig: any = {
   development: {
     username: config.database.dev.username,
     password: config.database.dev.password,
@@ -23,3 +23,5 @@ module.exports = {
     dialect: config.database.dialect,
   },
 };
+
+export default dbConfig;

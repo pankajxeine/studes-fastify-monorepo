@@ -4,4 +4,3 @@ export type Tenant =
   slug: string
   schema_name: string
 }
-

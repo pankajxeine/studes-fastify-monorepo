@@ -11,18 +11,7 @@ function buildHeaders(request: any) {
 
 const BillingServiceRoutes: FastifyPluginAsync = async (app) => {
   const controller = new BillingServiceService()
-  app.get('/health', async (request, reply) => {
-    return await controller.billingHealth(buildHeaders(request))
-  })
-  app.get('/health/db', async (request, reply) => {
-    return await controller.billingHealthDb(buildHeaders(request))
-  })
-  app.get('/billing/invoices', async (request, reply) => {
-    return await controller.listInvoices(buildHeaders(request))
-  })
-  app.post('/billing/invoices', async (request, reply) => {
-    return await controller.createInvoice(request.body as any, buildHeaders(request))
-  })
+
 }
 
 export default BillingServiceRoutes

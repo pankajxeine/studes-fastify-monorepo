@@ -1,0 +1,8 @@
+type: object
+properties:
+  status:
+    type: string
+    example: "ok"
+  dbConnected:
+    type: boolean
+    example: true

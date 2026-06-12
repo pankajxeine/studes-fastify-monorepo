@@ -3,7 +3,17 @@ import { escapeId } from 'mysql2'
 import mysql from 'mysql2/promise'
 import type { Pool, PoolConnection } from 'mysql2/promise'
 import type { FastifyBaseLogger, FastifyTypeProvider, FastifyTypeProviderDefault, RawReplyDefaultExpression, RawRequestDefaultExpression, RawServerBase, RawServerDefault } from 'fastify'
+import { Sequelize } from 'sequelize'
 
+import config from '../config/db.config'
+const fs = require("fs");
+const path = require("path");
+const basename = path.basename(__filename);
+const env = process.env.NODE_ENV || "development";
+// const config = require(__dirname + "/../config/db.config.ts")[env];
+const db: any = {};
+
+const ds = config[env];
 export type MysqlConnection = PoolConnection
 
 export default fp(async (app) => {
@@ -28,6 +38,12 @@ export default fp(async (app) => {
     multipleStatements: true
   })
 
+  const sequelize = new Sequelize(ds.database, ds.username, ds.password, {
+    host: ds.host,
+    dialect: 'mysql',
+    logging: false,
+  });
+  app.decorate('sequelize', sequelize)
   app.decorate('mysql', pool)
   app.decorate('mysqlDatabase', database)
   app.decorate('useTenantDatabase', async (connection: PoolConnection, database: string) => {
@@ -47,6 +63,7 @@ declare module 'fastify' {
     Logger extends FastifyBaseLogger = FastifyBaseLogger,
     TypeProvider extends FastifyTypeProvider = FastifyTypeProviderDefault
   > {
+    sequelize: Sequelize
     mysql: Pool
     mysqlDatabase: string
     useTenantDatabase: (connection: PoolConnection, database: string) => Promise<void>

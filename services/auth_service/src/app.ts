@@ -10,7 +10,7 @@ import {
   requestIdPlugin,
   requestLoggerPlugin
 } from './core'
-import authRoutes from './routes/auth_service.router'
+import registerRoutes from './routes'
 
 import { readdirSync } from 'node:fs'
 import { join } from 'node:path'
@@ -48,11 +48,9 @@ export async function buildApp(): Promise<FastifyInstance> {
   await fastify.register(createMetricsPlugin({ includeTenant: true }))
 
   registerErrorHandler(fastify, { includeZod: true })
+  // registerGeneratedRoutes(fastify) // Automatically register routes from the routes directory
+  registerRoutes(fastify)
 
-  //await fastify.register(healthRoutes)
-  await fastify.register(authRoutes)
-  //await fastify.register(tenantRoutes)
-  
   fastify.log.info({ routes: fastify.printRoutes() }, 'registered routes')
   return fastify
 }

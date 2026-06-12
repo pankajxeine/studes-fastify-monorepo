@@ -20,6 +20,9 @@ const ApiGatewayRoutes: FastifyPluginAsync = async (app) => {
   app.get('/health/db', async (request, reply) => {
     return await controller.gatewayHealthDb(buildHeaders(request))
   })
+  app.get('/metrics', async (request, reply) => {
+    return await controller.gatewayMetrics(buildHeaders(request))
+  })
   app.post('/auth/register', async (request, reply) => {
     return await controller.gatewayAuthRegister(request.body as any, buildHeaders(request))
   })
