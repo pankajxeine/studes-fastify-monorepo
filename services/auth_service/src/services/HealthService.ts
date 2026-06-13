@@ -4,12 +4,12 @@ import { FastifyInstance, FastifyRequest } from 'fastify'
 import type { HealthController } from '../openapi/controller/HealthController'
 
 export class HealthService implements HealthController {
-  public async authHealth(app: FastifyInstance,request?: FastifyRequest): Promise<HealthResponse> {
-    void request
+  public async authHealth(app: FastifyInstance, request?: FastifyRequest): Promise<HealthResponse> {
+    void request?.tenantModels
     throw new Error('Not implemented')
   }
 
-  public async authHealthDb(app: FastifyInstance,request?: FastifyRequest): Promise<HealthDbResponse> {
+  public async authHealthDb(app: FastifyInstance, request?: FastifyRequest): Promise<HealthDbResponse> {
     void request
     throw new Error('Not implemented')
   }

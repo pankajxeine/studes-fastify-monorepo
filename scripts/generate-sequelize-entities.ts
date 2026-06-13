@@ -2,20 +2,24 @@ import fs from 'node:fs'
 import path from 'node:path'
 
 type Column = {
-  name: string
-  sqlType: string
-  allowNull: boolean
-  primaryKey: boolean
-  autoIncrement: boolean
-  unique: boolean
-  defaultValue?: string
-  comment?: string
-}
+  name: string;
+  sqlType: string;
+  dataType: string;
+  allowNull: boolean;
+  primaryKey: boolean;
+  autoIncrement: boolean;
+  unique: boolean;
+  defaultValue?: string;
+  comment?: string;
+  references?: { model: string; key: string };
+  onDelete?: string;
+  onUpdate?: string;
+};
 
 type Table = {
   name: string
   columns: Column[]
-  indexes: string[]
+  indexes: any[]
   comment?: string
 }
 
@@ -146,151 +150,198 @@ function splitTopLevel(input: string): string[] {
   return parts
 }
 
-function cleanIdentifier(identifier: string): string {
-  return identifier.replace(/`/g, '').split('.').pop() ?? identifier
+function tsTypeFor(sqlType: string): string {
+  const normalized = sqlType.toLowerCase();
+
+  if (normalized.includes('serial') || normalized.startsWith('int') || normalized.startsWith('smallint')) return 'number';
+  if (normalized.startsWith('bigint')) return 'string | number';
+  if (normalized === 'uuid') return 'string';
+  if (normalized === 'boolean') return 'boolean';
+  if (normalized.startsWith('timestamp') || normalized === 'date' || normalized.startsWith('time')) return 'Date';
+  if (normalized.startsWith('jsonb') || normalized.startsWith('json')) return 'unknown';
+  if (normalized === 'bytea') return 'Buffer';
+  if (normalized.startsWith('numeric') || normalized.startsWith('decimal') || normalized.startsWith('float') || normalized.startsWith('double')) return 'number';
+
+  return 'string';
 }
 
-function toPascalCase(input: string): string {
-  return input
-    .split(/[^a-zA-Z0-9]+/)
-    .filter(Boolean)
-    .map((part) => part[0].toUpperCase() + part.slice(1))
-    .join('')
+function cleanIdentifier(name: string): string {
+  return name.replace(/"/g, '').trim();
 }
 
-function toCamelCase(input: string): string {
-  const pascal = toPascalCase(input)
-  return pascal ? pascal[0].toLowerCase() + pascal.slice(1) : input
+// Helper: convert snake_case → camelCase
+function toCamelCase(str: string): string {
+  return str.replace(/_([a-z])/g, (_, c) => c.toUpperCase());
 }
 
-function quoteObjectKey(key: string): string {
-  return /^[a-zA-Z_$][a-zA-Z0-9_$]*$/.test(key) ? key : JSON.stringify(key)
+// Helper: convert table name → PascalCase
+function toPascalCase(str: string): string {
+  return str
+    .replace(/(^|_)(\w)/g, (_, __, c) => c.toUpperCase());
 }
 
+// Extract identifiers from PRIMARY KEY, UNIQUE, FOREIGN KEY clauses
+function extractIdentifiers(value: string): string[] {
+  // First try quoted identifiers
+  const quoted = Array.from(value.matchAll(/"([^"]+)"/g)).map(m => m[1]);
+  if (quoted.length > 0) return quoted;
+
+  // Otherwise grab bare words inside parentheses
+  const parenMatch = value.match(/\(([^)]+)\)/);
+  if (parenMatch) {
+    return parenMatch[1]
+      .split(',')
+      .map(s => s.trim().replace(/["']/g, ''))
+      .filter(s => s.length > 0 && !/^(PRIMARY|CONSTRAINT|FOREIGN|KEY)$/i.test(s));
+  }
+
+  return [];
+}
+
+function dataTypeFor(sqlType: string): string {
+  const normalized = sqlType.toLowerCase();
+  const length = normalized.match(/\((.+)\)/)?.[1];
+
+  if (normalized.includes('serial')) return 'DataTypes.INTEGER';
+  if (normalized === 'uuid') return 'DataTypes.UUID';
+  if (normalized.startsWith('varchar')) return length ? `DataTypes.STRING(${length})` : 'DataTypes.STRING';
+  if (normalized.startsWith('char')) return length ? `DataTypes.CHAR(${length})` : 'DataTypes.CHAR';
+  if (normalized === 'text') return 'DataTypes.TEXT';
+  if (normalized === 'bytea') return 'DataTypes.BLOB';
+  if (normalized === 'boolean') return 'DataTypes.BOOLEAN';
+  if (normalized.startsWith('timestamp')) return 'DataTypes.DATE';
+  if (normalized === 'date') return 'DataTypes.DATEONLY';
+  if (normalized.startsWith('time')) return 'DataTypes.TIME';
+  if (normalized.startsWith('jsonb')) return 'DataTypes.JSONB';
+  if (normalized.startsWith('json')) return 'DataTypes.JSON';
+  if (normalized.startsWith('numeric') || normalized.startsWith('decimal')) return length ? `DataTypes.DECIMAL(${length})` : 'DataTypes.DECIMAL';
+  if (normalized.startsWith('float')) return 'DataTypes.FLOAT';
+  if (normalized.startsWith('double')) return 'DataTypes.DOUBLE';
+  if (normalized.startsWith('bigint')) return 'DataTypes.BIGINT';
+  if (normalized.startsWith('int')) return 'DataTypes.INTEGER';
+
+  return 'DataTypes.TEXT';
+}
+
+// Column parser (PostgreSQL → Sequelize metadata)
 function parseColumn(definition: string): Column | null {
-  const match = definition.match(/^`([^`]+)`\s+(.+)$/s)
-  if (!match) return null
+  const match = definition.match(/^(?:"([^"]+)"|(\w+))\s+(.+)$/s);
+  if (!match) return null;
 
-  const name = match[1]
-  const rest = match[2].trim()
-  const sqlType = rest.match(/^([a-zA-Z]+)(?:\s*\([^)]*\))?(?:\s+unsigned)?/i)?.[0] ?? 'text'
-  const allowNull = !/\bnot\s+null\b/i.test(rest)
-  const defaultMatch = rest.match(/\bdefault\s+((?:'([^'\\]|\\.)*')|(?:\([^)]*\))|[^\s,]+)/i)
-  const commentMatch = rest.match(/\bcomment\s+'((?:[^'\\]|\\.)*)'/i)
+  const name = match[1] || match[2];
+  const rest = match[3].trim();
+
+  const sqlType = rest.match(/^([a-zA-Z]+(?:\s+[a-zA-Z]+)?)(?:\s*\([^)]*\))?/i)?.[0] ?? 'text';
+
+  // Map PostgreSQL types → Sequelize DataTypes
+  let dataType: string;
+  if (/^smallint/i.test(sqlType)) dataType = 'DataTypes.SMALLINT';
+  else if (/^integer/i.test(sqlType)) dataType = 'DataTypes.INTEGER';
+  else if (/^bigint/i.test(sqlType)) dataType = 'DataTypes.BIGINT';
+  else if (/^serial/i.test(sqlType)) dataType = 'DataTypes.INTEGER';
+  else if (/^character varying/i.test(sqlType) || /^varchar/i.test(sqlType)) {
+    const len = sqlType.match(/\((\d+)\)/)?.[1];
+    dataType = len ? `DataTypes.STRING(${len})` : 'DataTypes.STRING';
+  }
+  else if (/^text/i.test(sqlType)) dataType = 'DataTypes.TEXT';
+  else if (/^jsonb/i.test(sqlType)) dataType = 'DataTypes.JSONB';
+  else if (/^timestamp/i.test(sqlType)) dataType = 'DataTypes.DATE';
+  else if (/^uuid/i.test(sqlType)) dataType = 'DataTypes.UUID';
+  else dataType = 'DataTypes.STRING';
+
+  // Normalize defaults
+  let defaultValue: string | undefined;
+  const defaultMatch = rest.match(/\bDEFAULT\s+([^,]+)/i);
+  if (defaultMatch) {
+    defaultValue = defaultMatch[1].trim();
+    if (/^null(::[a-z\s]+)?$/i.test(defaultValue)) defaultValue = null;
+    else if (/^current_timestamp/i.test(defaultValue) || /^now\(\)/i.test(defaultValue)) defaultValue = 'DataTypes.NOW';
+    else if (/^uuid_generate_v4\(\)/i.test(defaultValue)) defaultValue = 'Sequelize.fn("uuid_generate_v4")';
+  }
 
   return {
     name,
     sqlType,
-    allowNull,
-    primaryKey: /\bprimary\s+key\b/i.test(rest),
-    autoIncrement: /\bauto_increment\b/i.test(rest),
-    unique: /\bunique\b/i.test(rest),
-    defaultValue: defaultMatch?.[1],
-    comment: commentMatch?.[1]?.replace(/\\'/g, "'")
-  }
+    dataType,
+    allowNull: !/\bNOT\s+NULL\b/i.test(rest),
+    primaryKey: /\bPRIMARY\s+KEY\b/i.test(rest),
+    autoIncrement: /\bSERIAL\b/i.test(sqlType) || /\bGENERATED\b/i.test(rest),
+    unique: /\bUNIQUE\b/i.test(rest),
+    defaultValue,
+    comment: undefined
+  };
 }
+
 
 function extractBacktickNames(value: string): string[] {
   return Array.from(value.matchAll(/`([^`]+)`/g)).map((match) => match[1])
 }
-
+// Table parser
 function parseTable(statement: string): Table | null {
-  const tableMatch = statement.match(/create\s+table\s+(?:if\s+not\s+exists\s+)?((?:`[^`]+`|\w+)(?:\.(?:`[^`]+`|\w+))?)/i)
-  if (!tableMatch) return null
+  const tableMatch = statement.match(/create\s+table\s+(?:if\s+not\s+exists\s+)?("?[\w]+"?(?:\."?[\w]+"?)?)/i);
+  if (!tableMatch) return null;
 
-  const tableName = cleanIdentifier(tableMatch[1])
-  const bodyStart = statement.indexOf('(', tableMatch.index)
-  const bodyEnd = statement.lastIndexOf(')')
-  if (bodyStart === -1 || bodyEnd === -1 || bodyEnd <= bodyStart) return null
+  const tableName = cleanIdentifier(tableMatch[1]);
+  const bodyStart = statement.indexOf('(', tableMatch.index);
+  const bodyEnd = statement.lastIndexOf(')');
+  if (bodyStart === -1 || bodyEnd === -1 || bodyEnd <= bodyStart) return null;
 
-  const body = statement.slice(bodyStart + 1, bodyEnd)
-  const columns: Column[] = []
-  const indexes: string[] = []
-  const primaryKeyColumns = new Set<string>()
-  const uniqueColumns = new Set<string>()
-  const tableComment = statement.match(/\bcomment\s*=\s*'((?:[^'\\]|\\.)*)'/i)?.[1]?.replace(/\\'/g, "'")
+  const body = statement.slice(bodyStart + 1, bodyEnd);
+  const columns: Column[] = [];
+  const indexes: { fields: string[]; unique?: boolean }[] = [];
+  const primaryKeyColumns = new Set<string>();
+  const uniqueColumns = new Set<string>();
 
   for (const part of splitTopLevel(body)) {
-    const column = parseColumn(part)
-    if (column) {
-      columns.push(column)
-      continue
+    const column = parseColumn(part);
+    if (column && !/^(PRIMARY|CONSTRAINT)$/i.test(column.name)) {
+      columns.push(column);
+      continue;
     }
 
+    // PRIMARY KEY (col1, col2)
     if (/^primary\s+key\b/i.test(part)) {
-      for (const name of extractBacktickNames(part)) primaryKeyColumns.add(name)
-      indexes.push(part)
-      continue
+      const names = extractIdentifiers(part);
+      names.forEach(name => primaryKeyColumns.add(name));
+      indexes.push({ fields: names, unique: true });
+      continue;
     }
 
-    if (/^(unique\s+)?key\b/i.test(part) || /^constraint\b/i.test(part)) {
-      if (/^unique\s+key\b/i.test(part) || /\bunique\b/i.test(part)) {
-        for (const name of extractBacktickNames(part).slice(1)) uniqueColumns.add(name)
+    // UNIQUE (col1, col2)
+    if (/unique\b/i.test(part)) {
+      const names = extractIdentifiers(part);
+      indexes.push({ fields: names, unique: true });
+      continue;
+    }
+
+    // FOREIGN KEY ... REFERENCES
+    if (/references/i.test(part)) {
+      const fkMatch = part.match(/references\s+"?(\w+)"?\s*\("?(\w+)"?\)/i);
+      if (fkMatch) {
+        const colNames = extractIdentifiers(part);
+        for (const colName of colNames) {
+          const col = columns.find(c => c.name === colName);
+          if (col) {
+            col.references = { model: fkMatch[1], key: fkMatch[2] };
+            if (/on delete cascade/i.test(part)) col.onDelete = 'CASCADE';
+            if (/on delete set null/i.test(part)) col.onDelete = 'SET NULL';
+            if (/on update cascade/i.test(part)) col.onUpdate = 'CASCADE';
+          }
+        }
       }
-      indexes.push(part)
     }
   }
 
+  // Apply PK/Unique flags
+  // Apply PK flags
   for (const column of columns) {
-    if (primaryKeyColumns.has(column.name)) column.primaryKey = true
-    if (uniqueColumns.has(column.name)) column.unique = true
+    if (primaryKeyColumns.has(column.name)) column.primaryKey = true;
   }
 
-  return { name: tableName, columns, indexes, comment: tableComment }
+  return { name: tableName, columns, indexes }
 }
 
-function dataTypeFor(sqlType: string): string {
-  const normalized = sqlType.toLowerCase()
-  const length = normalized.match(/\((.+)\)/)?.[1]
 
-  if (normalized.startsWith('tinyint(1)') || normalized === 'boolean' || normalized === 'bool') return 'DataTypes.BOOLEAN'
-  if (normalized.startsWith('tinyint')) return length ? `DataTypes.TINYINT(${length})` : 'DataTypes.TINYINT'
-  if (normalized.startsWith('smallint')) return length ? `DataTypes.SMALLINT(${length})` : 'DataTypes.SMALLINT'
-  if (normalized.startsWith('mediumint')) return 'DataTypes.INTEGER'
-  if (normalized.startsWith('bigint')) return 'DataTypes.BIGINT'
-  if (normalized.startsWith('int') || normalized.startsWith('integer')) return length ? `DataTypes.INTEGER(${length})` : 'DataTypes.INTEGER'
-  if (normalized.startsWith('decimal') || normalized.startsWith('numeric')) return length ? `DataTypes.DECIMAL(${length})` : 'DataTypes.DECIMAL'
-  if (normalized.startsWith('double')) return length ? `DataTypes.DOUBLE(${length})` : 'DataTypes.DOUBLE'
-  if (normalized.startsWith('float')) return length ? `DataTypes.FLOAT(${length})` : 'DataTypes.FLOAT'
-  if (normalized.startsWith('varchar')) return length ? `DataTypes.STRING(${length})` : 'DataTypes.STRING'
-  if (normalized.startsWith('char')) return length ? `DataTypes.CHAR(${length})` : 'DataTypes.CHAR'
-  if (normalized.startsWith('longtext')) return 'DataTypes.TEXT("long")'
-  if (normalized.startsWith('mediumtext')) return 'DataTypes.TEXT("medium")'
-  if (normalized.startsWith('text')) return 'DataTypes.TEXT'
-  if (normalized.startsWith('datetime')) return 'DataTypes.DATE'
-  if (normalized.startsWith('timestamp')) return 'DataTypes.DATE'
-  if (normalized === 'date') return 'DataTypes.DATEONLY'
-  if (normalized.startsWith('time')) return 'DataTypes.TIME'
-  if (normalized.startsWith('json')) return 'DataTypes.JSON'
-  if (normalized.startsWith('enum')) return `DataTypes.ENUM(${normalized.slice(normalized.indexOf('(') + 1, normalized.lastIndexOf(')'))})`
-  if (normalized.startsWith('blob')) return 'DataTypes.BLOB'
-  if (normalized.startsWith('binary') || normalized.startsWith('varbinary')) return 'DataTypes.BLOB'
-
-  return 'DataTypes.TEXT'
-}
-
-function tsTypeFor(sqlType: string): string {
-  const normalized = sqlType.toLowerCase()
-  if (normalized.startsWith('tinyint(1)') || normalized === 'boolean' || normalized === 'bool') return 'boolean'
-  if (
-    normalized.startsWith('tinyint') ||
-    normalized.startsWith('smallint') ||
-    normalized.startsWith('mediumint') ||
-    normalized.startsWith('int') ||
-    normalized.startsWith('integer') ||
-    normalized.startsWith('decimal') ||
-    normalized.startsWith('numeric') ||
-    normalized.startsWith('double') ||
-    normalized.startsWith('float')
-  ) {
-    return 'number'
-  }
-  if (normalized.startsWith('bigint')) return 'string | number'
-  if (normalized.startsWith('datetime') || normalized.startsWith('timestamp') || normalized === 'date') return 'Date'
-  if (normalized.startsWith('json')) return 'unknown'
-  if (normalized.startsWith('blob') || normalized.startsWith('binary') || normalized.startsWith('varbinary')) return 'Buffer'
-  return 'string'
-}
 
 // function defaultValueFor(raw?: string): string | undefined {
 //   if (!raw) return undefined
@@ -306,166 +357,62 @@ function tsTypeFor(sqlType: string): string {
 // }
 
 function defaultValueFor(raw?: string): string | undefined {
-  if (!raw) return undefined
-  const value = raw.trim()
-  const lower = value.toLowerCase()
+  if (!raw) return undefined;
+  const lower = raw.toLowerCase();
 
-  // NULL
-  if (lower === 'null') return 'null'
-
-  // CURRENT_TIMESTAMP / NOW()
-  if (
-    lower === 'current_timestamp' ||
-    lower === 'current_timestamp()' ||
-    lower === 'now()'
-  ) {
-    return 'DataTypes.NOW'
+  if (lower === 'null') return 'null';
+  if (lower.includes('now()')) return 'DataTypes.NOW';
+  if (lower.includes('uuid_generate_v4()')) return 'Sequelize.fn("uuid_generate_v4")';
+  if (/^-?\d+(?:\.\d+)?$/.test(raw)) return raw; // numeric
+  if (/^'.*'$/.test(raw)) {
+    const inner = raw.slice(1, -1).replace(/\\'/g, "'");
+    return JSON.stringify(inner);
   }
 
-  // Boolean defaults
-  if (lower === 'true') return 'true'
-  if (lower === 'false') return 'false'
-
-  // Numeric defaults
-  if (/^-?\d+(?:\.\d+)?$/.test(value)) return value
-
-  // String defaults (quoted)
-  if (/^'.*'$/.test(value)) {
-    // strip quotes and unescape
-    const inner = value.slice(1, -1).replace(/\\'/g, "'")
-    return JSON.stringify(inner)
-  }
-
-  // Function defaults like UUID()
-  if (/^uuid\(\)/i.test(value)) return 'Sequelize.fn("UUID")'
-
-  // Expressions (fallback)
-  return JSON.stringify(value)
+  return JSON.stringify(raw);
 }
 
-// function renderEntity(table: Table, schemaName?: string): string {
-//   const className = `${toPascalCase(table.name)}Entity`
-//   const attributesName = `${toPascalCase(table.name)}Attributes`
-//   const creationName = `${toPascalCase(table.name)}CreationAttributes`
-//   const initName = `init${toPascalCase(table.name)}Entity`
 
-//   const attributes = table.columns
-//     .map((column) => {
-//       const optional = column.allowNull || column.defaultValue || column.autoIncrement ? '?' : ''
-//       const nullable = column.allowNull ? ' | null' : ''
-//       return `  ${quoteObjectKey(toCamelCase(column.name))}${optional}: ${tsTypeFor(column.sqlType)}${nullable}`
-//     })
-//     .join('\n')
-
-//   const creationOptional = table.columns
-//     .filter((column) => column.allowNull || column.defaultValue || column.autoIncrement)
-//     .map((column) => JSON.stringify(toCamelCase(column.name)))
-//     .join(' | ')
-
-//   const fields = table.columns
-//     .map((column) => {
-//       const lines = [
-//         `    ${quoteObjectKey(toCamelCase(column.name))}: {
-//               type: ${dataTypeFor(column.sqlType)}`,
-//         `      field: ${JSON.stringify(column.name)}`,
-//         `      allowNull: ${column.allowNull}`
-//       ]
-
-//       if (column.primaryKey) lines.push('      primaryKey: true')
-//       if (column.autoIncrement) lines.push('      autoIncrement: true')
-//       if (column.unique) lines.push('      unique: true')
-
-//       const defaultValue = defaultValueFor(column.defaultValue)
-//       if (defaultValue !== undefined) lines.push(`      defaultValue: ${defaultValue}`)
-//       if (column.comment) lines.push(`      comment: ${JSON.stringify(column.comment)}`)
-
-//       return `${lines.join(',\n')}\n    }`
-//     })
-//     .join(',\n')
-
-//   const options = [
-//     `    tableName: ${JSON.stringify(table.name)}`,
-//     '    timestamps: false',
-//     '    underscored: true',
-//     '    freezeTableName: true'
-//   ]
-
-//   if (schemaName) options.push(`    schema: ${JSON.stringify(schemaName)}`)
-//   if (table.comment) options.push(`    comment: ${JSON.stringify(table.comment)}`)
-
-//   const optionalType = creationOptional || 'never'
-
-//   return `import { DataTypes, Model, Sequelize, type Optional } from 'sequelize'
-
-// export type ${attributesName} = {
-// ${attributes}
-// }
-
-// export type ${creationName} = Optional<${attributesName}, ${optionalType}>
-
-// export class ${className}
-//   extends Model<${attributesName}, ${creationName}>
-//   implements ${attributesName}
-// {
-// ${table.columns
-//   .map((column) => {
-//     const optional = column.allowNull || column.defaultValue || column.autoIncrement ? '!' : '!'
-//     const nullable = column.allowNull ? ' | null' : ''
-//     return `  declare ${quoteObjectKey(toCamelCase(column.name))}${optional}: ${tsTypeFor(column.sqlType)}${nullable}`
-//   })
-//   .join('\n')}
-// }
-
-// export function ${initName}(sequelize: Sequelize): typeof ${className} {
-//   ${className}.init(
-//   {
-// ${fields}
-//   },
-//   {
-// ${options.join(',\n')}
-//   }
-//   )
-
-//   return ${className}
-// }
-// `
-// }
-
-// --- Entity rendering ---
 function renderEntity(table: Table, schemaName?: string): string {
-  //const className = `${table.name[0].toUpperCase()}${table.name.slice(1)}Entity`
-  const className = `${toPascalCase(table.name)}Entity`
-  //const className = `${table.name[0].toUpperCase()}${table.name.slice(1)}Entity`
-  const attributesName = `${className.replace('Entity', '')}Attributes`
-  const creationName = `${className.replace('Entity', '')}CreationAttributes`
-  const initName = `init${className}`
+  const className = `${toPascalCase(table.name)}Entity`;
+  const attributesName = `${className.replace('Entity', '')}Attributes`;
+  const creationName = `${className.replace('Entity', '')}CreationAttributes`;
+  const initName = `init${className}`;
 
   const attributes = table.columns.map(col => {
-    const optional = col.allowNull || col.defaultValue || col.autoIncrement ? '?' : ''
-    const nullable = col.allowNull ? ' | null' : ''
-    return `  ${col.name}${optional}: ${tsTypeFor(col.sqlType)}${nullable}`
-  }).join('\n')
+    const optional = col.allowNull || col.defaultValue || col.autoIncrement ? '?' : '';
+    const nullable = col.allowNull ? ' | null' : '';
+    return `  ${toCamelCase(col.name)}${optional}: ${tsTypeFor(col.sqlType)}${nullable}`;
+  }).join('\n');
 
   const creationOptional = table.columns
     .filter(col => col.allowNull || col.defaultValue || col.autoIncrement)
-    .map(col => `"${col.name}"`)
-    .join(' | ') || 'never'
+    .map(col => `"${toCamelCase(col.name)}"`)
+    .join(' | ') || 'never';
 
   const fields = table.columns.map(col => {
     const lines = [
-      `      ${col.name}: {`,
+      `      ${toCamelCase(col.name)}: {`,
       `        type: ${dataTypeFor(col.sqlType)},`,
       `        field: '${col.name}',`,
       `        allowNull: ${col.allowNull},`
-    ]
-    if (col.primaryKey) lines.push('        primaryKey: true ,')
-    if (col.autoIncrement) lines.push('        autoIncrement: true,')
-    if (col.unique) lines.push('        unique: true,')
-    if (col.defaultValue) lines.push(`        defaultValue: ${defaultValueFor(col.defaultValue)},`)
-    if (col.comment) lines.push(`        comment: '${col.comment}'`)
-    lines.push('      }')
-    return lines.join('\n')
-  }).join(',\n')
+    ];
+    if (col.primaryKey) lines.push('        primaryKey: true,');
+    if (col.autoIncrement) lines.push('        autoIncrement: true,');
+    if (col.unique) lines.push('        unique: true,');
+    if (col.defaultValue) lines.push(`        defaultValue: ${defaultValueFor(col.defaultValue)},`);
+    if (col.comment) lines.push(`        comment: '${col.comment}',`);
+    if (col.references) {
+      lines.push(`        references: { model: '${col.references.model}', key: '${col.references.key}' },`);
+      if (col.onDelete) lines.push(`        onDelete: '${col.onDelete}',`);
+      if (col.onUpdate) lines.push(`        onUpdate: '${col.onUpdate}',`);
+    }
+    lines.push('      }');
+    return lines.join('\n');
+  }).join(',\n');
+  const indexes = table.indexes.map(idx => {
+    return `      { unique: ${!!idx.unique}, fields: [${idx.fields.map(f => `'${f}'`).join(', ')}] }`;
+  }).join(',\n');
 
   return `import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
@@ -480,9 +427,9 @@ export class ${className}
   implements ${attributesName}
 {
 ${table.columns.map(col => {
-  const nullable = col.allowNull ? ' | null' : ''
-  return `  declare ${col.name}: ${tsTypeFor(col.sqlType)}${nullable}`
-}).join('\n')}
+    const nullable = col.allowNull ? ' | null' : '';
+    return `  declare ${toCamelCase(col.name)}: ${tsTypeFor(col.sqlType)}${nullable}`;
+  }).join('\n')}
 }
 
 export function ${initName}(sequelize: Sequelize): typeof ${className} {
@@ -496,12 +443,12 @@ ${fields}
       timestamps: true,
       underscored: true,
       freezeTableName: true,
-      paranoid: true${schemaName ? `,\n      schema: '${schemaName}'` : ''}${table.comment ? `,\n      comment: '${table.comment}'` : ''}
+      paranoid: true${schemaName ? `,\n      schema: '${schemaName}'` : ''}${table.comment ? `,\n      comment: '${table.comment}'` : ''}${indexes ? `,\n      indexes: [\n${indexes}\n      ]` : ''}
     }
   )
   return ${className}
 }
-`
+`;
 }
 
 
