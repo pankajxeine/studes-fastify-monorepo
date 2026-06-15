@@ -1,0 +1,181 @@
+openapi: 3.0.0
+info:
+  title: PackageFeaturesResponse API
+  version: 1.0.0
+paths:
+  /package_features:
+    get:
+      operationId: listPackageFeatures
+      summary: Get all package_features
+      responses:
+        '200':
+          description: List of package_features
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PackageFeaturesResponse'
+    post:
+      operationId: createPackageFeature
+      summary: Create a new package_features
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PackageFeaturesRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PackageFeaturesResponse'
+
+  /package_features/{id}:
+    get:
+      operationId: getPackageFeaturesById
+      summary: Get package_features by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: package_features object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PackageFeaturesResponse'
+    put:
+      operationId: updatePackageFeature
+      summary: Update package_features by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PackageFeaturesRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PackageFeaturesResponse'
+    delete:
+      operationId: deletePackageFeature
+      summary: Delete package_features by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Deleted
+components:
+  schemas:
+
+    PackageFeaturesRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        package_id:
+          type: integer
+        feature_id:
+          type: integer
+        feature_type:
+          type: string
+        short_description:
+          type: string
+          maxLength: 300
+        tags:
+          type: string
+          maxLength: 20
+        additional_price:
+          type: number
+        additional_cost_price:
+          type: number
+        primary_price:
+          type: number
+        primary_cost_price:
+          type: number
+        trial_period_days:
+          type: integer
+        video_description:
+          type: string
+          maxLength: 1
+        full_description:
+          type: string
+        images:
+          type: string
+          maxLength: 2
+        videos:
+          type: string
+          maxLength: 2
+        created_by:
+          type: integer
+        updated_by:
+          type: integer
+
+    PackageFeaturesResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        package_id:
+          type: integer
+        feature_id:
+          type: integer
+        feature_type:
+          type: string
+        short_description:
+          type: string
+          maxLength: 300
+        tags:
+          type: string
+          maxLength: 20
+        additional_price:
+          type: number
+        additional_cost_price:
+          type: number
+        primary_price:
+          type: number
+        primary_cost_price:
+          type: number
+        trial_period_days:
+          type: integer
+        video_description:
+          type: string
+          maxLength: 1
+        full_description:
+          type: string
+        images:
+          type: string
+          maxLength: 2
+        videos:
+          type: string
+          maxLength: 2
+        created_by:
+          type: integer
+        updated_by:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+  

@@ -1,0 +1,163 @@
+openapi: 3.0.0
+info:
+  title: SalesAgentsResponse API
+  version: 1.0.0
+paths:
+  /sales_agents:
+    get:
+      operationId: listSalesAgents
+      summary: Get all sales_agents
+      responses:
+        '200':
+          description: List of sales_agents
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SalesAgentsResponse'
+    post:
+      operationId: createSalesAgent
+      summary: Create a new sales_agents
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SalesAgentsRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SalesAgentsResponse'
+
+  /sales_agents/{id}:
+    get:
+      operationId: getSalesAgentsById
+      summary: Get sales_agents by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: sales_agents object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SalesAgentsResponse'
+    put:
+      operationId: updateSalesAgent
+      summary: Update sales_agents by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SalesAgentsRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SalesAgentsResponse'
+    delete:
+      operationId: deleteSalesAgent
+      summary: Delete sales_agents by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Deleted
+components:
+  schemas:
+
+    SalesAgentsRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+          maxLength: 100
+        address1:
+          type: string
+          maxLength: 100
+        address2:
+          type: string
+          maxLength: 100
+        notes:
+          type: string
+          maxLength: 200
+        city:
+          type: string
+          maxLength: 30
+        state_id:
+          type: integer
+        country_id:
+          type: integer
+        postal_code:
+          type: string
+          maxLength: 10
+        status:
+          type: string
+        created_by:
+          type: integer
+        updated_by:
+          type: integer
+
+    SalesAgentsResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+          maxLength: 100
+        address1:
+          type: string
+          maxLength: 100
+        address2:
+          type: string
+          maxLength: 100
+        notes:
+          type: string
+          maxLength: 200
+        city:
+          type: string
+          maxLength: 30
+        state_id:
+          type: integer
+        country_id:
+          type: integer
+        postal_code:
+          type: string
+          maxLength: 10
+        status:
+          type: string
+        created_by:
+          type: integer
+        updated_by:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+  

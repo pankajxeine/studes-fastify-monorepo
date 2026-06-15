@@ -1,0 +1,139 @@
+openapi: 3.0.0
+info:
+  title: CustomerStatusResponse API
+  version: 1.0.0
+paths:
+  /customer_status:
+    get:
+      operationId: listCustomerStatus
+      summary: Get all customer_status
+      responses:
+        '200':
+          description: List of customer_status
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CustomerStatusResponse'
+    post:
+      operationId: createCustomerStatu
+      summary: Create a new customer_status
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerStatusRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerStatusResponse'
+
+  /customer_status/{id}:
+    get:
+      operationId: getCustomerStatusById
+      summary: Get customer_status by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: customer_status object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerStatusResponse'
+    put:
+      operationId: updateCustomerStatu
+      summary: Update customer_status by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerStatusRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerStatusResponse'
+    delete:
+      operationId: deleteCustomerStatu
+      summary: Delete customer_status by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Deleted
+components:
+  schemas:
+
+    CustomerStatusRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+          maxLength: 50
+        status:
+          type: string
+        created_by:
+          type: integer
+        hours:
+          type: integer
+        sequence:
+          type: integer
+        updated_by:
+          type: integer
+        deleted_at:
+          type: string
+          format: date-time
+
+    CustomerStatusResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+          maxLength: 50
+        status:
+          type: string
+        created_by:
+          type: integer
+        hours:
+          type: integer
+        sequence:
+          type: integer
+        updated_by:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        deleted_at:
+          type: string
+          format: date-time
+  

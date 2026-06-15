@@ -1,0 +1,139 @@
+openapi: 3.0.0
+info:
+  title: ServiceTicketTypesResponse API
+  version: 1.0.0
+paths:
+  /service_ticket_types:
+    get:
+      operationId: listServiceTicketTypes
+      summary: Get all service_ticket_types
+      responses:
+        '200':
+          description: List of service_ticket_types
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ServiceTicketTypesResponse'
+    post:
+      operationId: createServiceTicketType
+      summary: Create a new service_ticket_types
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceTicketTypesRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceTicketTypesResponse'
+
+  /service_ticket_types/{id}:
+    get:
+      operationId: getServiceTicketTypesById
+      summary: Get service_ticket_types by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: service_ticket_types object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceTicketTypesResponse'
+    put:
+      operationId: updateServiceTicketType
+      summary: Update service_ticket_types by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceTicketTypesRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceTicketTypesResponse'
+    delete:
+      operationId: deleteServiceTicketType
+      summary: Delete service_ticket_types by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Deleted
+components:
+  schemas:
+
+    ServiceTicketTypesRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+          maxLength: 50
+        status:
+          type: string
+        created_by:
+          type: integer
+        hours:
+          type: integer
+        sequence:
+          type: integer
+        updated_by:
+          type: integer
+        deleted_at:
+          type: string
+          format: date-time
+
+    ServiceTicketTypesResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+          maxLength: 50
+        status:
+          type: string
+        created_by:
+          type: integer
+        hours:
+          type: integer
+        sequence:
+          type: integer
+        updated_by:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        deleted_at:
+          type: string
+          format: date-time
+  

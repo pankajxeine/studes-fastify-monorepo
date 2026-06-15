@@ -443,7 +443,7 @@ ${fields}
       timestamps: true,
       underscored: true,
       freezeTableName: true,
-      paranoid: true${schemaName ? `,\n      schema: '${schemaName}'` : ''}${table.comment ? `,\n      comment: '${table.comment}'` : ''}${indexes ? `,\n      indexes: [\n${indexes}\n      ]` : ''}
+      paranoid: false${schemaName ? `,\n      schema: '${schemaName}'` : ''}${table.comment ? `,\n      comment: '${table.comment}'` : ''}${indexes ? `,\n      indexes: [\n${indexes}\n      ]` : ''}
     }
   )
   return ${className}
@@ -454,26 +454,55 @@ ${fields}
 
 function renderIndex(tables: Table[]): string {
   const imports = tables
-    .map((table) => `import { init${toPascalCase(table.name)}Entity } from './${table.name}/${table.name}.entity'`)
+    .map(
+      (table) =>
+        `import { init${toPascalCase(table.name)}Entity } from './${table.name}/${table.name}.entity'`
+    )
     .join('\n')
-  const initCalls = tables.map((table) => `  init${toPascalCase(table.name)}Entity(sequelize)`).join('\n')
+
+  // Generate type entries
+  const typeEntries = tables
+    .map(
+      (t) =>
+        `  ${t.name}: ReturnType<typeof init${toPascalCase(t.name)}Entity>;`
+    )
+    .join('\n')
+
+  // Generate model initializers
+  const models = tables
+    .map(
+      (t) => `      ${t.name}: init${toPascalCase(t.name)}Entity(sequelize)`
+    )
+    .join(',\n')
 
   return `import type { Sequelize } from 'sequelize'
 ${imports}
 
-export function initGeneratedEntities(sequelize: Sequelize): void {
-${initCalls}
+export type GeneratedModels = {
+${typeEntries}
+}
+
+export function initGeneratedEntities(sequelize: Sequelize): { models: GeneratedModels } {
+  return {
+    models: {
+${models}
+    }
+  }
 }
 `
 }
 
-function writeEntities(tables: Table[], outDir: string, schemaName?: string) {
+
+export function writeEntities(tables: Table[], outDir: string, schemaName?: string) {
   fs.mkdirSync(outDir, { recursive: true })
 
   for (const table of tables) {
     const folder = path.join(outDir, table.name)
     fs.mkdirSync(folder, { recursive: true })
-    fs.writeFileSync(path.join(folder, `${table.name}.entity.ts`), renderEntity(table, schemaName))
+    fs.writeFileSync(
+      path.join(folder, `${table.name}.entity.ts`),
+      renderEntity(table, schemaName)
+    )
   }
 
   fs.writeFileSync(path.join(outDir, 'index.ts'), renderIndex(tables))

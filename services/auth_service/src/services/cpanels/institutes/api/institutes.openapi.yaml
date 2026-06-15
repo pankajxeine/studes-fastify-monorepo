@@ -1,0 +1,197 @@
+openapi: 3.0.0
+info:
+  title: InstitutesResponse API
+  version: 1.0.0
+paths:
+  /institutes:
+    get:
+      operationId: listInstitutes
+      summary: Get all institutes
+      responses:
+        '200':
+          description: List of institutes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/InstitutesResponse'
+    post:
+      operationId: createInstitute
+      summary: Create a new institutes
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InstitutesRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InstitutesResponse'
+
+  /institutes/{id}:
+    get:
+      operationId: getInstitutesById
+      summary: Get institutes by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: institutes object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InstitutesResponse'
+    put:
+      operationId: updateInstitute
+      summary: Update institutes by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InstitutesRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InstitutesResponse'
+    delete:
+      operationId: deleteInstitute
+      summary: Delete institutes by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Deleted
+components:
+  schemas:
+
+    InstitutesRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+          maxLength: 50
+        schema_name:
+          type: string
+          maxLength: 23
+        institute_type:
+          type: string
+          maxLength: 15
+        registration_number:
+          type: string
+          maxLength: 12
+        principal_name:
+          type: string
+          maxLength: 18
+        email:
+          type: string
+          maxLength: 50
+        phone:
+          type: string
+          maxLength: 15
+        address:
+          type: string
+          maxLength: 50
+        city:
+          type: string
+          maxLength: 50
+        state:
+          type: string
+          maxLength: 50
+        postal_code:
+          type: integer
+        country:
+          type: string
+          maxLength: 50
+        description:
+          type: string
+          maxLength: 200
+        settings:
+          type: object
+        status:
+          type: string
+        activation_date:
+          type: string
+          format: date
+
+    InstitutesResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+          maxLength: 50
+        schema_name:
+          type: string
+          maxLength: 23
+        institute_type:
+          type: string
+          maxLength: 15
+        registration_number:
+          type: string
+          maxLength: 12
+        principal_name:
+          type: string
+          maxLength: 18
+        email:
+          type: string
+          maxLength: 50
+        phone:
+          type: string
+          maxLength: 15
+        address:
+          type: string
+          maxLength: 50
+        city:
+          type: string
+          maxLength: 50
+        state:
+          type: string
+          maxLength: 50
+        postal_code:
+          type: integer
+        country:
+          type: string
+          maxLength: 50
+        description:
+          type: string
+          maxLength: 200
+        settings:
+          type: object
+        status:
+          type: string
+        activation_date:
+          type: string
+          format: date
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+  
