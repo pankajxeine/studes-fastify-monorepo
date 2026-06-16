@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { RoleTemplateModulesService } from '../services/role_template_modules/RoleTemplateModulesService'
+import { RoleTemplateModulesService } from '../services/cpanels/role_template_modules/RoleTemplateModulesService'
 
 const RoleTemplateModulesRoutes: FastifyPluginAsync = async (app) => {
   const controller = new RoleTemplateModulesService()

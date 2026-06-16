@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { SubscriptionPlansService } from '../services/subscription_plans/SubscriptionPlansService'
+import { SubscriptionPlansService } from '../services/cpanels/subscription_plans/SubscriptionPlansService'
 
 const SubscriptionPlansRoutes: FastifyPluginAsync = async (app) => {
   const controller = new SubscriptionPlansService()

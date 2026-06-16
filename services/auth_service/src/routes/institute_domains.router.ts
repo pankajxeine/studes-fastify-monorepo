@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { InstituteDomainsService } from '../services/institute_domains/InstituteDomainsService'
+import { InstituteDomainsService } from '../services/cpanels/institute_domains/InstituteDomainsService'
 
 const InstituteDomainsRoutes: FastifyPluginAsync = async (app) => {
   const controller = new InstituteDomainsService()

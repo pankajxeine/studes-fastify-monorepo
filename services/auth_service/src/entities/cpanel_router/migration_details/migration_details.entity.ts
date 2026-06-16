@@ -79,7 +79,7 @@ export function initMigrationDetailsEntity(sequelize: Sequelize): typeof Migrati
       timestamps: true,
       underscored: true,
       freezeTableName: true,
-      paranoid: true,
+      paranoid: false,
       indexes: [
       { unique: true, fields: ['file_name'] }
       ]

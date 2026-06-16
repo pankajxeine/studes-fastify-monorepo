@@ -13,7 +13,7 @@ export type ServiceTicketsAttributes = {
   subId?: number | null
   priority?: string
   followupTime?: Date | null
-  followupDate?: string | null
+  followupDate?: Date | null
   emailFollowup?: string
   callerName?: string | null
   callDirection?: string
@@ -49,7 +49,7 @@ export class ServiceTicketsEntity
   declare subId: number | null
   declare priority: string
   declare followupTime: Date | null
-  declare followupDate: string | null
+  declare followupDate: Date | null
   declare emailFollowup: string
   declare callerName: string | null
   declare callDirection: string
@@ -92,7 +92,7 @@ export function initServiceTicketsEntity(sequelize: Sequelize): typeof ServiceTi
         allowNull: true,
       },
       subject: {
-        type: DataTypes.CHAR(100),
+        type: DataTypes.STRING(100),
         field: 'subject',
         allowNull: true,
       },
@@ -134,7 +134,7 @@ export function initServiceTicketsEntity(sequelize: Sequelize): typeof ServiceTi
         allowNull: true,
       },
       followupDate: {
-        type: DataTypes.TEXT,
+        type: DataTypes.DATEONLY,
         field: 'followup_date',
         allowNull: true,
       },
@@ -145,7 +145,7 @@ export function initServiceTicketsEntity(sequelize: Sequelize): typeof ServiceTi
         defaultValue: "No",
       },
       callerName: {
-        type: DataTypes.CHAR(30),
+        type: DataTypes.STRING(30),
         field: 'caller_name',
         allowNull: true,
       },
@@ -166,12 +166,12 @@ export function initServiceTicketsEntity(sequelize: Sequelize): typeof ServiceTi
         allowNull: true,
       },
       description: {
-        type: DataTypes.CHAR(1),
+        type: DataTypes.STRING(1),
         field: 'description',
         allowNull: true,
       },
       status: {
-        type: DataTypes.CHAR(1),
+        type: DataTypes.STRING(1),
         field: 'status',
         allowNull: true,
       },
@@ -188,7 +188,7 @@ export function initServiceTicketsEntity(sequelize: Sequelize): typeof ServiceTi
         defaultValue: 0,
       },
       isNewClient: {
-        type: DataTypes.CHAR(1),
+        type: DataTypes.STRING(1),
         field: 'is_new_client',
         allowNull: true,
       },
@@ -224,7 +224,7 @@ export function initServiceTicketsEntity(sequelize: Sequelize): typeof ServiceTi
       timestamps: true,
       underscored: true,
       freezeTableName: true,
-      paranoid: true,
+      paranoid: false,
       indexes: [
       { unique: true, fields: ['id'] }
       ]

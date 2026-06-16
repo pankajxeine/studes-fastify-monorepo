@@ -41,7 +41,7 @@ export function initCustomerStatusEntity(sequelize: Sequelize): typeof CustomerS
         primaryKey: true,
       },
       name: {
-        type: DataTypes.CHAR(50),
+        type: DataTypes.STRING(50),
         field: 'name',
         allowNull: true,
       },
@@ -93,7 +93,7 @@ export function initCustomerStatusEntity(sequelize: Sequelize): typeof CustomerS
       timestamps: true,
       underscored: true,
       freezeTableName: true,
-      paranoid: true,
+      paranoid: false,
       indexes: [
       { unique: true, fields: ['id'] }
       ]

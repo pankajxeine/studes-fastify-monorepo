@@ -37,27 +37,27 @@ export function initIndustriesEntity(sequelize: Sequelize): typeof IndustriesEnt
         primaryKey: true,
       },
       code: {
-        type: DataTypes.CHAR(8),
+        type: DataTypes.STRING(8),
         field: 'code',
         allowNull: true,
       },
       name: {
-        type: DataTypes.CHAR(7),
+        type: DataTypes.STRING(7),
         field: 'name',
         allowNull: true,
       },
       description: {
-        type: DataTypes.CHAR(17),
+        type: DataTypes.STRING(17),
         field: 'description',
         allowNull: true,
       },
       type: {
-        type: DataTypes.CHAR(8),
+        type: DataTypes.STRING(8),
         field: 'type',
         allowNull: true,
       },
       image: {
-        type: DataTypes.CHAR(12),
+        type: DataTypes.STRING(12),
         field: 'image',
         allowNull: true,
       },
@@ -78,7 +78,7 @@ export function initIndustriesEntity(sequelize: Sequelize): typeof IndustriesEnt
       timestamps: true,
       underscored: true,
       freezeTableName: true,
-      paranoid: true,
+      paranoid: false,
       indexes: [
       { unique: true, fields: ['id'] },
       { unique: true, fields: ['code'] }

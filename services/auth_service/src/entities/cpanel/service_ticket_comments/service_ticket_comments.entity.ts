@@ -64,7 +64,7 @@ export function initServiceTicketCommentsEntity(sequelize: Sequelize): typeof Se
       timestamps: true,
       underscored: true,
       freezeTableName: true,
-      paranoid: true,
+      paranoid: false,
       indexes: [
       { unique: true, fields: ['id'] }
       ]

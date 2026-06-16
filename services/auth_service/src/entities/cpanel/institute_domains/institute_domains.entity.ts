@@ -42,12 +42,12 @@ export function initInstituteDomainsEntity(sequelize: Sequelize): typeof Institu
         allowNull: true,
       },
       domain: {
-        type: DataTypes.CHAR(100),
+        type: DataTypes.STRING(100),
         field: 'domain',
         allowNull: true,
       },
       schemaName: {
-        type: DataTypes.CHAR(100),
+        type: DataTypes.STRING(100),
         field: 'schema_name',
         allowNull: true,
       },
@@ -80,7 +80,7 @@ export function initInstituteDomainsEntity(sequelize: Sequelize): typeof Institu
       timestamps: true,
       underscored: true,
       freezeTableName: true,
-      paranoid: true,
+      paranoid: false,
       indexes: [
       { unique: true, fields: ['id'] },
       { unique: true, fields: ['domain'] }

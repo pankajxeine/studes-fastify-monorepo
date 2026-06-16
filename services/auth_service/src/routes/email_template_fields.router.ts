@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { EmailTemplateFieldsService } from '../services/email_template_fields/EmailTemplateFieldsService'
+import { EmailTemplateFieldsService } from '../services/cpanels/email_template_fields/EmailTemplateFieldsService'
 
 const EmailTemplateFieldsRoutes: FastifyPluginAsync = async (app) => {
   const controller = new EmailTemplateFieldsService()

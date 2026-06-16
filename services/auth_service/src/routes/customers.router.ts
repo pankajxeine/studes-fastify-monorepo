@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { CustomersService } from '../services/customers/CustomersService'
+import { CustomersService } from '../services/cpanels/customers/CustomersService'
 
 const CustomersRoutes: FastifyPluginAsync = async (app) => {
   const controller = new CustomersService()

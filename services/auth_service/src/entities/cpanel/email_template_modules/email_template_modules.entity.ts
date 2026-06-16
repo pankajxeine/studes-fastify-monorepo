@@ -25,7 +25,7 @@ export function initEmailTemplateModulesEntity(sequelize: Sequelize): typeof Ema
         primaryKey: true,
       },
       module: {
-        type: DataTypes.CHAR(50),
+        type: DataTypes.STRING(50),
         field: 'module',
         allowNull: true,
       }
@@ -36,7 +36,7 @@ export function initEmailTemplateModulesEntity(sequelize: Sequelize): typeof Ema
       timestamps: true,
       underscored: true,
       freezeTableName: true,
-      paranoid: true,
+      paranoid: false,
       indexes: [
       { unique: true, fields: ['id'] }
       ]

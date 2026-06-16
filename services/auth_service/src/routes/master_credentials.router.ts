@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { MasterCredentialsService } from '../services/master_credentials/MasterCredentialsService'
+import { MasterCredentialsService } from '../services/cpanels/master_credentials/MasterCredentialsService'
 
 const MasterCredentialsRoutes: FastifyPluginAsync = async (app) => {
   const controller = new MasterCredentialsService()

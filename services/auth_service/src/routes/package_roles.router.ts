@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { PackageRolesService } from '../services/package_roles/PackageRolesService'
+import { PackageRolesService } from '../services/cpanels/package_roles/PackageRolesService'
 
 const PackageRolesRoutes: FastifyPluginAsync = async (app) => {
   const controller = new PackageRolesService()

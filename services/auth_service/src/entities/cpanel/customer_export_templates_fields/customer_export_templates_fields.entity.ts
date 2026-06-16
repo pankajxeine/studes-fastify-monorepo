@@ -44,12 +44,12 @@ export function initCustomerExportTemplatesFieldsEntity(sequelize: Sequelize): t
         allowNull: true,
       },
       label: {
-        type: DataTypes.CHAR(100),
+        type: DataTypes.STRING(100),
         field: 'label',
         allowNull: true,
       },
       value: {
-        type: DataTypes.CHAR(100),
+        type: DataTypes.STRING(100),
         field: 'value',
         allowNull: true,
       },
@@ -59,7 +59,7 @@ export function initCustomerExportTemplatesFieldsEntity(sequelize: Sequelize): t
         allowNull: true,
       },
       module: {
-        type: DataTypes.CHAR(200),
+        type: DataTypes.STRING(200),
         field: 'module',
         allowNull: true,
       },
@@ -86,7 +86,7 @@ export function initCustomerExportTemplatesFieldsEntity(sequelize: Sequelize): t
       timestamps: true,
       underscored: true,
       freezeTableName: true,
-      paranoid: true,
+      paranoid: false,
       indexes: [
       { unique: true, fields: ['id'] },
       { unique: true, fields: ['template_id'] }

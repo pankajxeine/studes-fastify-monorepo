@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { SubPackageFeatureBlocksService } from '../services/sub_package_feature_blocks/SubPackageFeatureBlocksService'
+import { SubPackageFeatureBlocksService } from '../services/cpanels/sub_package_feature_blocks/SubPackageFeatureBlocksService'
 
 const SubPackageFeatureBlocksRoutes: FastifyPluginAsync = async (app) => {
   const controller = new SubPackageFeatureBlocksService()

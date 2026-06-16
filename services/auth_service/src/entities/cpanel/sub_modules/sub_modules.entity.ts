@@ -64,7 +64,7 @@ export function initSubModulesEntity(sequelize: Sequelize): typeof SubModulesEnt
       timestamps: true,
       underscored: true,
       freezeTableName: true,
-      paranoid: true,
+      paranoid: false,
       indexes: [
       { unique: true, fields: ['id'] }
       ]

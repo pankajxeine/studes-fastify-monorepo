@@ -2,10 +2,10 @@ import fp from 'fastify-plugin';
 import { z } from 'zod';
 import { BadRequestError } from '../core';
 import { sequelize } from './db';
-import { DataTypes, Sequelize } from 'sequelize';
-import { initGeneratedEntities } from '../postgre/entities';
+import { DataTypes } from 'sequelize';
+import { initGeneratedEntities as cpanelModel, GeneratedModels as CpanelModels } from '../entities/cpanel';
+import { initGeneratedEntities as cpanelRouterModel, GeneratedModels as CpanelRouterModels } from '../entities/cpanel_router';
 import { escapeIdentifier } from '../utils/escapeIdentifier';
-// import { getTenantUserModel } from '../utils/tenantModelCache';
 
 const tenantConfigSchema = z.object({
   requireTenant: z.boolean().optional().default(true),
@@ -14,42 +14,29 @@ const tenantConfigSchema = z.object({
 export default fp(async (app) => {
   app.decorateRequest('tenant', null);
   app.decorateRequest('tenantModels', null);
-  app.decorateRequest('db', null);
+  app.decorate('db', null);
+  app.decorate('cpanelModels', null);
+  app.decorate('cpanelRouterModels', null);
+
+  await Object.defineProperty(app, 'db', {
+    get() { return sequelize; }
+  });
+
+  await Object.defineProperty(app, 'cpanelModel', {
+    get() { return cpanelModel(sequelize).models }
+  });
+
+  await Object.defineProperty(app, 'cpanelRouterModel', {
+    get() { return cpanelRouterModel(sequelize).models }
+  });
+
 
   app.addHook('onRequest', async (request, reply) => {
     const tenantId = request.headers['x-tenant-id'];
-    const db_schema = tenantId ? escapeIdentifier(`${tenantId}`) : "default_cpanel";
-    /**
-     * Note: We attach the Sequelize instance and tenant-specific models to the request object for easy access in route handlers. In a real implementation, you might want to use a more sophisticated approach to manage tenant-specific models, such as a model factory or a caching layer, especially if you have many tenants or complex schemas.
-     */
-    Object.defineProperty(request, 'db', {
-      get() { return sequelize; }
-    });
+    const db_schema = tenantId ? escapeIdentifier(`${tenantId}`) : "skeleton_cpanel_router";
+    request.dbSchema = db_schema;
 
-    /**
-     * For tenantModels, we call initGeneratedEntities(sequelize) to initialize the models. 
-     * In a real implementation, you would likely want to cache these models per tenant schema to avoid re-initializing them on every request, 
-     * which can be expensive. 
-     * The caching mechanism is not implemented here for simplicity,
-     * but you could implement it using a Map or similar data structure keyed by tenant ID or schema name.
-     */
-    // Cache models per schema to avoid re‑init cost
-    Object.defineProperty(request, 'tenantModels', {
-      get() {
-        if (!app.tenantModelCache) app.tenantModelCache = {};
-        if (!db_schema) {
-          throw new Error('Tenant schema is not defined');
-        }
-        if (!app.tenantModelCache[db_schema]!!) {
-          // Initialize models for this schema once
-          app.tenantModelCache[db_schema] =
-            initGeneratedEntities(
-              sequelize
-            );
-        }
-        return app.tenantModelCache[db_schema];
-      },
-    });
+
     // Skip tenant resolution for public routes
     if (['/health', '/auth', '/docs', '/cpanelroutes'].includes(request.routeOptions.url)) {
       return;
@@ -124,10 +111,6 @@ export default fp(async (app) => {
       resolvedBy: from ?? 'header',
     };
 
-    // Attach tenant-specific models
-    request.db = sequelize;
-    request.tenantModels = initGeneratedEntities(sequelize);
-
     request.log.info(
       { tenantId: tenant.getDataValue('id'), tenantSlug: tenant.getDataValue('slug'), schema, resolvedBy: from },
       'tenant resolved'
@@ -141,7 +124,10 @@ export default fp(async (app) => {
 
 declare module 'fastify' {
   interface FastifyInstance {
-    tenantModelCache: Record<string, ReturnType<typeof initGeneratedEntities>>;
+    tenantModel: any;
+    cpanelModels: CpanelModels | null;
+    cpanelRouterModels: CpanelRouterModels | null;
+    db: typeof sequelize | null;
   }
   interface FastifyRequest {
     tenant: null | {
@@ -150,8 +136,7 @@ declare module 'fastify' {
       schema: string;
       resolvedBy: 'header' | 'subdomain';
     };
-    db: typeof sequelize | null;
-    tenantModels: ReturnType<typeof initGeneratedEntities> | null;
+    dbSchema: string;
   }
 
   interface FastifyRouteConfig {

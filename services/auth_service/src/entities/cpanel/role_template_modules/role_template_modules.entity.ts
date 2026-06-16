@@ -43,7 +43,7 @@ export function initRoleTemplateModulesEntity(sequelize: Sequelize): typeof Role
         allowNull: true,
       },
       moduleKey: {
-        type: DataTypes.CHAR(50),
+        type: DataTypes.STRING(50),
         field: 'module_key',
         allowNull: true,
       },
@@ -64,7 +64,7 @@ export function initRoleTemplateModulesEntity(sequelize: Sequelize): typeof Role
       timestamps: true,
       underscored: true,
       freezeTableName: true,
-      paranoid: true,
+      paranoid: false,
       indexes: [
       { unique: true, fields: ['id'] }
       ]

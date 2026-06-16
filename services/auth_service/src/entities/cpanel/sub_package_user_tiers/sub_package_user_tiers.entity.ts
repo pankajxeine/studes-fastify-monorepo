@@ -99,7 +99,7 @@ export function initSubPackageUserTiersEntity(sequelize: Sequelize): typeof SubP
       timestamps: true,
       underscored: true,
       freezeTableName: true,
-      paranoid: true,
+      paranoid: false,
       indexes: [
       { unique: true, fields: ['id'] }
       ]

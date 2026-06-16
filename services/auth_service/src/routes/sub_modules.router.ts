@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { SubModulesService } from '../services/sub_modules/SubModulesService'
+import { SubModulesService } from '../services/cpanels/sub_modules/SubModulesService'
 
 const SubModulesRoutes: FastifyPluginAsync = async (app) => {
   const controller = new SubModulesService()

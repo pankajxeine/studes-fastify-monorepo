@@ -60,7 +60,7 @@ export function initCrmsEntity(sequelize: Sequelize): typeof CrmsEntity {
       timestamps: true,
       underscored: true,
       freezeTableName: true,
-      paranoid: true,
+      paranoid: false,
       indexes: [
       { unique: true, fields: ['domain'] }
       ]

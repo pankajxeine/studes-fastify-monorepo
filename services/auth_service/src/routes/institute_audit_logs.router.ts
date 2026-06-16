@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { InstituteAuditLogsService } from '../services/institute_audit_logs/InstituteAuditLogsService'
+import { InstituteAuditLogsService } from '../services/cpanels/institute_audit_logs/InstituteAuditLogsService'
 
 const InstituteAuditLogsRoutes: FastifyPluginAsync = async (app) => {
   const controller = new InstituteAuditLogsService()

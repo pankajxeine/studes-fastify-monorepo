@@ -26,14 +26,15 @@ export function initCustomerNumbersEntity(sequelize: Sequelize): typeof Customer
         type: DataTypes.TEXT,
         field: 'id',
         allowNull: true,
+        primaryKey: true,
       },
       module: {
-        type: DataTypes.CHAR(14),
+        type: DataTypes.STRING(14),
         field: 'module',
         allowNull: true,
       },
       prefix: {
-        type: DataTypes.CHAR(2),
+        type: DataTypes.STRING(4),
         field: 'prefix',
         allowNull: true,
       },
@@ -49,7 +50,10 @@ export function initCustomerNumbersEntity(sequelize: Sequelize): typeof Customer
       timestamps: true,
       underscored: true,
       freezeTableName: true,
-      paranoid: true
+      paranoid: false,
+      indexes: [
+      { unique: true, fields: ['id'] }
+      ]
     }
   )
   return CustomerNumbersEntity

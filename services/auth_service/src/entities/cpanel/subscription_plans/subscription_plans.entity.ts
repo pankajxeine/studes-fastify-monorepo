@@ -47,12 +47,12 @@ export function initSubscriptionPlansEntity(sequelize: Sequelize): typeof Subscr
         primaryKey: true,
       },
       planName: {
-        type: DataTypes.CHAR(30),
+        type: DataTypes.STRING(30),
         field: 'plan_name',
         allowNull: true,
       },
       instituteType: {
-        type: DataTypes.CHAR(7),
+        type: DataTypes.STRING(7),
         field: 'institute_type',
         allowNull: true,
       },
@@ -114,7 +114,7 @@ export function initSubscriptionPlansEntity(sequelize: Sequelize): typeof Subscr
       timestamps: true,
       underscored: true,
       freezeTableName: true,
-      paranoid: true,
+      paranoid: false,
       indexes: [
       { unique: true, fields: ['id'] }
       ]

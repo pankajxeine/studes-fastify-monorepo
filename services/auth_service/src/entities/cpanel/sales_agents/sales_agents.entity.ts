@@ -49,27 +49,27 @@ export function initSalesAgentsEntity(sequelize: Sequelize): typeof SalesAgentsE
         primaryKey: true,
       },
       name: {
-        type: DataTypes.CHAR(100),
+        type: DataTypes.STRING(100),
         field: 'name',
         allowNull: true,
       },
       address1: {
-        type: DataTypes.CHAR(100),
+        type: DataTypes.STRING(100),
         field: 'address1',
         allowNull: true,
       },
       address2: {
-        type: DataTypes.CHAR(100),
+        type: DataTypes.STRING(100),
         field: 'address2',
         allowNull: true,
       },
       notes: {
-        type: DataTypes.CHAR(200),
+        type: DataTypes.STRING(200),
         field: 'notes',
         allowNull: true,
       },
       city: {
-        type: DataTypes.CHAR(30),
+        type: DataTypes.STRING(30),
         field: 'city',
         allowNull: true,
       },
@@ -84,7 +84,7 @@ export function initSalesAgentsEntity(sequelize: Sequelize): typeof SalesAgentsE
         allowNull: true,
       },
       postalCode: {
-        type: DataTypes.CHAR(10),
+        type: DataTypes.STRING(10),
         field: 'postal_code',
         allowNull: true,
       },
@@ -121,7 +121,7 @@ export function initSalesAgentsEntity(sequelize: Sequelize): typeof SalesAgentsE
       timestamps: true,
       underscored: true,
       freezeTableName: true,
-      paranoid: true,
+      paranoid: false,
       indexes: [
       { unique: true, fields: ['id'] }
       ]

@@ -31,7 +31,7 @@ export function initCustomerExportTemplatesEntity(sequelize: Sequelize): typeof 
         primaryKey: true,
       },
       name: {
-        type: DataTypes.CHAR(200),
+        type: DataTypes.STRING(200),
         field: 'name',
         allowNull: true,
       },
@@ -58,7 +58,7 @@ export function initCustomerExportTemplatesEntity(sequelize: Sequelize): typeof 
       timestamps: true,
       underscored: true,
       freezeTableName: true,
-      paranoid: true,
+      paranoid: false,
       indexes: [
       { unique: true, fields: ['id'] }
       ]

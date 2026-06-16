@@ -46,12 +46,12 @@ export function initCustomerNotesEntity(sequelize: Sequelize): typeof CustomerNo
         allowNull: true,
       },
       subject: {
-        type: DataTypes.CHAR(50),
+        type: DataTypes.STRING(50),
         field: 'subject',
         allowNull: true,
       },
       description: {
-        type: DataTypes.CHAR(500),
+        type: DataTypes.STRING(500),
         field: 'description',
         allowNull: true,
       },
@@ -92,7 +92,7 @@ export function initCustomerNotesEntity(sequelize: Sequelize): typeof CustomerNo
       timestamps: true,
       underscored: true,
       freezeTableName: true,
-      paranoid: true,
+      paranoid: false,
       indexes: [
       { unique: true, fields: ['id'] }
       ]

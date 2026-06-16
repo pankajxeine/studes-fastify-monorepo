@@ -314,9 +314,10 @@ function writeGeneratorFiles(outDir?: string, module?: string) {
       console.log(`Skipping service creation: ${serviceFileName} already exists`)
     }
 
+    const serviceName = getServiceName(parentDir)
     const routeOut =
       `import type { FastifyPluginAsync } from 'fastify'\n` +
-      `import { ${controllerImplName} } from '../services/${moduleName}/${modulePascal}Service'\n` +
+      `import { ${controllerImplName} } from '../services/${serviceName}/${modulePascal}Service'\n` +
       `\n` +
 
       `const ${modulePascal}Routes: FastifyPluginAsync = async (app) => {\n` +
@@ -339,6 +340,25 @@ function writeGeneratorFiles(outDir?: string, module?: string) {
     `}\n`;
 
   fs.writeFileSync(path.join(routesOutDir, 'index.ts'), indexOut, 'utf8');
+}
+
+function getServiceName(dirPath: string): string {
+  // normalize slashes
+  const normalized = dirPath.replace(/\\/g, '/');
+
+  // split into segments
+  const parts = normalized.split('/');
+
+  // find the last "services" segment
+  const idx = parts.lastIndexOf('services');
+
+  if (idx >= 0 && idx < parts.length - 1) {
+    // take everything after "services"
+    return parts.slice(idx + 1).join('/');
+  }
+
+  // fallback: return last two segments
+  return parts.slice(-2).join('/');
 }
 
 const args = process.argv.slice(2);

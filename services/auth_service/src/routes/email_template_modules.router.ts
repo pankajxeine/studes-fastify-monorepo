@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { EmailTemplateModulesService } from '../services/email_template_modules/EmailTemplateModulesService'
+import { EmailTemplateModulesService } from '../services/cpanels/email_template_modules/EmailTemplateModulesService'
 
 const EmailTemplateModulesRoutes: FastifyPluginAsync = async (app) => {
   const controller = new EmailTemplateModulesService()

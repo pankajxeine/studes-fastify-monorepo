@@ -71,7 +71,7 @@ export function initCpanelCompaniesEntity(sequelize: Sequelize): typeof CpanelCo
         primaryKey: true,
       },
       name: {
-        type: DataTypes.CHAR(50),
+        type: DataTypes.STRING(50),
         field: 'name',
         allowNull: true,
       },
@@ -91,17 +91,17 @@ export function initCpanelCompaniesEntity(sequelize: Sequelize): typeof CpanelCo
         allowNull: true,
       },
       address1: {
-        type: DataTypes.CHAR(50),
+        type: DataTypes.STRING(50),
         field: 'address1',
         allowNull: true,
       },
       address2: {
-        type: DataTypes.CHAR(50),
+        type: DataTypes.STRING(50),
         field: 'address2',
         allowNull: true,
       },
       city: {
-        type: DataTypes.CHAR(30),
+        type: DataTypes.STRING(30),
         field: 'city',
         allowNull: true,
       },
@@ -126,22 +126,22 @@ export function initCpanelCompaniesEntity(sequelize: Sequelize): typeof CpanelCo
         allowNull: true,
       },
       fax: {
-        type: DataTypes.CHAR(20),
+        type: DataTypes.STRING(20),
         field: 'fax',
         allowNull: true,
       },
       email: {
-        type: DataTypes.CHAR(30),
+        type: DataTypes.STRING(50),
         field: 'email',
         allowNull: true,
       },
       website: {
-        type: DataTypes.CHAR(30),
+        type: DataTypes.STRING(30),
         field: 'website',
         allowNull: true,
       },
       titleTag: {
-        type: DataTypes.CHAR(50),
+        type: DataTypes.STRING(50),
         field: 'title_tag',
         allowNull: true,
       },
@@ -172,22 +172,22 @@ export function initCpanelCompaniesEntity(sequelize: Sequelize): typeof CpanelCo
         allowNull: true,
       },
       logo: {
-        type: DataTypes.CHAR(8),
+        type: DataTypes.STRING(255),
         field: 'logo',
         allowNull: true,
       },
       faviconIcon: {
-        type: DataTypes.CHAR(16),
+        type: DataTypes.STRING(255),
         field: 'favicon_icon',
         allowNull: true,
       },
       loadingIcon: {
-        type: DataTypes.CHAR(1),
+        type: DataTypes.STRING(255),
         field: 'loading_icon',
         allowNull: true,
       },
       bundleName: {
-        type: DataTypes.CHAR(6),
+        type: DataTypes.STRING(30),
         field: 'bundle_name',
         allowNull: true,
       }
@@ -198,7 +198,7 @@ export function initCpanelCompaniesEntity(sequelize: Sequelize): typeof CpanelCo
       timestamps: true,
       underscored: true,
       freezeTableName: true,
-      paranoid: true
+      paranoid: false
     }
   )
   return CpanelCompaniesEntity

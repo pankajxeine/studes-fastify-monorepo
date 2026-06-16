@@ -59,52 +59,52 @@ export function initInstitutesEntity(sequelize: Sequelize): typeof InstitutesEnt
         primaryKey: true,
       },
       name: {
-        type: DataTypes.CHAR(50),
+        type: DataTypes.STRING(50),
         field: 'name',
         allowNull: true,
       },
       schemaName: {
-        type: DataTypes.CHAR(23),
+        type: DataTypes.STRING(23),
         field: 'schema_name',
         allowNull: true,
       },
       instituteType: {
-        type: DataTypes.CHAR(15),
+        type: DataTypes.STRING(15),
         field: 'institute_type',
         allowNull: true,
       },
       registrationNumber: {
-        type: DataTypes.CHAR(12),
+        type: DataTypes.STRING(12),
         field: 'registration_number',
         allowNull: true,
       },
       principalName: {
-        type: DataTypes.CHAR(18),
+        type: DataTypes.STRING(18),
         field: 'principal_name',
         allowNull: true,
       },
       email: {
-        type: DataTypes.CHAR(50),
+        type: DataTypes.STRING(50),
         field: 'email',
         allowNull: true,
       },
       phone: {
-        type: DataTypes.CHAR(15),
+        type: DataTypes.STRING(15),
         field: 'phone',
         allowNull: true,
       },
       address: {
-        type: DataTypes.CHAR(50),
+        type: DataTypes.STRING(50),
         field: 'address',
         allowNull: true,
       },
       city: {
-        type: DataTypes.CHAR(50),
+        type: DataTypes.STRING(50),
         field: 'city',
         allowNull: true,
       },
       state: {
-        type: DataTypes.CHAR(50),
+        type: DataTypes.STRING(50),
         field: 'state',
         allowNull: true,
       },
@@ -114,12 +114,12 @@ export function initInstitutesEntity(sequelize: Sequelize): typeof InstitutesEnt
         allowNull: true,
       },
       country: {
-        type: DataTypes.CHAR(50),
+        type: DataTypes.STRING(50),
         field: 'country',
         allowNull: true,
       },
       description: {
-        type: DataTypes.CHAR(200),
+        type: DataTypes.STRING(200),
         field: 'description',
         allowNull: true,
       },
@@ -156,7 +156,7 @@ export function initInstitutesEntity(sequelize: Sequelize): typeof InstitutesEnt
       timestamps: true,
       underscored: true,
       freezeTableName: true,
-      paranoid: true,
+      paranoid: false,
       indexes: [
       { unique: true, fields: ['id'] }
       ]

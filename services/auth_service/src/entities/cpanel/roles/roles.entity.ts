@@ -35,12 +35,12 @@ export function initRolesEntity(sequelize: Sequelize): typeof RolesEntity {
         primaryKey: true,
       },
       name: {
-        type: DataTypes.CHAR(50),
+        type: DataTypes.STRING(50),
         field: 'name',
         allowNull: true,
       },
       description: {
-        type: DataTypes.CHAR(300),
+        type: DataTypes.STRING(300),
         field: 'description',
         allowNull: true,
       },
@@ -73,7 +73,7 @@ export function initRolesEntity(sequelize: Sequelize): typeof RolesEntity {
       timestamps: true,
       underscored: true,
       freezeTableName: true,
-      paranoid: true,
+      paranoid: false,
       indexes: [
       { unique: true, fields: ['id'] }
       ]

@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { FeatureFieldsService } from '../services/feature_fields/FeatureFieldsService'
+import { FeatureFieldsService } from '../services/cpanels/feature_fields/FeatureFieldsService'
 
 const FeatureFieldsRoutes: FastifyPluginAsync = async (app) => {
   const controller = new FeatureFieldsService()

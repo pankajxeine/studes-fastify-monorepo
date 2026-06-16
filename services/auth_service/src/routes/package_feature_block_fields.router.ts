@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { PackageFeatureBlockFieldsService } from '../services/package_feature_block_fields/PackageFeatureBlockFieldsService'
+import { PackageFeatureBlockFieldsService } from '../services/cpanels/package_feature_block_fields/PackageFeatureBlockFieldsService'
 
 const PackageFeatureBlockFieldsRoutes: FastifyPluginAsync = async (app) => {
   const controller = new PackageFeatureBlockFieldsService()

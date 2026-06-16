@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { ServiceTicketLogsService } from '../services/service_ticket_logs/ServiceTicketLogsService'
+import { ServiceTicketLogsService } from '../services/cpanels/service_ticket_logs/ServiceTicketLogsService'
 
 const ServiceTicketLogsRoutes: FastifyPluginAsync = async (app) => {
   const controller = new ServiceTicketLogsService()

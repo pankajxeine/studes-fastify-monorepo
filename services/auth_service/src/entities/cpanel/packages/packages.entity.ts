@@ -51,7 +51,7 @@ export function initPackagesEntity(sequelize: Sequelize): typeof PackagesEntity 
         primaryKey: true,
       },
       name: {
-        type: DataTypes.CHAR(200),
+        type: DataTypes.STRING(200),
         field: 'name',
         allowNull: true,
       },
@@ -133,7 +133,7 @@ export function initPackagesEntity(sequelize: Sequelize): typeof PackagesEntity 
       timestamps: true,
       underscored: true,
       freezeTableName: true,
-      paranoid: true,
+      paranoid: false,
       indexes: [
       { unique: true, fields: ['id'] }
       ]

@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { CustomerExportTemplatesFieldsService } from '../services/customer_export_templates_fields/CustomerExportTemplatesFieldsService'
+import { CustomerExportTemplatesFieldsService } from '../services/cpanels/customer_export_templates_fields/CustomerExportTemplatesFieldsService'
 
 const CustomerExportTemplatesFieldsRoutes: FastifyPluginAsync = async (app) => {
   const controller = new CustomerExportTemplatesFieldsService()

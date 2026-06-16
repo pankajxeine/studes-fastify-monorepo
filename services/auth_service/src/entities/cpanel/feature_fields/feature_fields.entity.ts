@@ -40,12 +40,12 @@ export function initFeatureFieldsEntity(sequelize: Sequelize): typeof FeatureFie
         allowNull: true,
       },
       fieldName: {
-        type: DataTypes.CHAR(22),
+        type: DataTypes.STRING(22),
         field: 'field_name',
         allowNull: true,
       },
       fieldKey: {
-        type: DataTypes.CHAR(35),
+        type: DataTypes.STRING(35),
         field: 'field_key',
         allowNull: true,
       },
@@ -72,7 +72,7 @@ export function initFeatureFieldsEntity(sequelize: Sequelize): typeof FeatureFie
       timestamps: true,
       underscored: true,
       freezeTableName: true,
-      paranoid: true,
+      paranoid: false,
       indexes: [
       { unique: true, fields: ['id'] }
       ]

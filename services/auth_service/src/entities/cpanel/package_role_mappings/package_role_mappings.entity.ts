@@ -57,7 +57,7 @@ export function initPackageRoleMappingsEntity(sequelize: Sequelize): typeof Pack
       timestamps: true,
       underscored: true,
       freezeTableName: true,
-      paranoid: true,
+      paranoid: false,
       indexes: [
       { unique: true, fields: ['id'] },
       { unique: true, fields: ['package_role_id', 'package_id'] }

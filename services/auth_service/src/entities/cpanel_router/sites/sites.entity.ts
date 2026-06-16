@@ -74,7 +74,7 @@ export function initSitesEntity(sequelize: Sequelize): typeof SitesEntity {
       timestamps: true,
       underscored: true,
       freezeTableName: true,
-      paranoid: true,
+      paranoid: false,
       indexes: [
       { unique: true, fields: ['domain'] }
       ]

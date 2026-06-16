@@ -47,12 +47,12 @@ export function initCustomerDocumentsEntity(sequelize: Sequelize): typeof Custom
         primaryKey: true,
       },
       documentName: {
-        type: DataTypes.CHAR(300),
+        type: DataTypes.STRING(300),
         field: 'document_name',
         allowNull: true,
       },
       fileName: {
-        type: DataTypes.CHAR(300),
+        type: DataTypes.STRING(300),
         field: 'file_name',
         allowNull: true,
       },
@@ -94,7 +94,7 @@ export function initCustomerDocumentsEntity(sequelize: Sequelize): typeof Custom
       timestamps: true,
       underscored: true,
       freezeTableName: true,
-      paranoid: true,
+      paranoid: false,
       indexes: [
       { unique: true, fields: ['id', 'customer_id', 'document_type_id'] }
       ]

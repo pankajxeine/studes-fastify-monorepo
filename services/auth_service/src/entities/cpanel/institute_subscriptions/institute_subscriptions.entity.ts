@@ -104,7 +104,7 @@ export function initInstituteSubscriptionsEntity(sequelize: Sequelize): typeof I
       timestamps: true,
       underscored: true,
       freezeTableName: true,
-      paranoid: true,
+      paranoid: false,
       indexes: [
       { unique: true, fields: ['id'] }
       ]

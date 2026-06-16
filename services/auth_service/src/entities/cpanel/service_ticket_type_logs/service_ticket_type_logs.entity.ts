@@ -53,12 +53,12 @@ export function initServiceTicketTypeLogsEntity(sequelize: Sequelize): typeof Se
         allowNull: true,
       },
       hoursLapsed: {
-        type: DataTypes.CHAR(1),
+        type: DataTypes.STRING(1),
         field: 'hours_lapsed',
         allowNull: true,
       },
       minutesLapsed: {
-        type: DataTypes.CHAR(1),
+        type: DataTypes.STRING(1),
         field: 'minutes_lapsed',
         allowNull: true,
       },
@@ -100,7 +100,7 @@ export function initServiceTicketTypeLogsEntity(sequelize: Sequelize): typeof Se
       timestamps: true,
       underscored: true,
       freezeTableName: true,
-      paranoid: true,
+      paranoid: false,
       indexes: [
       { unique: true, fields: ['id'] }
       ]

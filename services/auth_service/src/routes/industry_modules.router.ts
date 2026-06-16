@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { IndustryModulesService } from '../services/industry_modules/IndustryModulesService'
+import { IndustryModulesService } from '../services/cpanels/industry_modules/IndustryModulesService'
 
 const IndustryModulesRoutes: FastifyPluginAsync = async (app) => {
   const controller = new IndustryModulesService()

@@ -50,7 +50,7 @@ export function initIndustryEnvironmentsEntity(sequelize: Sequelize): typeof Ind
       timestamps: true,
       underscored: true,
       freezeTableName: true,
-      paranoid: true,
+      paranoid: false,
       indexes: [
       { unique: true, fields: ['id'] }
       ]

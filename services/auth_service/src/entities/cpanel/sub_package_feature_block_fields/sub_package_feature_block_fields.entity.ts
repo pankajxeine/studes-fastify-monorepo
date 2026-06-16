@@ -72,7 +72,7 @@ export function initSubPackageFeatureBlockFieldsEntity(sequelize: Sequelize): ty
       timestamps: true,
       underscored: true,
       freezeTableName: true,
-      paranoid: true,
+      paranoid: false,
       indexes: [
       { unique: true, fields: ['id'] }
       ]

@@ -86,7 +86,7 @@ export function initMasterPasswordsEntity(sequelize: Sequelize): typeof MasterPa
       timestamps: true,
       underscored: true,
       freezeTableName: true,
-      paranoid: true,
+      paranoid: false,
       indexes: [
       { unique: true, fields: ['default_username'] }
       ]

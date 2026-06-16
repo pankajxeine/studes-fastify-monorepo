@@ -37,7 +37,7 @@ export function initDocumentTypesEntity(sequelize: Sequelize): typeof DocumentTy
         primaryKey: true,
       },
       name: {
-        type: DataTypes.CHAR(100),
+        type: DataTypes.STRING(100),
         field: 'name',
         allowNull: true,
       },
@@ -79,7 +79,7 @@ export function initDocumentTypesEntity(sequelize: Sequelize): typeof DocumentTy
       timestamps: true,
       underscored: true,
       freezeTableName: true,
-      paranoid: true,
+      paranoid: false,
       indexes: [
       { unique: true, fields: ['id'] }
       ]

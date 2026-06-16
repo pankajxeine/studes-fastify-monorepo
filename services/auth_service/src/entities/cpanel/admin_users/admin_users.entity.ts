@@ -68,12 +68,12 @@ export function initAdminUsersEntity(sequelize: Sequelize): typeof AdminUsersEnt
         allowNull: true,
       },
       firstName: {
-        type: DataTypes.STRING(7),
+        type: DataTypes.STRING(50),
         field: 'first_name',
         allowNull: true,
       },
       lastName: {
-        type: DataTypes.STRING(7),
+        type: DataTypes.STRING(50),
         field: 'last_name',
         allowNull: true,
       },
@@ -88,7 +88,7 @@ export function initAdminUsersEntity(sequelize: Sequelize): typeof AdminUsersEnt
         allowNull: true,
       },
       profileImage: {
-        type: DataTypes.STRING(1),
+        type: DataTypes.STRING(255),
         field: 'profile_image',
         allowNull: true,
       },
@@ -135,7 +135,7 @@ export function initAdminUsersEntity(sequelize: Sequelize): typeof AdminUsersEnt
       timestamps: true,
       underscored: true,
       freezeTableName: true,
-      paranoid: true,
+      paranoid: false,
       indexes: [
       { unique: true, fields: ['username'] },
       { unique: true, fields: ['email'] }

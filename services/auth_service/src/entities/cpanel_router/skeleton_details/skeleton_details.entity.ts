@@ -72,7 +72,7 @@ export function initSkeletonDetailsEntity(sequelize: Sequelize): typeof Skeleton
       timestamps: true,
       underscored: true,
       freezeTableName: true,
-      paranoid: true
+      paranoid: false
     }
   )
   return SkeletonDetailsEntity

@@ -57,7 +57,7 @@ export function initPackageFeatureBlocksEntity(sequelize: Sequelize): typeof Pac
       timestamps: true,
       underscored: true,
       freezeTableName: true,
-      paranoid: true,
+      paranoid: false,
       indexes: [
       { unique: true, fields: ['id'] }
       ]

@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { RoleModulePermissionsService } from '../services/role_module_permissions/RoleModulePermissionsService'
+import { RoleModulePermissionsService } from '../services/cpanels/role_module_permissions/RoleModulePermissionsService'
 
 const RoleModulePermissionsRoutes: FastifyPluginAsync = async (app) => {
   const controller = new RoleModulePermissionsService()

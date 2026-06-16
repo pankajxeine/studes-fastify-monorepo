@@ -287,7 +287,7 @@ export function initSubsEntity(sequelize: Sequelize): typeof SubsEntity {
       timestamps: true,
       underscored: true,
       freezeTableName: true,
-      paranoid: true,
+      paranoid: false,
       indexes: [
       { unique: true, fields: ['subdomain'] },
       { unique: true, fields: ['shortname'] }

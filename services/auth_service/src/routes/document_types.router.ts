@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { DocumentTypesService } from '../services/document_types/DocumentTypesService'
+import { DocumentTypesService } from '../services/cpanels/document_types/DocumentTypesService'
 
 const DocumentTypesRoutes: FastifyPluginAsync = async (app) => {
   const controller = new DocumentTypesService()

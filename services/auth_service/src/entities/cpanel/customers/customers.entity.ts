@@ -14,8 +14,8 @@ export type CustomersAttributes = {
   customerEmail?: string | null
   clientEmail?: string | null
   dba?: string | null
-  contractStartDate?: string | null
-  contractExpireDate?: string | null
+  contractStartDate?: Date | null
+  contractExpireDate?: Date | null
   costCenter?: string | null
   city?: string | null
   stateId?: number | null
@@ -55,8 +55,8 @@ export class CustomersEntity
   declare customerEmail: string | null
   declare clientEmail: string | null
   declare dba: string | null
-  declare contractStartDate: string | null
-  declare contractExpireDate: string | null
+  declare contractStartDate: Date | null
+  declare contractExpireDate: Date | null
   declare costCenter: string | null
   declare city: string | null
   declare stateId: number | null
@@ -87,22 +87,22 @@ export function initCustomersEntity(sequelize: Sequelize): typeof CustomersEntit
         primaryKey: true,
       },
       name: {
-        type: DataTypes.CHAR(50),
+        type: DataTypes.STRING(50),
         field: 'name',
         allowNull: true,
       },
       contactTitle: {
-        type: DataTypes.CHAR(20),
+        type: DataTypes.STRING(20),
         field: 'contact_title',
         allowNull: true,
       },
       customerType: {
-        type: DataTypes.CHAR(10),
+        type: DataTypes.STRING(10),
         field: 'customer_type',
         allowNull: true,
       },
       contactName: {
-        type: DataTypes.CHAR(50),
+        type: DataTypes.STRING(50),
         field: 'contact_name',
         allowNull: true,
       },
@@ -122,47 +122,47 @@ export function initCustomersEntity(sequelize: Sequelize): typeof CustomersEntit
         allowNull: true,
       },
       customerNumber: {
-        type: DataTypes.CHAR(10),
+        type: DataTypes.STRING(10),
         field: 'customer_number',
         allowNull: true,
       },
       type: {
-        type: DataTypes.CHAR(10),
+        type: DataTypes.STRING(10),
         field: 'type',
         allowNull: true,
       },
       customerEmail: {
-        type: DataTypes.CHAR(150),
+        type: DataTypes.STRING(150),
         field: 'customer_email',
         allowNull: true,
       },
       clientEmail: {
-        type: DataTypes.CHAR(150),
+        type: DataTypes.STRING(150),
         field: 'client_email',
         allowNull: true,
       },
       dba: {
-        type: DataTypes.CHAR(50),
+        type: DataTypes.STRING(50),
         field: 'dba',
         allowNull: true,
       },
       contractStartDate: {
-        type: DataTypes.TEXT,
+        type: DataTypes.DATEONLY,
         field: 'contract_start_date',
         allowNull: true,
       },
       contractExpireDate: {
-        type: DataTypes.TEXT,
+        type: DataTypes.DATEONLY,
         field: 'contract_expire_date',
         allowNull: true,
       },
       costCenter: {
-        type: DataTypes.CHAR(30),
+        type: DataTypes.STRING(30),
         field: 'cost_center',
         allowNull: true,
       },
       city: {
-        type: DataTypes.CHAR(30),
+        type: DataTypes.STRING(30),
         field: 'city',
         allowNull: true,
       },
@@ -187,12 +187,12 @@ export function initCustomersEntity(sequelize: Sequelize): typeof CustomersEntit
         allowNull: true,
       },
       streetAddress: {
-        type: DataTypes.CHAR(22),
+        type: DataTypes.STRING(22),
         field: 'street_address',
         allowNull: true,
       },
       chainNumber: {
-        type: DataTypes.CHAR(20),
+        type: DataTypes.STRING(20),
         field: 'chain_number',
         allowNull: true,
       },
@@ -258,7 +258,7 @@ export function initCustomersEntity(sequelize: Sequelize): typeof CustomersEntit
       timestamps: true,
       underscored: true,
       freezeTableName: true,
-      paranoid: true,
+      paranoid: false,
       indexes: [
       { unique: true, fields: ['id'] }
       ]

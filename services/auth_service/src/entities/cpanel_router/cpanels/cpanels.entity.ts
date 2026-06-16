@@ -65,7 +65,7 @@ export function initCpanelsEntity(sequelize: Sequelize): typeof CpanelsEntity {
       timestamps: true,
       underscored: true,
       freezeTableName: true,
-      paranoid: true,
+      paranoid: false,
       indexes: [
       { unique: true, fields: ['domain'] }
       ]

@@ -75,12 +75,12 @@ export function initPackageFeaturesEntity(sequelize: Sequelize): typeof PackageF
         defaultValue: "None",
       },
       shortDescription: {
-        type: DataTypes.CHAR(300),
+        type: DataTypes.STRING(300),
         field: 'short_description',
         allowNull: true,
       },
       tags: {
-        type: DataTypes.CHAR(20),
+        type: DataTypes.STRING(20),
         field: 'tags',
         allowNull: true,
       },
@@ -110,7 +110,7 @@ export function initPackageFeaturesEntity(sequelize: Sequelize): typeof PackageF
         allowNull: true,
       },
       videoDescription: {
-        type: DataTypes.CHAR(1),
+        type: DataTypes.STRING(1),
         field: 'video_description',
         allowNull: true,
       },
@@ -120,12 +120,12 @@ export function initPackageFeaturesEntity(sequelize: Sequelize): typeof PackageF
         allowNull: true,
       },
       images: {
-        type: DataTypes.CHAR(2),
+        type: DataTypes.STRING(2),
         field: 'images',
         allowNull: true,
       },
       videos: {
-        type: DataTypes.CHAR(2),
+        type: DataTypes.STRING(2),
         field: 'videos',
         allowNull: true,
       },
@@ -156,7 +156,7 @@ export function initPackageFeaturesEntity(sequelize: Sequelize): typeof PackageF
       timestamps: true,
       underscored: true,
       freezeTableName: true,
-      paranoid: true,
+      paranoid: false,
       indexes: [
       { unique: true, fields: ['id'] },
       { unique: true, fields: ['package_id', 'feature_id'] }

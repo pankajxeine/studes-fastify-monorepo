@@ -31,12 +31,12 @@ export function initEnvironmentsEntity(sequelize: Sequelize): typeof Environment
         primaryKey: true,
       },
       name: {
-        type: DataTypes.CHAR(30),
+        type: DataTypes.STRING(30),
         field: 'name',
         allowNull: true,
       },
       code: {
-        type: DataTypes.CHAR(30),
+        type: DataTypes.STRING(30),
         field: 'code',
         allowNull: true,
       },
@@ -57,7 +57,7 @@ export function initEnvironmentsEntity(sequelize: Sequelize): typeof Environment
       timestamps: true,
       underscored: true,
       freezeTableName: true,
-      paranoid: true,
+      paranoid: false,
       indexes: [
       { unique: true, fields: ['id'] }
       ]

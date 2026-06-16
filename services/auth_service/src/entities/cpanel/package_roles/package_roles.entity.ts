@@ -33,12 +33,12 @@ export function initPackageRolesEntity(sequelize: Sequelize): typeof PackageRole
         primaryKey: true,
       },
       packageRoleName: {
-        type: DataTypes.CHAR(30),
+        type: DataTypes.STRING(30),
         field: 'package_role_name',
         allowNull: true,
       },
       packageRoleKey: {
-        type: DataTypes.CHAR(30),
+        type: DataTypes.STRING(30),
         field: 'package_role_key',
         allowNull: true,
       },
@@ -65,7 +65,7 @@ export function initPackageRolesEntity(sequelize: Sequelize): typeof PackageRole
       timestamps: true,
       underscored: true,
       freezeTableName: true,
-      paranoid: true,
+      paranoid: false,
       indexes: [
       { unique: true, fields: ['id'] },
       { unique: true, fields: ['package_role_key'] }

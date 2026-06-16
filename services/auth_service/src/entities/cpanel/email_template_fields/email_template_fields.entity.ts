@@ -34,12 +34,12 @@ export function initEmailTemplateFieldsEntity(sequelize: Sequelize): typeof Emai
         allowNull: true,
       },
       fieldName: {
-        type: DataTypes.CHAR(50),
+        type: DataTypes.STRING(50),
         field: 'field_name',
         allowNull: true,
       },
       fieldShortCode: {
-        type: DataTypes.CHAR(50),
+        type: DataTypes.STRING(50),
         field: 'field_short_code',
         allowNull: true,
       }
@@ -50,7 +50,7 @@ export function initEmailTemplateFieldsEntity(sequelize: Sequelize): typeof Emai
       timestamps: true,
       underscored: true,
       freezeTableName: true,
-      paranoid: true,
+      paranoid: false,
       indexes: [
       { unique: true, fields: ['id'] }
       ]

@@ -33,12 +33,12 @@ export function initRoleTemplatesEntity(sequelize: Sequelize): typeof RoleTempla
         primaryKey: true,
       },
       name: {
-        type: DataTypes.CHAR(50),
+        type: DataTypes.STRING(50),
         field: 'name',
         allowNull: true,
       },
       description: {
-        type: DataTypes.CHAR(200),
+        type: DataTypes.STRING(200),
         field: 'description',
         allowNull: true,
       },
@@ -65,7 +65,7 @@ export function initRoleTemplatesEntity(sequelize: Sequelize): typeof RoleTempla
       timestamps: true,
       underscored: true,
       freezeTableName: true,
-      paranoid: true,
+      paranoid: false,
       indexes: [
       { unique: true, fields: ['id'] },
       { unique: true, fields: ['name'] }

@@ -1,0 +1,127 @@
+openapi: 3.0.0
+info:
+  title: SkeletonDetailsResponse API
+  version: 1.0.0
+paths:
+  /skeleton_details:
+    get:
+      operationId: listSkeletonDetails
+      summary: Get all skeleton_details
+      responses:
+        '200':
+          description: List of skeleton_details
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SkeletonDetailsResponse'
+    post:
+      operationId: createSkeletonDetail
+      summary: Create a new skeleton_details
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SkeletonDetailsRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SkeletonDetailsResponse'
+
+  /skeleton_details/{id}:
+    get:
+      operationId: getSkeletonDetailsById
+      summary: Get skeleton_details by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: skeleton_details object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SkeletonDetailsResponse'
+    put:
+      operationId: updateSkeletonDetail
+      summary: Update skeleton_details by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SkeletonDetailsRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SkeletonDetailsResponse'
+    delete:
+      operationId: deleteSkeletonDetail
+      summary: Delete skeleton_details by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Deleted
+components:
+  schemas:
+
+    SkeletonDetailsRequest:
+      type: object
+      properties:
+        database_name:
+          type: string
+          maxLength: 50
+        environment:
+          type: string
+          maxLength: 50
+        industry:
+          type: string
+          maxLength: 50
+        configuration:
+          type: object
+
+    SkeletonDetailsResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        database_name:
+          type: string
+          maxLength: 50
+        environment:
+          type: string
+          maxLength: 50
+        industry:
+          type: string
+          maxLength: 50
+        configuration:
+          type: object
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+  

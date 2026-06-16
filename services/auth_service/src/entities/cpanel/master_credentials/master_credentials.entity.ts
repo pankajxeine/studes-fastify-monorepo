@@ -48,17 +48,17 @@ export function initMasterCredentialsEntity(sequelize: Sequelize): typeof Master
         allowNull: true,
       },
       username: {
-        type: DataTypes.CHAR(30),
+        type: DataTypes.STRING(30),
         field: 'username',
         allowNull: true,
       },
       application: {
-        type: DataTypes.CHAR(10),
+        type: DataTypes.STRING(10),
         field: 'application',
         allowNull: true,
       },
       password: {
-        type: DataTypes.CHAR(250),
+        type: DataTypes.STRING(250),
         field: 'password',
         allowNull: true,
       },
@@ -78,7 +78,7 @@ export function initMasterCredentialsEntity(sequelize: Sequelize): typeof Master
         allowNull: true,
       },
       fromDomain: {
-        type: DataTypes.CHAR(100),
+        type: DataTypes.STRING(100),
         field: 'from_domain',
         allowNull: true,
       },
@@ -99,7 +99,7 @@ export function initMasterCredentialsEntity(sequelize: Sequelize): typeof Master
       timestamps: true,
       underscored: true,
       freezeTableName: true,
-      paranoid: true,
+      paranoid: false,
       indexes: [
       { unique: true, fields: ['id'] }
       ]

@@ -285,7 +285,7 @@ if (!sqlFile && !outDir && !service) {
 
 const sql = fs.readFileSync(path.resolve(sqlFile), 'utf-8');
 const tables = parseSQL(sql);
-const serviceModulesDir = path.join(outDir, service)
+const serviceModulesDir = path.join(outDir, 'src', 'services', service)
 if (!fs.existsSync(outDir)) {
     fs.mkdirSync(outDir, { recursive: true })
 }

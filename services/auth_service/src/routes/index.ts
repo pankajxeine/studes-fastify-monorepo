@@ -49,6 +49,12 @@ import SubPackageFeaturesRoutes from './sub_package_features.router'
 import SubPackageFeatureBlocksRoutes from './sub_package_feature_blocks.router'
 import SubPackageFeatureBlockFieldsRoutes from './sub_package_feature_block_fields.router'
 import SubPackageUserTiersRoutes from './sub_package_user_tiers.router'
+import CpanelsRoutes from './cpanels.router'
+import CrmsRoutes from './crms.router'
+import MasterPasswordsRoutes from './master_passwords.router'
+import MigrationDetailsRoutes from './migration_details.router'
+import SitesRoutes from './sites.router'
+import SkeletonDetailsRoutes from './skeleton_details.router'
 
 import type { FastifyInstance } from 'fastify'
 
@@ -104,4 +110,10 @@ export default async function registerRoutes(app: FastifyInstance) {
   await app.register(SubPackageFeatureBlocksRoutes)
   await app.register(SubPackageFeatureBlockFieldsRoutes)
   await app.register(SubPackageUserTiersRoutes)
+  await app.register(CpanelsRoutes)
+  await app.register(CrmsRoutes)
+  await app.register(MasterPasswordsRoutes)
+  await app.register(MigrationDetailsRoutes)
+  await app.register(SitesRoutes)
+  await app.register(SkeletonDetailsRoutes)
 }

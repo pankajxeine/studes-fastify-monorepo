@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { ServiceTicketCommentsService } from '../services/service_ticket_comments/ServiceTicketCommentsService'
+import { ServiceTicketCommentsService } from '../services/cpanels/service_ticket_comments/ServiceTicketCommentsService'
 
 const ServiceTicketCommentsRoutes: FastifyPluginAsync = async (app) => {
   const controller = new ServiceTicketCommentsService()

@@ -79,7 +79,7 @@ export function initRoleModulePermissionsEntity(sequelize: Sequelize): typeof Ro
       timestamps: true,
       underscored: true,
       freezeTableName: true,
-      paranoid: true,
+      paranoid: false,
       indexes: [
       { unique: true, fields: ['id'] },
       { unique: true, fields: ['role_id', 'module_id', 'permission'] }

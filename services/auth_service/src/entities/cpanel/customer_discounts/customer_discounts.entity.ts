@@ -86,7 +86,7 @@ export function initCustomerDiscountsEntity(sequelize: Sequelize): typeof Custom
       timestamps: true,
       underscored: true,
       freezeTableName: true,
-      paranoid: true,
+      paranoid: false,
       indexes: [
       { unique: true, fields: ['id'] },
       { unique: true, fields: ['customer_id', 'sub_id'] }

@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { CpanelCompaniesService } from '../services/cpanel_companies/CpanelCompaniesService'
+import { CpanelCompaniesService } from '../services/cpanels/cpanel_companies/CpanelCompaniesService'
 
 const CpanelCompaniesRoutes: FastifyPluginAsync = async (app) => {
   const controller = new CpanelCompaniesService()

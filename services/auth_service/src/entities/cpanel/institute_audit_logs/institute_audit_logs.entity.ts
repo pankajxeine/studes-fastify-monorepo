@@ -49,12 +49,12 @@ export function initInstituteAuditLogsEntity(sequelize: Sequelize): typeof Insti
         onDelete: 'SET NULL',
       },
       action: {
-        type: DataTypes.CHAR(50),
+        type: DataTypes.STRING(50),
         field: 'action',
         allowNull: true,
       },
       module: {
-        type: DataTypes.CHAR(50),
+        type: DataTypes.STRING(50),
         field: 'module',
         allowNull: true,
       },
@@ -64,7 +64,7 @@ export function initInstituteAuditLogsEntity(sequelize: Sequelize): typeof Insti
         allowNull: true,
       },
       ipAddress: {
-        type: DataTypes.CHAR(20),
+        type: DataTypes.STRING(20),
         field: 'ip_address',
         allowNull: true,
       },
@@ -80,7 +80,7 @@ export function initInstituteAuditLogsEntity(sequelize: Sequelize): typeof Insti
       timestamps: true,
       underscored: true,
       freezeTableName: true,
-      paranoid: true,
+      paranoid: false,
       indexes: [
       { unique: true, fields: ['id'] }
       ]

@@ -65,7 +65,7 @@ export function initSubPackagesEntity(sequelize: Sequelize): typeof SubPackagesE
         allowNull: true,
       },
       packageName: {
-        type: DataTypes.CHAR(200),
+        type: DataTypes.STRING(200),
         field: 'package_name',
         allowNull: true,
       },
@@ -145,7 +145,7 @@ export function initSubPackagesEntity(sequelize: Sequelize): typeof SubPackagesE
       timestamps: true,
       underscored: true,
       freezeTableName: true,
-      paranoid: true,
+      paranoid: false,
       indexes: [
       { unique: true, fields: ['id'] }
       ]

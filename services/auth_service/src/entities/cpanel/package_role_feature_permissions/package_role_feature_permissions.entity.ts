@@ -65,7 +65,7 @@ export function initPackageRoleFeaturePermissionsEntity(sequelize: Sequelize): t
       timestamps: true,
       underscored: true,
       freezeTableName: true,
-      paranoid: true,
+      paranoid: false,
       indexes: [
       { unique: true, fields: ['id'] },
       { unique: true, fields: ['package_role_mapping_id', 'feature_id'] }

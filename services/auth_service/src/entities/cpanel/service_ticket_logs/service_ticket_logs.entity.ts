@@ -64,7 +64,7 @@ export function initServiceTicketLogsEntity(sequelize: Sequelize): typeof Servic
       timestamps: true,
       underscored: true,
       freezeTableName: true,
-      paranoid: true,
+      paranoid: false,
       indexes: [
       { unique: true, fields: ['id'] }
       ]

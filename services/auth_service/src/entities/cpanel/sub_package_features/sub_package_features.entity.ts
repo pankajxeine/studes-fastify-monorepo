@@ -158,7 +158,7 @@ export function initSubPackageFeaturesEntity(sequelize: Sequelize): typeof SubPa
       timestamps: true,
       underscored: true,
       freezeTableName: true,
-      paranoid: true,
+      paranoid: false,
       indexes: [
       { unique: true, fields: ['id'] },
       { unique: true, fields: ['sub_package_id', 'feature_id'] }

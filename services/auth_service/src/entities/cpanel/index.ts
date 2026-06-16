@@ -51,56 +51,114 @@ import { initSubPackagesEntity } from './sub_packages/sub_packages.entity'
 import { initSubsEntity } from './subs/subs.entity'
 import { initSubscriptionPlansEntity } from './subscription_plans/subscription_plans.entity'
 
-export function initGeneratedEntities(sequelize: Sequelize): void {
-  initAdminUsersEntity(sequelize)
-  initCpanelCompaniesEntity(sequelize)
-  initCustomerDiscountsEntity(sequelize)
-  initCustomerDocumentsEntity(sequelize)
-  initCustomerExportTemplatesEntity(sequelize)
-  initCustomerExportTemplatesFieldsEntity(sequelize)
-  initCustomerNotesEntity(sequelize)
-  initCustomerNumbersEntity(sequelize)
-  initCustomerStatusEntity(sequelize)
-  initCustomerStatusLogsEntity(sequelize)
-  initCustomerStatusTimeLogsEntity(sequelize)
-  initCustomersEntity(sequelize)
-  initDocumentTypesEntity(sequelize)
-  initEmailTemplateFieldsEntity(sequelize)
-  initEmailTemplateModulesEntity(sequelize)
-  initEnvironmentsEntity(sequelize)
-  initFeatureFieldsEntity(sequelize)
-  initIndustriesEntity(sequelize)
-  initIndustryEnvironmentsEntity(sequelize)
-  initIndustryModulesEntity(sequelize)
-  initInstituteAuditLogsEntity(sequelize)
-  initInstituteDomainsEntity(sequelize)
-  initInstituteSubscriptionsEntity(sequelize)
-  initInstitutesEntity(sequelize)
-  initMasterCredentialsEntity(sequelize)
-  initPackageFeatureBlockFieldsEntity(sequelize)
-  initPackageFeatureBlocksEntity(sequelize)
-  initPackageFeaturesEntity(sequelize)
-  initPackageRoleFeaturePermissionsEntity(sequelize)
-  initPackageRoleMappingsEntity(sequelize)
-  initPackageRolesEntity(sequelize)
-  initPackagesEntity(sequelize)
-  initRoleModulePermissionsEntity(sequelize)
-  initRoleTemplateModulesEntity(sequelize)
-  initRoleTemplatesEntity(sequelize)
-  initRolesEntity(sequelize)
-  initSalesAgentsEntity(sequelize)
-  initServiceTicketCommentsEntity(sequelize)
-  initServiceTicketLogsEntity(sequelize)
-  initServiceTicketTypeLogsEntity(sequelize)
-  initServiceTicketTypesEntity(sequelize)
-  initServiceTicketUserContentsEntity(sequelize)
-  initServiceTicketsEntity(sequelize)
-  initSubModulesEntity(sequelize)
-  initSubPackageFeatureBlockFieldsEntity(sequelize)
-  initSubPackageFeatureBlocksEntity(sequelize)
-  initSubPackageFeaturesEntity(sequelize)
-  initSubPackageUserTiersEntity(sequelize)
-  initSubPackagesEntity(sequelize)
-  initSubsEntity(sequelize)
-  initSubscriptionPlansEntity(sequelize)
+export type GeneratedModels = {
+  admin_users: ReturnType<typeof initAdminUsersEntity>;
+  cpanel_companies: ReturnType<typeof initCpanelCompaniesEntity>;
+  customer_discounts: ReturnType<typeof initCustomerDiscountsEntity>;
+  customer_documents: ReturnType<typeof initCustomerDocumentsEntity>;
+  customer_export_templates: ReturnType<typeof initCustomerExportTemplatesEntity>;
+  customer_export_templates_fields: ReturnType<typeof initCustomerExportTemplatesFieldsEntity>;
+  customer_notes: ReturnType<typeof initCustomerNotesEntity>;
+  customer_numbers: ReturnType<typeof initCustomerNumbersEntity>;
+  customer_status: ReturnType<typeof initCustomerStatusEntity>;
+  customer_status_logs: ReturnType<typeof initCustomerStatusLogsEntity>;
+  customer_status_time_logs: ReturnType<typeof initCustomerStatusTimeLogsEntity>;
+  customers: ReturnType<typeof initCustomersEntity>;
+  document_types: ReturnType<typeof initDocumentTypesEntity>;
+  email_template_fields: ReturnType<typeof initEmailTemplateFieldsEntity>;
+  email_template_modules: ReturnType<typeof initEmailTemplateModulesEntity>;
+  environments: ReturnType<typeof initEnvironmentsEntity>;
+  feature_fields: ReturnType<typeof initFeatureFieldsEntity>;
+  industries: ReturnType<typeof initIndustriesEntity>;
+  industry_environments: ReturnType<typeof initIndustryEnvironmentsEntity>;
+  industry_modules: ReturnType<typeof initIndustryModulesEntity>;
+  institute_audit_logs: ReturnType<typeof initInstituteAuditLogsEntity>;
+  institute_domains: ReturnType<typeof initInstituteDomainsEntity>;
+  institute_subscriptions: ReturnType<typeof initInstituteSubscriptionsEntity>;
+  institutes: ReturnType<typeof initInstitutesEntity>;
+  master_credentials: ReturnType<typeof initMasterCredentialsEntity>;
+  package_feature_block_fields: ReturnType<typeof initPackageFeatureBlockFieldsEntity>;
+  package_feature_blocks: ReturnType<typeof initPackageFeatureBlocksEntity>;
+  package_features: ReturnType<typeof initPackageFeaturesEntity>;
+  package_role_feature_permissions: ReturnType<typeof initPackageRoleFeaturePermissionsEntity>;
+  package_role_mappings: ReturnType<typeof initPackageRoleMappingsEntity>;
+  package_roles: ReturnType<typeof initPackageRolesEntity>;
+  packages: ReturnType<typeof initPackagesEntity>;
+  role_module_permissions: ReturnType<typeof initRoleModulePermissionsEntity>;
+  role_template_modules: ReturnType<typeof initRoleTemplateModulesEntity>;
+  role_templates: ReturnType<typeof initRoleTemplatesEntity>;
+  roles: ReturnType<typeof initRolesEntity>;
+  sales_agents: ReturnType<typeof initSalesAgentsEntity>;
+  service_ticket_comments: ReturnType<typeof initServiceTicketCommentsEntity>;
+  service_ticket_logs: ReturnType<typeof initServiceTicketLogsEntity>;
+  service_ticket_type_logs: ReturnType<typeof initServiceTicketTypeLogsEntity>;
+  service_ticket_types: ReturnType<typeof initServiceTicketTypesEntity>;
+  service_ticket_user_contents: ReturnType<typeof initServiceTicketUserContentsEntity>;
+  service_tickets: ReturnType<typeof initServiceTicketsEntity>;
+  sub_modules: ReturnType<typeof initSubModulesEntity>;
+  sub_package_feature_block_fields: ReturnType<typeof initSubPackageFeatureBlockFieldsEntity>;
+  sub_package_feature_blocks: ReturnType<typeof initSubPackageFeatureBlocksEntity>;
+  sub_package_features: ReturnType<typeof initSubPackageFeaturesEntity>;
+  sub_package_user_tiers: ReturnType<typeof initSubPackageUserTiersEntity>;
+  sub_packages: ReturnType<typeof initSubPackagesEntity>;
+  subs: ReturnType<typeof initSubsEntity>;
+  subscription_plans: ReturnType<typeof initSubscriptionPlansEntity>;
+}
+
+export function initGeneratedEntities(sequelize: Sequelize): { models: GeneratedModels } {
+  return {
+    models: {
+      admin_users: initAdminUsersEntity(sequelize),
+      cpanel_companies: initCpanelCompaniesEntity(sequelize),
+      customer_discounts: initCustomerDiscountsEntity(sequelize),
+      customer_documents: initCustomerDocumentsEntity(sequelize),
+      customer_export_templates: initCustomerExportTemplatesEntity(sequelize),
+      customer_export_templates_fields: initCustomerExportTemplatesFieldsEntity(sequelize),
+      customer_notes: initCustomerNotesEntity(sequelize),
+      customer_numbers: initCustomerNumbersEntity(sequelize),
+      customer_status: initCustomerStatusEntity(sequelize),
+      customer_status_logs: initCustomerStatusLogsEntity(sequelize),
+      customer_status_time_logs: initCustomerStatusTimeLogsEntity(sequelize),
+      customers: initCustomersEntity(sequelize),
+      document_types: initDocumentTypesEntity(sequelize),
+      email_template_fields: initEmailTemplateFieldsEntity(sequelize),
+      email_template_modules: initEmailTemplateModulesEntity(sequelize),
+      environments: initEnvironmentsEntity(sequelize),
+      feature_fields: initFeatureFieldsEntity(sequelize),
+      industries: initIndustriesEntity(sequelize),
+      industry_environments: initIndustryEnvironmentsEntity(sequelize),
+      industry_modules: initIndustryModulesEntity(sequelize),
+      institute_audit_logs: initInstituteAuditLogsEntity(sequelize),
+      institute_domains: initInstituteDomainsEntity(sequelize),
+      institute_subscriptions: initInstituteSubscriptionsEntity(sequelize),
+      institutes: initInstitutesEntity(sequelize),
+      master_credentials: initMasterCredentialsEntity(sequelize),
+      package_feature_block_fields: initPackageFeatureBlockFieldsEntity(sequelize),
+      package_feature_blocks: initPackageFeatureBlocksEntity(sequelize),
+      package_features: initPackageFeaturesEntity(sequelize),
+      package_role_feature_permissions: initPackageRoleFeaturePermissionsEntity(sequelize),
+      package_role_mappings: initPackageRoleMappingsEntity(sequelize),
+      package_roles: initPackageRolesEntity(sequelize),
+      packages: initPackagesEntity(sequelize),
+      role_module_permissions: initRoleModulePermissionsEntity(sequelize),
+      role_template_modules: initRoleTemplateModulesEntity(sequelize),
+      role_templates: initRoleTemplatesEntity(sequelize),
+      roles: initRolesEntity(sequelize),
+      sales_agents: initSalesAgentsEntity(sequelize),
+      service_ticket_comments: initServiceTicketCommentsEntity(sequelize),
+      service_ticket_logs: initServiceTicketLogsEntity(sequelize),
+      service_ticket_type_logs: initServiceTicketTypeLogsEntity(sequelize),
+      service_ticket_types: initServiceTicketTypesEntity(sequelize),
+      service_ticket_user_contents: initServiceTicketUserContentsEntity(sequelize),
+      service_tickets: initServiceTicketsEntity(sequelize),
+      sub_modules: initSubModulesEntity(sequelize),
+      sub_package_feature_block_fields: initSubPackageFeatureBlockFieldsEntity(sequelize),
+      sub_package_feature_blocks: initSubPackageFeatureBlocksEntity(sequelize),
+      sub_package_features: initSubPackageFeaturesEntity(sequelize),
+      sub_package_user_tiers: initSubPackageUserTiersEntity(sequelize),
+      sub_packages: initSubPackagesEntity(sequelize),
+      subs: initSubsEntity(sequelize),
+      subscription_plans: initSubscriptionPlansEntity(sequelize)
+    }
+  }
 }
