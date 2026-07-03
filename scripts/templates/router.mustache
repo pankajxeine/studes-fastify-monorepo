@@ -1,0 +1,15 @@
+import type { FastifyPluginAsync } from 'fastify'
+import { {{ServiceName}} } from '{{{serviceImportPath}}}'
+
+const {{ModuleName}}Routes: FastifyPluginAsync = async (app) => {
+  const controller = new {{ServiceName}}()
+
+{{#routes}}
+  app.{{httpMethod}}('{{{path}}}', async (request, reply) => {
+    {{#hasInput}}return await reply.send(controller.{{operationId}}(app, request.body as any, request)){{/hasInput}}{{^hasInput}}
+    return await reply.send(controller.{{operationId}}(app, request)){{/hasInput}}
+  })
+{{/routes}}
+}
+
+export default {{ModuleName}}Routes

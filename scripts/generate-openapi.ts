@@ -2,6 +2,8 @@ import fs from 'node:fs'
 import path from 'node:path'
 import yaml from 'js-yaml'
 
+const Mustache = require('mustache')
+
 const servicesDir = path.resolve(process.cwd(), 'services')
 
 function toPascalCase(input: string): string {
@@ -12,7 +14,14 @@ function toPascalCase(input: string): string {
     .join('')
 }
 
+function toLowerCamelCase(input: string): string {
+  const pascal = toPascalCase(input)
+  return pascal[0].toLowerCase() + pascal.slice(1)
+}
+
 function resolveRef(ref: string): string {
+  if (!ref.startsWith('#/')) return 'unknown'
+
   const parts = ref.split('/')
   return parts[parts.length - 1]
 }
@@ -64,7 +73,8 @@ function tsTypeFromSchema(schema: any): string {
 function collectSchemaRefs(schema: any, refs: Set<string>) {
   if (!schema) return
   if (schema.$ref) {
-    refs.add(resolveRef(schema.$ref))
+    const ref = resolveRef(schema.$ref)
+    if (ref !== 'unknown') refs.add(ref)
     return
   }
   if (schema.oneOf || schema.anyOf) {
@@ -120,7 +130,6 @@ function listSpecFiles(apiDir: string): string[] {
       const stat = fs.statSync(fullPath);
 
       if (stat.isDirectory()) {
-        // ✅ recurse into subfolder
         walk(fullPath);
       } else if (f.endsWith('.openapi.yaml') || f === 'openapi.yaml') {
         results.push(fullPath);
@@ -131,73 +140,261 @@ function listSpecFiles(apiDir: string): string[] {
   walk(apiDir);
   return results;
 }
+
 function moduleNameFromSpec(specPath: string): string {
   const base = path.basename(specPath)
-  return base.replace('.openapi.yaml', '')
+  return base.replace('.openapi.yaml', '').replace('.yaml', '')
 }
 
-function httpMethodFromKey(key: string): string {
-  return key.toLowerCase()
+function normalizeModuleName(input: string): string {
+  return input
+    .replace(/\s+API\s*$/i, '')
+    .replace(/\s+Service\s*$/i, '')
+    .replace(/\s+API\s*-/i, ' ')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '_')
+    .replace(/^_+|_+$/g, '')
+}
+
+function moduleNameFromDoc(specPath: string, doc: any): string {
+  const fileModuleName = moduleNameFromSpec(specPath)
+  if (fileModuleName && fileModuleName !== 'openapi') {
+    return normalizeModuleName(fileModuleName)
+  }
+
+  if (doc.info && doc.info.title) {
+    const normalized = normalizeModuleName(doc.info.title)
+    if (normalized) return normalized
+  }
+
+  return 'openapi'
+}
+
+function operationNameFromPath(method: string, routePath: string): string {
+  const pathName = routePath
+    .split('/')
+    .filter(Boolean)
+    .map((part) => (part.startsWith(':') ? 'by_' + part.slice(1) : part))
+    .join('_')
+
+  return toLowerCamelCase(`${method}_${pathName || 'root'}`)
 }
 
 function toRoutePath(pathKey: string): string {
   return pathKey.replace(/{/g, ':').replace(/}/g, '')
 }
 
-// const headerType = '{ tenantId?: string; tenantSlug?: string; authorization?: string }'
+function getServiceName(dirPath: string): string {
+  const normalized = dirPath.replace(/\\/g, '/');
+  const parts = normalized.split('/')
+  const idx = parts.lastIndexOf('services')
+  if (idx >= 0 && idx < parts.length - 1) {
+    return parts.slice(idx + 1).join('/')
+  }
+  return parts.slice(-2).join('/')
+}
+
+function toImportPath(fromDir: string, toFileWithoutExtension: string): string {
+  let relative = path.relative(fromDir, toFileWithoutExtension).replace(/\\/g, '/')
+  if (!relative.startsWith('.')) relative = './' + relative
+  return relative
+}
+
+function getSpecRoots(baseDir: string): string[] {
+  const openapiDir = path.join(baseDir, 'openapi')
+  const apiDir = path.join(baseDir, 'api')
+  const srcServicesDir = path.join(baseDir, 'src', 'services')
+  const roots: string[] = []
+
+  if (fs.existsSync(openapiDir)) roots.push(openapiDir)
+  if (fs.existsSync(apiDir)) roots.push(apiDir)
+  if (fs.existsSync(srcServicesDir)) roots.push(srcServicesDir)
+
+  return roots
+}
+
+function isInsideDir(parentDir: string, childPath: string): boolean {
+  const relative = path.relative(parentDir, childPath)
+  return Boolean(relative) && !relative.startsWith('..') && !path.isAbsolute(relative)
+}
+
+function getSpecOutputDir(baseDir: string, specPath: string, moduleName: string): string {
+  const specDir = path.dirname(specPath)
+  const srcServicesDir = path.join(baseDir, 'src', 'services')
+
+  if (path.basename(specDir) === 'api' && isInsideDir(srcServicesDir, specDir)) {
+    return path.dirname(specDir)
+  }
+
+  return path.join(srcServicesDir, moduleName)
+}
+
+function discoverServiceDirs(): string[] {
+  if (!fs.existsSync(servicesDir)) return []
+
+  return fs
+    .readdirSync(servicesDir, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => path.join(servicesDir, entry.name))
+    .filter((serviceDir) => getSpecRoots(serviceDir).some((specRoot) => listSpecFiles(specRoot).length > 0))
+}
+
+function loadTemplate(templateName: string): string {
+  const templatePath = path.join(__dirname, 'templates', `${templateName}.mustache`)
+  if (!fs.existsSync(templatePath)) {
+    console.warn(`Template not found: ${templatePath}`)
+    return ''
+  }
+  return fs.readFileSync(templatePath, 'utf8')
+}
+
+function generateTypes(schemas: Record<string, any>, typesDir: string) {
+  const typeTemplate = loadTemplate('type')
+
+  for (const [name, schema] of Object.entries(schemas)) {
+    const tsType = tsTypeFromSchema(schema)
+    const refs = new Set<string>()
+    collectSchemaRefs(schema, refs)
+    refs.delete(name)
+
+    const imports = Array.from(refs).sort()
+    const data = {
+      typeName: name,
+      typeDefinition: tsType,
+      imports: imports.length > 0 ? imports : false,
+    }
+
+    const output = Mustache.render(typeTemplate, data)
+    fs.writeFileSync(path.join(typesDir, `${name}.ts`), output, 'utf8')
+  }
+}
+
+function generateController(
+  modulePascal: string,
+  schemas: Record<string, any>,
+  methods: Array<{ methodSignature: string }>,
+  parentDir: string
+) {
+  const controllerTemplate = loadTemplate('controller')
+  const controllerName = `${modulePascal}Controller`
+
+  const schemaNames = Object.keys(schemas)
+  const data = {
+    ControllerName: controllerName,
+    imports: schemaNames.length > 0 ? schemaNames : false,
+    methods: methods.length > 0 ? methods : false,
+  }
+
+  const output = Mustache.render(controllerTemplate, data)
+  fs.writeFileSync(path.join(parentDir, `${controllerName}.ts`), output, 'utf8')
+}
+
+function generateService(
+  modulePascal: string,
+  schemas: Record<string, any>,
+  methods: Array<any>,
+  parentDir: string
+) {
+  const serviceTemplate = loadTemplate('service')
+  const serviceName = `${modulePascal}Service`
+  const controllerName = `${modulePascal}Controller`
+
+  const schemaNames = Object.keys(schemas)
+  const data = {
+    ServiceName: serviceName,
+    ControllerName: controllerName,
+    imports: schemaNames.length > 0 ? schemaNames : false,
+    methods: methods.length > 0 ? methods : false,
+  }
+
+  const output = Mustache.render(serviceTemplate, data)
+  fs.writeFileSync(path.join(parentDir, serviceName + '.ts'), output, 'utf8')
+}
+
+function generateRouter(
+  moduleName: string,
+  modulePascal: string,
+  routes: Array<any>,
+  routesDir: string,
+  serviceImportPath: string
+) {
+  const routerTemplate = loadTemplate('router')
+  const serviceName = `${modulePascal}Service`
+  const routesFileName = `${moduleName}.router.ts`
+
+  const data = {
+    ModuleName: modulePascal,
+    ServiceName: serviceName,
+    moduleName,
+    serviceImportPath,
+    routes: routes.length > 0 ? routes : false,
+  }
+
+  const output = Mustache.render(routerTemplate, data)
+  fs.writeFileSync(path.join(routesDir, routesFileName), output, 'utf8')
+}
 
 function writeGeneratorFiles(outDir?: string, module?: string) {
-  if (!outDir) return "outDir not defined";
-  const baseDir = path.join(outDir)
-  const apiDir = path.join(baseDir, 'src', 'services')
-  const specs = listSpecFiles(apiDir)
-  if (specs.length === 0) return
+  if (!outDir) {
+    const serviceDirs = discoverServiceDirs()
+    if (serviceDirs.length === 0) {
+      console.warn(`No OpenAPI specs found under ${servicesDir}`)
+      return
+    }
 
-  const servicesOutDir = path.join(apiDir)
+    for (const serviceDir of serviceDirs) {
+      writeGeneratorFiles(serviceDir, module)
+    }
+    return
+  }
+
+  const baseDir = path.join(outDir)
+  const specRoots = getSpecRoots(baseDir)
+  const specs = specRoots.flatMap(listSpecFiles)
+
+  if (specs.length === 0) {
+    console.warn(`No OpenAPI specs found in ${baseDir}/openapi or ${baseDir}/api`)
+    return
+  }
+
   const routesOutDir = path.join(baseDir, 'src', 'routes')
 
-  if (!fs.existsSync(servicesOutDir)) {
-    fs.mkdirSync(servicesOutDir, { recursive: true })
-  }
   if (!fs.existsSync(routesOutDir)) {
     fs.mkdirSync(routesOutDir, { recursive: true })
   }
+
   const allRoutes: string[] = [];
   const registerLines: string[] = [];
+  const processedModules = new Set<string>();
 
   for (const specPath of specs) {
     const raw = fs.readFileSync(specPath, 'utf8')
     const doc: any = yaml.load(raw)
     const schemas = (doc.components && doc.components.schemas) || {}
-    const moduleName = moduleNameFromSpec(specPath)
-    const parentDir = path.dirname(path.dirname(specPath));
 
-    // Write types: one file per schema (with imports for referenced schemas)
-    for (const [name, schema] of Object.entries(schemas)) {
-      const typeModuleDir = path.join(parentDir, 'types');
-      fs.mkdirSync(typeModuleDir, { recursive: true })
-      const tsType = tsTypeFromSchema(schema)
-      const refs = new Set<string>()
-      collectSchemaRefs(schema, refs)
-      refs.delete(name)
-      const importLines = Array.from(refs)
-        .sort()
-        .map((refName) => `import type { ${refName} } from './${refName}'`)
-        .join('\n')
-      const prefix = importLines ? `${importLines}\n\n` : ''
-      const filePath = path.join(typeModuleDir, `${name}.ts`)
-      fs.writeFileSync(filePath, `${prefix}export type ${name} = ${tsType}\n`, 'utf8')
+    const moduleName = moduleNameFromDoc(specPath, doc)
+    const parentDir = getSpecOutputDir(baseDir, specPath, moduleName);
+    const moduleKey = `${moduleName}:${path.relative(baseDir, parentDir).replace(/\\/g, '/')}`
+
+    if (processedModules.has(moduleKey)) {
+      console.warn(`Skipping duplicate OpenAPI module "${moduleName}" from ${specPath}`)
+      continue
     }
+    processedModules.add(moduleKey)
 
     const modulePascal = toPascalCase(moduleName)
-    const controllerName = `${modulePascal}Controller`
-    const controllerImplName = `${modulePascal}Service`
-    const routesFileName = `${moduleName}.router.ts`
-    const serviceFileName = `${modulePascal}Service.ts`
+    const typesDir = path.join(parentDir, 'types');
 
-    const methods: string[] = []
-    const methodStubs: string[] = []
-    const routeDefs: string[] = []
+    fs.mkdirSync(typesDir, { recursive: true })
+    fs.mkdirSync(parentDir, { recursive: true })
+
+    // Generate types
+    generateTypes(schemas, typesDir)
+
+    // Collect method info
+    const methodSignatures: Array<{ methodSignature: string }> = []
+    const methodImpls: Array<any> = []
+    const routeDefs: Array<any> = []
 
     const paths = doc.paths || {}
     for (const [pathKey, ops] of Object.entries(paths)) {
@@ -207,131 +404,86 @@ function writeGeneratorFiles(outDir?: string, module?: string) {
         if (!['get', 'post', 'put', 'patch', 'delete'].includes(lower)) continue
 
         const operation: any = op
-        if (!operation.operationId) continue
+        const operationId = operation.operationId || operationNameFromPath(lower, pathKey)
 
         const requestType = typeFromRequestBody(operation.requestBody)
         const responseType = typeFromResponse(pickSuccessResponse(operation.responses))
+        const httpMethod = lower
+        const routePath = toRoutePath(pathKey)
+
+        let methodSignature: string
+        let methodImpl: any
+        let hasInput = false
 
         if (requestType) {
-          methods.push(
-            `  ${operation.operationId}(app: FastifyInstance, input: ${requestType}, request?: FastifyRequest): Promise<${responseType}>`
-          );
-
-          methodStubs.push(
-            `  public async ${operation.operationId}(app: FastifyInstance, input: ${requestType}, request?: FastifyRequest): Promise<${responseType}> {\n` +
-            `    try {\n` +
-            `      // TODO: implement logic using app + input\n` +
-            `      void input;\n` +
-            `      void request;\n` +
-            `      throw new Error('Not implemented');\n` +
-            `    } catch (err) {\n` +
-            `      app.log.error(err);\n` +
-            `      throw err;\n` +
-            `    }\n` +
-            `  }\n`
-          );
+          methodSignature = `${operationId}(app: FastifyInstance, input: ${requestType}, request?: FastifyRequest): Promise<${responseType}>`
+          methodImpl = {
+            methodName: operationId,
+            methodParams: `app: FastifyInstance, input: ${requestType}, request?: FastifyRequest`,
+            returnType: responseType,
+            hasInput: true,
+          }
+          hasInput = true
         } else {
-          methods.push(
-            `  ${operation.operationId}(app: FastifyInstance, request?: FastifyRequest): Promise<${responseType}>`
-          );
-
-          methodStubs.push(
-            `  public async ${operation.operationId}(app: FastifyInstance, request?: FastifyRequest): Promise<${responseType}> {\n` +
-            `    try {\n` +
-            `      // TODO: implement logic using app + request\n` +
-            `      void request;\n` +
-            `      throw new Error('Not implemented');\n` +
-            `    } catch (err) {\n` +
-            `      app.log.error(err);\n` +
-            `      throw err;\n` +
-            `    }\n` +
-            `  }\n`
-          );
+          methodSignature = `${operationId}(app: FastifyInstance, request?: FastifyRequest): Promise<${responseType}>`
+          methodImpl = {
+            methodName: operationId,
+            methodParams: `app: FastifyInstance, request?: FastifyRequest`,
+            returnType: responseType,
+            hasInput: false,
+          }
         }
 
-
-        const httpMethod = httpMethodFromKey(methodKey)
-        const routePath = toRoutePath(pathKey)
-        const handlerArgs = requestType
-          ? 'request.body as any, request'
-          : 'request'
-        const responseLine = responseType === 'void' ?
-          `  await controller.${operation.operationId}(app, ${handlerArgs}) \n
-             reply.code(201) 
-          `
-          : ` return await reply.send(controller.${operation.operationId}(app, ${handlerArgs}))`
-
-        routeDefs.push(
-          `app.${httpMethod}('${routePath}', async (request, reply) => {`,
-          `  ${responseLine}`,
-          `})`
-        )
+        methodSignatures.push({ methodSignature })
+        methodImpls.push(methodImpl)
+        routeDefs.push({
+          operationId,
+          httpMethod,
+          path: routePath,
+          hasInput,
+        })
       }
     }
 
-    const schemaNames = Object.keys(schemas)
-    const schemaImports = schemaNames
-      .map((name) => `import type { ${name} } from './types/${name}'`)
-      .join('\n')
-    const importLine =
-      `${schemaImports}${schemaImports ? '\n' : ''}` +
-      `import { FastifyInstance, FastifyRequest} from 'fastify'\n\n`
-    const controllerOut = `${importLine}export interface ${controllerName} {\n${methods.join('\n')}\n}\n`
+    // Generate controller
+    generateController(modulePascal, schemas, methodSignatures, parentDir)
 
-    const contModuleDir = path.join(parentDir)
-    fs.mkdirSync(contModuleDir, { recursive: true })
-    fs.writeFileSync(path.join(contModuleDir, `${controllerName}.ts`), controllerOut, 'utf8')
-
-    const shouldGenerateService = process.argv.includes('--generate-service')
-
-    // generate service implementation with stubs for each method if --generate-service flag is provided, otherwise skip if file already exists
-    // const serviceFilePath = path.join(servicesOutDir, serviceFileName)
+    // Generate service
+    const shouldGenerateService = !process.argv.includes('--skip-service')
     if (shouldGenerateService) {
-      // TODO if file exist then get input to override or not, if not then create file with stub implementation
-      const serviceSchemaImports = schemaNames
-        .map((name) => `import type { ${name} } from './types/${name}'`)
-        .join('\n')
-      const serviceImports =
-        `${serviceSchemaImports}${serviceSchemaImports ? '\n' : ''}` +
-        `import { FastifyInstance, FastifyRequest } from 'fastify'\n` +
-        `import type { ${controllerName} } from './${controllerName}'\n`
-      const controllerImpl =
-        `${serviceImports}\n` +
-        `export class ${controllerImplName} implements ${controllerName} {\n` +
-        `${methodStubs.join('\n')}` +
-        `}\n`
-
-      const serviceModuleDir = path.join(parentDir)
-      fs.mkdirSync(serviceModuleDir, { recursive: true })
-      fs.writeFileSync(path.join(serviceModuleDir, serviceFileName), controllerImpl, 'utf8')
-
-      // if (!fs.existsSync(serviceFilePath)) {
-
-      // } else {
-      //   console.log(`Skipping service creation: ${serviceFileName} already exists`)
-      // }
-    } else {
-      console.log(`Skipping service creation: ${serviceFileName} already exists`)
+      generateService(modulePascal, schemas, methodImpls, parentDir)
     }
 
-    const serviceName = getServiceName(parentDir)
-    const routeOut =
-      `import type { FastifyPluginAsync } from 'fastify'\n` +
-      `import { ${controllerImplName} } from '../services/${serviceName}/${modulePascal}Service'\n` +
-      `\n` +
-
-      `const ${modulePascal}Routes: FastifyPluginAsync = async (app) => {\n` +
-      `  const controller = new ${controllerImplName}()\n` +
-      `${routeDefs.map((l) => `  ${l}`).join('\n')}\n` +
-      `}\n` +
-      `\n` +
-      `export default ${modulePascal}Routes\n`
-
-    fs.writeFileSync(path.join(routesOutDir, routesFileName), routeOut, 'utf8')
+    // Generate router
+    const serviceImportPath = toImportPath(routesOutDir, path.join(parentDir, `${modulePascal}Service`))
+    generateRouter(moduleName, modulePascal, routeDefs, routesOutDir, serviceImportPath)
 
     allRoutes.push(`import ${modulePascal}Routes from './${moduleName}.router'`);
     registerLines.push(`  await app.register(${modulePascal}Routes)`);
   }
+
+  //   const indexTemplate =
+  //     `{{#imports}}
+  // import {{.}} from './{{.}}.router'
+  // {{/imports}}
+
+  // import type { FastifyInstance } from 'fastify'
+
+  // export default async function registerRoutes(app: FastifyInstance) {
+  // {{#registers}}
+  //   {{.}}
+  // {{/registers}}
+  // }
+  // `
+
+  // const indexData = {
+  //   imports: allRoutes.map(line => {
+  //     const match = line.match(/import (\w+)Routes from '\.\/(\w+)/)
+  //     return match ? `${match[1]}Routes from './{{${match[1]}}}'` : line
+  //   }),
+  //   registers: registerLines.map(line => line.trim()),
+  // }
+
   const indexOut =
     `${allRoutes.join('\n')}\n\n` +
     `import type { FastifyInstance } from 'fastify'\n\n` +
@@ -340,31 +492,12 @@ function writeGeneratorFiles(outDir?: string, module?: string) {
     `}\n`;
 
   fs.writeFileSync(path.join(routesOutDir, 'index.ts'), indexOut, 'utf8');
-}
-
-function getServiceName(dirPath: string): string {
-  // normalize slashes
-  const normalized = dirPath.replace(/\\/g, '/');
-
-  // split into segments
-  const parts = normalized.split('/');
-
-  // find the last "services" segment
-  const idx = parts.lastIndexOf('services');
-
-  if (idx >= 0 && idx < parts.length - 1) {
-    // take everything after "services"
-    return parts.slice(idx + 1).join('/');
-  }
-
-  // fallback: return last two segments
-  return parts.slice(-2).join('/');
+  console.log('✅ OpenAPI types, controllers, services, and routes generated successfully')
 }
 
 const args = process.argv.slice(2);
 let outDir: string | undefined;
 let module: string | undefined;
-
 
 for (let i = 0; i < args.length; i++) {
   if (args[i] === '--module') module = args[i + 1];
@@ -372,9 +505,7 @@ for (let i = 0; i < args.length; i++) {
 }
 
 if (!outDir && !module) {
-  console.error('Usage: npm run generate -- --sql schema.sql --service ./openapi');
-  process.exit(1);
+  console.log('No --out provided; scanning services/* for OpenAPI specs')
 }
 
 writeGeneratorFiles(outDir, module);
-console.log('OpenAPI types, controllers, services, and routes generated.')

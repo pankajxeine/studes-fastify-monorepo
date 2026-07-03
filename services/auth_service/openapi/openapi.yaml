@@ -1,0 +1,204 @@
+openapi: 3.0.0
+info:
+  title: Auth Service API
+  version: 1.0.0
+  description: Authentication service for user login, token refresh, and logout
+
+paths:
+  /auth/login:
+    post:
+      operationId: authLogin
+      summary: User login
+      description: Authenticate user with username/email and password, returns JWT tokens
+      tags:
+        - auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '400':
+          description: Missing required fields
+        '401':
+          description: Invalid credentials
+
+  /auth/refresh:
+    post:
+      operationId: authRefresh
+      summary: Refresh access token
+      description: Generate new access token using refresh token
+      tags:
+        - auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshTokenRequest'
+      responses:
+        '200':
+          description: Token refresh successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '401':
+          description: Invalid or expired refresh token
+
+  /auth/logout:
+    post:
+      operationId: authLogout
+      summary: User logout
+      description: Logout the current user
+      tags:
+        - auth
+      responses:
+        '201':
+          description: Logout successful
+
+  /auth/register:
+    post:
+      operationId: authRegister
+      summary: User registration
+      description: Register a new user account
+      tags:
+        - auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '201':
+          description: Registration successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthUser'
+        '400':
+          description: Invalid input
+        '409':
+          description: User already exists
+
+components:
+  schemas:
+    LoginRequest:
+      type: object
+      required:
+        - password
+      properties:
+        username:
+          type: string
+          description: Username for login
+          example: admin
+        email:
+          type: string
+          format: email
+          description: Email for login
+          example: admin@example.com
+        password:
+          type: string
+          format: password
+          description: User password
+          example: password123
+
+    LoginResponse:
+      type: object
+      required:
+        - accessToken
+        - refreshToken
+        - user
+      properties:
+        accessToken:
+          type: string
+          description: JWT access token
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        refreshToken:
+          type: string
+          description: JWT refresh token
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        user:
+          $ref: '#/components/schemas/AuthUser'
+
+    RefreshTokenRequest:
+      type: object
+      required:
+        - refreshToken
+      properties:
+        refreshToken:
+          type: string
+          description: Refresh token from login response
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+    RegisterRequest:
+      type: object
+      required:
+        - username
+        - email
+        - password
+        - first_name
+      properties:
+        username:
+          type: string
+          description: Username
+          example: newuser
+        email:
+          type: string
+          format: email
+          description: Email address
+          example: newuser@example.com
+        password:
+          type: string
+          format: password
+          description: Password
+          example: SecurePass123!
+        first_name:
+          type: string
+          description: First name
+          example: John
+        last_name:
+          type: string
+          description: Last name
+          example: Doe
+        phone:
+          type: string
+          description: Phone number
+          example: '+1234567890'
+
+    AuthUser:
+      type: object
+      required:
+        - id
+        - email
+        - username
+      properties:
+        id:
+          type: string
+          description: User ID
+          example: user-001
+        email:
+          type: string
+          format: email
+          description: User email
+          example: admin@example.com
+        username:
+          type: string
+          description: Username
+          example: admin
+        first_name:
+          type: string
+          description: First name
+          example: Admin
+        last_name:
+          type: string
+          description: Last name
+          example: User

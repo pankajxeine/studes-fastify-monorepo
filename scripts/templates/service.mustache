@@ -1,0 +1,22 @@
+{{#imports}}
+import type { {{.}} } from './types/{{.}}'
+{{/imports}}
+import { FastifyInstance, FastifyRequest } from 'fastify'
+import type { {{ControllerName}} } from './{{ControllerName}}'
+
+export class {{ServiceName}} implements {{ControllerName}} {
+{{#methods}}
+  public async {{methodName}}({{methodParams}}): Promise<{{returnType}}> {
+    try {
+      // TODO: implement logic using {{#hasInput}}app + input{{/hasInput}}{{^hasInput}}app + request{{/hasInput}}
+      {{#hasInput}}void input;{{/hasInput}}
+      void request;
+      throw new Error('Not implemented');
+    } catch (err) {
+      app.log.error(err);
+      throw err;
+    }
+  }
+
+{{/methods}}
+}

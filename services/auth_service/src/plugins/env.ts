@@ -17,6 +17,9 @@ export default fp(async (app) => {
         TENANT_HEADER_PRECEDENCE: { type: 'string', default: 'header_then_subdomain' },
         CORS_ORIGIN: { type: 'string', default: '*' },
         JWT_SECRET: { type: 'string' },
+        JWT_REFRESH_SECRET: { type: 'string' },
+        JWT_EXPIRY: { type: 'string', default: '15m' },
+        JWT_REFRESH_EXPIRY: { type: 'string', default: '7d' },
         SESSION_COOKIE_NAME: { type: 'string', default: 'studes_session' },
         SESSION_COOKIE_SECRET: { type: 'string' },
       },
@@ -44,11 +47,11 @@ declare module 'fastify' {
       TENANT_HEADER_PRECEDENCE: 'header_then_subdomain' | 'subdomain_then_header'
       CORS_ORIGIN: string
       JWT_SECRET: string
+      JWT_REFRESH_SECRET?: string
+      JWT_EXPIRY: string
+      JWT_REFRESH_EXPIRY: string
       SESSION_COOKIE_NAME: string
       SESSION_COOKIE_SECRET: string
     }
   }
 }
-
-
-

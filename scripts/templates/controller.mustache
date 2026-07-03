@@ -1,0 +1,10 @@
+{{#imports}}
+import type { {{.}} } from './types/{{.}}'
+{{/imports}}
+import { FastifyInstance, FastifyRequest } from 'fastify'
+
+export interface {{ControllerName}} {
+{{#methods}}
+  {{{methodSignature}}}
+{{/methods}}
+}
