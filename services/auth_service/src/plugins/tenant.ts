@@ -29,7 +29,7 @@ export default fp(async (app) => {
 
 
     // Skip tenant resolution for public routes
-    if (['/health', '/auth', '/docs', '/cpanelroutes'].includes(request.routeOptions.url)) {
+    if (['/health', '/auth', '/docs', '/cpanelroutes'].includes(request?.routeOptions?.url!)) {
       return;
     }
 

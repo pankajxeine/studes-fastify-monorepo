@@ -1,0 +1,131 @@
+openapi: 3.0.0
+info:
+  title: SitesResponse API
+  version: 1.0.0
+paths:
+  /sites:
+    get:
+      operationId: listSites
+      summary: Get all sites
+      responses:
+        '200':
+          description: List of sites
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SitesResponse'
+    post:
+      operationId: createSite
+      summary: Create a new sites
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SitesRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SitesResponse'
+
+  /sites/{id}:
+    get:
+      operationId: getSitesById
+      summary: Get sites by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: sites object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SitesResponse'
+    put:
+      operationId: updateSite
+      summary: Update sites by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SitesRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SitesResponse'
+    delete:
+      operationId: deleteSite
+      summary: Delete sites by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Deleted
+components:
+  schemas:
+
+    SitesRequest:
+      type: object
+      properties:
+        domain:
+          type: string
+          maxLength: 100
+        short_code:
+          type: string
+          maxLength: 100
+        mobile_logo:
+          type: string
+          maxLength: 255
+        domain_type:
+          type: string
+        cpanel_id:
+          type: integer
+
+    SitesResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        domain:
+          type: string
+          maxLength: 100
+        short_code:
+          type: string
+          maxLength: 100
+        mobile_logo:
+          type: string
+          maxLength: 255
+        domain_type:
+          type: string
+        cpanel_id:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+  

@@ -5,12 +5,13 @@ export type SitesAttributes = {
   domain: string
   shortCode: string
   mobileLogo: string
+  domainType?: string | null
   cpanelId: number
   createdAt: Date
   updatedAt: Date
 }
 
-export type SitesCreationAttributes = Optional<SitesAttributes, "id">
+export type SitesCreationAttributes = Optional<SitesAttributes, "id" | "domainType">
 
 export class SitesEntity
   extends Model<SitesAttributes, SitesCreationAttributes>
@@ -20,6 +21,7 @@ export class SitesEntity
   declare domain: string
   declare shortCode: string
   declare mobileLogo: string
+  declare domainType: string | null
   declare cpanelId: number
   declare createdAt: Date
   declare updatedAt: Date
@@ -49,6 +51,12 @@ export function initSitesEntity(sequelize: Sequelize): typeof SitesEntity {
         type: DataTypes.STRING(255),
         field: 'mobile_logo',
         allowNull: false,
+      },
+      domainType: {
+        type: DataTypes.TEXT,
+        field: 'domain_type',
+        allowNull: true,
+        defaultValue: "tenant",
       },
       cpanelId: {
         type: DataTypes.INTEGER,
