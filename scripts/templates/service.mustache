@@ -8,10 +8,47 @@ export class {{ServiceName}} implements {{ControllerName}} {
 {{#methods}}
   public async {{methodName}}({{methodParams}}): Promise<{{returnType}}> {
     try {
+{{#hasModel}}{{#isCrud}}
+      // tenant schema comes from request context
+      const schema = request?.cpanelBbSchema;
+      // bind model to tenant schema
+      const model = app.{{modelDecoratorName}}.{{modelKey}}.schema(schema!)
+{{#isList}}
+      const rows = await model.findAll()
+      return rows.map((row) => row.get({ plain: true })) as {{returnType}}
+{{/isList}}{{#isCreate}}
+      const row = await model.create(input as any)
+      return row.get({ plain: true }) as {{returnType}}
+{{/isCreate}}{{#isRead}}
+      const { id } = (request?.params ?? {}) as { id?: string | number }
+      const row = await model.findByPk(id)
+      if (!row) {
+        throw new Error('{{modelKey}} not found')
+      }
+      return row.get({ plain: true }) as {{returnType}}
+{{/isRead}}{{#isUpdate}}
+      const { id } = (request?.params ?? {}) as { id?: string | number }
+      const row = await model.findByPk(id)
+      if (!row) {
+        throw new Error('{{modelKey}} not found')
+      }
+      await row.update(input as any)
+      return row.get({ plain: true }) as {{returnType}}
+{{/isUpdate}}{{#isDelete}}
+      const { id } = (request?.params ?? {}) as { id?: string | number }
+      await model.destroy({ where: { id } })
+      return undefined as {{returnType}}
+{{/isDelete}}{{/isCrud}}{{^isCrud}}
       // TODO: implement logic using {{#hasInput}}app + input{{/hasInput}}{{^hasInput}}app + request{{/hasInput}}
       {{#hasInput}}void input;{{/hasInput}}
       void request;
       throw new Error('Not implemented');
+{{/isCrud}}{{/hasModel}}{{^hasModel}}
+      // TODO: implement logic using {{#hasInput}}app + input{{/hasInput}}{{^hasInput}}app + request{{/hasInput}}
+      {{#hasInput}}void input;{{/hasInput}}
+      void request;
+      throw new Error('Not implemented');
+{{/hasModel}}
     } catch (err) {
       app.log.error(err);
       throw err;

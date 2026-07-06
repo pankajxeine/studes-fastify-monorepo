@@ -30,6 +30,12 @@ type Options = {
   dryRun: boolean
 }
 
+type EntityModule = {
+  dirName: string
+  exportName: string
+  decoratorName: string
+}
+
 function usage(): never {
   console.log(`Usage:
   tsx scripts/generate-sequelize-entities.ts --sql infra/cpanel_default.sql --out services/auth_service/src/entities
@@ -178,6 +184,11 @@ function toCamelCase(str: string): string {
 function toPascalCase(str: string): string {
   return str
     .replace(/(^|_)(\w)/g, (_, __, c) => c.toUpperCase());
+}
+
+function toLowerCamelCase(str: string): string {
+  const pascal = toPascalCase(str)
+  return pascal[0].toLowerCase() + pascal.slice(1)
 }
 
 // Extract identifiers from PRIMARY KEY, UNIQUE, FOREIGN KEY clauses
@@ -492,6 +503,85 @@ ${models}
 `
 }
 
+function renderRootEntitiesIndex(modules: EntityModule[]): string {
+  const imports = modules
+    .map(
+      (module) =>
+        `import { initGeneratedEntities as init${module.exportName}Entities, type GeneratedModels as ${module.exportName}Models } from './${module.dirName}'`
+    )
+    .join('\n')
+
+  const moduleEntries = modules
+    .map((module) => `  ${module.decoratorName}: ${module.exportName}Models`)
+    .join('\n')
+
+  const registerLines = modules
+    .map((module) => `  app.decorate('${module.decoratorName}', init${module.exportName}Entities(sequelize).models)`)
+    .join('\n')
+
+  const returnLines = modules
+    .map((module) => `    ${module.decoratorName}: app.${module.decoratorName}`)
+    .join(',\n')
+
+  const fastifyEntries = modules
+    .map((module) => `    ${module.decoratorName}: ${module.exportName}Models`)
+    .join('\n')
+
+  return `import type { FastifyInstance } from 'fastify'
+import type { Sequelize } from 'sequelize'
+${imports}
+
+export type GeneratedEntityDecorations = {
+${moduleEntries}
+}
+
+export function registerGeneratedEntityDecorators(app: FastifyInstance, sequelize: Sequelize): GeneratedEntityDecorations {
+${registerLines}
+
+  return {
+${returnLines}
+  }
+}
+
+declare module 'fastify' {
+  interface FastifyInstance {
+${fastifyEntries}
+  }
+}
+`
+}
+
+function findGeneratedEntityModules(entitiesRootDir: string): EntityModule[] {
+  if (!fs.existsSync(entitiesRootDir)) return []
+
+  return fs
+    .readdirSync(entitiesRootDir, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .filter((entry) => fs.existsSync(path.join(entitiesRootDir, entry.name, 'index.ts')))
+    .map((entry) => ({
+      dirName: entry.name,
+      exportName: toPascalCase(entry.name),
+      decoratorName: `${toLowerCamelCase(entry.name)}Models`,
+    }))
+    .sort((a, b) => a.dirName.localeCompare(b.dirName))
+}
+
+function writeRootEntitiesIndex(outDir: string) {
+  const entitiesRootDir = path.dirname(outDir)
+  const modules = findGeneratedEntityModules(entitiesRootDir)
+  if (modules.length === 0) return
+
+  writeFileIfChanged(path.join(entitiesRootDir, 'index.ts'), renderRootEntitiesIndex(modules))
+}
+
+function writeFileIfChanged(filePath: string, content: string) {
+  if (fs.existsSync(filePath) && fs.readFileSync(filePath, 'utf8') === content) {
+    return
+  }
+
+  fs.writeFileSync(filePath, content)
+}
+
 
 export function writeEntities(tables: Table[], outDir: string, schemaName?: string) {
   fs.mkdirSync(outDir, { recursive: true })
@@ -499,13 +589,14 @@ export function writeEntities(tables: Table[], outDir: string, schemaName?: stri
   for (const table of tables) {
     const folder = path.join(outDir, table.name)
     fs.mkdirSync(folder, { recursive: true })
-    fs.writeFileSync(
+    writeFileIfChanged(
       path.join(folder, `${table.name}.entity.ts`),
       renderEntity(table, schemaName)
     )
   }
 
-  fs.writeFileSync(path.join(outDir, 'index.ts'), renderIndex(tables))
+  writeFileIfChanged(path.join(outDir, 'index.ts'), renderIndex(tables))
+  writeRootEntitiesIndex(outDir)
 }
 
 function main() {

@@ -2,9 +2,8 @@ import fp from 'fastify-plugin';
 import { z } from 'zod';
 import { BadRequestError } from '../core';
 import { sequelize } from './db';
-import { DataTypes } from 'sequelize';
-import { initGeneratedEntities as cpanelModel, GeneratedModels as CpanelModels } from '../entities/cpanel';
-import { initGeneratedEntities as cpanelRouterModel, GeneratedModels as CpanelRouterModels } from '../entities/cpanel_router';
+import { DataTypes, Op } from 'sequelize';
+import { registerGeneratedEntityDecorators } from '../entities';
 import { escapeIdentifier } from '../utils/escapeIdentifier';
 
 const tenantConfigSchema = z.object({
@@ -15,26 +14,18 @@ export default fp(async (app) => {
   app.decorateRequest('tenant', null);
   app.decorateRequest('tenantModels', null);
   app.decorate('db', null);
-  app.decorate('cpanelModels', null);
-  app.decorate('cpanelRouterModels', null);
 
   await Object.defineProperty(app, 'db', {
     get() { return sequelize; }
   });
 
-  await Object.defineProperty(app, 'cpanelModel', {
-    get() { return cpanelModel(sequelize).models }
-  });
-
-  await Object.defineProperty(app, 'cpanelRouterModel', {
-    get() { return cpanelRouterModel(sequelize).models }
-  });
-
+  registerGeneratedEntityDecorators(app, sequelize);
 
   app.addHook('onRequest', async (request, reply) => {
     const tenantId = request.headers['x-tenant-id'];
     const db_schema = tenantId ? escapeIdentifier(`${tenantId}`) : "skeleton_cpanel_router";
     request.dbSchema = db_schema;
+    request.cpanelBbSchema = db_schema;
 
 
     // Skip tenant resolution for public routes
@@ -94,7 +85,7 @@ export default fp(async (app) => {
     );
 
     const tenant = await Tenant.findOne({
-      where: { [sequelize.Op.or]: [{ id: tenantIdOrSlug }, { slug: tenantIdOrSlug }] },
+      where: { [Op.or]: [{ id: tenantIdOrSlug }, { slug: tenantIdOrSlug }] },
     });
 
     if (!tenant) {
@@ -125,8 +116,6 @@ export default fp(async (app) => {
 declare module 'fastify' {
   interface FastifyInstance {
     tenantModel: any;
-    cpanelModels: CpanelModels | null;
-    cpanelRouterModels: CpanelRouterModels | null;
     db: typeof sequelize | null;
   }
   interface FastifyRequest {
@@ -137,6 +126,7 @@ declare module 'fastify' {
       resolvedBy: 'header' | 'subdomain';
     };
     dbSchema: string;
+    cpanelBbSchema: string;
   }
 
   interface FastifyRouteConfig {

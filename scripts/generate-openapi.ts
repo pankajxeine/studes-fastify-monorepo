@@ -200,6 +200,35 @@ function toImportPath(fromDir: string, toFileWithoutExtension: string): string {
   return relative
 }
 
+function toEntityDecoratorBase(groupName: string): string {
+  if (groupName === 'cpanels') return 'cpanel'
+  if (groupName === 'cpanels_router') return 'cpanelRouter'
+
+  return toLowerCamelCase(groupName)
+}
+
+function getModelDecoratorName(baseDir: string, parentDir: string): string | null {
+  const srcServicesDir = path.join(baseDir, 'src', 'services')
+  const relative = path.relative(srcServicesDir, parentDir).replace(/\\/g, '/')
+  const [groupName, moduleName] = relative.split('/')
+
+  if (!groupName || !moduleName) return null
+
+  return `${toEntityDecoratorBase(groupName)}Models`
+}
+
+function crudActionFromOperation(httpMethod: string, routePath: string): string {
+  const hasIdParam = routePath.split('/').some((part) => part.startsWith(':'))
+
+  if (httpMethod === 'get' && hasIdParam) return 'read'
+  if (httpMethod === 'get') return 'list'
+  if (httpMethod === 'post') return 'create'
+  if (httpMethod === 'put' || httpMethod === 'patch') return 'update'
+  if (httpMethod === 'delete') return 'delete'
+
+  return 'custom'
+}
+
 function getSpecRoots(baseDir: string): string[] {
   const openapiDir = path.join(baseDir, 'openapi')
   const apiDir = path.join(baseDir, 'api')
@@ -384,6 +413,7 @@ function writeGeneratorFiles(outDir?: string, module?: string) {
 
     const modulePascal = toPascalCase(moduleName)
     const typesDir = path.join(parentDir, 'types');
+    const modelDecoratorName = getModelDecoratorName(baseDir, parentDir)
 
     fs.mkdirSync(typesDir, { recursive: true })
     fs.mkdirSync(parentDir, { recursive: true })
@@ -435,7 +465,17 @@ function writeGeneratorFiles(outDir?: string, module?: string) {
         }
 
         methodSignatures.push({ methodSignature })
+        const crudAction = crudActionFromOperation(httpMethod, routePath)
         methodImpls.push(methodImpl)
+        methodImpl.modelDecoratorName = modelDecoratorName
+        methodImpl.modelKey = moduleName
+        methodImpl.hasModel = Boolean(modelDecoratorName)
+        methodImpl.isList = crudAction === 'list'
+        methodImpl.isCreate = crudAction === 'create'
+        methodImpl.isRead = crudAction === 'read'
+        methodImpl.isUpdate = crudAction === 'update'
+        methodImpl.isDelete = crudAction === 'delete'
+        methodImpl.isCrud = crudAction !== 'custom'
         routeDefs.push({
           operationId,
           httpMethod,
