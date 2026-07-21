@@ -7,7 +7,7 @@ export class DocumentTypesService implements DocumentTypesController {
   public async listDocumentTypes(app: FastifyInstance, request?: FastifyRequest): Promise<DocumentTypesResponse[]> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.document_types.schema(schema!)
       const rows = await model.findAll()
@@ -21,7 +21,7 @@ export class DocumentTypesService implements DocumentTypesController {
   public async createDocumentType(app: FastifyInstance, input: DocumentTypesRequest, request?: FastifyRequest): Promise<DocumentTypesResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.document_types.schema(schema!)
       const row = await model.create(input as any)
@@ -35,7 +35,7 @@ export class DocumentTypesService implements DocumentTypesController {
   public async getDocumentTypesById(app: FastifyInstance, request?: FastifyRequest): Promise<DocumentTypesResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.document_types.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }
@@ -53,7 +53,7 @@ export class DocumentTypesService implements DocumentTypesController {
   public async updateDocumentType(app: FastifyInstance, input: DocumentTypesRequest, request?: FastifyRequest): Promise<DocumentTypesResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.document_types.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }
@@ -72,7 +72,7 @@ export class DocumentTypesService implements DocumentTypesController {
   public async deleteDocumentType(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.document_types.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }

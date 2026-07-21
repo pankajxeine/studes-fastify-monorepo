@@ -1,4 +1,5 @@
 import AuthRoutes from './auth.router'
+import CommonRoutes from './common.router'
 import HealthRoutes from './health.router'
 import AdminUsersRoutes from './admin_users.router'
 import CpanelCompaniesRoutes from './cpanel_companies.router'
@@ -62,6 +63,7 @@ import type { FastifyInstance } from 'fastify'
 
 export default async function registerRoutes(app: FastifyInstance) {
   await app.register(AuthRoutes)
+  await app.register(CommonRoutes)
   await app.register(HealthRoutes)
   await app.register(AdminUsersRoutes)
   await app.register(CpanelCompaniesRoutes)

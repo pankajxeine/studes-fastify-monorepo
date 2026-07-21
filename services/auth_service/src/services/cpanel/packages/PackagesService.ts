@@ -7,7 +7,7 @@ export class PackagesService implements PackagesController {
   public async listPackages(app: FastifyInstance, request?: FastifyRequest): Promise<PackagesResponse[]> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.packages.schema(schema!)
       const rows = await model.findAll()
@@ -21,7 +21,7 @@ export class PackagesService implements PackagesController {
   public async createPackage(app: FastifyInstance, input: PackagesRequest, request?: FastifyRequest): Promise<PackagesResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.packages.schema(schema!)
       const row = await model.create(input as any)
@@ -35,7 +35,7 @@ export class PackagesService implements PackagesController {
   public async getPackagesById(app: FastifyInstance, request?: FastifyRequest): Promise<PackagesResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.packages.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }
@@ -53,7 +53,7 @@ export class PackagesService implements PackagesController {
   public async updatePackage(app: FastifyInstance, input: PackagesRequest, request?: FastifyRequest): Promise<PackagesResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.packages.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }
@@ -72,7 +72,7 @@ export class PackagesService implements PackagesController {
   public async deletePackage(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.packages.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }

@@ -7,7 +7,7 @@ export class CpanelCompaniesService implements CpanelCompaniesController {
   public async listCpanelCompanies(app: FastifyInstance, request?: FastifyRequest): Promise<CpanelCompaniesResponse[]> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.cpanel_companies.schema(schema!)
       const rows = await model.findAll()
@@ -21,7 +21,7 @@ export class CpanelCompaniesService implements CpanelCompaniesController {
   public async createCpanelCompanie(app: FastifyInstance, input: CpanelCompaniesRequest, request?: FastifyRequest): Promise<CpanelCompaniesResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.cpanel_companies.schema(schema!)
       const row = await model.create(input as any)
@@ -35,7 +35,7 @@ export class CpanelCompaniesService implements CpanelCompaniesController {
   public async getCpanelCompaniesById(app: FastifyInstance, request?: FastifyRequest): Promise<CpanelCompaniesResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.cpanel_companies.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }
@@ -53,7 +53,7 @@ export class CpanelCompaniesService implements CpanelCompaniesController {
   public async updateCpanelCompanie(app: FastifyInstance, input: CpanelCompaniesRequest, request?: FastifyRequest): Promise<CpanelCompaniesResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.cpanel_companies.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }
@@ -72,7 +72,7 @@ export class CpanelCompaniesService implements CpanelCompaniesController {
   public async deleteCpanelCompanie(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.cpanel_companies.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }

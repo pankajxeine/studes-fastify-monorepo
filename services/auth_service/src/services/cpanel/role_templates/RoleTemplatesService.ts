@@ -7,7 +7,7 @@ export class RoleTemplatesService implements RoleTemplatesController {
   public async listRoleTemplates(app: FastifyInstance, request?: FastifyRequest): Promise<RoleTemplatesResponse[]> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.role_templates.schema(schema!)
       const rows = await model.findAll()
@@ -21,7 +21,7 @@ export class RoleTemplatesService implements RoleTemplatesController {
   public async createRoleTemplate(app: FastifyInstance, input: RoleTemplatesRequest, request?: FastifyRequest): Promise<RoleTemplatesResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.role_templates.schema(schema!)
       const row = await model.create(input as any)
@@ -35,7 +35,7 @@ export class RoleTemplatesService implements RoleTemplatesController {
   public async getRoleTemplatesById(app: FastifyInstance, request?: FastifyRequest): Promise<RoleTemplatesResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.role_templates.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }
@@ -53,7 +53,7 @@ export class RoleTemplatesService implements RoleTemplatesController {
   public async updateRoleTemplate(app: FastifyInstance, input: RoleTemplatesRequest, request?: FastifyRequest): Promise<RoleTemplatesResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.role_templates.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }
@@ -72,7 +72,7 @@ export class RoleTemplatesService implements RoleTemplatesController {
   public async deleteRoleTemplate(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.role_templates.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }

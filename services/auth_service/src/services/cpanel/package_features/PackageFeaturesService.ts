@@ -7,7 +7,7 @@ export class PackageFeaturesService implements PackageFeaturesController {
   public async listPackageFeatures(app: FastifyInstance, request?: FastifyRequest): Promise<PackageFeaturesResponse[]> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.package_features.schema(schema!)
       const rows = await model.findAll()
@@ -21,7 +21,7 @@ export class PackageFeaturesService implements PackageFeaturesController {
   public async createPackageFeature(app: FastifyInstance, input: PackageFeaturesRequest, request?: FastifyRequest): Promise<PackageFeaturesResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.package_features.schema(schema!)
       const row = await model.create(input as any)
@@ -35,7 +35,7 @@ export class PackageFeaturesService implements PackageFeaturesController {
   public async getPackageFeaturesById(app: FastifyInstance, request?: FastifyRequest): Promise<PackageFeaturesResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.package_features.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }
@@ -53,7 +53,7 @@ export class PackageFeaturesService implements PackageFeaturesController {
   public async updatePackageFeature(app: FastifyInstance, input: PackageFeaturesRequest, request?: FastifyRequest): Promise<PackageFeaturesResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.package_features.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }
@@ -72,7 +72,7 @@ export class PackageFeaturesService implements PackageFeaturesController {
   public async deletePackageFeature(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.package_features.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }

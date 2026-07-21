@@ -7,7 +7,7 @@ export class MigrationDetailsService implements MigrationDetailsController {
   public async listMigrationDetails(app: FastifyInstance, request?: FastifyRequest): Promise<MigrationDetailsResponse[]> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelRouterModels.migration_details.schema(schema!)
       const rows = await model.findAll()
@@ -21,7 +21,7 @@ export class MigrationDetailsService implements MigrationDetailsController {
   public async createMigrationDetail(app: FastifyInstance, input: MigrationDetailsRequest, request?: FastifyRequest): Promise<MigrationDetailsResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelRouterModels.migration_details.schema(schema!)
       const row = await model.create(input as any)
@@ -35,7 +35,7 @@ export class MigrationDetailsService implements MigrationDetailsController {
   public async getMigrationDetailsById(app: FastifyInstance, request?: FastifyRequest): Promise<MigrationDetailsResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelRouterModels.migration_details.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }
@@ -53,7 +53,7 @@ export class MigrationDetailsService implements MigrationDetailsController {
   public async updateMigrationDetail(app: FastifyInstance, input: MigrationDetailsRequest, request?: FastifyRequest): Promise<MigrationDetailsResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelRouterModels.migration_details.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }
@@ -72,7 +72,7 @@ export class MigrationDetailsService implements MigrationDetailsController {
   public async deleteMigrationDetail(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelRouterModels.migration_details.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }

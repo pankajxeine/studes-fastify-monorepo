@@ -7,7 +7,7 @@ export class SubscriptionPlansService implements SubscriptionPlansController {
   public async listSubscriptionPlans(app: FastifyInstance, request?: FastifyRequest): Promise<SubscriptionPlansResponse[]> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.subscription_plans.schema(schema!)
       const rows = await model.findAll()
@@ -21,7 +21,7 @@ export class SubscriptionPlansService implements SubscriptionPlansController {
   public async createSubscriptionPlan(app: FastifyInstance, input: SubscriptionPlansRequest, request?: FastifyRequest): Promise<SubscriptionPlansResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.subscription_plans.schema(schema!)
       const row = await model.create(input as any)
@@ -35,7 +35,7 @@ export class SubscriptionPlansService implements SubscriptionPlansController {
   public async getSubscriptionPlansById(app: FastifyInstance, request?: FastifyRequest): Promise<SubscriptionPlansResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.subscription_plans.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }
@@ -53,7 +53,7 @@ export class SubscriptionPlansService implements SubscriptionPlansController {
   public async updateSubscriptionPlan(app: FastifyInstance, input: SubscriptionPlansRequest, request?: FastifyRequest): Promise<SubscriptionPlansResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.subscription_plans.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }
@@ -72,7 +72,7 @@ export class SubscriptionPlansService implements SubscriptionPlansController {
   public async deleteSubscriptionPlan(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.subscription_plans.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }

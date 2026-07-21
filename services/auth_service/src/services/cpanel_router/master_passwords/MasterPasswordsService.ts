@@ -7,7 +7,7 @@ export class MasterPasswordsService implements MasterPasswordsController {
   public async listMasterPasswords(app: FastifyInstance, request?: FastifyRequest): Promise<MasterPasswordsResponse[]> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelRouterModels.master_passwords.schema(schema!)
       const rows = await model.findAll()
@@ -21,7 +21,7 @@ export class MasterPasswordsService implements MasterPasswordsController {
   public async createMasterPassword(app: FastifyInstance, input: MasterPasswordsRequest, request?: FastifyRequest): Promise<MasterPasswordsResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelRouterModels.master_passwords.schema(schema!)
       const row = await model.create(input as any)
@@ -35,7 +35,7 @@ export class MasterPasswordsService implements MasterPasswordsController {
   public async getMasterPasswordsById(app: FastifyInstance, request?: FastifyRequest): Promise<MasterPasswordsResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelRouterModels.master_passwords.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }
@@ -53,7 +53,7 @@ export class MasterPasswordsService implements MasterPasswordsController {
   public async updateMasterPassword(app: FastifyInstance, input: MasterPasswordsRequest, request?: FastifyRequest): Promise<MasterPasswordsResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelRouterModels.master_passwords.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }
@@ -72,7 +72,7 @@ export class MasterPasswordsService implements MasterPasswordsController {
   public async deleteMasterPassword(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelRouterModels.master_passwords.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }

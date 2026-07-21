@@ -7,7 +7,7 @@ export class CpanelsService implements CpanelsController {
   public async listCpanels(app: FastifyInstance, request?: FastifyRequest): Promise<CpanelsResponse[]> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelRouterModels.cpanels.schema(schema!)
       const rows = await model.findAll()
@@ -21,7 +21,7 @@ export class CpanelsService implements CpanelsController {
   public async createCpanel(app: FastifyInstance, input: CpanelsRequest, request?: FastifyRequest): Promise<CpanelsResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelRouterModels.cpanels.schema(schema!)
       const row = await model.create(input as any)
@@ -35,7 +35,7 @@ export class CpanelsService implements CpanelsController {
   public async getCpanelsById(app: FastifyInstance, request?: FastifyRequest): Promise<CpanelsResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelRouterModels.cpanels.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }
@@ -53,7 +53,7 @@ export class CpanelsService implements CpanelsController {
   public async updateCpanel(app: FastifyInstance, input: CpanelsRequest, request?: FastifyRequest): Promise<CpanelsResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelRouterModels.cpanels.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }
@@ -72,7 +72,7 @@ export class CpanelsService implements CpanelsController {
   public async deleteCpanel(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelRouterModels.cpanels.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }

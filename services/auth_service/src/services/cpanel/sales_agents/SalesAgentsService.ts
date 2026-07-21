@@ -7,7 +7,7 @@ export class SalesAgentsService implements SalesAgentsController {
   public async listSalesAgents(app: FastifyInstance, request?: FastifyRequest): Promise<SalesAgentsResponse[]> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.sales_agents.schema(schema!)
       const rows = await model.findAll()
@@ -21,7 +21,7 @@ export class SalesAgentsService implements SalesAgentsController {
   public async createSalesAgent(app: FastifyInstance, input: SalesAgentsRequest, request?: FastifyRequest): Promise<SalesAgentsResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.sales_agents.schema(schema!)
       const row = await model.create(input as any)
@@ -35,7 +35,7 @@ export class SalesAgentsService implements SalesAgentsController {
   public async getSalesAgentsById(app: FastifyInstance, request?: FastifyRequest): Promise<SalesAgentsResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.sales_agents.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }
@@ -53,7 +53,7 @@ export class SalesAgentsService implements SalesAgentsController {
   public async updateSalesAgent(app: FastifyInstance, input: SalesAgentsRequest, request?: FastifyRequest): Promise<SalesAgentsResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.sales_agents.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }
@@ -72,7 +72,7 @@ export class SalesAgentsService implements SalesAgentsController {
   public async deleteSalesAgent(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.sales_agents.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }

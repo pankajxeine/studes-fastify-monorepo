@@ -7,7 +7,7 @@ export class CustomerStatusLogsService implements CustomerStatusLogsController {
   public async listCustomerStatusLogs(app: FastifyInstance, request?: FastifyRequest): Promise<CustomerStatusLogsResponse[]> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.customer_status_logs.schema(schema!)
       const rows = await model.findAll()
@@ -21,7 +21,7 @@ export class CustomerStatusLogsService implements CustomerStatusLogsController {
   public async createCustomerStatusLog(app: FastifyInstance, input: CustomerStatusLogsRequest, request?: FastifyRequest): Promise<CustomerStatusLogsResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.customer_status_logs.schema(schema!)
       const row = await model.create(input as any)
@@ -35,7 +35,7 @@ export class CustomerStatusLogsService implements CustomerStatusLogsController {
   public async getCustomerStatusLogsById(app: FastifyInstance, request?: FastifyRequest): Promise<CustomerStatusLogsResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.customer_status_logs.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }
@@ -53,7 +53,7 @@ export class CustomerStatusLogsService implements CustomerStatusLogsController {
   public async updateCustomerStatusLog(app: FastifyInstance, input: CustomerStatusLogsRequest, request?: FastifyRequest): Promise<CustomerStatusLogsResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.customer_status_logs.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }
@@ -72,7 +72,7 @@ export class CustomerStatusLogsService implements CustomerStatusLogsController {
   public async deleteCustomerStatusLog(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.customer_status_logs.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }

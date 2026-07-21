@@ -7,7 +7,7 @@ export class SubsService implements SubsController {
   public async listSubs(app: FastifyInstance, request?: FastifyRequest): Promise<SubsResponse[]> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.subs.schema(schema!)
       const rows = await model.findAll()
@@ -21,7 +21,7 @@ export class SubsService implements SubsController {
   public async createSub(app: FastifyInstance, input: SubsRequest, request?: FastifyRequest): Promise<SubsResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.subs.schema(schema!)
       const row = await model.create(input as any)
@@ -35,7 +35,7 @@ export class SubsService implements SubsController {
   public async getSubsById(app: FastifyInstance, request?: FastifyRequest): Promise<SubsResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.subs.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }
@@ -53,7 +53,7 @@ export class SubsService implements SubsController {
   public async updateSub(app: FastifyInstance, input: SubsRequest, request?: FastifyRequest): Promise<SubsResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.subs.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }
@@ -72,7 +72,7 @@ export class SubsService implements SubsController {
   public async deleteSub(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.subs.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }

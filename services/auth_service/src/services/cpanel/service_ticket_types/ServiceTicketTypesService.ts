@@ -7,7 +7,7 @@ export class ServiceTicketTypesService implements ServiceTicketTypesController {
   public async listServiceTicketTypes(app: FastifyInstance, request?: FastifyRequest): Promise<ServiceTicketTypesResponse[]> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.service_ticket_types.schema(schema!)
       const rows = await model.findAll()
@@ -21,7 +21,7 @@ export class ServiceTicketTypesService implements ServiceTicketTypesController {
   public async createServiceTicketType(app: FastifyInstance, input: ServiceTicketTypesRequest, request?: FastifyRequest): Promise<ServiceTicketTypesResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.service_ticket_types.schema(schema!)
       const row = await model.create(input as any)
@@ -35,7 +35,7 @@ export class ServiceTicketTypesService implements ServiceTicketTypesController {
   public async getServiceTicketTypesById(app: FastifyInstance, request?: FastifyRequest): Promise<ServiceTicketTypesResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.service_ticket_types.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }
@@ -53,7 +53,7 @@ export class ServiceTicketTypesService implements ServiceTicketTypesController {
   public async updateServiceTicketType(app: FastifyInstance, input: ServiceTicketTypesRequest, request?: FastifyRequest): Promise<ServiceTicketTypesResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.service_ticket_types.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }
@@ -72,7 +72,7 @@ export class ServiceTicketTypesService implements ServiceTicketTypesController {
   public async deleteServiceTicketType(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.service_ticket_types.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }

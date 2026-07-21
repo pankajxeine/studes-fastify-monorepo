@@ -7,7 +7,7 @@ export class IndustryModulesService implements IndustryModulesController {
   public async listIndustryModules(app: FastifyInstance, request?: FastifyRequest): Promise<IndustryModulesResponse[]> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.industry_modules.schema(schema!)
       const rows = await model.findAll()
@@ -21,7 +21,7 @@ export class IndustryModulesService implements IndustryModulesController {
   public async createIndustryModule(app: FastifyInstance, input: IndustryModulesRequest, request?: FastifyRequest): Promise<IndustryModulesResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.industry_modules.schema(schema!)
       const row = await model.create(input as any)
@@ -35,7 +35,7 @@ export class IndustryModulesService implements IndustryModulesController {
   public async getIndustryModulesById(app: FastifyInstance, request?: FastifyRequest): Promise<IndustryModulesResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.industry_modules.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }
@@ -53,7 +53,7 @@ export class IndustryModulesService implements IndustryModulesController {
   public async updateIndustryModule(app: FastifyInstance, input: IndustryModulesRequest, request?: FastifyRequest): Promise<IndustryModulesResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.industry_modules.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }
@@ -72,7 +72,7 @@ export class IndustryModulesService implements IndustryModulesController {
   public async deleteIndustryModule(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.industry_modules.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }

@@ -7,7 +7,7 @@ export class CrmsService implements CrmsController {
   public async listCrms(app: FastifyInstance, request?: FastifyRequest): Promise<CrmsResponse[]> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelRouterModels.crms.schema(schema!)
       const rows = await model.findAll()
@@ -21,7 +21,7 @@ export class CrmsService implements CrmsController {
   public async createCrm(app: FastifyInstance, input: CrmsRequest, request?: FastifyRequest): Promise<CrmsResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelRouterModels.crms.schema(schema!)
       const row = await model.create(input as any)
@@ -35,7 +35,7 @@ export class CrmsService implements CrmsController {
   public async getCrmsById(app: FastifyInstance, request?: FastifyRequest): Promise<CrmsResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelRouterModels.crms.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }
@@ -53,7 +53,7 @@ export class CrmsService implements CrmsController {
   public async updateCrm(app: FastifyInstance, input: CrmsRequest, request?: FastifyRequest): Promise<CrmsResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelRouterModels.crms.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }
@@ -72,7 +72,7 @@ export class CrmsService implements CrmsController {
   public async deleteCrm(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelRouterModels.crms.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }

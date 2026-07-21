@@ -7,7 +7,7 @@ export class FeatureFieldsService implements FeatureFieldsController {
   public async listFeatureFields(app: FastifyInstance, request?: FastifyRequest): Promise<FeatureFieldsResponse[]> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.feature_fields.schema(schema!)
       const rows = await model.findAll()
@@ -21,7 +21,7 @@ export class FeatureFieldsService implements FeatureFieldsController {
   public async createFeatureField(app: FastifyInstance, input: FeatureFieldsRequest, request?: FastifyRequest): Promise<FeatureFieldsResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.feature_fields.schema(schema!)
       const row = await model.create(input as any)
@@ -35,7 +35,7 @@ export class FeatureFieldsService implements FeatureFieldsController {
   public async getFeatureFieldsById(app: FastifyInstance, request?: FastifyRequest): Promise<FeatureFieldsResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.feature_fields.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }
@@ -53,7 +53,7 @@ export class FeatureFieldsService implements FeatureFieldsController {
   public async updateFeatureField(app: FastifyInstance, input: FeatureFieldsRequest, request?: FastifyRequest): Promise<FeatureFieldsResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.feature_fields.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }
@@ -72,7 +72,7 @@ export class FeatureFieldsService implements FeatureFieldsController {
   public async deleteFeatureField(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.feature_fields.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }

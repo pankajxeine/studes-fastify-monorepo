@@ -7,7 +7,7 @@ export class AdminUsersService implements AdminUsersController {
   public async listAdminUsers(app: FastifyInstance, request?: FastifyRequest): Promise<AdminUsersResponse[]> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.admin_users.schema(schema!)
       const rows = await model.findAll()
@@ -21,7 +21,7 @@ export class AdminUsersService implements AdminUsersController {
   public async createAdminUser(app: FastifyInstance, input: AdminUsersRequest, request?: FastifyRequest): Promise<AdminUsersResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.admin_users.schema(schema!)
       const row = await model.create(input as any)
@@ -35,7 +35,7 @@ export class AdminUsersService implements AdminUsersController {
   public async getAdminUsersById(app: FastifyInstance, request?: FastifyRequest): Promise<AdminUsersResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.admin_users.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }
@@ -53,7 +53,7 @@ export class AdminUsersService implements AdminUsersController {
   public async updateAdminUser(app: FastifyInstance, input: AdminUsersRequest, request?: FastifyRequest): Promise<AdminUsersResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.admin_users.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }
@@ -72,7 +72,7 @@ export class AdminUsersService implements AdminUsersController {
   public async deleteAdminUser(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.admin_users.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }

@@ -7,7 +7,7 @@ export class EmailTemplateFieldsService implements EmailTemplateFieldsController
   public async listEmailTemplateFields(app: FastifyInstance, request?: FastifyRequest): Promise<EmailTemplateFieldsResponse[]> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.email_template_fields.schema(schema!)
       const rows = await model.findAll()
@@ -21,7 +21,7 @@ export class EmailTemplateFieldsService implements EmailTemplateFieldsController
   public async createEmailTemplateField(app: FastifyInstance, input: EmailTemplateFieldsRequest, request?: FastifyRequest): Promise<EmailTemplateFieldsResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.email_template_fields.schema(schema!)
       const row = await model.create(input as any)
@@ -35,7 +35,7 @@ export class EmailTemplateFieldsService implements EmailTemplateFieldsController
   public async getEmailTemplateFieldsById(app: FastifyInstance, request?: FastifyRequest): Promise<EmailTemplateFieldsResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.email_template_fields.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }
@@ -53,7 +53,7 @@ export class EmailTemplateFieldsService implements EmailTemplateFieldsController
   public async updateEmailTemplateField(app: FastifyInstance, input: EmailTemplateFieldsRequest, request?: FastifyRequest): Promise<EmailTemplateFieldsResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.email_template_fields.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }
@@ -72,7 +72,7 @@ export class EmailTemplateFieldsService implements EmailTemplateFieldsController
   public async deleteEmailTemplateField(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.email_template_fields.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }

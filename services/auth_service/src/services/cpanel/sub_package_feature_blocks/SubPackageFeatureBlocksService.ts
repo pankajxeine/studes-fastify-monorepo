@@ -7,7 +7,7 @@ export class SubPackageFeatureBlocksService implements SubPackageFeatureBlocksCo
   public async listSubPackageFeatureBlocks(app: FastifyInstance, request?: FastifyRequest): Promise<SubPackageFeatureBlocksResponse[]> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.sub_package_feature_blocks.schema(schema!)
       const rows = await model.findAll()
@@ -21,7 +21,7 @@ export class SubPackageFeatureBlocksService implements SubPackageFeatureBlocksCo
   public async createSubPackageFeatureBlock(app: FastifyInstance, input: SubPackageFeatureBlocksRequest, request?: FastifyRequest): Promise<SubPackageFeatureBlocksResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.sub_package_feature_blocks.schema(schema!)
       const row = await model.create(input as any)
@@ -35,7 +35,7 @@ export class SubPackageFeatureBlocksService implements SubPackageFeatureBlocksCo
   public async getSubPackageFeatureBlocksById(app: FastifyInstance, request?: FastifyRequest): Promise<SubPackageFeatureBlocksResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.sub_package_feature_blocks.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }
@@ -53,7 +53,7 @@ export class SubPackageFeatureBlocksService implements SubPackageFeatureBlocksCo
   public async updateSubPackageFeatureBlock(app: FastifyInstance, input: SubPackageFeatureBlocksRequest, request?: FastifyRequest): Promise<SubPackageFeatureBlocksResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.sub_package_feature_blocks.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }
@@ -72,7 +72,7 @@ export class SubPackageFeatureBlocksService implements SubPackageFeatureBlocksCo
   public async deleteSubPackageFeatureBlock(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.sub_package_feature_blocks.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }

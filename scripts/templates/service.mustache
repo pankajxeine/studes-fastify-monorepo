@@ -10,7 +10,7 @@ export class {{ServiceName}} implements {{ControllerName}} {
     try {
 {{#hasModel}}{{#isCrud}}
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.{{modelDecoratorName}}.{{modelKey}}.schema(schema!)
 {{#isList}}

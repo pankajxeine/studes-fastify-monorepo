@@ -7,7 +7,7 @@ export class MasterCredentialsService implements MasterCredentialsController {
   public async listMasterCredentials(app: FastifyInstance, request?: FastifyRequest): Promise<MasterCredentialsResponse[]> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.master_credentials.schema(schema!)
       const rows = await model.findAll()
@@ -21,7 +21,7 @@ export class MasterCredentialsService implements MasterCredentialsController {
   public async createMasterCredential(app: FastifyInstance, input: MasterCredentialsRequest, request?: FastifyRequest): Promise<MasterCredentialsResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.master_credentials.schema(schema!)
       const row = await model.create(input as any)
@@ -35,7 +35,7 @@ export class MasterCredentialsService implements MasterCredentialsController {
   public async getMasterCredentialsById(app: FastifyInstance, request?: FastifyRequest): Promise<MasterCredentialsResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.master_credentials.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }
@@ -53,7 +53,7 @@ export class MasterCredentialsService implements MasterCredentialsController {
   public async updateMasterCredential(app: FastifyInstance, input: MasterCredentialsRequest, request?: FastifyRequest): Promise<MasterCredentialsResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.master_credentials.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }
@@ -72,7 +72,7 @@ export class MasterCredentialsService implements MasterCredentialsController {
   public async deleteMasterCredential(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.master_credentials.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }

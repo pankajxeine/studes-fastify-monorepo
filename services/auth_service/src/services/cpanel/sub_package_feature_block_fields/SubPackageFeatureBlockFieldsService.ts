@@ -7,7 +7,7 @@ export class SubPackageFeatureBlockFieldsService implements SubPackageFeatureBlo
   public async listSubPackageFeatureBlockFields(app: FastifyInstance, request?: FastifyRequest): Promise<SubPackageFeatureBlockFieldsResponse[]> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.sub_package_feature_block_fields.schema(schema!)
       const rows = await model.findAll()
@@ -21,7 +21,7 @@ export class SubPackageFeatureBlockFieldsService implements SubPackageFeatureBlo
   public async createSubPackageFeatureBlockField(app: FastifyInstance, input: SubPackageFeatureBlockFieldsRequest, request?: FastifyRequest): Promise<SubPackageFeatureBlockFieldsResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.sub_package_feature_block_fields.schema(schema!)
       const row = await model.create(input as any)
@@ -35,7 +35,7 @@ export class SubPackageFeatureBlockFieldsService implements SubPackageFeatureBlo
   public async getSubPackageFeatureBlockFieldsById(app: FastifyInstance, request?: FastifyRequest): Promise<SubPackageFeatureBlockFieldsResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.sub_package_feature_block_fields.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }
@@ -53,7 +53,7 @@ export class SubPackageFeatureBlockFieldsService implements SubPackageFeatureBlo
   public async updateSubPackageFeatureBlockField(app: FastifyInstance, input: SubPackageFeatureBlockFieldsRequest, request?: FastifyRequest): Promise<SubPackageFeatureBlockFieldsResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.sub_package_feature_block_fields.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }
@@ -72,7 +72,7 @@ export class SubPackageFeatureBlockFieldsService implements SubPackageFeatureBlo
   public async deleteSubPackageFeatureBlockField(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.sub_package_feature_block_fields.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }

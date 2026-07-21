@@ -7,7 +7,7 @@ export class ServiceTicketCommentsService implements ServiceTicketCommentsContro
   public async listServiceTicketComments(app: FastifyInstance, request?: FastifyRequest): Promise<ServiceTicketCommentsResponse[]> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.service_ticket_comments.schema(schema!)
       const rows = await model.findAll()
@@ -21,7 +21,7 @@ export class ServiceTicketCommentsService implements ServiceTicketCommentsContro
   public async createServiceTicketComment(app: FastifyInstance, input: ServiceTicketCommentsRequest, request?: FastifyRequest): Promise<ServiceTicketCommentsResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.service_ticket_comments.schema(schema!)
       const row = await model.create(input as any)
@@ -35,7 +35,7 @@ export class ServiceTicketCommentsService implements ServiceTicketCommentsContro
   public async getServiceTicketCommentsById(app: FastifyInstance, request?: FastifyRequest): Promise<ServiceTicketCommentsResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.service_ticket_comments.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }
@@ -53,7 +53,7 @@ export class ServiceTicketCommentsService implements ServiceTicketCommentsContro
   public async updateServiceTicketComment(app: FastifyInstance, input: ServiceTicketCommentsRequest, request?: FastifyRequest): Promise<ServiceTicketCommentsResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.service_ticket_comments.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }
@@ -72,7 +72,7 @@ export class ServiceTicketCommentsService implements ServiceTicketCommentsContro
   public async deleteServiceTicketComment(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.service_ticket_comments.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }

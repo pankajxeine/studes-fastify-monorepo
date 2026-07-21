@@ -7,7 +7,7 @@ export class CustomerDiscountsService implements CustomerDiscountsController {
   public async listCustomerDiscounts(app: FastifyInstance, request?: FastifyRequest): Promise<CustomerDiscountsResponse[]> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.customer_discounts.schema(schema!)
       const rows = await model.findAll()
@@ -21,7 +21,7 @@ export class CustomerDiscountsService implements CustomerDiscountsController {
   public async createCustomerDiscount(app: FastifyInstance, input: CustomerDiscountsRequest, request?: FastifyRequest): Promise<CustomerDiscountsResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.customer_discounts.schema(schema!)
       const row = await model.create(input as any)
@@ -35,7 +35,7 @@ export class CustomerDiscountsService implements CustomerDiscountsController {
   public async getCustomerDiscountsById(app: FastifyInstance, request?: FastifyRequest): Promise<CustomerDiscountsResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.customer_discounts.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }
@@ -53,7 +53,7 @@ export class CustomerDiscountsService implements CustomerDiscountsController {
   public async updateCustomerDiscount(app: FastifyInstance, input: CustomerDiscountsRequest, request?: FastifyRequest): Promise<CustomerDiscountsResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.customer_discounts.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }
@@ -72,7 +72,7 @@ export class CustomerDiscountsService implements CustomerDiscountsController {
   public async deleteCustomerDiscount(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.customer_discounts.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }

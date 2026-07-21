@@ -7,7 +7,7 @@ export class ServiceTicketLogsService implements ServiceTicketLogsController {
   public async listServiceTicketLogs(app: FastifyInstance, request?: FastifyRequest): Promise<ServiceTicketLogsResponse[]> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.service_ticket_logs.schema(schema!)
       const rows = await model.findAll()
@@ -21,7 +21,7 @@ export class ServiceTicketLogsService implements ServiceTicketLogsController {
   public async createServiceTicketLog(app: FastifyInstance, input: ServiceTicketLogsRequest, request?: FastifyRequest): Promise<ServiceTicketLogsResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.service_ticket_logs.schema(schema!)
       const row = await model.create(input as any)
@@ -35,7 +35,7 @@ export class ServiceTicketLogsService implements ServiceTicketLogsController {
   public async getServiceTicketLogsById(app: FastifyInstance, request?: FastifyRequest): Promise<ServiceTicketLogsResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.service_ticket_logs.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }
@@ -53,7 +53,7 @@ export class ServiceTicketLogsService implements ServiceTicketLogsController {
   public async updateServiceTicketLog(app: FastifyInstance, input: ServiceTicketLogsRequest, request?: FastifyRequest): Promise<ServiceTicketLogsResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.service_ticket_logs.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }
@@ -72,7 +72,7 @@ export class ServiceTicketLogsService implements ServiceTicketLogsController {
   public async deleteServiceTicketLog(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.service_ticket_logs.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }

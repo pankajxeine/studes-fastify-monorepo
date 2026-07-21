@@ -7,7 +7,7 @@ export class SubPackageUserTiersService implements SubPackageUserTiersController
   public async listSubPackageUserTiers(app: FastifyInstance, request?: FastifyRequest): Promise<SubPackageUserTiersResponse[]> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.sub_package_user_tiers.schema(schema!)
       const rows = await model.findAll()
@@ -21,7 +21,7 @@ export class SubPackageUserTiersService implements SubPackageUserTiersController
   public async createSubPackageUserTier(app: FastifyInstance, input: SubPackageUserTiersRequest, request?: FastifyRequest): Promise<SubPackageUserTiersResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.sub_package_user_tiers.schema(schema!)
       const row = await model.create(input as any)
@@ -35,7 +35,7 @@ export class SubPackageUserTiersService implements SubPackageUserTiersController
   public async getSubPackageUserTiersById(app: FastifyInstance, request?: FastifyRequest): Promise<SubPackageUserTiersResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.sub_package_user_tiers.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }
@@ -53,7 +53,7 @@ export class SubPackageUserTiersService implements SubPackageUserTiersController
   public async updateSubPackageUserTier(app: FastifyInstance, input: SubPackageUserTiersRequest, request?: FastifyRequest): Promise<SubPackageUserTiersResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.sub_package_user_tiers.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }
@@ -72,7 +72,7 @@ export class SubPackageUserTiersService implements SubPackageUserTiersController
   public async deleteSubPackageUserTier(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.sub_package_user_tiers.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }

@@ -7,7 +7,7 @@ export class RoleModulePermissionsService implements RoleModulePermissionsContro
   public async listRoleModulePermissions(app: FastifyInstance, request?: FastifyRequest): Promise<RoleModulePermissionsResponse[]> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.role_module_permissions.schema(schema!)
       const rows = await model.findAll()
@@ -21,7 +21,7 @@ export class RoleModulePermissionsService implements RoleModulePermissionsContro
   public async createRoleModulePermission(app: FastifyInstance, input: RoleModulePermissionsRequest, request?: FastifyRequest): Promise<RoleModulePermissionsResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.role_module_permissions.schema(schema!)
       const row = await model.create(input as any)
@@ -35,7 +35,7 @@ export class RoleModulePermissionsService implements RoleModulePermissionsContro
   public async getRoleModulePermissionsById(app: FastifyInstance, request?: FastifyRequest): Promise<RoleModulePermissionsResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.role_module_permissions.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }
@@ -53,7 +53,7 @@ export class RoleModulePermissionsService implements RoleModulePermissionsContro
   public async updateRoleModulePermission(app: FastifyInstance, input: RoleModulePermissionsRequest, request?: FastifyRequest): Promise<RoleModulePermissionsResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.role_module_permissions.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }
@@ -72,7 +72,7 @@ export class RoleModulePermissionsService implements RoleModulePermissionsContro
   public async deleteRoleModulePermission(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.role_module_permissions.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }

@@ -25,7 +25,8 @@ export default fp(async (app) => {
     const tenantId = request.headers['x-tenant-id'];
     const db_schema = tenantId ? escapeIdentifier(`${tenantId}`) : "skeleton_cpanel_router";
     request.dbSchema = db_schema;
-    request.cpanelBbSchema = db_schema;
+    request.cpanelDbSchema = db_schema;
+    request.routerDbSchema = "skeleton_cpanel_router";
 
 
     // Skip tenant resolution for public routes
@@ -126,7 +127,8 @@ declare module 'fastify' {
       resolvedBy: 'header' | 'subdomain';
     };
     dbSchema: string;
-    cpanelBbSchema: string;
+    cpanelDbSchema: string;
+    routerDbSchema: string;
   }
 
   interface FastifyRouteConfig {

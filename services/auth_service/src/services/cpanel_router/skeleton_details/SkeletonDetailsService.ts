@@ -7,7 +7,7 @@ export class SkeletonDetailsService implements SkeletonDetailsController {
   public async listSkeletonDetails(app: FastifyInstance, request?: FastifyRequest): Promise<SkeletonDetailsResponse[]> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelRouterModels.skeleton_details.schema(schema!)
       const rows = await model.findAll()
@@ -21,7 +21,7 @@ export class SkeletonDetailsService implements SkeletonDetailsController {
   public async createSkeletonDetail(app: FastifyInstance, input: SkeletonDetailsRequest, request?: FastifyRequest): Promise<SkeletonDetailsResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelRouterModels.skeleton_details.schema(schema!)
       const row = await model.create(input as any)
@@ -35,7 +35,7 @@ export class SkeletonDetailsService implements SkeletonDetailsController {
   public async getSkeletonDetailsById(app: FastifyInstance, request?: FastifyRequest): Promise<SkeletonDetailsResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelRouterModels.skeleton_details.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }
@@ -53,7 +53,7 @@ export class SkeletonDetailsService implements SkeletonDetailsController {
   public async updateSkeletonDetail(app: FastifyInstance, input: SkeletonDetailsRequest, request?: FastifyRequest): Promise<SkeletonDetailsResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelRouterModels.skeleton_details.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }
@@ -72,7 +72,7 @@ export class SkeletonDetailsService implements SkeletonDetailsController {
   public async deleteSkeletonDetail(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelRouterModels.skeleton_details.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }

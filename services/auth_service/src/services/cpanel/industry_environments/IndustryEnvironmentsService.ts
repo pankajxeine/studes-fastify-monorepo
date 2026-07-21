@@ -7,7 +7,7 @@ export class IndustryEnvironmentsService implements IndustryEnvironmentsControll
   public async listIndustryEnvironments(app: FastifyInstance, request?: FastifyRequest): Promise<IndustryEnvironmentsResponse[]> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.industry_environments.schema(schema!)
       const rows = await model.findAll()
@@ -21,7 +21,7 @@ export class IndustryEnvironmentsService implements IndustryEnvironmentsControll
   public async createIndustryEnvironment(app: FastifyInstance, input: IndustryEnvironmentsRequest, request?: FastifyRequest): Promise<IndustryEnvironmentsResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.industry_environments.schema(schema!)
       const row = await model.create(input as any)
@@ -35,7 +35,7 @@ export class IndustryEnvironmentsService implements IndustryEnvironmentsControll
   public async getIndustryEnvironmentsById(app: FastifyInstance, request?: FastifyRequest): Promise<IndustryEnvironmentsResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.industry_environments.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }
@@ -53,7 +53,7 @@ export class IndustryEnvironmentsService implements IndustryEnvironmentsControll
   public async updateIndustryEnvironment(app: FastifyInstance, input: IndustryEnvironmentsRequest, request?: FastifyRequest): Promise<IndustryEnvironmentsResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.industry_environments.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }
@@ -72,7 +72,7 @@ export class IndustryEnvironmentsService implements IndustryEnvironmentsControll
   public async deleteIndustryEnvironment(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.industry_environments.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }

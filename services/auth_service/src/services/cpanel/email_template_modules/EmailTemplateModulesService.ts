@@ -7,7 +7,7 @@ export class EmailTemplateModulesService implements EmailTemplateModulesControll
   public async listEmailTemplateModules(app: FastifyInstance, request?: FastifyRequest): Promise<EmailTemplateModulesResponse[]> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.email_template_modules.schema(schema!)
       const rows = await model.findAll()
@@ -21,7 +21,7 @@ export class EmailTemplateModulesService implements EmailTemplateModulesControll
   public async createEmailTemplateModule(app: FastifyInstance, input: EmailTemplateModulesRequest, request?: FastifyRequest): Promise<EmailTemplateModulesResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.email_template_modules.schema(schema!)
       const row = await model.create(input as any)
@@ -35,7 +35,7 @@ export class EmailTemplateModulesService implements EmailTemplateModulesControll
   public async getEmailTemplateModulesById(app: FastifyInstance, request?: FastifyRequest): Promise<EmailTemplateModulesResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.email_template_modules.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }
@@ -53,7 +53,7 @@ export class EmailTemplateModulesService implements EmailTemplateModulesControll
   public async updateEmailTemplateModule(app: FastifyInstance, input: EmailTemplateModulesRequest, request?: FastifyRequest): Promise<EmailTemplateModulesResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.email_template_modules.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }
@@ -72,7 +72,7 @@ export class EmailTemplateModulesService implements EmailTemplateModulesControll
   public async deleteEmailTemplateModule(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.email_template_modules.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }

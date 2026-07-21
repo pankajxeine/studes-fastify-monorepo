@@ -7,7 +7,7 @@ export class InstituteAuditLogsService implements InstituteAuditLogsController {
   public async listInstituteAuditLogs(app: FastifyInstance, request?: FastifyRequest): Promise<InstituteAuditLogsResponse[]> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.institute_audit_logs.schema(schema!)
       const rows = await model.findAll()
@@ -21,7 +21,7 @@ export class InstituteAuditLogsService implements InstituteAuditLogsController {
   public async createInstituteAuditLog(app: FastifyInstance, input: InstituteAuditLogsRequest, request?: FastifyRequest): Promise<InstituteAuditLogsResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.institute_audit_logs.schema(schema!)
       const row = await model.create(input as any)
@@ -35,7 +35,7 @@ export class InstituteAuditLogsService implements InstituteAuditLogsController {
   public async getInstituteAuditLogsById(app: FastifyInstance, request?: FastifyRequest): Promise<InstituteAuditLogsResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.institute_audit_logs.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }
@@ -53,7 +53,7 @@ export class InstituteAuditLogsService implements InstituteAuditLogsController {
   public async updateInstituteAuditLog(app: FastifyInstance, input: InstituteAuditLogsRequest, request?: FastifyRequest): Promise<InstituteAuditLogsResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.institute_audit_logs.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }
@@ -72,7 +72,7 @@ export class InstituteAuditLogsService implements InstituteAuditLogsController {
   public async deleteInstituteAuditLog(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.institute_audit_logs.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }

@@ -7,7 +7,7 @@ export class RolesService implements RolesController {
   public async listRoles(app: FastifyInstance, request?: FastifyRequest): Promise<RolesResponse[]> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.roles.schema(schema!)
       const rows = await model.findAll()
@@ -21,7 +21,7 @@ export class RolesService implements RolesController {
   public async createRole(app: FastifyInstance, input: RolesRequest, request?: FastifyRequest): Promise<RolesResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.roles.schema(schema!)
       const row = await model.create(input as any)
@@ -35,7 +35,7 @@ export class RolesService implements RolesController {
   public async getRolesById(app: FastifyInstance, request?: FastifyRequest): Promise<RolesResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.roles.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }
@@ -53,7 +53,7 @@ export class RolesService implements RolesController {
   public async updateRole(app: FastifyInstance, input: RolesRequest, request?: FastifyRequest): Promise<RolesResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.roles.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }
@@ -72,7 +72,7 @@ export class RolesService implements RolesController {
   public async deleteRole(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.roles.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }

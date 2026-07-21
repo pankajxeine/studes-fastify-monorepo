@@ -7,7 +7,7 @@ export class PackageRoleFeaturePermissionsService implements PackageRoleFeatureP
   public async listPackageRoleFeaturePermissions(app: FastifyInstance, request?: FastifyRequest): Promise<PackageRoleFeaturePermissionsResponse[]> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.package_role_feature_permissions.schema(schema!)
       const rows = await model.findAll()
@@ -21,7 +21,7 @@ export class PackageRoleFeaturePermissionsService implements PackageRoleFeatureP
   public async createPackageRoleFeaturePermission(app: FastifyInstance, input: PackageRoleFeaturePermissionsRequest, request?: FastifyRequest): Promise<PackageRoleFeaturePermissionsResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.package_role_feature_permissions.schema(schema!)
       const row = await model.create(input as any)
@@ -35,7 +35,7 @@ export class PackageRoleFeaturePermissionsService implements PackageRoleFeatureP
   public async getPackageRoleFeaturePermissionsById(app: FastifyInstance, request?: FastifyRequest): Promise<PackageRoleFeaturePermissionsResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.package_role_feature_permissions.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }
@@ -53,7 +53,7 @@ export class PackageRoleFeaturePermissionsService implements PackageRoleFeatureP
   public async updatePackageRoleFeaturePermission(app: FastifyInstance, input: PackageRoleFeaturePermissionsRequest, request?: FastifyRequest): Promise<PackageRoleFeaturePermissionsResponse> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.package_role_feature_permissions.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }
@@ -72,7 +72,7 @@ export class PackageRoleFeaturePermissionsService implements PackageRoleFeatureP
   public async deletePackageRoleFeaturePermission(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
     try {
       // tenant schema comes from request context
-      const schema = request?.cpanelBbSchema;
+      const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.package_role_feature_permissions.schema(schema!)
       const { id } = (request?.params ?? {}) as { id?: string | number }
