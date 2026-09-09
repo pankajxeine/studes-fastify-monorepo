@@ -1,7 +1,7 @@
 import fastifyFactory, { FastifyInstance } from 'fastify'
 import envPlugin from './plugins/env'
 import dbPlugin from './plugins/db'
-import tenantPlugin from './plugins/tenant'
+import requestPlugin from './plugins/request'
 import authPlugin from './plugins/auth'
 import {
   createMetricsPlugin,
@@ -43,7 +43,7 @@ export async function buildApp(): Promise<FastifyInstance> {
   })
 
   await fastify.register(dbPlugin)
-  await fastify.register(tenantPlugin)
+  await fastify.register(requestPlugin)
   await fastify.register(authPlugin)
   await fastify.register(createMetricsPlugin({ includeTenant: true }))
 

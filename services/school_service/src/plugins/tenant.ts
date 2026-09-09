@@ -61,7 +61,9 @@ export default fp(async (app) => {
       }
 
       const tenant = tenantResult.rows[0]
-      await client.query(`set search_path to ${tenant.schema_name}, public`)
+      // One database, isolated schemas. schema_name comes from the trusted
+      // control-plane registry, never directly from the request.
+      await client.query(`select set_config('search_path', format('%I, public', $1), false)`, [tenant.schema_name])
 
       request.tenant = {
         id: tenant.id,

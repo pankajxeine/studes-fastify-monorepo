@@ -6,4 +6,8 @@ export type AuthUser =
   username: string
   first_name?: string
   last_name?: string
+  role?: string
+  audience?: 'admin' | 'tenant'
+  tenant_id?: string
+  tenant_slug?: string
 }

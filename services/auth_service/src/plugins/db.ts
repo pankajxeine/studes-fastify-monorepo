@@ -1,11 +1,7 @@
 import fp from 'fastify-plugin'
-import { escapeIdentifier as escapeId } from '../utils/escapeIdentifier'
-// import mysql from 'mysql2/promise'
-// import type { Pool, PoolConnection } from 'mysql2/promise'
 import type { FastifyBaseLogger, FastifyTypeProvider, FastifyTypeProviderDefault, RawReplyDefaultExpression, RawRequestDefaultExpression, RawServerBase, RawServerDefault } from 'fastify'
 import { Sequelize } from 'sequelize'
 
-import { initGeneratedEntities } from '../entities'
 import config from '../config/db.config'
 const fs = require("fs");
 const path = require("path");
@@ -54,11 +50,11 @@ export default fp(async (app) => {
   //app.decorate('sequelize', sequelize)
   // app.decorate('mysql', pool)
   //app.decorate('mysqlDatabase', database)
-  app.decorate('useTenantDatabase', async (database: string) => {
-    await sequelize.query(`use ${escapeId(database)}`)
+  app.decorate('useTenantDatabase', async (_database: string) => {
+    throw new Error('Database-per-tenant is retired; use tenant_id scoped queries')
   })
-  app.decorate('useCpanelDatabase', async (database: string) => {
-    await sequelize.query(`use ${escapeId(database)}`)
+  app.decorate('useCpanelDatabase', async (_database: string) => {
+    throw new Error('Database-per-tenant is retired; use tenant_id scoped queries')
   })
 
   app.addHook('onClose', async () => {

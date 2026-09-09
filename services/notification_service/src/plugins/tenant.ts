@@ -59,7 +59,8 @@ export default fp(async (app) => {
       }
 
       const tenant = tenantResult.rows[0]
-      await client.query(`set search_path to ${tenant.schema_name}, public`)
+      // schema_name is read from the control-plane registry, not from input.
+      await client.query(`select set_config('search_path', format('%I, public', $1), false)`, [tenant.schema_name])
 
       request.tenant = {
         id: tenant.id,

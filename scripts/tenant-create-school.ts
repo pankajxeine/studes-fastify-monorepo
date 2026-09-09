@@ -1,4 +1,5 @@
 ﻿import { Pool } from 'pg'
+
 import fs from 'node:fs'
 import path from 'node:path'
 
@@ -9,7 +10,8 @@ async function main() {
     throw new Error('Usage: tsx scripts/tenant-create-school.ts <slug> [name]')
   }
 
-  const schemaName = `tenant_${slug.replace(/-/g, '_')}`
+  const schemaName = `${slug.replace(/-/g, '_')}_tenant`
+  if (!/^[a-zA-Z0-9_]+$/.test(schemaName)) throw new Error('Invalid tenant slug')
   const pool = new Pool({ connectionString: process.env.DATABASE_URL })
   const client = await pool.connect()
 
@@ -23,11 +25,21 @@ async function main() {
       [name, slug, schemaName]
     )
 
-    await client.query(`create schema if not exists ${schemaName}`)
-    await client.query(`set search_path to ${schemaName}, public`)
-
+    await client.query(`create schema if not exists "${schemaName}"`)
+    await client.query(`set search_path to "${schemaName}", public`)
     const templateSql = fs.readFileSync(path.resolve(__dirname, '../infra/sql/tenant_template.sql'), 'utf8')
     await client.query(templateSql)
+    await client.query(`create table if not exists users (
+      id uuid primary key default uuid_generate_v4(),
+      email text not null unique,
+      username text unique,
+      password_hash text not null,
+      role text not null default 'tenant_user',
+      last_login timestamptz,
+      status text not null default 'active',
+      created_at timestamptz not null default now(),
+      updated_at timestamptz not null default now()
+    )`)
 
     await client.query('commit')
     console.log('tenant schema created', tenantRes.rows[0])
