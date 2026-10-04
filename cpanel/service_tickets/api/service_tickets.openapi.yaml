@@ -1,0 +1,223 @@
+openapi: 3.0.0
+info:
+  title: ServiceTicketsResponse API
+  version: 1.0.0
+paths:
+  /service_tickets:
+    get:
+      operationId: listServiceTickets
+      summary: Get all service_tickets
+      responses:
+        '200':
+          description: List of service_tickets
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ServiceTicketsResponse'
+    post:
+      operationId: createServiceTicket
+      summary: Create a new service_tickets
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceTicketsRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceTicketsResponse'
+
+  /service_tickets/{id}:
+    get:
+      operationId: getServiceTicketsById
+      summary: Get service_tickets by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: service_tickets object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceTicketsResponse'
+    put:
+      operationId: updateServiceTicket
+      summary: Update service_tickets by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceTicketsRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceTicketsResponse'
+    delete:
+      operationId: deleteServiceTicket
+      summary: Delete service_tickets by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Deleted
+components:
+  schemas:
+
+    ServiceTicketsRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        customer_id:
+          type: integer
+        service_ticket_type_id:
+          type: integer
+        service_ticket_number:
+          type: integer
+        subject:
+          type: string
+          maxLength: 100
+        st_status:
+          type: string
+        user_id:
+          type: integer
+        assign_users:
+          type: integer
+        industry:
+          type: integer
+        sub_id:
+          type: integer
+        priority:
+          type: string
+        followup_time:
+          type: string
+          format: time
+        followup_date:
+          type: string
+          format: date
+        email_followup:
+          type: string
+        caller_name:
+          type: string
+          maxLength: 30
+        call_direction:
+          type: string
+        primary_service_request_id:
+          type: integer
+        notes:
+          type: string
+        description:
+          type: string
+          maxLength: 1
+        status:
+          type: string
+          maxLength: 1
+        hours_elapsed:
+          type: integer
+        minutes_elapsed:
+          type: integer
+        is_new_client:
+          type: string
+          maxLength: 1
+        created_by:
+          type: integer
+        updated_by:
+          type: integer
+        deleted_at:
+          type: string
+          format: date-time
+
+    ServiceTicketsResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        customer_id:
+          type: integer
+        service_ticket_type_id:
+          type: integer
+        service_ticket_number:
+          type: integer
+        subject:
+          type: string
+          maxLength: 100
+        st_status:
+          type: string
+        user_id:
+          type: integer
+        assign_users:
+          type: integer
+        industry:
+          type: integer
+        sub_id:
+          type: integer
+        priority:
+          type: string
+        followup_time:
+          type: string
+          format: time
+        followup_date:
+          type: string
+          format: date
+        email_followup:
+          type: string
+        caller_name:
+          type: string
+          maxLength: 30
+        call_direction:
+          type: string
+        primary_service_request_id:
+          type: integer
+        notes:
+          type: string
+        description:
+          type: string
+          maxLength: 1
+        status:
+          type: string
+          maxLength: 1
+        hours_elapsed:
+          type: integer
+        minutes_elapsed:
+          type: integer
+        is_new_client:
+          type: string
+          maxLength: 1
+        created_by:
+          type: integer
+        updated_by:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        deleted_at:
+          type: string
+          format: date-time
+  

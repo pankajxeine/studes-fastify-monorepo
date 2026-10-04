@@ -1,2 +1,3 @@
-declare const _default: import("fastify").FastifyPluginAsync<unknown, import("fastify").RawServerDefault, import("fastify").FastifyTypeProviderDefault>;
+import { FastifyInstance } from 'fastify';
+declare const _default: (app: FastifyInstance) => Promise<void>;
 export default _default;

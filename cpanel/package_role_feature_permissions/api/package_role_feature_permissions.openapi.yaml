@@ -1,0 +1,119 @@
+openapi: 3.0.0
+info:
+  title: PackageRoleFeaturePermissionsResponse API
+  version: 1.0.0
+paths:
+  /package_role_feature_permissions:
+    get:
+      operationId: listPackageRoleFeaturePermissions
+      summary: Get all package_role_feature_permissions
+      responses:
+        '200':
+          description: List of package_role_feature_permissions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PackageRoleFeaturePermissionsResponse'
+    post:
+      operationId: createPackageRoleFeaturePermission
+      summary: Create a new package_role_feature_permissions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PackageRoleFeaturePermissionsRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PackageRoleFeaturePermissionsResponse'
+
+  /package_role_feature_permissions/{id}:
+    get:
+      operationId: getPackageRoleFeaturePermissionsById
+      summary: Get package_role_feature_permissions by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: package_role_feature_permissions object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PackageRoleFeaturePermissionsResponse'
+    put:
+      operationId: updatePackageRoleFeaturePermission
+      summary: Update package_role_feature_permissions by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PackageRoleFeaturePermissionsRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PackageRoleFeaturePermissionsResponse'
+    delete:
+      operationId: deletePackageRoleFeaturePermission
+      summary: Delete package_role_feature_permissions by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Deleted
+components:
+  schemas:
+
+    PackageRoleFeaturePermissionsRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        package_role_mapping_id:
+          type: integer
+        feature_id:
+          type: integer
+        permission:
+          type: string
+
+    PackageRoleFeaturePermissionsResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        package_role_mapping_id:
+          type: integer
+        feature_id:
+          type: integer
+        permission:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+  

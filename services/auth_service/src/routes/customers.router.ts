@@ -5,22 +5,24 @@ const CustomersRoutes: FastifyPluginAsync = async (app) => {
   const controller = new CustomersService()
 
   app.get('/customers', async (request, reply) => {
-
-    return await reply.send(controller.listCustomers(app, request))
+    const result = await controller.listCustomers(app, request)
+    return reply.send(result)
   })
   app.post('/customers', async (request, reply) => {
-    return await reply.send(controller.createCustomer(app, request.body as any, request))
+    const result = await controller.createCustomer(app, request.body as any, request)
+    return reply.send(result)
   })
   app.get('/customers/:id', async (request, reply) => {
-
-    return await reply.send(controller.getCustomersById(app, request))
+    const result = await controller.getCustomersById(app, request)
+    return reply.send(result)
   })
   app.put('/customers/:id', async (request, reply) => {
-    return await reply.send(controller.updateCustomer(app, request.body as any, request))
+    const result = await controller.updateCustomer(app, request.body as any, request)
+    return reply.send(result)
   })
   app.delete('/customers/:id', async (request, reply) => {
-
-    return await reply.send(controller.deleteCustomer(app, request))
+    const result = await controller.deleteCustomer(app, request)
+    return reply.send(result)
   })
 }
 

@@ -1,0 +1,181 @@
+openapi: 3.0.0
+info:
+  title: SubPackageFeaturesResponse API
+  version: 1.0.0
+paths:
+  /sub_package_features:
+    get:
+      operationId: listSubPackageFeatures
+      summary: Get all sub_package_features
+      responses:
+        '200':
+          description: List of sub_package_features
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SubPackageFeaturesResponse'
+    post:
+      operationId: createSubPackageFeature
+      summary: Create a new sub_package_features
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubPackageFeaturesRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubPackageFeaturesResponse'
+
+  /sub_package_features/{id}:
+    get:
+      operationId: getSubPackageFeaturesById
+      summary: Get sub_package_features by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: sub_package_features object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubPackageFeaturesResponse'
+    put:
+      operationId: updateSubPackageFeature
+      summary: Update sub_package_features by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubPackageFeaturesRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubPackageFeaturesResponse'
+    delete:
+      operationId: deleteSubPackageFeature
+      summary: Delete sub_package_features by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Deleted
+components:
+  schemas:
+
+    SubPackageFeaturesRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        sub_package_id:
+          type: integer
+        feature_id:
+          type: integer
+        feature_type:
+          type: string
+        primary_price:
+          type: number
+        additional_price:
+          type: number
+        trial_period_days:
+          type: integer
+        billing_date:
+          type: string
+          format: date-time
+        expiry_date:
+          type: string
+          format: date-time
+        purchased_date:
+          type: string
+          format: date-time
+        purchased_terms:
+          type: object
+        cancel_date:
+          type: string
+          format: date-time
+        cancel_terms:
+          type: object
+        status:
+          type: string
+        source_of_purchase:
+          type: string
+        source_of_cancellation:
+          type: string
+        deleted_at:
+          type: string
+          format: date-time
+
+    SubPackageFeaturesResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        sub_package_id:
+          type: integer
+        feature_id:
+          type: integer
+        feature_type:
+          type: string
+        primary_price:
+          type: number
+        additional_price:
+          type: number
+        trial_period_days:
+          type: integer
+        billing_date:
+          type: string
+          format: date-time
+        expiry_date:
+          type: string
+          format: date-time
+        purchased_date:
+          type: string
+          format: date-time
+        purchased_terms:
+          type: object
+        cancel_date:
+          type: string
+          format: date-time
+        cancel_terms:
+          type: object
+        status:
+          type: string
+        source_of_purchase:
+          type: string
+        source_of_cancellation:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        deleted_at:
+          type: string
+          format: date-time
+  

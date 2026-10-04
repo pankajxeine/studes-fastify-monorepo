@@ -1,24 +1,42 @@
 import type { RoleTemplateModulesRequest } from './types/RoleTemplateModulesRequest'
 import type { RoleTemplateModulesResponse } from './types/RoleTemplateModulesResponse'
 import { FastifyInstance, FastifyRequest } from 'fastify'
-import type { RoleTemplateModulesController } from './RoleTemplateModulesController'
+import type { RoleTemplateModulesController, ListItem, PaginatedResponse } from './RoleTemplateModulesController'
 
 export class RoleTemplateModulesService implements RoleTemplateModulesController {
-  public async listRoleTemplateModules(app: FastifyInstance, request?: FastifyRequest): Promise<RoleTemplateModulesResponse[]> {
+      public async listRoleTemplateModules(app: FastifyInstance, request?: FastifyRequest): Promise<PaginatedResponse<ListItem<RoleTemplateModulesResponse[]>>> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.role_template_modules.schema(schema!)
-      const rows = await model.findAll()
-      return rows.map((row) => row.get({ plain: true })) as RoleTemplateModulesResponse[]
+      const query = (request?.query ?? {}) as { page?: string | number; limit?: string | number }
+      const parsePositiveInteger = (value: string | number | undefined, fallback: number) => {
+        const parsed = Number(value)
+        return Number.isInteger(parsed) && parsed > 0 ? parsed : fallback
+      }
+      const page = parsePositiveInteger(query.page, 1)
+      const limit = Math.min(parsePositiveInteger(query.limit, 20), 100)
+      const { count, rows } = await model.findAndCountAll({
+        limit,
+        offset: (page - 1) * limit,
+      })
+      return {
+        data: rows.map((row) => row.get({ plain: true })) as ListItem<RoleTemplateModulesResponse[]>[],
+        pagination: {
+          page,
+          limit,
+          total: count,
+          totalPages: Math.ceil(count / limit),
+        },
+      }
     } catch (err) {
       app.log.error(err);
       throw err;
     }
   }
 
-  public async createRoleTemplateModule(app: FastifyInstance, input: RoleTemplateModulesRequest, request?: FastifyRequest): Promise<RoleTemplateModulesResponse> {
+      public async createRoleTemplateModule(app: FastifyInstance, input: RoleTemplateModulesRequest, request?: FastifyRequest): Promise<RoleTemplateModulesResponse> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
@@ -32,7 +50,7 @@ export class RoleTemplateModulesService implements RoleTemplateModulesController
     }
   }
 
-  public async getRoleTemplateModulesById(app: FastifyInstance, request?: FastifyRequest): Promise<RoleTemplateModulesResponse> {
+      public async getRoleTemplateModulesById(app: FastifyInstance, request?: FastifyRequest): Promise<RoleTemplateModulesResponse> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
@@ -50,7 +68,7 @@ export class RoleTemplateModulesService implements RoleTemplateModulesController
     }
   }
 
-  public async updateRoleTemplateModule(app: FastifyInstance, input: RoleTemplateModulesRequest, request?: FastifyRequest): Promise<RoleTemplateModulesResponse> {
+      public async updateRoleTemplateModule(app: FastifyInstance, input: RoleTemplateModulesRequest, request?: FastifyRequest): Promise<RoleTemplateModulesResponse> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
@@ -69,7 +87,7 @@ export class RoleTemplateModulesService implements RoleTemplateModulesController
     }
   }
 
-  public async deleteRoleTemplateModule(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
+      public async deleteRoleTemplateModule(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;

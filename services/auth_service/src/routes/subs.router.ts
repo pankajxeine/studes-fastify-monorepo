@@ -5,22 +5,24 @@ const SubsRoutes: FastifyPluginAsync = async (app) => {
   const controller = new SubsService()
 
   app.get('/subs', async (request, reply) => {
-
-    return await reply.send(controller.listSubs(app, request))
+    const result = await controller.listSubs(app, request)
+    return reply.send(result)
   })
   app.post('/subs', async (request, reply) => {
-    return await reply.send(controller.createSub(app, request.body as any, request))
+    const result = await controller.createSub(app, request.body as any, request)
+    return reply.send(result)
   })
   app.get('/subs/:id', async (request, reply) => {
-
-    return await reply.send(controller.getSubsById(app, request))
+    const result = await controller.getSubsById(app, request)
+    return reply.send(result)
   })
   app.put('/subs/:id', async (request, reply) => {
-    return await reply.send(controller.updateSub(app, request.body as any, request))
+    const result = await controller.updateSub(app, request.body as any, request)
+    return reply.send(result)
   })
   app.delete('/subs/:id', async (request, reply) => {
-
-    return await reply.send(controller.deleteSub(app, request))
+    const result = await controller.deleteSub(app, request)
+    return reply.send(result)
   })
 }
 

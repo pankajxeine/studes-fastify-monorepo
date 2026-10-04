@@ -1,0 +1,127 @@
+openapi: 3.0.0
+info:
+  title: CrmCronLogsResponse API
+  version: 1.0.0
+paths:
+  /crm_cron_logs:
+    get:
+      operationId: listCrmCronLogs
+      summary: Get all crm_cron_logs
+      responses:
+        '200':
+          description: List of crm_cron_logs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CrmCronLogsResponse'
+    post:
+      operationId: createCrmCronLog
+      summary: Create a new crm_cron_logs
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CrmCronLogsRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CrmCronLogsResponse'
+
+  /crm_cron_logs/{id}:
+    get:
+      operationId: getCrmCronLogsById
+      summary: Get crm_cron_logs by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: crm_cron_logs object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CrmCronLogsResponse'
+    put:
+      operationId: updateCrmCronLog
+      summary: Update crm_cron_logs by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CrmCronLogsRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CrmCronLogsResponse'
+    delete:
+      operationId: deleteCrmCronLog
+      summary: Delete crm_cron_logs by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Deleted
+components:
+  schemas:
+
+    CrmCronLogsRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        cron:
+          type: string
+          maxLength: 100
+        log:
+          type: string
+        start_time:
+          type: string
+          format: date-time
+        end_time:
+          type: string
+          format: date-time
+        status:
+          type: string
+
+    CrmCronLogsResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        cron:
+          type: string
+          maxLength: 100
+        log:
+          type: string
+        start_time:
+          type: string
+          format: date-time
+        end_time:
+          type: string
+          format: date-time
+        status:
+          type: string
+  

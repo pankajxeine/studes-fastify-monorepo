@@ -5,22 +5,24 @@ const IndustriesRoutes: FastifyPluginAsync = async (app) => {
   const controller = new IndustriesService()
 
   app.get('/industries', async (request, reply) => {
-
-    return await reply.send(controller.listIndustries(app, request))
+    const result = await controller.listIndustries(app, request)
+    return reply.send(result)
   })
   app.post('/industries', async (request, reply) => {
-    return await reply.send(controller.createIndustrie(app, request.body as any, request))
+    const result = await controller.createIndustrie(app, request.body as any, request)
+    return reply.send(result)
   })
   app.get('/industries/:id', async (request, reply) => {
-
-    return await reply.send(controller.getIndustriesById(app, request))
+    const result = await controller.getIndustriesById(app, request)
+    return reply.send(result)
   })
   app.put('/industries/:id', async (request, reply) => {
-    return await reply.send(controller.updateIndustrie(app, request.body as any, request))
+    const result = await controller.updateIndustrie(app, request.body as any, request)
+    return reply.send(result)
   })
   app.delete('/industries/:id', async (request, reply) => {
-
-    return await reply.send(controller.deleteIndustrie(app, request))
+    const result = await controller.deleteIndustrie(app, request)
+    return reply.send(result)
   })
 }
 

@@ -15,7 +15,7 @@ export default fp(async (app) => {
         TENANT_HEADER_NAME: { type: 'string', default: 'x-tenant-id' },
         TENANT_HEADER_SLUG_NAME: { type: 'string', default: 'x-tenant-slug' },
         TENANT_HEADER_PRECEDENCE: { type: 'string', default: 'header_then_subdomain' },
-        DEFAULT_CPANEL_SCHEMA: { type: 'string', default: 'default_cpanel' },
+        DEFAULT_CPANEL_SCHEMA: { type: 'string', default: 'demo_cpanel' },
         DEFAULT_CPANEL_ROUTE_SCHEMA: { type: 'string', default: 'default_cpanel_route' },
         CORS_ORIGIN: { type: 'string', default: '*' },
         JWT_SECRET: { type: 'string' },

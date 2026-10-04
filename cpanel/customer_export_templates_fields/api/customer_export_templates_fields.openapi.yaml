@@ -1,0 +1,137 @@
+openapi: 3.0.0
+info:
+  title: CustomerExportTemplatesFieldsResponse API
+  version: 1.0.0
+paths:
+  /customer_export_templates_fields:
+    get:
+      operationId: listCustomerExportTemplatesFields
+      summary: Get all customer_export_templates_fields
+      responses:
+        '200':
+          description: List of customer_export_templates_fields
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CustomerExportTemplatesFieldsResponse'
+    post:
+      operationId: createCustomerExportTemplatesField
+      summary: Create a new customer_export_templates_fields
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerExportTemplatesFieldsRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerExportTemplatesFieldsResponse'
+
+  /customer_export_templates_fields/{id}:
+    get:
+      operationId: getCustomerExportTemplatesFieldsById
+      summary: Get customer_export_templates_fields by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: customer_export_templates_fields object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerExportTemplatesFieldsResponse'
+    put:
+      operationId: updateCustomerExportTemplatesField
+      summary: Update customer_export_templates_fields by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerExportTemplatesFieldsRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerExportTemplatesFieldsResponse'
+    delete:
+      operationId: deleteCustomerExportTemplatesField
+      summary: Delete customer_export_templates_fields by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Deleted
+components:
+  schemas:
+
+    CustomerExportTemplatesFieldsRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        template_id:
+          type: integer
+        label:
+          type: string
+          maxLength: 100
+        value:
+          type: string
+          maxLength: 100
+        sequence:
+          type: integer
+        module:
+          type: string
+          maxLength: 200
+        is_required:
+          type: string
+
+    CustomerExportTemplatesFieldsResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        template_id:
+          type: integer
+        label:
+          type: string
+          maxLength: 100
+        value:
+          type: string
+          maxLength: 100
+        sequence:
+          type: integer
+        module:
+          type: string
+          maxLength: 200
+        is_required:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+  

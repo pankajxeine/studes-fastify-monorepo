@@ -1,0 +1,113 @@
+openapi: 3.0.0
+info:
+  title: ShippingMethodsResponse API
+  version: 1.0.0
+paths:
+  /shipping_methods:
+    get:
+      operationId: listShippingMethods
+      summary: Get all shipping_methods
+      responses:
+        '200':
+          description: List of shipping_methods
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ShippingMethodsResponse'
+    post:
+      operationId: createShippingMethod
+      summary: Create a new shipping_methods
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShippingMethodsRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShippingMethodsResponse'
+
+  /shipping_methods/{id}:
+    get:
+      operationId: getShippingMethodsById
+      summary: Get shipping_methods by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: shipping_methods object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShippingMethodsResponse'
+    put:
+      operationId: updateShippingMethod
+      summary: Update shipping_methods by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShippingMethodsRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShippingMethodsResponse'
+    delete:
+      operationId: deleteShippingMethod
+      summary: Delete shipping_methods by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Deleted
+components:
+  schemas:
+
+    ShippingMethodsRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+          maxLength: 50
+
+    ShippingMethodsResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+          maxLength: 50
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+  

@@ -1,0 +1,20 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.UnauthorizedError = exports.AppError = void 0;
+class AppError extends Error {
+    statusCode;
+    details;
+    constructor(message, statusCode = 500, details) {
+        super(message);
+        this.name = this.constructor.name;
+        this.statusCode = statusCode;
+        this.details = details;
+    }
+}
+exports.AppError = AppError;
+class UnauthorizedError extends AppError {
+    constructor(message = 'Unauthorized', details) {
+        super(message, 401, details);
+    }
+}
+exports.UnauthorizedError = UnauthorizedError;

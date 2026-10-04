@@ -1,24 +1,42 @@
 import type { CrmsRequest } from './types/CrmsRequest'
 import type { CrmsResponse } from './types/CrmsResponse'
 import { FastifyInstance, FastifyRequest } from 'fastify'
-import type { CrmsController } from './CrmsController'
+import type { CrmsController, ListItem, PaginatedResponse } from './CrmsController'
 
 export class CrmsService implements CrmsController {
-  public async listCrms(app: FastifyInstance, request?: FastifyRequest): Promise<CrmsResponse[]> {
+      public async listCrms(app: FastifyInstance, request?: FastifyRequest): Promise<PaginatedResponse<ListItem<CrmsResponse[]>>> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelRouterModels.crms.schema(schema!)
-      const rows = await model.findAll()
-      return rows.map((row) => row.get({ plain: true })) as CrmsResponse[]
+      const query = (request?.query ?? {}) as { page?: string | number; limit?: string | number }
+      const parsePositiveInteger = (value: string | number | undefined, fallback: number) => {
+        const parsed = Number(value)
+        return Number.isInteger(parsed) && parsed > 0 ? parsed : fallback
+      }
+      const page = parsePositiveInteger(query.page, 1)
+      const limit = Math.min(parsePositiveInteger(query.limit, 20), 100)
+      const { count, rows } = await model.findAndCountAll({
+        limit,
+        offset: (page - 1) * limit,
+      })
+      return {
+        data: rows.map((row) => row.get({ plain: true })) as ListItem<CrmsResponse[]>[],
+        pagination: {
+          page,
+          limit,
+          total: count,
+          totalPages: Math.ceil(count / limit),
+        },
+      }
     } catch (err) {
       app.log.error(err);
       throw err;
     }
   }
 
-  public async createCrm(app: FastifyInstance, input: CrmsRequest, request?: FastifyRequest): Promise<CrmsResponse> {
+      public async createCrm(app: FastifyInstance, input: CrmsRequest, request?: FastifyRequest): Promise<CrmsResponse> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
@@ -32,7 +50,7 @@ export class CrmsService implements CrmsController {
     }
   }
 
-  public async getCrmsById(app: FastifyInstance, request?: FastifyRequest): Promise<CrmsResponse> {
+      public async getCrmsById(app: FastifyInstance, request?: FastifyRequest): Promise<CrmsResponse> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
@@ -50,7 +68,7 @@ export class CrmsService implements CrmsController {
     }
   }
 
-  public async updateCrm(app: FastifyInstance, input: CrmsRequest, request?: FastifyRequest): Promise<CrmsResponse> {
+      public async updateCrm(app: FastifyInstance, input: CrmsRequest, request?: FastifyRequest): Promise<CrmsResponse> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
@@ -69,7 +87,7 @@ export class CrmsService implements CrmsController {
     }
   }
 
-  public async deleteCrm(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
+      public async deleteCrm(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;

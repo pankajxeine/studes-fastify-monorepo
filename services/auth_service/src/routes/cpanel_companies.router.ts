@@ -5,22 +5,24 @@ const CpanelCompaniesRoutes: FastifyPluginAsync = async (app) => {
   const controller = new CpanelCompaniesService()
 
   app.get('/cpanel_companies', async (request, reply) => {
-
-    return await reply.send(controller.listCpanelCompanies(app, request))
+    const result = await controller.listCpanelCompanies(app, request)
+    return reply.send(result)
   })
   app.post('/cpanel_companies', async (request, reply) => {
-    return await reply.send(controller.createCpanelCompanie(app, request.body as any, request))
+    const result = await controller.createCpanelCompanie(app, request.body as any, request)
+    return reply.send(result)
   })
   app.get('/cpanel_companies/:id', async (request, reply) => {
-
-    return await reply.send(controller.getCpanelCompaniesById(app, request))
+    const result = await controller.getCpanelCompaniesById(app, request)
+    return reply.send(result)
   })
   app.put('/cpanel_companies/:id', async (request, reply) => {
-    return await reply.send(controller.updateCpanelCompanie(app, request.body as any, request))
+    const result = await controller.updateCpanelCompanie(app, request.body as any, request)
+    return reply.send(result)
   })
   app.delete('/cpanel_companies/:id', async (request, reply) => {
-
-    return await reply.send(controller.deleteCpanelCompanie(app, request))
+    const result = await controller.deleteCpanelCompanie(app, request)
+    return reply.send(result)
   })
 }
 

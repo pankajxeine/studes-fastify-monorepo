@@ -5,22 +5,24 @@ const AdminUsersRoutes: FastifyPluginAsync = async (app) => {
   const controller = new AdminUsersService()
 
   app.get('/admin_users', async (request, reply) => {
-
-    return await reply.send(controller.listAdminUsers(app, request))
+    const result = await controller.listAdminUsers(app, request)
+    return reply.send(result)
   })
   app.post('/admin_users', async (request, reply) => {
-    return await reply.send(controller.createAdminUser(app, request.body as any, request))
+    const result = await controller.createAdminUser(app, request.body as any, request)
+    return reply.send(result)
   })
   app.get('/admin_users/:id', async (request, reply) => {
-
-    return await reply.send(controller.getAdminUsersById(app, request))
+    const result = await controller.getAdminUsersById(app, request)
+    return reply.send(result)
   })
   app.put('/admin_users/:id', async (request, reply) => {
-    return await reply.send(controller.updateAdminUser(app, request.body as any, request))
+    const result = await controller.updateAdminUser(app, request.body as any, request)
+    return reply.send(result)
   })
   app.delete('/admin_users/:id', async (request, reply) => {
-
-    return await reply.send(controller.deleteAdminUser(app, request))
+    const result = await controller.deleteAdminUser(app, request)
+    return reply.send(result)
   })
 }
 

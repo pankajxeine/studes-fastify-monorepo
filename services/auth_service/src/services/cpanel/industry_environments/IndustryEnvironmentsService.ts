@@ -1,24 +1,42 @@
 import type { IndustryEnvironmentsRequest } from './types/IndustryEnvironmentsRequest'
 import type { IndustryEnvironmentsResponse } from './types/IndustryEnvironmentsResponse'
 import { FastifyInstance, FastifyRequest } from 'fastify'
-import type { IndustryEnvironmentsController } from './IndustryEnvironmentsController'
+import type { IndustryEnvironmentsController, ListItem, PaginatedResponse } from './IndustryEnvironmentsController'
 
 export class IndustryEnvironmentsService implements IndustryEnvironmentsController {
-  public async listIndustryEnvironments(app: FastifyInstance, request?: FastifyRequest): Promise<IndustryEnvironmentsResponse[]> {
+      public async listIndustryEnvironments(app: FastifyInstance, request?: FastifyRequest): Promise<PaginatedResponse<ListItem<IndustryEnvironmentsResponse[]>>> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.industry_environments.schema(schema!)
-      const rows = await model.findAll()
-      return rows.map((row) => row.get({ plain: true })) as IndustryEnvironmentsResponse[]
+      const query = (request?.query ?? {}) as { page?: string | number; limit?: string | number }
+      const parsePositiveInteger = (value: string | number | undefined, fallback: number) => {
+        const parsed = Number(value)
+        return Number.isInteger(parsed) && parsed > 0 ? parsed : fallback
+      }
+      const page = parsePositiveInteger(query.page, 1)
+      const limit = Math.min(parsePositiveInteger(query.limit, 20), 100)
+      const { count, rows } = await model.findAndCountAll({
+        limit,
+        offset: (page - 1) * limit,
+      })
+      return {
+        data: rows.map((row) => row.get({ plain: true })) as ListItem<IndustryEnvironmentsResponse[]>[],
+        pagination: {
+          page,
+          limit,
+          total: count,
+          totalPages: Math.ceil(count / limit),
+        },
+      }
     } catch (err) {
       app.log.error(err);
       throw err;
     }
   }
 
-  public async createIndustryEnvironment(app: FastifyInstance, input: IndustryEnvironmentsRequest, request?: FastifyRequest): Promise<IndustryEnvironmentsResponse> {
+      public async createIndustryEnvironment(app: FastifyInstance, input: IndustryEnvironmentsRequest, request?: FastifyRequest): Promise<IndustryEnvironmentsResponse> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
@@ -32,7 +50,7 @@ export class IndustryEnvironmentsService implements IndustryEnvironmentsControll
     }
   }
 
-  public async getIndustryEnvironmentsById(app: FastifyInstance, request?: FastifyRequest): Promise<IndustryEnvironmentsResponse> {
+      public async getIndustryEnvironmentsById(app: FastifyInstance, request?: FastifyRequest): Promise<IndustryEnvironmentsResponse> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
@@ -50,7 +68,7 @@ export class IndustryEnvironmentsService implements IndustryEnvironmentsControll
     }
   }
 
-  public async updateIndustryEnvironment(app: FastifyInstance, input: IndustryEnvironmentsRequest, request?: FastifyRequest): Promise<IndustryEnvironmentsResponse> {
+      public async updateIndustryEnvironment(app: FastifyInstance, input: IndustryEnvironmentsRequest, request?: FastifyRequest): Promise<IndustryEnvironmentsResponse> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
@@ -69,7 +87,7 @@ export class IndustryEnvironmentsService implements IndustryEnvironmentsControll
     }
   }
 
-  public async deleteIndustryEnvironment(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
+      public async deleteIndustryEnvironment(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;

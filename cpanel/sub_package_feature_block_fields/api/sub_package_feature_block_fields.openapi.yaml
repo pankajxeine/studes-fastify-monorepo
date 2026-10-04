@@ -1,0 +1,125 @@
+openapi: 3.0.0
+info:
+  title: SubPackageFeatureBlockFieldsResponse API
+  version: 1.0.0
+paths:
+  /sub_package_feature_block_fields:
+    get:
+      operationId: listSubPackageFeatureBlockFields
+      summary: Get all sub_package_feature_block_fields
+      responses:
+        '200':
+          description: List of sub_package_feature_block_fields
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SubPackageFeatureBlockFieldsResponse'
+    post:
+      operationId: createSubPackageFeatureBlockField
+      summary: Create a new sub_package_feature_block_fields
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubPackageFeatureBlockFieldsRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubPackageFeatureBlockFieldsResponse'
+
+  /sub_package_feature_block_fields/{id}:
+    get:
+      operationId: getSubPackageFeatureBlockFieldsById
+      summary: Get sub_package_feature_block_fields by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: sub_package_feature_block_fields object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubPackageFeatureBlockFieldsResponse'
+    put:
+      operationId: updateSubPackageFeatureBlockField
+      summary: Update sub_package_feature_block_fields by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubPackageFeatureBlockFieldsRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubPackageFeatureBlockFieldsResponse'
+    delete:
+      operationId: deleteSubPackageFeatureBlockField
+      summary: Delete sub_package_feature_block_fields by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Deleted
+components:
+  schemas:
+
+    SubPackageFeatureBlockFieldsRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        sub_package_feature_block_id:
+          type: integer
+        field_id:
+          type: integer
+        is_selected:
+          type: string
+        deleted_at:
+          type: string
+          format: date-time
+
+    SubPackageFeatureBlockFieldsResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        sub_package_feature_block_id:
+          type: integer
+        field_id:
+          type: integer
+        is_selected:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        deleted_at:
+          type: string
+          format: date-time
+  

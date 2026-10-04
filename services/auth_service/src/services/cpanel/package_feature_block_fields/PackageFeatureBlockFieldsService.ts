@@ -1,24 +1,42 @@
 import type { PackageFeatureBlockFieldsRequest } from './types/PackageFeatureBlockFieldsRequest'
 import type { PackageFeatureBlockFieldsResponse } from './types/PackageFeatureBlockFieldsResponse'
 import { FastifyInstance, FastifyRequest } from 'fastify'
-import type { PackageFeatureBlockFieldsController } from './PackageFeatureBlockFieldsController'
+import type { PackageFeatureBlockFieldsController, ListItem, PaginatedResponse } from './PackageFeatureBlockFieldsController'
 
 export class PackageFeatureBlockFieldsService implements PackageFeatureBlockFieldsController {
-  public async listPackageFeatureBlockFields(app: FastifyInstance, request?: FastifyRequest): Promise<PackageFeatureBlockFieldsResponse[]> {
+      public async listPackageFeatureBlockFields(app: FastifyInstance, request?: FastifyRequest): Promise<PaginatedResponse<ListItem<PackageFeatureBlockFieldsResponse[]>>> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.package_feature_block_fields.schema(schema!)
-      const rows = await model.findAll()
-      return rows.map((row) => row.get({ plain: true })) as PackageFeatureBlockFieldsResponse[]
+      const query = (request?.query ?? {}) as { page?: string | number; limit?: string | number }
+      const parsePositiveInteger = (value: string | number | undefined, fallback: number) => {
+        const parsed = Number(value)
+        return Number.isInteger(parsed) && parsed > 0 ? parsed : fallback
+      }
+      const page = parsePositiveInteger(query.page, 1)
+      const limit = Math.min(parsePositiveInteger(query.limit, 20), 100)
+      const { count, rows } = await model.findAndCountAll({
+        limit,
+        offset: (page - 1) * limit,
+      })
+      return {
+        data: rows.map((row) => row.get({ plain: true })) as ListItem<PackageFeatureBlockFieldsResponse[]>[],
+        pagination: {
+          page,
+          limit,
+          total: count,
+          totalPages: Math.ceil(count / limit),
+        },
+      }
     } catch (err) {
       app.log.error(err);
       throw err;
     }
   }
 
-  public async createPackageFeatureBlockField(app: FastifyInstance, input: PackageFeatureBlockFieldsRequest, request?: FastifyRequest): Promise<PackageFeatureBlockFieldsResponse> {
+      public async createPackageFeatureBlockField(app: FastifyInstance, input: PackageFeatureBlockFieldsRequest, request?: FastifyRequest): Promise<PackageFeatureBlockFieldsResponse> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
@@ -32,7 +50,7 @@ export class PackageFeatureBlockFieldsService implements PackageFeatureBlockFiel
     }
   }
 
-  public async getPackageFeatureBlockFieldsById(app: FastifyInstance, request?: FastifyRequest): Promise<PackageFeatureBlockFieldsResponse> {
+      public async getPackageFeatureBlockFieldsById(app: FastifyInstance, request?: FastifyRequest): Promise<PackageFeatureBlockFieldsResponse> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
@@ -50,7 +68,7 @@ export class PackageFeatureBlockFieldsService implements PackageFeatureBlockFiel
     }
   }
 
-  public async updatePackageFeatureBlockField(app: FastifyInstance, input: PackageFeatureBlockFieldsRequest, request?: FastifyRequest): Promise<PackageFeatureBlockFieldsResponse> {
+      public async updatePackageFeatureBlockField(app: FastifyInstance, input: PackageFeatureBlockFieldsRequest, request?: FastifyRequest): Promise<PackageFeatureBlockFieldsResponse> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
@@ -69,7 +87,7 @@ export class PackageFeatureBlockFieldsService implements PackageFeatureBlockFiel
     }
   }
 
-  public async deletePackageFeatureBlockField(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
+      public async deletePackageFeatureBlockField(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;

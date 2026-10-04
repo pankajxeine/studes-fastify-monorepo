@@ -1,24 +1,42 @@
 import type { PackageFeaturesRequest } from './types/PackageFeaturesRequest'
 import type { PackageFeaturesResponse } from './types/PackageFeaturesResponse'
 import { FastifyInstance, FastifyRequest } from 'fastify'
-import type { PackageFeaturesController } from './PackageFeaturesController'
+import type { PackageFeaturesController, ListItem, PaginatedResponse } from './PackageFeaturesController'
 
 export class PackageFeaturesService implements PackageFeaturesController {
-  public async listPackageFeatures(app: FastifyInstance, request?: FastifyRequest): Promise<PackageFeaturesResponse[]> {
+      public async listPackageFeatures(app: FastifyInstance, request?: FastifyRequest): Promise<PaginatedResponse<ListItem<PackageFeaturesResponse[]>>> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.package_features.schema(schema!)
-      const rows = await model.findAll()
-      return rows.map((row) => row.get({ plain: true })) as PackageFeaturesResponse[]
+      const query = (request?.query ?? {}) as { page?: string | number; limit?: string | number }
+      const parsePositiveInteger = (value: string | number | undefined, fallback: number) => {
+        const parsed = Number(value)
+        return Number.isInteger(parsed) && parsed > 0 ? parsed : fallback
+      }
+      const page = parsePositiveInteger(query.page, 1)
+      const limit = Math.min(parsePositiveInteger(query.limit, 20), 100)
+      const { count, rows } = await model.findAndCountAll({
+        limit,
+        offset: (page - 1) * limit,
+      })
+      return {
+        data: rows.map((row) => row.get({ plain: true })) as ListItem<PackageFeaturesResponse[]>[],
+        pagination: {
+          page,
+          limit,
+          total: count,
+          totalPages: Math.ceil(count / limit),
+        },
+      }
     } catch (err) {
       app.log.error(err);
       throw err;
     }
   }
 
-  public async createPackageFeature(app: FastifyInstance, input: PackageFeaturesRequest, request?: FastifyRequest): Promise<PackageFeaturesResponse> {
+      public async createPackageFeature(app: FastifyInstance, input: PackageFeaturesRequest, request?: FastifyRequest): Promise<PackageFeaturesResponse> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
@@ -32,7 +50,7 @@ export class PackageFeaturesService implements PackageFeaturesController {
     }
   }
 
-  public async getPackageFeaturesById(app: FastifyInstance, request?: FastifyRequest): Promise<PackageFeaturesResponse> {
+      public async getPackageFeaturesById(app: FastifyInstance, request?: FastifyRequest): Promise<PackageFeaturesResponse> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
@@ -50,7 +68,7 @@ export class PackageFeaturesService implements PackageFeaturesController {
     }
   }
 
-  public async updatePackageFeature(app: FastifyInstance, input: PackageFeaturesRequest, request?: FastifyRequest): Promise<PackageFeaturesResponse> {
+      public async updatePackageFeature(app: FastifyInstance, input: PackageFeaturesRequest, request?: FastifyRequest): Promise<PackageFeaturesResponse> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
@@ -69,7 +87,7 @@ export class PackageFeaturesService implements PackageFeaturesController {
     }
   }
 
-  public async deletePackageFeature(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
+      public async deletePackageFeature(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;

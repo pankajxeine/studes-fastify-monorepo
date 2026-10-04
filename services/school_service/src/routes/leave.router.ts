@@ -1,13 +1,16 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { LeaveService } from '../services/LeaveService'
+import { LeaveService } from '../services/leave/LeaveService'
 
 const LeaveRoutes: FastifyPluginAsync = async (app) => {
   const controller = new LeaveService()
+
   app.get('/leave', async (request, reply) => {
-    return await controller.listLeaveRequests(app, request)
+    const result = await controller.listLeaveRequests(app, request)
+    return reply.send(result)
   })
   app.post('/leave', async (request, reply) => {
-    return await controller.createLeaveRequest(app, request.body as any, request)
+    const result = await controller.createLeaveRequest(app, request.body as any, request)
+    return reply.send(result)
   })
 }
 

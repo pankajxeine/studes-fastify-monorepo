@@ -1,0 +1,217 @@
+openapi: 3.0.0
+info:
+  title: CpanelCompaniesResponse API
+  version: 1.0.0
+paths:
+  /cpanel_companies:
+    get:
+      operationId: listCpanelCompanies
+      summary: Get all cpanel_companies
+      responses:
+        '200':
+          description: List of cpanel_companies
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CpanelCompaniesResponse'
+    post:
+      operationId: createCpanelCompanie
+      summary: Create a new cpanel_companies
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CpanelCompaniesRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CpanelCompaniesResponse'
+
+  /cpanel_companies/{id}:
+    get:
+      operationId: getCpanelCompaniesById
+      summary: Get cpanel_companies by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: cpanel_companies object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CpanelCompaniesResponse'
+    put:
+      operationId: updateCpanelCompanie
+      summary: Update cpanel_companies by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CpanelCompaniesRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CpanelCompaniesResponse'
+    delete:
+      operationId: deleteCpanelCompanie
+      summary: Delete cpanel_companies by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Deleted
+components:
+  schemas:
+
+    CpanelCompaniesRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 50
+        date_format_id:
+          type: integer
+        timezone_id:
+          type: integer
+        currency_id:
+          type: integer
+        address1:
+          type: string
+          maxLength: 50
+        address2:
+          type: string
+          maxLength: 50
+        city:
+          type: string
+          maxLength: 30
+        state_id:
+          type: integer
+        country_id:
+          type: integer
+        postal_code:
+          type: integer
+        phone:
+          type: integer
+        fax:
+          type: string
+          maxLength: 20
+        email:
+          type: string
+          maxLength: 50
+        website:
+          type: string
+          maxLength: 30
+        title_tag:
+          type: string
+          maxLength: 50
+        status:
+          type: string
+        theme_json:
+          type: object
+        application:
+          type: string
+        logo:
+          type: string
+          maxLength: 255
+        favicon_icon:
+          type: string
+          maxLength: 255
+        loading_icon:
+          type: string
+          maxLength: 255
+        bundle_name:
+          type: string
+          maxLength: 30
+
+    CpanelCompaniesResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+          maxLength: 50
+        date_format_id:
+          type: integer
+        timezone_id:
+          type: integer
+        currency_id:
+          type: integer
+        address1:
+          type: string
+          maxLength: 50
+        address2:
+          type: string
+          maxLength: 50
+        city:
+          type: string
+          maxLength: 30
+        state_id:
+          type: integer
+        country_id:
+          type: integer
+        postal_code:
+          type: integer
+        phone:
+          type: integer
+        fax:
+          type: string
+          maxLength: 20
+        email:
+          type: string
+          maxLength: 50
+        website:
+          type: string
+          maxLength: 30
+        title_tag:
+          type: string
+          maxLength: 50
+        status:
+          type: string
+        theme_json:
+          type: object
+        application:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        logo:
+          type: string
+          maxLength: 255
+        favicon_icon:
+          type: string
+          maxLength: 255
+        loading_icon:
+          type: string
+          maxLength: 255
+        bundle_name:
+          type: string
+          maxLength: 30
+  

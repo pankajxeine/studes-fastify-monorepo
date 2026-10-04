@@ -5,22 +5,24 @@ const CustomerDocumentsRoutes: FastifyPluginAsync = async (app) => {
   const controller = new CustomerDocumentsService()
 
   app.get('/customer_documents', async (request, reply) => {
-
-    return await reply.send(controller.listCustomerDocuments(app, request))
+    const result = await controller.listCustomerDocuments(app, request)
+    return reply.send(result)
   })
   app.post('/customer_documents', async (request, reply) => {
-    return await reply.send(controller.createCustomerDocument(app, request.body as any, request))
+    const result = await controller.createCustomerDocument(app, request.body as any, request)
+    return reply.send(result)
   })
   app.get('/customer_documents/:id', async (request, reply) => {
-
-    return await reply.send(controller.getCustomerDocumentsById(app, request))
+    const result = await controller.getCustomerDocumentsById(app, request)
+    return reply.send(result)
   })
   app.put('/customer_documents/:id', async (request, reply) => {
-    return await reply.send(controller.updateCustomerDocument(app, request.body as any, request))
+    const result = await controller.updateCustomerDocument(app, request.body as any, request)
+    return reply.send(result)
   })
   app.delete('/customer_documents/:id', async (request, reply) => {
-
-    return await reply.send(controller.deleteCustomerDocument(app, request))
+    const result = await controller.deleteCustomerDocument(app, request)
+    return reply.send(result)
   })
 }
 

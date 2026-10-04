@@ -5,22 +5,24 @@ const SitesRoutes: FastifyPluginAsync = async (app) => {
   const controller = new SitesService()
 
   app.get('/sites', async (request, reply) => {
-
-    return await reply.send(controller.listSites(app, request))
+    const result = await controller.listSites(app, request)
+    return reply.send(result)
   })
   app.post('/sites', async (request, reply) => {
-    return await reply.send(controller.createSite(app, request.body as any, request))
+    const result = await controller.createSite(app, request.body as any, request)
+    return reply.send(result)
   })
   app.get('/sites/:id', async (request, reply) => {
-
-    return await reply.send(controller.getSitesById(app, request))
+    const result = await controller.getSitesById(app, request)
+    return reply.send(result)
   })
   app.put('/sites/:id', async (request, reply) => {
-    return await reply.send(controller.updateSite(app, request.body as any, request))
+    const result = await controller.updateSite(app, request.body as any, request)
+    return reply.send(result)
   })
   app.delete('/sites/:id', async (request, reply) => {
-
-    return await reply.send(controller.deleteSite(app, request))
+    const result = await controller.deleteSite(app, request)
+    return reply.send(result)
   })
 }
 

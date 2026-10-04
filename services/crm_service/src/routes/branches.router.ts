@@ -1,16 +1,20 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { BranchesService } from '../services/BranchesService'
+import { BranchesService } from '../services/branches/BranchesService'
 
 const BranchesRoutes: FastifyPluginAsync = async (app) => {
   const controller = new BranchesService()
+
   app.get('/branches', async (request, reply) => {
-    return await controller.listBranches(app, request)
+    const result = await controller.listBranches(app, request)
+    return reply.send(result)
   })
   app.post('/branches', async (request, reply) => {
-    return await controller.createBranch(app, request.body as any, request)
+    const result = await controller.createBranch(app, request.body as any, request)
+    return reply.send(result)
   })
   app.patch('/branches/:branchId', async (request, reply) => {
-    return await controller.updateBranch(app, request.body as any, request)
+    const result = await controller.updateBranch(app, request.body as any, request)
+    return reply.send(result)
   })
 }
 

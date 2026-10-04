@@ -1,24 +1,42 @@
 import type { ServiceTicketUserContentsRequest } from './types/ServiceTicketUserContentsRequest'
 import type { ServiceTicketUserContentsResponse } from './types/ServiceTicketUserContentsResponse'
 import { FastifyInstance, FastifyRequest } from 'fastify'
-import type { ServiceTicketUserContentsController } from './ServiceTicketUserContentsController'
+import type { ServiceTicketUserContentsController, ListItem, PaginatedResponse } from './ServiceTicketUserContentsController'
 
 export class ServiceTicketUserContentsService implements ServiceTicketUserContentsController {
-  public async listServiceTicketUserContents(app: FastifyInstance, request?: FastifyRequest): Promise<ServiceTicketUserContentsResponse[]> {
+      public async listServiceTicketUserContents(app: FastifyInstance, request?: FastifyRequest): Promise<PaginatedResponse<ListItem<ServiceTicketUserContentsResponse[]>>> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.service_ticket_user_contents.schema(schema!)
-      const rows = await model.findAll()
-      return rows.map((row) => row.get({ plain: true })) as ServiceTicketUserContentsResponse[]
+      const query = (request?.query ?? {}) as { page?: string | number; limit?: string | number }
+      const parsePositiveInteger = (value: string | number | undefined, fallback: number) => {
+        const parsed = Number(value)
+        return Number.isInteger(parsed) && parsed > 0 ? parsed : fallback
+      }
+      const page = parsePositiveInteger(query.page, 1)
+      const limit = Math.min(parsePositiveInteger(query.limit, 20), 100)
+      const { count, rows } = await model.findAndCountAll({
+        limit,
+        offset: (page - 1) * limit,
+      })
+      return {
+        data: rows.map((row) => row.get({ plain: true })) as ListItem<ServiceTicketUserContentsResponse[]>[],
+        pagination: {
+          page,
+          limit,
+          total: count,
+          totalPages: Math.ceil(count / limit),
+        },
+      }
     } catch (err) {
       app.log.error(err);
       throw err;
     }
   }
 
-  public async createServiceTicketUserContent(app: FastifyInstance, input: ServiceTicketUserContentsRequest, request?: FastifyRequest): Promise<ServiceTicketUserContentsResponse> {
+      public async createServiceTicketUserContent(app: FastifyInstance, input: ServiceTicketUserContentsRequest, request?: FastifyRequest): Promise<ServiceTicketUserContentsResponse> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
@@ -32,7 +50,7 @@ export class ServiceTicketUserContentsService implements ServiceTicketUserConten
     }
   }
 
-  public async getServiceTicketUserContentsById(app: FastifyInstance, request?: FastifyRequest): Promise<ServiceTicketUserContentsResponse> {
+      public async getServiceTicketUserContentsById(app: FastifyInstance, request?: FastifyRequest): Promise<ServiceTicketUserContentsResponse> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
@@ -50,7 +68,7 @@ export class ServiceTicketUserContentsService implements ServiceTicketUserConten
     }
   }
 
-  public async updateServiceTicketUserContent(app: FastifyInstance, input: ServiceTicketUserContentsRequest, request?: FastifyRequest): Promise<ServiceTicketUserContentsResponse> {
+      public async updateServiceTicketUserContent(app: FastifyInstance, input: ServiceTicketUserContentsRequest, request?: FastifyRequest): Promise<ServiceTicketUserContentsResponse> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
@@ -69,7 +87,7 @@ export class ServiceTicketUserContentsService implements ServiceTicketUserConten
     }
   }
 
-  public async deleteServiceTicketUserContent(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
+      public async deleteServiceTicketUserContent(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;

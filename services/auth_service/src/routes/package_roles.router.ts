@@ -5,22 +5,24 @@ const PackageRolesRoutes: FastifyPluginAsync = async (app) => {
   const controller = new PackageRolesService()
 
   app.get('/package_roles', async (request, reply) => {
-
-    return await reply.send(controller.listPackageRoles(app, request))
+    const result = await controller.listPackageRoles(app, request)
+    return reply.send(result)
   })
   app.post('/package_roles', async (request, reply) => {
-    return await reply.send(controller.createPackageRole(app, request.body as any, request))
+    const result = await controller.createPackageRole(app, request.body as any, request)
+    return reply.send(result)
   })
   app.get('/package_roles/:id', async (request, reply) => {
-
-    return await reply.send(controller.getPackageRolesById(app, request))
+    const result = await controller.getPackageRolesById(app, request)
+    return reply.send(result)
   })
   app.put('/package_roles/:id', async (request, reply) => {
-    return await reply.send(controller.updatePackageRole(app, request.body as any, request))
+    const result = await controller.updatePackageRole(app, request.body as any, request)
+    return reply.send(result)
   })
   app.delete('/package_roles/:id', async (request, reply) => {
-
-    return await reply.send(controller.deletePackageRole(app, request))
+    const result = await controller.deletePackageRole(app, request)
+    return reply.send(result)
   })
 }
 

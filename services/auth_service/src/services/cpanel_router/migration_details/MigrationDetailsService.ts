@@ -1,24 +1,42 @@
 import type { MigrationDetailsRequest } from './types/MigrationDetailsRequest'
 import type { MigrationDetailsResponse } from './types/MigrationDetailsResponse'
 import { FastifyInstance, FastifyRequest } from 'fastify'
-import type { MigrationDetailsController } from './MigrationDetailsController'
+import type { MigrationDetailsController, ListItem, PaginatedResponse } from './MigrationDetailsController'
 
 export class MigrationDetailsService implements MigrationDetailsController {
-  public async listMigrationDetails(app: FastifyInstance, request?: FastifyRequest): Promise<MigrationDetailsResponse[]> {
+      public async listMigrationDetails(app: FastifyInstance, request?: FastifyRequest): Promise<PaginatedResponse<ListItem<MigrationDetailsResponse[]>>> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelRouterModels.migration_details.schema(schema!)
-      const rows = await model.findAll()
-      return rows.map((row) => row.get({ plain: true })) as MigrationDetailsResponse[]
+      const query = (request?.query ?? {}) as { page?: string | number; limit?: string | number }
+      const parsePositiveInteger = (value: string | number | undefined, fallback: number) => {
+        const parsed = Number(value)
+        return Number.isInteger(parsed) && parsed > 0 ? parsed : fallback
+      }
+      const page = parsePositiveInteger(query.page, 1)
+      const limit = Math.min(parsePositiveInteger(query.limit, 20), 100)
+      const { count, rows } = await model.findAndCountAll({
+        limit,
+        offset: (page - 1) * limit,
+      })
+      return {
+        data: rows.map((row) => row.get({ plain: true })) as ListItem<MigrationDetailsResponse[]>[],
+        pagination: {
+          page,
+          limit,
+          total: count,
+          totalPages: Math.ceil(count / limit),
+        },
+      }
     } catch (err) {
       app.log.error(err);
       throw err;
     }
   }
 
-  public async createMigrationDetail(app: FastifyInstance, input: MigrationDetailsRequest, request?: FastifyRequest): Promise<MigrationDetailsResponse> {
+      public async createMigrationDetail(app: FastifyInstance, input: MigrationDetailsRequest, request?: FastifyRequest): Promise<MigrationDetailsResponse> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
@@ -32,7 +50,7 @@ export class MigrationDetailsService implements MigrationDetailsController {
     }
   }
 
-  public async getMigrationDetailsById(app: FastifyInstance, request?: FastifyRequest): Promise<MigrationDetailsResponse> {
+      public async getMigrationDetailsById(app: FastifyInstance, request?: FastifyRequest): Promise<MigrationDetailsResponse> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
@@ -50,7 +68,7 @@ export class MigrationDetailsService implements MigrationDetailsController {
     }
   }
 
-  public async updateMigrationDetail(app: FastifyInstance, input: MigrationDetailsRequest, request?: FastifyRequest): Promise<MigrationDetailsResponse> {
+      public async updateMigrationDetail(app: FastifyInstance, input: MigrationDetailsRequest, request?: FastifyRequest): Promise<MigrationDetailsResponse> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
@@ -69,7 +87,7 @@ export class MigrationDetailsService implements MigrationDetailsController {
     }
   }
 
-  public async deleteMigrationDetail(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
+      public async deleteMigrationDetail(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;

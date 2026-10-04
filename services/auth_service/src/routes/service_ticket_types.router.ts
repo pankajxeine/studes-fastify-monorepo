@@ -5,22 +5,24 @@ const ServiceTicketTypesRoutes: FastifyPluginAsync = async (app) => {
   const controller = new ServiceTicketTypesService()
 
   app.get('/service_ticket_types', async (request, reply) => {
-
-    return await reply.send(controller.listServiceTicketTypes(app, request))
+    const result = await controller.listServiceTicketTypes(app, request)
+    return reply.send(result)
   })
   app.post('/service_ticket_types', async (request, reply) => {
-    return await reply.send(controller.createServiceTicketType(app, request.body as any, request))
+    const result = await controller.createServiceTicketType(app, request.body as any, request)
+    return reply.send(result)
   })
   app.get('/service_ticket_types/:id', async (request, reply) => {
-
-    return await reply.send(controller.getServiceTicketTypesById(app, request))
+    const result = await controller.getServiceTicketTypesById(app, request)
+    return reply.send(result)
   })
   app.put('/service_ticket_types/:id', async (request, reply) => {
-    return await reply.send(controller.updateServiceTicketType(app, request.body as any, request))
+    const result = await controller.updateServiceTicketType(app, request.body as any, request)
+    return reply.send(result)
   })
   app.delete('/service_ticket_types/:id', async (request, reply) => {
-
-    return await reply.send(controller.deleteServiceTicketType(app, request))
+    const result = await controller.deleteServiceTicketType(app, request)
+    return reply.send(result)
   })
 }
 

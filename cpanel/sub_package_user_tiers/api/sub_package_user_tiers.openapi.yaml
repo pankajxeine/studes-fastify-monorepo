@@ -1,0 +1,143 @@
+openapi: 3.0.0
+info:
+  title: SubPackageUserTiersResponse API
+  version: 1.0.0
+paths:
+  /sub_package_user_tiers:
+    get:
+      operationId: listSubPackageUserTiers
+      summary: Get all sub_package_user_tiers
+      responses:
+        '200':
+          description: List of sub_package_user_tiers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SubPackageUserTiersResponse'
+    post:
+      operationId: createSubPackageUserTier
+      summary: Create a new sub_package_user_tiers
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubPackageUserTiersRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubPackageUserTiersResponse'
+
+  /sub_package_user_tiers/{id}:
+    get:
+      operationId: getSubPackageUserTiersById
+      summary: Get sub_package_user_tiers by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: sub_package_user_tiers object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubPackageUserTiersResponse'
+    put:
+      operationId: updateSubPackageUserTier
+      summary: Update sub_package_user_tiers by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubPackageUserTiersRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubPackageUserTiersResponse'
+    delete:
+      operationId: deleteSubPackageUserTier
+      summary: Delete sub_package_user_tiers by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Deleted
+components:
+  schemas:
+
+    SubPackageUserTiersRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        sub_package_id:
+          type: integer
+        user_tier_id:
+          type: integer
+        additional_users:
+          type: integer
+        additional_user_price:
+          type: number
+        purchased_terms:
+          type: object
+        cancel_date:
+          type: string
+          format: date-time
+        cancel_terms:
+          type: object
+        deleted_at:
+          type: string
+          format: date-time
+
+    SubPackageUserTiersResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        sub_package_id:
+          type: integer
+        user_tier_id:
+          type: integer
+        additional_users:
+          type: integer
+        additional_user_price:
+          type: number
+        purchased_terms:
+          type: object
+        cancel_date:
+          type: string
+          format: date-time
+        cancel_terms:
+          type: object
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        deleted_at:
+          type: string
+          format: date-time
+  

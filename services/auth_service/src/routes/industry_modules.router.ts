@@ -5,22 +5,24 @@ const IndustryModulesRoutes: FastifyPluginAsync = async (app) => {
   const controller = new IndustryModulesService()
 
   app.get('/industry_modules', async (request, reply) => {
-
-    return await reply.send(controller.listIndustryModules(app, request))
+    const result = await controller.listIndustryModules(app, request)
+    return reply.send(result)
   })
   app.post('/industry_modules', async (request, reply) => {
-    return await reply.send(controller.createIndustryModule(app, request.body as any, request))
+    const result = await controller.createIndustryModule(app, request.body as any, request)
+    return reply.send(result)
   })
   app.get('/industry_modules/:id', async (request, reply) => {
-
-    return await reply.send(controller.getIndustryModulesById(app, request))
+    const result = await controller.getIndustryModulesById(app, request)
+    return reply.send(result)
   })
   app.put('/industry_modules/:id', async (request, reply) => {
-    return await reply.send(controller.updateIndustryModule(app, request.body as any, request))
+    const result = await controller.updateIndustryModule(app, request.body as any, request)
+    return reply.send(result)
   })
   app.delete('/industry_modules/:id', async (request, reply) => {
-
-    return await reply.send(controller.deleteIndustryModule(app, request))
+    const result = await controller.deleteIndustryModule(app, request)
+    return reply.send(result)
   })
 }
 

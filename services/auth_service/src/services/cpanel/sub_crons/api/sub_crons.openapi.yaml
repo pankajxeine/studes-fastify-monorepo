@@ -1,0 +1,119 @@
+openapi: 3.0.0
+info:
+  title: SubCronsResponse API
+  version: 1.0.0
+paths:
+  /sub_crons:
+    get:
+      operationId: listSubCrons
+      summary: Get all sub_crons
+      responses:
+        '200':
+          description: List of sub_crons
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SubCronsResponse'
+    post:
+      operationId: createSubCron
+      summary: Create a new sub_crons
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubCronsRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubCronsResponse'
+
+  /sub_crons/{id}:
+    get:
+      operationId: getSubCronsById
+      summary: Get sub_crons by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: sub_crons object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubCronsResponse'
+    put:
+      operationId: updateSubCron
+      summary: Update sub_crons by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubCronsRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubCronsResponse'
+    delete:
+      operationId: deleteSubCron
+      summary: Delete sub_crons by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Deleted
+components:
+  schemas:
+
+    SubCronsRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        sub_id:
+          type: integer
+        cron_id:
+          type: integer
+        status:
+          type: string
+
+    SubCronsResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        sub_id:
+          type: integer
+        cron_id:
+          type: integer
+        status:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+  

@@ -1,0 +1,117 @@
+openapi: 3.0.0
+info:
+  title: EmailTemplateFieldsResponse API
+  version: 1.0.0
+paths:
+  /email_template_fields:
+    get:
+      operationId: listEmailTemplateFields
+      summary: Get all email_template_fields
+      responses:
+        '200':
+          description: List of email_template_fields
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EmailTemplateFieldsResponse'
+    post:
+      operationId: createEmailTemplateField
+      summary: Create a new email_template_fields
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailTemplateFieldsRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailTemplateFieldsResponse'
+
+  /email_template_fields/{id}:
+    get:
+      operationId: getEmailTemplateFieldsById
+      summary: Get email_template_fields by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: email_template_fields object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailTemplateFieldsResponse'
+    put:
+      operationId: updateEmailTemplateField
+      summary: Update email_template_fields by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailTemplateFieldsRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailTemplateFieldsResponse'
+    delete:
+      operationId: deleteEmailTemplateField
+      summary: Delete email_template_fields by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Deleted
+components:
+  schemas:
+
+    EmailTemplateFieldsRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        email_template_id:
+          type: integer
+        field_name:
+          type: string
+          maxLength: 50
+        field_short_code:
+          type: string
+          maxLength: 50
+
+    EmailTemplateFieldsResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        email_template_id:
+          type: integer
+        field_name:
+          type: string
+          maxLength: 50
+        field_short_code:
+          type: string
+          maxLength: 50
+  

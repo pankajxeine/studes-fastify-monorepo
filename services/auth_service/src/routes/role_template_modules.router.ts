@@ -5,22 +5,24 @@ const RoleTemplateModulesRoutes: FastifyPluginAsync = async (app) => {
   const controller = new RoleTemplateModulesService()
 
   app.get('/role_template_modules', async (request, reply) => {
-
-    return await reply.send(controller.listRoleTemplateModules(app, request))
+    const result = await controller.listRoleTemplateModules(app, request)
+    return reply.send(result)
   })
   app.post('/role_template_modules', async (request, reply) => {
-    return await reply.send(controller.createRoleTemplateModule(app, request.body as any, request))
+    const result = await controller.createRoleTemplateModule(app, request.body as any, request)
+    return reply.send(result)
   })
   app.get('/role_template_modules/:id', async (request, reply) => {
-
-    return await reply.send(controller.getRoleTemplateModulesById(app, request))
+    const result = await controller.getRoleTemplateModulesById(app, request)
+    return reply.send(result)
   })
   app.put('/role_template_modules/:id', async (request, reply) => {
-    return await reply.send(controller.updateRoleTemplateModule(app, request.body as any, request))
+    const result = await controller.updateRoleTemplateModule(app, request.body as any, request)
+    return reply.send(result)
   })
   app.delete('/role_template_modules/:id', async (request, reply) => {
-
-    return await reply.send(controller.deleteRoleTemplateModule(app, request))
+    const result = await controller.deleteRoleTemplateModule(app, request)
+    return reply.send(result)
   })
 }
 

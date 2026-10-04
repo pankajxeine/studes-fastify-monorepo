@@ -1,24 +1,42 @@
 import type { ServiceTicketCommentsRequest } from './types/ServiceTicketCommentsRequest'
 import type { ServiceTicketCommentsResponse } from './types/ServiceTicketCommentsResponse'
 import { FastifyInstance, FastifyRequest } from 'fastify'
-import type { ServiceTicketCommentsController } from './ServiceTicketCommentsController'
+import type { ServiceTicketCommentsController, ListItem, PaginatedResponse } from './ServiceTicketCommentsController'
 
 export class ServiceTicketCommentsService implements ServiceTicketCommentsController {
-  public async listServiceTicketComments(app: FastifyInstance, request?: FastifyRequest): Promise<ServiceTicketCommentsResponse[]> {
+      public async listServiceTicketComments(app: FastifyInstance, request?: FastifyRequest): Promise<PaginatedResponse<ListItem<ServiceTicketCommentsResponse[]>>> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.service_ticket_comments.schema(schema!)
-      const rows = await model.findAll()
-      return rows.map((row) => row.get({ plain: true })) as ServiceTicketCommentsResponse[]
+      const query = (request?.query ?? {}) as { page?: string | number; limit?: string | number }
+      const parsePositiveInteger = (value: string | number | undefined, fallback: number) => {
+        const parsed = Number(value)
+        return Number.isInteger(parsed) && parsed > 0 ? parsed : fallback
+      }
+      const page = parsePositiveInteger(query.page, 1)
+      const limit = Math.min(parsePositiveInteger(query.limit, 20), 100)
+      const { count, rows } = await model.findAndCountAll({
+        limit,
+        offset: (page - 1) * limit,
+      })
+      return {
+        data: rows.map((row) => row.get({ plain: true })) as ListItem<ServiceTicketCommentsResponse[]>[],
+        pagination: {
+          page,
+          limit,
+          total: count,
+          totalPages: Math.ceil(count / limit),
+        },
+      }
     } catch (err) {
       app.log.error(err);
       throw err;
     }
   }
 
-  public async createServiceTicketComment(app: FastifyInstance, input: ServiceTicketCommentsRequest, request?: FastifyRequest): Promise<ServiceTicketCommentsResponse> {
+      public async createServiceTicketComment(app: FastifyInstance, input: ServiceTicketCommentsRequest, request?: FastifyRequest): Promise<ServiceTicketCommentsResponse> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
@@ -32,7 +50,7 @@ export class ServiceTicketCommentsService implements ServiceTicketCommentsContro
     }
   }
 
-  public async getServiceTicketCommentsById(app: FastifyInstance, request?: FastifyRequest): Promise<ServiceTicketCommentsResponse> {
+      public async getServiceTicketCommentsById(app: FastifyInstance, request?: FastifyRequest): Promise<ServiceTicketCommentsResponse> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
@@ -50,7 +68,7 @@ export class ServiceTicketCommentsService implements ServiceTicketCommentsContro
     }
   }
 
-  public async updateServiceTicketComment(app: FastifyInstance, input: ServiceTicketCommentsRequest, request?: FastifyRequest): Promise<ServiceTicketCommentsResponse> {
+      public async updateServiceTicketComment(app: FastifyInstance, input: ServiceTicketCommentsRequest, request?: FastifyRequest): Promise<ServiceTicketCommentsResponse> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
@@ -69,7 +87,7 @@ export class ServiceTicketCommentsService implements ServiceTicketCommentsContro
     }
   }
 
-  public async deleteServiceTicketComment(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
+      public async deleteServiceTicketComment(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;

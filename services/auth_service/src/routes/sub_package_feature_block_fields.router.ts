@@ -5,22 +5,24 @@ const SubPackageFeatureBlockFieldsRoutes: FastifyPluginAsync = async (app) => {
   const controller = new SubPackageFeatureBlockFieldsService()
 
   app.get('/sub_package_feature_block_fields', async (request, reply) => {
-
-    return await reply.send(controller.listSubPackageFeatureBlockFields(app, request))
+    const result = await controller.listSubPackageFeatureBlockFields(app, request)
+    return reply.send(result)
   })
   app.post('/sub_package_feature_block_fields', async (request, reply) => {
-    return await reply.send(controller.createSubPackageFeatureBlockField(app, request.body as any, request))
+    const result = await controller.createSubPackageFeatureBlockField(app, request.body as any, request)
+    return reply.send(result)
   })
   app.get('/sub_package_feature_block_fields/:id', async (request, reply) => {
-
-    return await reply.send(controller.getSubPackageFeatureBlockFieldsById(app, request))
+    const result = await controller.getSubPackageFeatureBlockFieldsById(app, request)
+    return reply.send(result)
   })
   app.put('/sub_package_feature_block_fields/:id', async (request, reply) => {
-    return await reply.send(controller.updateSubPackageFeatureBlockField(app, request.body as any, request))
+    const result = await controller.updateSubPackageFeatureBlockField(app, request.body as any, request)
+    return reply.send(result)
   })
   app.delete('/sub_package_feature_block_fields/:id', async (request, reply) => {
-
-    return await reply.send(controller.deleteSubPackageFeatureBlockField(app, request))
+    const result = await controller.deleteSubPackageFeatureBlockField(app, request)
+    return reply.send(result)
   })
 }
 

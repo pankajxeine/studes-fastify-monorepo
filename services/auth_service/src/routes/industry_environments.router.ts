@@ -5,22 +5,24 @@ const IndustryEnvironmentsRoutes: FastifyPluginAsync = async (app) => {
   const controller = new IndustryEnvironmentsService()
 
   app.get('/industry_environments', async (request, reply) => {
-
-    return await reply.send(controller.listIndustryEnvironments(app, request))
+    const result = await controller.listIndustryEnvironments(app, request)
+    return reply.send(result)
   })
   app.post('/industry_environments', async (request, reply) => {
-    return await reply.send(controller.createIndustryEnvironment(app, request.body as any, request))
+    const result = await controller.createIndustryEnvironment(app, request.body as any, request)
+    return reply.send(result)
   })
   app.get('/industry_environments/:id', async (request, reply) => {
-
-    return await reply.send(controller.getIndustryEnvironmentsById(app, request))
+    const result = await controller.getIndustryEnvironmentsById(app, request)
+    return reply.send(result)
   })
   app.put('/industry_environments/:id', async (request, reply) => {
-    return await reply.send(controller.updateIndustryEnvironment(app, request.body as any, request))
+    const result = await controller.updateIndustryEnvironment(app, request.body as any, request)
+    return reply.send(result)
   })
   app.delete('/industry_environments/:id', async (request, reply) => {
-
-    return await reply.send(controller.deleteIndustryEnvironment(app, request))
+    const result = await controller.deleteIndustryEnvironment(app, request)
+    return reply.send(result)
   })
 }
 

@@ -5,22 +5,24 @@ const SubPackagesRoutes: FastifyPluginAsync = async (app) => {
   const controller = new SubPackagesService()
 
   app.get('/sub_packages', async (request, reply) => {
-
-    return await reply.send(controller.listSubPackages(app, request))
+    const result = await controller.listSubPackages(app, request)
+    return reply.send(result)
   })
   app.post('/sub_packages', async (request, reply) => {
-    return await reply.send(controller.createSubPackage(app, request.body as any, request))
+    const result = await controller.createSubPackage(app, request.body as any, request)
+    return reply.send(result)
   })
   app.get('/sub_packages/:id', async (request, reply) => {
-
-    return await reply.send(controller.getSubPackagesById(app, request))
+    const result = await controller.getSubPackagesById(app, request)
+    return reply.send(result)
   })
   app.put('/sub_packages/:id', async (request, reply) => {
-    return await reply.send(controller.updateSubPackage(app, request.body as any, request))
+    const result = await controller.updateSubPackage(app, request.body as any, request)
+    return reply.send(result)
   })
   app.delete('/sub_packages/:id', async (request, reply) => {
-
-    return await reply.send(controller.deleteSubPackage(app, request))
+    const result = await controller.deleteSubPackage(app, request)
+    return reply.send(result)
   })
 }
 

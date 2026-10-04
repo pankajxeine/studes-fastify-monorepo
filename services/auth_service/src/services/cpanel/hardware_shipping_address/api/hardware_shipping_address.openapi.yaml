@@ -1,0 +1,137 @@
+openapi: 3.0.0
+info:
+  title: HardwareShippingAddressResponse API
+  version: 1.0.0
+paths:
+  /hardware_shipping_address:
+    get:
+      operationId: listHardwareShippingAddress
+      summary: Get all hardware_shipping_address
+      responses:
+        '200':
+          description: List of hardware_shipping_address
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HardwareShippingAddressResponse'
+    post:
+      operationId: createHardwareShippingAddres
+      summary: Create a new hardware_shipping_address
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HardwareShippingAddressRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HardwareShippingAddressResponse'
+
+  /hardware_shipping_address/{id}:
+    get:
+      operationId: getHardwareShippingAddressById
+      summary: Get hardware_shipping_address by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: hardware_shipping_address object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HardwareShippingAddressResponse'
+    put:
+      operationId: updateHardwareShippingAddres
+      summary: Update hardware_shipping_address by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HardwareShippingAddressRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HardwareShippingAddressResponse'
+    delete:
+      operationId: deleteHardwareShippingAddres
+      summary: Delete hardware_shipping_address by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Deleted
+components:
+  schemas:
+
+    HardwareShippingAddressRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        hardware_id:
+          type: integer
+        country_id:
+          type: integer
+        address1:
+          type: string
+          maxLength: 100
+        state_id:
+          type: integer
+        city:
+          type: string
+          maxLength: 50
+        postal_code:
+          type: string
+          maxLength: 50
+
+    HardwareShippingAddressResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        hardware_id:
+          type: integer
+        country_id:
+          type: integer
+        address1:
+          type: string
+          maxLength: 100
+        state_id:
+          type: integer
+        city:
+          type: string
+          maxLength: 50
+        postal_code:
+          type: string
+          maxLength: 50
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+  

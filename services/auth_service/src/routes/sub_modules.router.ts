@@ -5,22 +5,24 @@ const SubModulesRoutes: FastifyPluginAsync = async (app) => {
   const controller = new SubModulesService()
 
   app.get('/sub_modules', async (request, reply) => {
-
-    return await reply.send(controller.listSubModules(app, request))
+    const result = await controller.listSubModules(app, request)
+    return reply.send(result)
   })
   app.post('/sub_modules', async (request, reply) => {
-    return await reply.send(controller.createSubModule(app, request.body as any, request))
+    const result = await controller.createSubModule(app, request.body as any, request)
+    return reply.send(result)
   })
   app.get('/sub_modules/:id', async (request, reply) => {
-
-    return await reply.send(controller.getSubModulesById(app, request))
+    const result = await controller.getSubModulesById(app, request)
+    return reply.send(result)
   })
   app.put('/sub_modules/:id', async (request, reply) => {
-    return await reply.send(controller.updateSubModule(app, request.body as any, request))
+    const result = await controller.updateSubModule(app, request.body as any, request)
+    return reply.send(result)
   })
   app.delete('/sub_modules/:id', async (request, reply) => {
-
-    return await reply.send(controller.deleteSubModule(app, request))
+    const result = await controller.deleteSubModule(app, request)
+    return reply.send(result)
   })
 }
 

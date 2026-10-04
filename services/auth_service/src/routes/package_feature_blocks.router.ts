@@ -5,22 +5,24 @@ const PackageFeatureBlocksRoutes: FastifyPluginAsync = async (app) => {
   const controller = new PackageFeatureBlocksService()
 
   app.get('/package_feature_blocks', async (request, reply) => {
-
-    return await reply.send(controller.listPackageFeatureBlocks(app, request))
+    const result = await controller.listPackageFeatureBlocks(app, request)
+    return reply.send(result)
   })
   app.post('/package_feature_blocks', async (request, reply) => {
-    return await reply.send(controller.createPackageFeatureBlock(app, request.body as any, request))
+    const result = await controller.createPackageFeatureBlock(app, request.body as any, request)
+    return reply.send(result)
   })
   app.get('/package_feature_blocks/:id', async (request, reply) => {
-
-    return await reply.send(controller.getPackageFeatureBlocksById(app, request))
+    const result = await controller.getPackageFeatureBlocksById(app, request)
+    return reply.send(result)
   })
   app.put('/package_feature_blocks/:id', async (request, reply) => {
-    return await reply.send(controller.updatePackageFeatureBlock(app, request.body as any, request))
+    const result = await controller.updatePackageFeatureBlock(app, request.body as any, request)
+    return reply.send(result)
   })
   app.delete('/package_feature_blocks/:id', async (request, reply) => {
-
-    return await reply.send(controller.deletePackageFeatureBlock(app, request))
+    const result = await controller.deletePackageFeatureBlock(app, request)
+    return reply.send(result)
   })
 }
 

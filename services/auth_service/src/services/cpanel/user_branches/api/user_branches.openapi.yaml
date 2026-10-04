@@ -1,0 +1,115 @@
+openapi: 3.0.0
+info:
+  title: UserBranchesResponse API
+  version: 1.0.0
+paths:
+  /user_branches:
+    get:
+      operationId: listUserBranches
+      summary: Get all user_branches
+      responses:
+        '200':
+          description: List of user_branches
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserBranchesResponse'
+    post:
+      operationId: createUserBranche
+      summary: Create a new user_branches
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserBranchesRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserBranchesResponse'
+
+  /user_branches/{id}:
+    get:
+      operationId: getUserBranchesById
+      summary: Get user_branches by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: user_branches object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserBranchesResponse'
+    put:
+      operationId: updateUserBranche
+      summary: Update user_branches by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserBranchesRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserBranchesResponse'
+    delete:
+      operationId: deleteUserBranche
+      summary: Delete user_branches by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Deleted
+components:
+  schemas:
+
+    UserBranchesRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: integer
+        branch_id:
+          type: integer
+
+    UserBranchesResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: integer
+        branch_id:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+  

@@ -1,24 +1,42 @@
 import type { RoleModulePermissionsRequest } from './types/RoleModulePermissionsRequest'
 import type { RoleModulePermissionsResponse } from './types/RoleModulePermissionsResponse'
 import { FastifyInstance, FastifyRequest } from 'fastify'
-import type { RoleModulePermissionsController } from './RoleModulePermissionsController'
+import type { RoleModulePermissionsController, ListItem, PaginatedResponse } from './RoleModulePermissionsController'
 
 export class RoleModulePermissionsService implements RoleModulePermissionsController {
-  public async listRoleModulePermissions(app: FastifyInstance, request?: FastifyRequest): Promise<RoleModulePermissionsResponse[]> {
+      public async listRoleModulePermissions(app: FastifyInstance, request?: FastifyRequest): Promise<PaginatedResponse<ListItem<RoleModulePermissionsResponse[]>>> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.role_module_permissions.schema(schema!)
-      const rows = await model.findAll()
-      return rows.map((row) => row.get({ plain: true })) as RoleModulePermissionsResponse[]
+      const query = (request?.query ?? {}) as { page?: string | number; limit?: string | number }
+      const parsePositiveInteger = (value: string | number | undefined, fallback: number) => {
+        const parsed = Number(value)
+        return Number.isInteger(parsed) && parsed > 0 ? parsed : fallback
+      }
+      const page = parsePositiveInteger(query.page, 1)
+      const limit = Math.min(parsePositiveInteger(query.limit, 20), 100)
+      const { count, rows } = await model.findAndCountAll({
+        limit,
+        offset: (page - 1) * limit,
+      })
+      return {
+        data: rows.map((row) => row.get({ plain: true })) as ListItem<RoleModulePermissionsResponse[]>[],
+        pagination: {
+          page,
+          limit,
+          total: count,
+          totalPages: Math.ceil(count / limit),
+        },
+      }
     } catch (err) {
       app.log.error(err);
       throw err;
     }
   }
 
-  public async createRoleModulePermission(app: FastifyInstance, input: RoleModulePermissionsRequest, request?: FastifyRequest): Promise<RoleModulePermissionsResponse> {
+      public async createRoleModulePermission(app: FastifyInstance, input: RoleModulePermissionsRequest, request?: FastifyRequest): Promise<RoleModulePermissionsResponse> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
@@ -32,7 +50,7 @@ export class RoleModulePermissionsService implements RoleModulePermissionsContro
     }
   }
 
-  public async getRoleModulePermissionsById(app: FastifyInstance, request?: FastifyRequest): Promise<RoleModulePermissionsResponse> {
+      public async getRoleModulePermissionsById(app: FastifyInstance, request?: FastifyRequest): Promise<RoleModulePermissionsResponse> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
@@ -50,7 +68,7 @@ export class RoleModulePermissionsService implements RoleModulePermissionsContro
     }
   }
 
-  public async updateRoleModulePermission(app: FastifyInstance, input: RoleModulePermissionsRequest, request?: FastifyRequest): Promise<RoleModulePermissionsResponse> {
+      public async updateRoleModulePermission(app: FastifyInstance, input: RoleModulePermissionsRequest, request?: FastifyRequest): Promise<RoleModulePermissionsResponse> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
@@ -69,7 +87,7 @@ export class RoleModulePermissionsService implements RoleModulePermissionsContro
     }
   }
 
-  public async deleteRoleModulePermission(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
+      public async deleteRoleModulePermission(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;

@@ -5,12 +5,12 @@ const HealthRoutes: FastifyPluginAsync = async (app) => {
   const controller = new HealthService()
 
   app.get('/health', async (request, reply) => {
-    
-    return await reply.send(controller.authHealth(app, request))
+    const result = await controller.authHealth(app, request)
+    return reply.send(result)
   })
   app.get('/health/db', async (request, reply) => {
-    
-    return await reply.send(controller.authHealthDb(app, request))
+    const result = await controller.authHealthDb(app, request)
+    return reply.send(result)
   })
 }
 

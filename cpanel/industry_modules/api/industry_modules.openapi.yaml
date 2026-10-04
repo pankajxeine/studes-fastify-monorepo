@@ -1,0 +1,115 @@
+openapi: 3.0.0
+info:
+  title: IndustryModulesResponse API
+  version: 1.0.0
+paths:
+  /industry_modules:
+    get:
+      operationId: listIndustryModules
+      summary: Get all industry_modules
+      responses:
+        '200':
+          description: List of industry_modules
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/IndustryModulesResponse'
+    post:
+      operationId: createIndustryModule
+      summary: Create a new industry_modules
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IndustryModulesRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IndustryModulesResponse'
+
+  /industry_modules/{id}:
+    get:
+      operationId: getIndustryModulesById
+      summary: Get industry_modules by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: industry_modules object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IndustryModulesResponse'
+    put:
+      operationId: updateIndustryModule
+      summary: Update industry_modules by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IndustryModulesRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IndustryModulesResponse'
+    delete:
+      operationId: deleteIndustryModule
+      summary: Delete industry_modules by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Deleted
+components:
+  schemas:
+
+    IndustryModulesRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        industry_id:
+          type: integer
+        module_id:
+          type: integer
+
+    IndustryModulesResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        industry_id:
+          type: integer
+        module_id:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+  

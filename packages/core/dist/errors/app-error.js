@@ -2,12 +2,13 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppError = void 0;
 class AppError extends Error {
-    constructor(message, statusCode, details) {
+    statusCode;
+    details;
+    constructor(message, statusCode = 500, details) {
         super(message);
+        this.name = this.constructor.name;
         this.statusCode = statusCode;
         this.details = details;
-        this.name = this.constructor.name;
-        Error.captureStackTrace?.(this, this.constructor);
     }
 }
 exports.AppError = AppError;

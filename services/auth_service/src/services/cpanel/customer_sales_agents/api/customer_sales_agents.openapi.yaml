@@ -1,0 +1,115 @@
+openapi: 3.0.0
+info:
+  title: CustomerSalesAgentsResponse API
+  version: 1.0.0
+paths:
+  /customer_sales_agents:
+    get:
+      operationId: listCustomerSalesAgents
+      summary: Get all customer_sales_agents
+      responses:
+        '200':
+          description: List of customer_sales_agents
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CustomerSalesAgentsResponse'
+    post:
+      operationId: createCustomerSalesAgent
+      summary: Create a new customer_sales_agents
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerSalesAgentsRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerSalesAgentsResponse'
+
+  /customer_sales_agents/{id}:
+    get:
+      operationId: getCustomerSalesAgentsById
+      summary: Get customer_sales_agents by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: customer_sales_agents object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerSalesAgentsResponse'
+    put:
+      operationId: updateCustomerSalesAgent
+      summary: Update customer_sales_agents by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerSalesAgentsRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerSalesAgentsResponse'
+    delete:
+      operationId: deleteCustomerSalesAgent
+      summary: Delete customer_sales_agents by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Deleted
+components:
+  schemas:
+
+    CustomerSalesAgentsRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        customer_id:
+          type: integer
+        sales_agent_id:
+          type: integer
+
+    CustomerSalesAgentsResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        customer_id:
+          type: integer
+        sales_agent_id:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+  

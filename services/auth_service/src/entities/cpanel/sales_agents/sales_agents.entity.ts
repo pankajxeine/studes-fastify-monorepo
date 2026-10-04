@@ -21,8 +21,7 @@ export type SalesAgentsCreationAttributes = Optional<SalesAgentsAttributes, "id"
 
 export class SalesAgentsEntity
   extends Model<SalesAgentsAttributes, SalesAgentsCreationAttributes>
-  implements SalesAgentsAttributes
-{
+  implements SalesAgentsAttributes {
   declare id: number | null
   declare name: string | null
   declare address1: string | null
@@ -123,7 +122,7 @@ export function initSalesAgentsEntity(sequelize: Sequelize): typeof SalesAgentsE
       freezeTableName: true,
       paranoid: false,
       indexes: [
-      { unique: true, fields: ['id'] }
+        { unique: true, fields: ['id'] }
       ]
     }
   )

@@ -5,9 +5,9 @@ const {{ModuleName}}Routes: FastifyPluginAsync = async (app) => {
   const controller = new {{ServiceName}}()
 
 {{#routes}}
-  app.{{httpMethod}}('{{{path}}}', async (request, reply) => {
-    {{#hasInput}}return await reply.send(controller.{{operationId}}(app, request.body as any, request)){{/hasInput}}{{^hasInput}}
-    return await reply.send(controller.{{operationId}}(app, request)){{/hasInput}}
+  app.{{httpMethod}}('{{{path}}}', {{{routeOptions}}}async (request, reply) => {
+    {{#hasInput}}const result = await controller.{{operationId}}(app, request.body as any, request){{/hasInput}}{{^hasInput}}const result = await controller.{{operationId}}(app, request){{/hasInput}}
+    return reply.send(result)
   })
 {{/routes}}
 }

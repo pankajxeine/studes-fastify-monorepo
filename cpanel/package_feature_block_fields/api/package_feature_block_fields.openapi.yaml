@@ -1,0 +1,115 @@
+openapi: 3.0.0
+info:
+  title: PackageFeatureBlockFieldsResponse API
+  version: 1.0.0
+paths:
+  /package_feature_block_fields:
+    get:
+      operationId: listPackageFeatureBlockFields
+      summary: Get all package_feature_block_fields
+      responses:
+        '200':
+          description: List of package_feature_block_fields
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PackageFeatureBlockFieldsResponse'
+    post:
+      operationId: createPackageFeatureBlockField
+      summary: Create a new package_feature_block_fields
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PackageFeatureBlockFieldsRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PackageFeatureBlockFieldsResponse'
+
+  /package_feature_block_fields/{id}:
+    get:
+      operationId: getPackageFeatureBlockFieldsById
+      summary: Get package_feature_block_fields by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: package_feature_block_fields object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PackageFeatureBlockFieldsResponse'
+    put:
+      operationId: updatePackageFeatureBlockField
+      summary: Update package_feature_block_fields by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PackageFeatureBlockFieldsRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PackageFeatureBlockFieldsResponse'
+    delete:
+      operationId: deletePackageFeatureBlockField
+      summary: Delete package_feature_block_fields by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Deleted
+components:
+  schemas:
+
+    PackageFeatureBlockFieldsRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        package_feature_block_id:
+          type: integer
+        field_id:
+          type: integer
+
+    PackageFeatureBlockFieldsResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        package_feature_block_id:
+          type: integer
+        field_id:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+  

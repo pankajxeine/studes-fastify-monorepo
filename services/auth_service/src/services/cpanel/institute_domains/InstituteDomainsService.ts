@@ -1,24 +1,42 @@
 import type { InstituteDomainsRequest } from './types/InstituteDomainsRequest'
 import type { InstituteDomainsResponse } from './types/InstituteDomainsResponse'
 import { FastifyInstance, FastifyRequest } from 'fastify'
-import type { InstituteDomainsController } from './InstituteDomainsController'
+import type { InstituteDomainsController, ListItem, PaginatedResponse } from './InstituteDomainsController'
 
 export class InstituteDomainsService implements InstituteDomainsController {
-  public async listInstituteDomains(app: FastifyInstance, request?: FastifyRequest): Promise<InstituteDomainsResponse[]> {
+      public async listInstituteDomains(app: FastifyInstance, request?: FastifyRequest): Promise<PaginatedResponse<ListItem<InstituteDomainsResponse[]>>> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.institute_domains.schema(schema!)
-      const rows = await model.findAll()
-      return rows.map((row) => row.get({ plain: true })) as InstituteDomainsResponse[]
+      const query = (request?.query ?? {}) as { page?: string | number; limit?: string | number }
+      const parsePositiveInteger = (value: string | number | undefined, fallback: number) => {
+        const parsed = Number(value)
+        return Number.isInteger(parsed) && parsed > 0 ? parsed : fallback
+      }
+      const page = parsePositiveInteger(query.page, 1)
+      const limit = Math.min(parsePositiveInteger(query.limit, 20), 100)
+      const { count, rows } = await model.findAndCountAll({
+        limit,
+        offset: (page - 1) * limit,
+      })
+      return {
+        data: rows.map((row) => row.get({ plain: true })) as ListItem<InstituteDomainsResponse[]>[],
+        pagination: {
+          page,
+          limit,
+          total: count,
+          totalPages: Math.ceil(count / limit),
+        },
+      }
     } catch (err) {
       app.log.error(err);
       throw err;
     }
   }
 
-  public async createInstituteDomain(app: FastifyInstance, input: InstituteDomainsRequest, request?: FastifyRequest): Promise<InstituteDomainsResponse> {
+      public async createInstituteDomain(app: FastifyInstance, input: InstituteDomainsRequest, request?: FastifyRequest): Promise<InstituteDomainsResponse> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
@@ -32,7 +50,7 @@ export class InstituteDomainsService implements InstituteDomainsController {
     }
   }
 
-  public async getInstituteDomainsById(app: FastifyInstance, request?: FastifyRequest): Promise<InstituteDomainsResponse> {
+      public async getInstituteDomainsById(app: FastifyInstance, request?: FastifyRequest): Promise<InstituteDomainsResponse> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
@@ -50,7 +68,7 @@ export class InstituteDomainsService implements InstituteDomainsController {
     }
   }
 
-  public async updateInstituteDomain(app: FastifyInstance, input: InstituteDomainsRequest, request?: FastifyRequest): Promise<InstituteDomainsResponse> {
+      public async updateInstituteDomain(app: FastifyInstance, input: InstituteDomainsRequest, request?: FastifyRequest): Promise<InstituteDomainsResponse> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
@@ -69,7 +87,7 @@ export class InstituteDomainsService implements InstituteDomainsController {
     }
   }
 
-  public async deleteInstituteDomain(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
+      public async deleteInstituteDomain(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;

@@ -1,0 +1,125 @@
+openapi: 3.0.0
+info:
+  title: CronsResponse API
+  version: 1.0.0
+paths:
+  /crons:
+    get:
+      operationId: listCrons
+      summary: Get all crons
+      responses:
+        '200':
+          description: List of crons
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CronsResponse'
+    post:
+      operationId: createCron
+      summary: Create a new crons
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CronsRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CronsResponse'
+
+  /crons/{id}:
+    get:
+      operationId: getCronsById
+      summary: Get crons by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: crons object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CronsResponse'
+    put:
+      operationId: updateCron
+      summary: Update crons by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CronsRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CronsResponse'
+    delete:
+      operationId: deleteCron
+      summary: Delete crons by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Deleted
+components:
+  schemas:
+
+    CronsRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+          maxLength: 50
+        short_description:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+          maxLength: 200
+
+    CronsResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+          maxLength: 50
+        short_description:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+          maxLength: 200
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+  

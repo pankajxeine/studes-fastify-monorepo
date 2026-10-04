@@ -1,24 +1,42 @@
 import type { PackageRoleMappingsRequest } from './types/PackageRoleMappingsRequest'
 import type { PackageRoleMappingsResponse } from './types/PackageRoleMappingsResponse'
 import { FastifyInstance, FastifyRequest } from 'fastify'
-import type { PackageRoleMappingsController } from './PackageRoleMappingsController'
+import type { PackageRoleMappingsController, ListItem, PaginatedResponse } from './PackageRoleMappingsController'
 
 export class PackageRoleMappingsService implements PackageRoleMappingsController {
-  public async listPackageRoleMappings(app: FastifyInstance, request?: FastifyRequest): Promise<PackageRoleMappingsResponse[]> {
+      public async listPackageRoleMappings(app: FastifyInstance, request?: FastifyRequest): Promise<PaginatedResponse<ListItem<PackageRoleMappingsResponse[]>>> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.package_role_mappings.schema(schema!)
-      const rows = await model.findAll()
-      return rows.map((row) => row.get({ plain: true })) as PackageRoleMappingsResponse[]
+      const query = (request?.query ?? {}) as { page?: string | number; limit?: string | number }
+      const parsePositiveInteger = (value: string | number | undefined, fallback: number) => {
+        const parsed = Number(value)
+        return Number.isInteger(parsed) && parsed > 0 ? parsed : fallback
+      }
+      const page = parsePositiveInteger(query.page, 1)
+      const limit = Math.min(parsePositiveInteger(query.limit, 20), 100)
+      const { count, rows } = await model.findAndCountAll({
+        limit,
+        offset: (page - 1) * limit,
+      })
+      return {
+        data: rows.map((row) => row.get({ plain: true })) as ListItem<PackageRoleMappingsResponse[]>[],
+        pagination: {
+          page,
+          limit,
+          total: count,
+          totalPages: Math.ceil(count / limit),
+        },
+      }
     } catch (err) {
       app.log.error(err);
       throw err;
     }
   }
 
-  public async createPackageRoleMapping(app: FastifyInstance, input: PackageRoleMappingsRequest, request?: FastifyRequest): Promise<PackageRoleMappingsResponse> {
+      public async createPackageRoleMapping(app: FastifyInstance, input: PackageRoleMappingsRequest, request?: FastifyRequest): Promise<PackageRoleMappingsResponse> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
@@ -32,7 +50,7 @@ export class PackageRoleMappingsService implements PackageRoleMappingsController
     }
   }
 
-  public async getPackageRoleMappingsById(app: FastifyInstance, request?: FastifyRequest): Promise<PackageRoleMappingsResponse> {
+      public async getPackageRoleMappingsById(app: FastifyInstance, request?: FastifyRequest): Promise<PackageRoleMappingsResponse> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
@@ -50,7 +68,7 @@ export class PackageRoleMappingsService implements PackageRoleMappingsController
     }
   }
 
-  public async updatePackageRoleMapping(app: FastifyInstance, input: PackageRoleMappingsRequest, request?: FastifyRequest): Promise<PackageRoleMappingsResponse> {
+      public async updatePackageRoleMapping(app: FastifyInstance, input: PackageRoleMappingsRequest, request?: FastifyRequest): Promise<PackageRoleMappingsResponse> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
@@ -69,7 +87,7 @@ export class PackageRoleMappingsService implements PackageRoleMappingsController
     }
   }
 
-  public async deletePackageRoleMapping(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
+      public async deletePackageRoleMapping(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;

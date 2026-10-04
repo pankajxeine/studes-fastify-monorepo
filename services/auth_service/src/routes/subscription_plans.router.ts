@@ -5,22 +5,24 @@ const SubscriptionPlansRoutes: FastifyPluginAsync = async (app) => {
   const controller = new SubscriptionPlansService()
 
   app.get('/subscription_plans', async (request, reply) => {
-
-    return await reply.send(controller.listSubscriptionPlans(app, request))
+    const result = await controller.listSubscriptionPlans(app, request)
+    return reply.send(result)
   })
   app.post('/subscription_plans', async (request, reply) => {
-    return await reply.send(controller.createSubscriptionPlan(app, request.body as any, request))
+    const result = await controller.createSubscriptionPlan(app, request.body as any, request)
+    return reply.send(result)
   })
   app.get('/subscription_plans/:id', async (request, reply) => {
-
-    return await reply.send(controller.getSubscriptionPlansById(app, request))
+    const result = await controller.getSubscriptionPlansById(app, request)
+    return reply.send(result)
   })
   app.put('/subscription_plans/:id', async (request, reply) => {
-    return await reply.send(controller.updateSubscriptionPlan(app, request.body as any, request))
+    const result = await controller.updateSubscriptionPlan(app, request.body as any, request)
+    return reply.send(result)
   })
   app.delete('/subscription_plans/:id', async (request, reply) => {
-
-    return await reply.send(controller.deleteSubscriptionPlan(app, request))
+    const result = await controller.deleteSubscriptionPlan(app, request)
+    return reply.send(result)
   })
 }
 

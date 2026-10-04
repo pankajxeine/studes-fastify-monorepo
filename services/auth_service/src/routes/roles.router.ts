@@ -5,22 +5,24 @@ const RolesRoutes: FastifyPluginAsync = async (app) => {
   const controller = new RolesService()
 
   app.get('/roles', async (request, reply) => {
-
-    return await reply.send(controller.listRoles(app, request))
+    const result = await controller.listRoles(app, request)
+    return reply.send(result)
   })
   app.post('/roles', async (request, reply) => {
-    return await reply.send(controller.createRole(app, request.body as any, request))
+    const result = await controller.createRole(app, request.body as any, request)
+    return reply.send(result)
   })
   app.get('/roles/:id', async (request, reply) => {
-
-    return await reply.send(controller.getRolesById(app, request))
+    const result = await controller.getRolesById(app, request)
+    return reply.send(result)
   })
   app.put('/roles/:id', async (request, reply) => {
-    return await reply.send(controller.updateRole(app, request.body as any, request))
+    const result = await controller.updateRole(app, request.body as any, request)
+    return reply.send(result)
   })
   app.delete('/roles/:id', async (request, reply) => {
-
-    return await reply.send(controller.deleteRole(app, request))
+    const result = await controller.deleteRole(app, request)
+    return reply.send(result)
   })
 }
 

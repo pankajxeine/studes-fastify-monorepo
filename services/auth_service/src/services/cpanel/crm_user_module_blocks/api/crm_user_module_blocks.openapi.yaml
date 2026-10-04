@@ -1,0 +1,119 @@
+openapi: 3.0.0
+info:
+  title: CrmUserModuleBlocksResponse API
+  version: 1.0.0
+paths:
+  /crm_user_module_blocks:
+    get:
+      operationId: listCrmUserModuleBlocks
+      summary: Get all crm_user_module_blocks
+      responses:
+        '200':
+          description: List of crm_user_module_blocks
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CrmUserModuleBlocksResponse'
+    post:
+      operationId: createCrmUserModuleBlock
+      summary: Create a new crm_user_module_blocks
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CrmUserModuleBlocksRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CrmUserModuleBlocksResponse'
+
+  /crm_user_module_blocks/{id}:
+    get:
+      operationId: getCrmUserModuleBlocksById
+      summary: Get crm_user_module_blocks by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: crm_user_module_blocks object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CrmUserModuleBlocksResponse'
+    put:
+      operationId: updateCrmUserModuleBlock
+      summary: Update crm_user_module_blocks by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CrmUserModuleBlocksRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CrmUserModuleBlocksResponse'
+    delete:
+      operationId: deleteCrmUserModuleBlock
+      summary: Delete crm_user_module_blocks by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Deleted
+components:
+  schemas:
+
+    CrmUserModuleBlocksRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        crm_user_module_id:
+          type: integer
+        block_id:
+          type: integer
+        permission:
+          type: string
+
+    CrmUserModuleBlocksResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        crm_user_module_id:
+          type: integer
+        block_id:
+          type: integer
+        permission:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+  

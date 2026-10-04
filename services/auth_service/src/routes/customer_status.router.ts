@@ -5,22 +5,24 @@ const CustomerStatusRoutes: FastifyPluginAsync = async (app) => {
   const controller = new CustomerStatusService()
 
   app.get('/customer_status', async (request, reply) => {
-
-    return await reply.send(controller.listCustomerStatus(app, request))
+    const result = await controller.listCustomerStatus(app, request)
+    return reply.send(result)
   })
   app.post('/customer_status', async (request, reply) => {
-    return await reply.send(controller.createCustomerStatu(app, request.body as any, request))
+    const result = await controller.createCustomerStatu(app, request.body as any, request)
+    return reply.send(result)
   })
   app.get('/customer_status/:id', async (request, reply) => {
-
-    return await reply.send(controller.getCustomerStatusById(app, request))
+    const result = await controller.getCustomerStatusById(app, request)
+    return reply.send(result)
   })
   app.put('/customer_status/:id', async (request, reply) => {
-    return await reply.send(controller.updateCustomerStatu(app, request.body as any, request))
+    const result = await controller.updateCustomerStatu(app, request.body as any, request)
+    return reply.send(result)
   })
   app.delete('/customer_status/:id', async (request, reply) => {
-
-    return await reply.send(controller.deleteCustomerStatu(app, request))
+    const result = await controller.deleteCustomerStatu(app, request)
+    return reply.send(result)
   })
 }
 

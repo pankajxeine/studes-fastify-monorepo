@@ -1,0 +1,131 @@
+openapi: 3.0.0
+info:
+  title: PackageDiscountsResponse API
+  version: 1.0.0
+paths:
+  /package_discounts:
+    get:
+      operationId: listPackageDiscounts
+      summary: Get all package_discounts
+      responses:
+        '200':
+          description: List of package_discounts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PackageDiscountsResponse'
+    post:
+      operationId: createPackageDiscount
+      summary: Create a new package_discounts
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PackageDiscountsRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PackageDiscountsResponse'
+
+  /package_discounts/{id}:
+    get:
+      operationId: getPackageDiscountsById
+      summary: Get package_discounts by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: package_discounts object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PackageDiscountsResponse'
+    put:
+      operationId: updatePackageDiscount
+      summary: Update package_discounts by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PackageDiscountsRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PackageDiscountsResponse'
+    delete:
+      operationId: deletePackageDiscount
+      summary: Delete package_discounts by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Deleted
+components:
+  schemas:
+
+    PackageDiscountsRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        package_id:
+          type: integer
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        discount:
+          type: number
+        duration:
+          type: integer
+
+    PackageDiscountsResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        package_id:
+          type: integer
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        discount:
+          type: number
+        duration:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+  

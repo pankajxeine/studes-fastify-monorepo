@@ -1,0 +1,127 @@
+openapi: 3.0.0
+info:
+  title: StatesResponse API
+  version: 1.0.0
+paths:
+  /states:
+    get:
+      operationId: listStates
+      summary: Get all states
+      responses:
+        '200':
+          description: List of states
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StatesResponse'
+    post:
+      operationId: createState
+      summary: Create a new states
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StatesRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatesResponse'
+
+  /states/{id}:
+    get:
+      operationId: getStatesById
+      summary: Get states by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: states object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatesResponse'
+    put:
+      operationId: updateState
+      summary: Update states by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StatesRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatesResponse'
+    delete:
+      operationId: deleteState
+      summary: Delete states by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Deleted
+components:
+  schemas:
+
+    StatesRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        country_id:
+          type: integer
+        name:
+          type: string
+          maxLength: 30
+        code:
+          type: string
+          maxLength: 5
+        status:
+          type: string
+
+    StatesResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        country_id:
+          type: integer
+        name:
+          type: string
+          maxLength: 30
+        code:
+          type: string
+          maxLength: 5
+        status:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+  

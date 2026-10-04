@@ -1,24 +1,42 @@
 import type { IndustryModulesRequest } from './types/IndustryModulesRequest'
 import type { IndustryModulesResponse } from './types/IndustryModulesResponse'
 import { FastifyInstance, FastifyRequest } from 'fastify'
-import type { IndustryModulesController } from './IndustryModulesController'
+import type { IndustryModulesController, ListItem, PaginatedResponse } from './IndustryModulesController'
 
 export class IndustryModulesService implements IndustryModulesController {
-  public async listIndustryModules(app: FastifyInstance, request?: FastifyRequest): Promise<IndustryModulesResponse[]> {
+      public async listIndustryModules(app: FastifyInstance, request?: FastifyRequest): Promise<PaginatedResponse<ListItem<IndustryModulesResponse[]>>> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.industry_modules.schema(schema!)
-      const rows = await model.findAll()
-      return rows.map((row) => row.get({ plain: true })) as IndustryModulesResponse[]
+      const query = (request?.query ?? {}) as { page?: string | number; limit?: string | number }
+      const parsePositiveInteger = (value: string | number | undefined, fallback: number) => {
+        const parsed = Number(value)
+        return Number.isInteger(parsed) && parsed > 0 ? parsed : fallback
+      }
+      const page = parsePositiveInteger(query.page, 1)
+      const limit = Math.min(parsePositiveInteger(query.limit, 20), 100)
+      const { count, rows } = await model.findAndCountAll({
+        limit,
+        offset: (page - 1) * limit,
+      })
+      return {
+        data: rows.map((row) => row.get({ plain: true })) as ListItem<IndustryModulesResponse[]>[],
+        pagination: {
+          page,
+          limit,
+          total: count,
+          totalPages: Math.ceil(count / limit),
+        },
+      }
     } catch (err) {
       app.log.error(err);
       throw err;
     }
   }
 
-  public async createIndustryModule(app: FastifyInstance, input: IndustryModulesRequest, request?: FastifyRequest): Promise<IndustryModulesResponse> {
+      public async createIndustryModule(app: FastifyInstance, input: IndustryModulesRequest, request?: FastifyRequest): Promise<IndustryModulesResponse> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
@@ -32,7 +50,7 @@ export class IndustryModulesService implements IndustryModulesController {
     }
   }
 
-  public async getIndustryModulesById(app: FastifyInstance, request?: FastifyRequest): Promise<IndustryModulesResponse> {
+      public async getIndustryModulesById(app: FastifyInstance, request?: FastifyRequest): Promise<IndustryModulesResponse> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
@@ -50,7 +68,7 @@ export class IndustryModulesService implements IndustryModulesController {
     }
   }
 
-  public async updateIndustryModule(app: FastifyInstance, input: IndustryModulesRequest, request?: FastifyRequest): Promise<IndustryModulesResponse> {
+      public async updateIndustryModule(app: FastifyInstance, input: IndustryModulesRequest, request?: FastifyRequest): Promise<IndustryModulesResponse> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
@@ -69,7 +87,7 @@ export class IndustryModulesService implements IndustryModulesController {
     }
   }
 
-  public async deleteIndustryModule(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
+      public async deleteIndustryModule(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;

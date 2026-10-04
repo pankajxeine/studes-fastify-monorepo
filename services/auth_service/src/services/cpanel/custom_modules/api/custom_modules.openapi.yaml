@@ -1,0 +1,123 @@
+openapi: 3.0.0
+info:
+  title: CustomModulesResponse API
+  version: 1.0.0
+paths:
+  /custom_modules:
+    get:
+      operationId: listCustomModules
+      summary: Get all custom_modules
+      responses:
+        '200':
+          description: List of custom_modules
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CustomModulesResponse'
+    post:
+      operationId: createCustomModule
+      summary: Create a new custom_modules
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomModulesRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomModulesResponse'
+
+  /custom_modules/{id}:
+    get:
+      operationId: getCustomModulesById
+      summary: Get custom_modules by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: custom_modules object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomModulesResponse'
+    put:
+      operationId: updateCustomModule
+      summary: Update custom_modules by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomModulesRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomModulesResponse'
+    delete:
+      operationId: deleteCustomModule
+      summary: Delete custom_modules by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Deleted
+components:
+  schemas:
+
+    CustomModulesRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+          maxLength: 200
+        module_key:
+          type: string
+          maxLength: 200
+        relevant_modules:
+          type: object
+
+    CustomModulesResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+          maxLength: 200
+        module_key:
+          type: string
+          maxLength: 200
+        relevant_modules:
+          type: object
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+  

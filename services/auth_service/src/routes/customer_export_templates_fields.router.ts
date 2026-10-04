@@ -5,22 +5,24 @@ const CustomerExportTemplatesFieldsRoutes: FastifyPluginAsync = async (app) => {
   const controller = new CustomerExportTemplatesFieldsService()
 
   app.get('/customer_export_templates_fields', async (request, reply) => {
-
-    return await reply.send(controller.listCustomerExportTemplatesFields(app, request))
+    const result = await controller.listCustomerExportTemplatesFields(app, request)
+    return reply.send(result)
   })
   app.post('/customer_export_templates_fields', async (request, reply) => {
-    return await reply.send(controller.createCustomerExportTemplatesField(app, request.body as any, request))
+    const result = await controller.createCustomerExportTemplatesField(app, request.body as any, request)
+    return reply.send(result)
   })
   app.get('/customer_export_templates_fields/:id', async (request, reply) => {
-
-    return await reply.send(controller.getCustomerExportTemplatesFieldsById(app, request))
+    const result = await controller.getCustomerExportTemplatesFieldsById(app, request)
+    return reply.send(result)
   })
   app.put('/customer_export_templates_fields/:id', async (request, reply) => {
-    return await reply.send(controller.updateCustomerExportTemplatesField(app, request.body as any, request))
+    const result = await controller.updateCustomerExportTemplatesField(app, request.body as any, request)
+    return reply.send(result)
   })
   app.delete('/customer_export_templates_fields/:id', async (request, reply) => {
-
-    return await reply.send(controller.deleteCustomerExportTemplatesField(app, request))
+    const result = await controller.deleteCustomerExportTemplatesField(app, request)
+    return reply.send(result)
   })
 }
 

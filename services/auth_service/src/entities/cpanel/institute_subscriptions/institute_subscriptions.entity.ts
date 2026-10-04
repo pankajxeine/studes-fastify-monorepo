@@ -51,8 +51,6 @@ export function initInstituteSubscriptionsEntity(sequelize: Sequelize): typeof I
         type: DataTypes.TEXT,
         field: 'subscription_plan_id',
         allowNull: true,
-        references: { model: 'subscription_plans', key: 'id' },
-        onDelete: 'CASCADE',
       },
       subscriptionStartDate: {
         type: DataTypes.DATE,

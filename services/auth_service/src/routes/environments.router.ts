@@ -5,22 +5,24 @@ const EnvironmentsRoutes: FastifyPluginAsync = async (app) => {
   const controller = new EnvironmentsService()
 
   app.get('/environments', async (request, reply) => {
-
-    return await reply.send(controller.listEnvironments(app, request))
+    const result = await controller.listEnvironments(app, request)
+    return reply.send(result)
   })
   app.post('/environments', async (request, reply) => {
-    return await reply.send(controller.createEnvironment(app, request.body as any, request))
+    const result = await controller.createEnvironment(app, request.body as any, request)
+    return reply.send(result)
   })
   app.get('/environments/:id', async (request, reply) => {
-
-    return await reply.send(controller.getEnvironmentsById(app, request))
+    const result = await controller.getEnvironmentsById(app, request)
+    return reply.send(result)
   })
   app.put('/environments/:id', async (request, reply) => {
-    return await reply.send(controller.updateEnvironment(app, request.body as any, request))
+    const result = await controller.updateEnvironment(app, request.body as any, request)
+    return reply.send(result)
   })
   app.delete('/environments/:id', async (request, reply) => {
-
-    return await reply.send(controller.deleteEnvironment(app, request))
+    const result = await controller.deleteEnvironment(app, request)
+    return reply.send(result)
   })
 }
 

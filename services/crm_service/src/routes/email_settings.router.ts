@@ -1,13 +1,16 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { EmailSettingsService } from '../services/EmailSettingsService'
+import { EmailSettingsService } from '../services/email_settings/EmailSettingsService'
 
 const EmailSettingsRoutes: FastifyPluginAsync = async (app) => {
   const controller = new EmailSettingsService()
+
   app.get('/email/settings', async (request, reply) => {
-    return await controller.getEmailSettings(app, request)
+    const result = await controller.getEmailSettings(app, request)
+    return reply.send(result)
   })
   app.put('/email/settings', async (request, reply) => {
-    return await controller.updateEmailSettings(app, request.body as any, request)
+    const result = await controller.updateEmailSettings(app, request.body as any, request)
+    return reply.send(result)
   })
 }
 

@@ -440,32 +440,37 @@ function writeGeneratorFiles(outDir?: string, module?: string) {
         const responseType = typeFromResponse(pickSuccessResponse(operation.responses))
         const httpMethod = lower
         const routePath = toRoutePath(pathKey)
+        const crudAction = crudActionFromOperation(httpMethod, routePath)
+        const returnType = crudAction === 'list'
+          ? `PaginatedResponse<ListItem<${responseType}>>`
+          : responseType
 
         let methodSignature: string
         let methodImpl: any
         let hasInput = false
 
         if (requestType) {
-          methodSignature = `${operationId}(app: FastifyInstance, input: ${requestType}, request?: FastifyRequest): Promise<${responseType}>`
+          methodSignature = `${operationId}(app: FastifyInstance, input: ${requestType}, request?: FastifyRequest): Promise<${returnType}>`
           methodImpl = {
             methodName: operationId,
             methodParams: `app: FastifyInstance, input: ${requestType}, request?: FastifyRequest`,
-            returnType: responseType,
+            returnType,
+            responseType,
             hasInput: true,
           }
           hasInput = true
         } else {
-          methodSignature = `${operationId}(app: FastifyInstance, request?: FastifyRequest): Promise<${responseType}>`
+          methodSignature = `${operationId}(app: FastifyInstance, request?: FastifyRequest): Promise<${returnType}>`
           methodImpl = {
             methodName: operationId,
             methodParams: `app: FastifyInstance, request?: FastifyRequest`,
-            returnType: responseType,
+            returnType,
+            responseType,
             hasInput: false,
           }
         }
 
         methodSignatures.push({ methodSignature })
-        const crudAction = crudActionFromOperation(httpMethod, routePath)
         methodImpls.push(methodImpl)
         methodImpl.modelDecoratorName = modelDecoratorName
         methodImpl.modelKey = moduleName
@@ -481,6 +486,9 @@ function writeGeneratorFiles(outDir?: string, module?: string) {
           httpMethod,
           path: routePath,
           hasInput,
+          routeOptions: operation['x-fastify-config']
+            ? `{ config: ${JSON.stringify(operation['x-fastify-config'])} }, `
+            : '',
         })
       }
     }

@@ -1,24 +1,42 @@
 import type { SitesRequest } from './types/SitesRequest'
 import type { SitesResponse } from './types/SitesResponse'
 import { FastifyInstance, FastifyRequest } from 'fastify'
-import type { SitesController } from './SitesController'
+import type { SitesController, ListItem, PaginatedResponse } from './SitesController'
 
 export class SitesService implements SitesController {
-  public async listSites(app: FastifyInstance, request?: FastifyRequest): Promise<SitesResponse[]> {
+      public async listSites(app: FastifyInstance, request?: FastifyRequest): Promise<PaginatedResponse<ListItem<SitesResponse[]>>> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelRouterModels.sites.schema(schema!)
-      const rows = await model.findAll()
-      return rows.map((row) => row.get({ plain: true })) as SitesResponse[]
+      const query = (request?.query ?? {}) as { page?: string | number; limit?: string | number }
+      const parsePositiveInteger = (value: string | number | undefined, fallback: number) => {
+        const parsed = Number(value)
+        return Number.isInteger(parsed) && parsed > 0 ? parsed : fallback
+      }
+      const page = parsePositiveInteger(query.page, 1)
+      const limit = Math.min(parsePositiveInteger(query.limit, 20), 100)
+      const { count, rows } = await model.findAndCountAll({
+        limit,
+        offset: (page - 1) * limit,
+      })
+      return {
+        data: rows.map((row) => row.get({ plain: true })) as ListItem<SitesResponse[]>[],
+        pagination: {
+          page,
+          limit,
+          total: count,
+          totalPages: Math.ceil(count / limit),
+        },
+      }
     } catch (err) {
       app.log.error(err);
       throw err;
     }
   }
 
-  public async createSite(app: FastifyInstance, input: SitesRequest, request?: FastifyRequest): Promise<SitesResponse> {
+      public async createSite(app: FastifyInstance, input: SitesRequest, request?: FastifyRequest): Promise<SitesResponse> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
@@ -32,7 +50,7 @@ export class SitesService implements SitesController {
     }
   }
 
-  public async getSitesById(app: FastifyInstance, request?: FastifyRequest): Promise<SitesResponse> {
+      public async getSitesById(app: FastifyInstance, request?: FastifyRequest): Promise<SitesResponse> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
@@ -50,7 +68,7 @@ export class SitesService implements SitesController {
     }
   }
 
-  public async updateSite(app: FastifyInstance, input: SitesRequest, request?: FastifyRequest): Promise<SitesResponse> {
+      public async updateSite(app: FastifyInstance, input: SitesRequest, request?: FastifyRequest): Promise<SitesResponse> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
@@ -69,7 +87,7 @@ export class SitesService implements SitesController {
     }
   }
 
-  public async deleteSite(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
+      public async deleteSite(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;

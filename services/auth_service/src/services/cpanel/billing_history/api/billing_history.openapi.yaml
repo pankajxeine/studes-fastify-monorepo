@@ -1,0 +1,173 @@
+openapi: 3.0.0
+info:
+  title: BillingHistoryResponse API
+  version: 1.0.0
+paths:
+  /billing_history:
+    get:
+      operationId: listBillingHistory
+      summary: Get all billing_history
+      responses:
+        '200':
+          description: List of billing_history
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BillingHistoryResponse'
+    post:
+      operationId: createBillingHistory
+      summary: Create a new billing_history
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BillingHistoryRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillingHistoryResponse'
+
+  /billing_history/{id}:
+    get:
+      operationId: getBillingHistoryById
+      summary: Get billing_history by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: billing_history object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillingHistoryResponse'
+    put:
+      operationId: updateBillingHistory
+      summary: Update billing_history by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BillingHistoryRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillingHistoryResponse'
+    delete:
+      operationId: deleteBillingHistory
+      summary: Delete billing_history by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Deleted
+components:
+  schemas:
+
+    BillingHistoryRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        sub_id:
+          type: integer
+        sub_store_id:
+          type: integer
+        customer_id:
+          type: integer
+        feature_id:
+          type: integer
+        item:
+          type: string
+          maxLength: 100
+        price:
+          type: number
+        price_per_month:
+          type: number
+        cost_price:
+          type: number
+        type:
+          type: string
+        purchased_date:
+          type: string
+          format: date-time
+        billing_date:
+          type: string
+          format: date-time
+        expiry_date:
+          type: string
+          format: date-time
+        trial_period_days:
+          type: integer
+        description:
+          type: string
+          maxLength: 256
+
+    BillingHistoryResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        sub_id:
+          type: integer
+        sub_store_id:
+          type: integer
+        customer_id:
+          type: integer
+        feature_id:
+          type: integer
+        item:
+          type: string
+          maxLength: 100
+        price:
+          type: number
+        price_per_month:
+          type: number
+        cost_price:
+          type: number
+        type:
+          type: string
+        purchased_date:
+          type: string
+          format: date-time
+        billing_date:
+          type: string
+          format: date-time
+        expiry_date:
+          type: string
+          format: date-time
+        trial_period_days:
+          type: integer
+        description:
+          type: string
+          maxLength: 256
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+  

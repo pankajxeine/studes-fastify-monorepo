@@ -5,22 +5,24 @@ const PackageRoleMappingsRoutes: FastifyPluginAsync = async (app) => {
   const controller = new PackageRoleMappingsService()
 
   app.get('/package_role_mappings', async (request, reply) => {
-
-    return await reply.send(controller.listPackageRoleMappings(app, request))
+    const result = await controller.listPackageRoleMappings(app, request)
+    return reply.send(result)
   })
   app.post('/package_role_mappings', async (request, reply) => {
-    return await reply.send(controller.createPackageRoleMapping(app, request.body as any, request))
+    const result = await controller.createPackageRoleMapping(app, request.body as any, request)
+    return reply.send(result)
   })
   app.get('/package_role_mappings/:id', async (request, reply) => {
-
-    return await reply.send(controller.getPackageRoleMappingsById(app, request))
+    const result = await controller.getPackageRoleMappingsById(app, request)
+    return reply.send(result)
   })
   app.put('/package_role_mappings/:id', async (request, reply) => {
-    return await reply.send(controller.updatePackageRoleMapping(app, request.body as any, request))
+    const result = await controller.updatePackageRoleMapping(app, request.body as any, request)
+    return reply.send(result)
   })
   app.delete('/package_role_mappings/:id', async (request, reply) => {
-
-    return await reply.send(controller.deletePackageRoleMapping(app, request))
+    const result = await controller.deletePackageRoleMapping(app, request)
+    return reply.send(result)
   })
 }
 

@@ -5,22 +5,24 @@ const MigrationDetailsRoutes: FastifyPluginAsync = async (app) => {
   const controller = new MigrationDetailsService()
 
   app.get('/migration_details', async (request, reply) => {
-
-    return await reply.send(controller.listMigrationDetails(app, request))
+    const result = await controller.listMigrationDetails(app, request)
+    return reply.send(result)
   })
   app.post('/migration_details', async (request, reply) => {
-    return await reply.send(controller.createMigrationDetail(app, request.body as any, request))
+    const result = await controller.createMigrationDetail(app, request.body as any, request)
+    return reply.send(result)
   })
   app.get('/migration_details/:id', async (request, reply) => {
-
-    return await reply.send(controller.getMigrationDetailsById(app, request))
+    const result = await controller.getMigrationDetailsById(app, request)
+    return reply.send(result)
   })
   app.put('/migration_details/:id', async (request, reply) => {
-    return await reply.send(controller.updateMigrationDetail(app, request.body as any, request))
+    const result = await controller.updateMigrationDetail(app, request.body as any, request)
+    return reply.send(result)
   })
   app.delete('/migration_details/:id', async (request, reply) => {
-
-    return await reply.send(controller.deleteMigrationDetail(app, request))
+    const result = await controller.deleteMigrationDetail(app, request)
+    return reply.send(result)
   })
 }
 

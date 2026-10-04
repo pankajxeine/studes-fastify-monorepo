@@ -1,24 +1,42 @@
 import type { CustomersRequest } from './types/CustomersRequest'
 import type { CustomersResponse } from './types/CustomersResponse'
 import { FastifyInstance, FastifyRequest } from 'fastify'
-import type { CustomersController } from './CustomersController'
+import type { CustomersController, ListItem, PaginatedResponse } from './CustomersController'
 
 export class CustomersService implements CustomersController {
-  public async listCustomers(app: FastifyInstance, request?: FastifyRequest): Promise<CustomersResponse[]> {
+      public async listCustomers(app: FastifyInstance, request?: FastifyRequest): Promise<PaginatedResponse<ListItem<CustomersResponse[]>>> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.customers.schema(schema!)
-      const rows = await model.findAll()
-      return rows.map((row) => row.get({ plain: true })) as CustomersResponse[]
+      const query = (request?.query ?? {}) as { page?: string | number; limit?: string | number }
+      const parsePositiveInteger = (value: string | number | undefined, fallback: number) => {
+        const parsed = Number(value)
+        return Number.isInteger(parsed) && parsed > 0 ? parsed : fallback
+      }
+      const page = parsePositiveInteger(query.page, 1)
+      const limit = Math.min(parsePositiveInteger(query.limit, 20), 100)
+      const { count, rows } = await model.findAndCountAll({
+        limit,
+        offset: (page - 1) * limit,
+      })
+      return {
+        data: rows.map((row) => row.get({ plain: true })) as ListItem<CustomersResponse[]>[],
+        pagination: {
+          page,
+          limit,
+          total: count,
+          totalPages: Math.ceil(count / limit),
+        },
+      }
     } catch (err) {
       app.log.error(err);
       throw err;
     }
   }
 
-  public async createCustomer(app: FastifyInstance, input: CustomersRequest, request?: FastifyRequest): Promise<CustomersResponse> {
+      public async createCustomer(app: FastifyInstance, input: CustomersRequest, request?: FastifyRequest): Promise<CustomersResponse> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
@@ -32,7 +50,7 @@ export class CustomersService implements CustomersController {
     }
   }
 
-  public async getCustomersById(app: FastifyInstance, request?: FastifyRequest): Promise<CustomersResponse> {
+      public async getCustomersById(app: FastifyInstance, request?: FastifyRequest): Promise<CustomersResponse> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
@@ -50,7 +68,7 @@ export class CustomersService implements CustomersController {
     }
   }
 
-  public async updateCustomer(app: FastifyInstance, input: CustomersRequest, request?: FastifyRequest): Promise<CustomersResponse> {
+      public async updateCustomer(app: FastifyInstance, input: CustomersRequest, request?: FastifyRequest): Promise<CustomersResponse> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
@@ -69,7 +87,7 @@ export class CustomersService implements CustomersController {
     }
   }
 
-  public async deleteCustomer(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
+      public async deleteCustomer(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;

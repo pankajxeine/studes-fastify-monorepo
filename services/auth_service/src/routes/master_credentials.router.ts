@@ -5,22 +5,24 @@ const MasterCredentialsRoutes: FastifyPluginAsync = async (app) => {
   const controller = new MasterCredentialsService()
 
   app.get('/master_credentials', async (request, reply) => {
-
-    return await reply.send(controller.listMasterCredentials(app, request))
+    const result = await controller.listMasterCredentials(app, request)
+    return reply.send(result)
   })
   app.post('/master_credentials', async (request, reply) => {
-    return await reply.send(controller.createMasterCredential(app, request.body as any, request))
+    const result = await controller.createMasterCredential(app, request.body as any, request)
+    return reply.send(result)
   })
   app.get('/master_credentials/:id', async (request, reply) => {
-
-    return await reply.send(controller.getMasterCredentialsById(app, request))
+    const result = await controller.getMasterCredentialsById(app, request)
+    return reply.send(result)
   })
   app.put('/master_credentials/:id', async (request, reply) => {
-    return await reply.send(controller.updateMasterCredential(app, request.body as any, request))
+    const result = await controller.updateMasterCredential(app, request.body as any, request)
+    return reply.send(result)
   })
   app.delete('/master_credentials/:id', async (request, reply) => {
-
-    return await reply.send(controller.deleteMasterCredential(app, request))
+    const result = await controller.deleteMasterCredential(app, request)
+    return reply.send(result)
   })
 }
 

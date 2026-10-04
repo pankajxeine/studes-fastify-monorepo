@@ -1,18 +1,20 @@
 import fp from 'fastify-plugin';
 import { z } from 'zod';
 import { BadRequestError } from '../core';
+import { jwtAuthGuard } from '../middleware/jwtAuth';
 import { sequelize } from './db';
 import { DataTypes, Op } from 'sequelize';
 import { registerGeneratedEntityDecorators } from '../entities';
 
 const tenantConfigSchema = z.object({
+  isPublic: z.boolean().optional().default(false),
   requireTenant: z.boolean().optional().default(true),
 });
 
 export default fp(async (app) => {
   app.decorateRequest('tenant', null);
   app.decorateRequest('tenantModels', null);
-  app.decorateRequest('cpanelDbSchema', 'default_cpanel');
+  app.decorateRequest('cpanelDbSchema', 'demo_cpanel');
   app.decorateRequest('dbSchema', null);
   app.decorateRequest('routerDbSchema', 'default_cpanel_route');
   app.decorate('db', null);
@@ -25,10 +27,21 @@ export default fp(async (app) => {
 
   app.addHook('onRequest', async (request, reply) => {
     const config = tenantConfigSchema.parse(request.routeOptions.config ?? {});
+
     request.cpanelDbSchema = app.env.DEFAULT_CPANEL_SCHEMA;
     request.routerDbSchema = app.env.DEFAULT_CPANEL_ROUTE_SCHEMA;
-    // Public login resolves the tenant from credentials, not a spoofable header.
-    if (!config.requireTenant) {
+    let tokenClaims: { tenantId?: string; tenantSlug?: string; audience?: string } | undefined;
+    if (config.isPublic !== true) {
+      await jwtAuthGuard(request, reply);
+      tokenClaims = request.user as typeof tokenClaims;
+      const userTypeHeader = request.headers['x-user-type'];
+      const headerUserType = Array.isArray(userTypeHeader) ? userTypeHeader[0] : userTypeHeader;
+      request.userType = tokenClaims?.audience ?? headerUserType ?? null;
+    } else {
+      return
+    }
+
+    if (!config.requireTenant || tokenClaims?.audience === 'admin') {
       return;
     }
 
@@ -44,13 +57,17 @@ export default fp(async (app) => {
     const baseDomain = (app.env?.TENANT_BASE_DOMAIN ?? process.env.TENANT_BASE_DOMAIN ?? 'localtest.me').toLowerCase();
 
     let tenantIdOrSlug: string | undefined;
-    let from: 'header' | 'subdomain' | undefined;
+    let from: 'token' | 'header' | 'subdomain' | undefined;
 
     const subdomain = hostname.endsWith(`.${baseDomain}`)
       ? hostname.slice(0, -1 * (baseDomain.length + 1))
       : undefined;
 
-    if (precedence === 'header_then_subdomain') {
+    const tokenTenant = tokenClaims?.tenantId || tokenClaims?.tenantSlug;
+    if (tokenTenant) {
+      tenantIdOrSlug = tokenTenant;
+      from = 'token';
+    } else if (precedence === 'header_then_subdomain') {
       tenantIdOrSlug = headerTenantId || headerTenantSlug || subdomain;
       from = headerTenantId || headerTenantSlug ? 'header' : subdomain ? 'subdomain' : undefined;
     } else {
@@ -117,11 +134,13 @@ declare module 'fastify' {
     tenant: null | {
       id: string;
       slug: string;
-      resolvedBy: 'header' | 'subdomain';
+      resolvedBy: 'token' | 'header' | 'subdomain';
     };
+    userType: string | null;
   }
 
   interface FastifyRouteConfig {
+    isPublic?: boolean;
     requireTenant?: boolean;
   }
 }

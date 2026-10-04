@@ -2,8 +2,20 @@ import type { CustomerDiscountsRequest } from './types/CustomerDiscountsRequest'
 import type { CustomerDiscountsResponse } from './types/CustomerDiscountsResponse'
 import { FastifyInstance, FastifyRequest } from 'fastify'
 
+export type ListItem<T> = T extends (infer Item)[] ? Item : T
+
+export interface PaginatedResponse<T> {
+  data: T[]
+  pagination: {
+    page: number
+    limit: number
+    total: number
+    totalPages: number
+  }
+}
+
 export interface CustomerDiscountsController {
-  listCustomerDiscounts(app: FastifyInstance, request?: FastifyRequest): Promise<CustomerDiscountsResponse[]>
+  listCustomerDiscounts(app: FastifyInstance, request?: FastifyRequest): Promise<PaginatedResponse<ListItem<CustomerDiscountsResponse[]>>>
   createCustomerDiscount(app: FastifyInstance, input: CustomerDiscountsRequest, request?: FastifyRequest): Promise<CustomerDiscountsResponse>
   getCustomerDiscountsById(app: FastifyInstance, request?: FastifyRequest): Promise<CustomerDiscountsResponse>
   updateCustomerDiscount(app: FastifyInstance, input: CustomerDiscountsRequest, request?: FastifyRequest): Promise<CustomerDiscountsResponse>

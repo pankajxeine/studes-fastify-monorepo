@@ -1,0 +1,241 @@
+openapi: 3.0.0
+info:
+  title: UsersResponse API
+  version: 1.0.0
+paths:
+  /users:
+    get:
+      operationId: listUsers
+      summary: Get all users
+      responses:
+        '200':
+          description: List of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UsersResponse'
+    post:
+      operationId: createUser
+      summary: Create a new users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UsersRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsersResponse'
+
+  /users/{id}:
+    get:
+      operationId: getUsersById
+      summary: Get users by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: users object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsersResponse'
+    put:
+      operationId: updateUser
+      summary: Update users by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UsersRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsersResponse'
+    delete:
+      operationId: deleteUser
+      summary: Delete users by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Deleted
+components:
+  schemas:
+
+    UsersRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        role_id:
+          type: integer
+        username:
+          type: string
+          maxLength: 50
+        password:
+          type: string
+          maxLength: 250
+        firstname:
+          type: string
+          maxLength: 20
+        lastname:
+          type: string
+          maxLength: 20
+        image:
+          type: string
+          maxLength: 100
+        email:
+          type: string
+          maxLength: 100
+        phone:
+          type: string
+          maxLength: 20
+        mobile:
+          type: string
+          maxLength: 20
+        status:
+          type: string
+        password_token:
+          type: string
+          maxLength: 50
+        password_expire_at:
+          type: string
+          format: date-time
+        access:
+          type: string
+        alert_priority:
+          type: string
+        is_admin:
+          type: string
+        user_type:
+          type: string
+        receive_alert:
+          type: string
+        is_default_user:
+          type: string
+        is_omnna_user:
+          type: string
+        university_access_role:
+          type: string
+        university_token:
+          type: string
+        university_industry_id:
+          type: integer
+        university_username:
+          type: string
+          maxLength: 200
+        university_password:
+          type: string
+          maxLength: 200
+        created_by:
+          type: integer
+        updated_by:
+          type: integer
+        deleted_at:
+          type: string
+          format: date-time
+
+    UsersResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        role_id:
+          type: integer
+        username:
+          type: string
+          maxLength: 50
+        password:
+          type: string
+          maxLength: 250
+        firstname:
+          type: string
+          maxLength: 20
+        lastname:
+          type: string
+          maxLength: 20
+        image:
+          type: string
+          maxLength: 100
+        email:
+          type: string
+          maxLength: 100
+        phone:
+          type: string
+          maxLength: 20
+        mobile:
+          type: string
+          maxLength: 20
+        status:
+          type: string
+        password_token:
+          type: string
+          maxLength: 50
+        password_expire_at:
+          type: string
+          format: date-time
+        access:
+          type: string
+        alert_priority:
+          type: string
+        is_admin:
+          type: string
+        user_type:
+          type: string
+        receive_alert:
+          type: string
+        is_default_user:
+          type: string
+        is_omnna_user:
+          type: string
+        university_access_role:
+          type: string
+        university_token:
+          type: string
+        university_industry_id:
+          type: integer
+        university_username:
+          type: string
+          maxLength: 200
+        university_password:
+          type: string
+          maxLength: 200
+        created_by:
+          type: integer
+        updated_by:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        deleted_at:
+          type: string
+          format: date-time
+  

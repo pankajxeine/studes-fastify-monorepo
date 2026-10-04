@@ -1,0 +1,127 @@
+openapi: 3.0.0
+info:
+  title: CrmPagesResponse API
+  version: 1.0.0
+paths:
+  /crm_pages:
+    get:
+      operationId: listCrmPages
+      summary: Get all crm_pages
+      responses:
+        '200':
+          description: List of crm_pages
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CrmPagesResponse'
+    post:
+      operationId: createCrmPage
+      summary: Create a new crm_pages
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CrmPagesRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CrmPagesResponse'
+
+  /crm_pages/{id}:
+    get:
+      operationId: getCrmPagesById
+      summary: Get crm_pages by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: crm_pages object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CrmPagesResponse'
+    put:
+      operationId: updateCrmPage
+      summary: Update crm_pages by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CrmPagesRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CrmPagesResponse'
+    delete:
+      operationId: deleteCrmPage
+      summary: Delete crm_pages by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Deleted
+components:
+  schemas:
+
+    CrmPagesRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+          maxLength: 200
+        module_key:
+          type: string
+          maxLength: 200
+        relevant_modules:
+          type: object
+        allow_crm_lms_content:
+          type: string
+
+    CrmPagesResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+          maxLength: 200
+        module_key:
+          type: string
+          maxLength: 200
+        relevant_modules:
+          type: object
+        allow_crm_lms_content:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+  

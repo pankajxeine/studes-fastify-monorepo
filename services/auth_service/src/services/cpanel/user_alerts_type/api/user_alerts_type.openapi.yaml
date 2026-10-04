@@ -1,0 +1,115 @@
+openapi: 3.0.0
+info:
+  title: UserAlertsTypeResponse API
+  version: 1.0.0
+paths:
+  /user_alerts_type:
+    get:
+      operationId: listUserAlertsType
+      summary: Get all user_alerts_type
+      responses:
+        '200':
+          description: List of user_alerts_type
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserAlertsTypeResponse'
+    post:
+      operationId: createUserAlertsType
+      summary: Create a new user_alerts_type
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserAlertsTypeRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserAlertsTypeResponse'
+
+  /user_alerts_type/{id}:
+    get:
+      operationId: getUserAlertsTypeById
+      summary: Get user_alerts_type by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: user_alerts_type object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserAlertsTypeResponse'
+    put:
+      operationId: updateUserAlertsType
+      summary: Update user_alerts_type by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserAlertsTypeRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserAlertsTypeResponse'
+    delete:
+      operationId: deleteUserAlertsType
+      summary: Delete user_alerts_type by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Deleted
+components:
+  schemas:
+
+    UserAlertsTypeRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: integer
+        alert_type_id:
+          type: integer
+
+    UserAlertsTypeResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: integer
+        alert_type_id:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+  

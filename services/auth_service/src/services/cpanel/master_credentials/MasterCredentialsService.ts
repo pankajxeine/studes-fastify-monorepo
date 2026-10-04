@@ -1,24 +1,42 @@
 import type { MasterCredentialsRequest } from './types/MasterCredentialsRequest'
 import type { MasterCredentialsResponse } from './types/MasterCredentialsResponse'
 import { FastifyInstance, FastifyRequest } from 'fastify'
-import type { MasterCredentialsController } from './MasterCredentialsController'
+import type { MasterCredentialsController, ListItem, PaginatedResponse } from './MasterCredentialsController'
 
 export class MasterCredentialsService implements MasterCredentialsController {
-  public async listMasterCredentials(app: FastifyInstance, request?: FastifyRequest): Promise<MasterCredentialsResponse[]> {
+      public async listMasterCredentials(app: FastifyInstance, request?: FastifyRequest): Promise<PaginatedResponse<ListItem<MasterCredentialsResponse[]>>> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.master_credentials.schema(schema!)
-      const rows = await model.findAll()
-      return rows.map((row) => row.get({ plain: true })) as MasterCredentialsResponse[]
+      const query = (request?.query ?? {}) as { page?: string | number; limit?: string | number }
+      const parsePositiveInteger = (value: string | number | undefined, fallback: number) => {
+        const parsed = Number(value)
+        return Number.isInteger(parsed) && parsed > 0 ? parsed : fallback
+      }
+      const page = parsePositiveInteger(query.page, 1)
+      const limit = Math.min(parsePositiveInteger(query.limit, 20), 100)
+      const { count, rows } = await model.findAndCountAll({
+        limit,
+        offset: (page - 1) * limit,
+      })
+      return {
+        data: rows.map((row) => row.get({ plain: true })) as ListItem<MasterCredentialsResponse[]>[],
+        pagination: {
+          page,
+          limit,
+          total: count,
+          totalPages: Math.ceil(count / limit),
+        },
+      }
     } catch (err) {
       app.log.error(err);
       throw err;
     }
   }
 
-  public async createMasterCredential(app: FastifyInstance, input: MasterCredentialsRequest, request?: FastifyRequest): Promise<MasterCredentialsResponse> {
+      public async createMasterCredential(app: FastifyInstance, input: MasterCredentialsRequest, request?: FastifyRequest): Promise<MasterCredentialsResponse> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
@@ -32,7 +50,7 @@ export class MasterCredentialsService implements MasterCredentialsController {
     }
   }
 
-  public async getMasterCredentialsById(app: FastifyInstance, request?: FastifyRequest): Promise<MasterCredentialsResponse> {
+      public async getMasterCredentialsById(app: FastifyInstance, request?: FastifyRequest): Promise<MasterCredentialsResponse> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
@@ -50,7 +68,7 @@ export class MasterCredentialsService implements MasterCredentialsController {
     }
   }
 
-  public async updateMasterCredential(app: FastifyInstance, input: MasterCredentialsRequest, request?: FastifyRequest): Promise<MasterCredentialsResponse> {
+      public async updateMasterCredential(app: FastifyInstance, input: MasterCredentialsRequest, request?: FastifyRequest): Promise<MasterCredentialsResponse> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
@@ -69,7 +87,7 @@ export class MasterCredentialsService implements MasterCredentialsController {
     }
   }
 
-  public async deleteMasterCredential(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
+      public async deleteMasterCredential(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;

@@ -5,22 +5,24 @@ const EmailTemplateModulesRoutes: FastifyPluginAsync = async (app) => {
   const controller = new EmailTemplateModulesService()
 
   app.get('/email_template_modules', async (request, reply) => {
-
-    return await reply.send(controller.listEmailTemplateModules(app, request))
+    const result = await controller.listEmailTemplateModules(app, request)
+    return reply.send(result)
   })
   app.post('/email_template_modules', async (request, reply) => {
-    return await reply.send(controller.createEmailTemplateModule(app, request.body as any, request))
+    const result = await controller.createEmailTemplateModule(app, request.body as any, request)
+    return reply.send(result)
   })
   app.get('/email_template_modules/:id', async (request, reply) => {
-
-    return await reply.send(controller.getEmailTemplateModulesById(app, request))
+    const result = await controller.getEmailTemplateModulesById(app, request)
+    return reply.send(result)
   })
   app.put('/email_template_modules/:id', async (request, reply) => {
-    return await reply.send(controller.updateEmailTemplateModule(app, request.body as any, request))
+    const result = await controller.updateEmailTemplateModule(app, request.body as any, request)
+    return reply.send(result)
   })
   app.delete('/email_template_modules/:id', async (request, reply) => {
-
-    return await reply.send(controller.deleteEmailTemplateModule(app, request))
+    const result = await controller.deleteEmailTemplateModule(app, request)
+    return reply.send(result)
   })
 }
 

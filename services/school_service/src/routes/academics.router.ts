@@ -1,22 +1,28 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { AcademicsService } from '../services/AcademicsService'
+import { AcademicsService } from '../services/academics/AcademicsService'
 
 const AcademicsRoutes: FastifyPluginAsync = async (app) => {
   const controller = new AcademicsService()
+
   app.get('/courses', async (request, reply) => {
-    return await controller.listCourses(app, request)
+    const result = await controller.listCourses(app, request)
+    return reply.send(result)
   })
   app.post('/courses', async (request, reply) => {
-    return await controller.createCourse(app, request.body as any, request)
+    const result = await controller.createCourse(app, request.body as any, request)
+    return reply.send(result)
   })
   app.get('/offerings', async (request, reply) => {
-    return await controller.listOfferings(app, request)
+    const result = await controller.listOfferings(app, request)
+    return reply.send(result)
   })
   app.post('/offerings', async (request, reply) => {
-    return await controller.createOffering(app, request.body as any, request)
+    const result = await controller.createOffering(app, request.body as any, request)
+    return reply.send(result)
   })
   app.post('/enrollments', async (request, reply) => {
-    return await controller.createEnrollment(app, request.body as any, request)
+    const result = await controller.createEnrollment(app, request.body as any, request)
+    return reply.send(result)
   })
 }
 

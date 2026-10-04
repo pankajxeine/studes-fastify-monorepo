@@ -1,0 +1,115 @@
+openapi: 3.0.0
+info:
+  title: UserCustomerStatusResponse API
+  version: 1.0.0
+paths:
+  /user_customer_status:
+    get:
+      operationId: listUserCustomerStatus
+      summary: Get all user_customer_status
+      responses:
+        '200':
+          description: List of user_customer_status
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserCustomerStatusResponse'
+    post:
+      operationId: createUserCustomerStatu
+      summary: Create a new user_customer_status
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCustomerStatusRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserCustomerStatusResponse'
+
+  /user_customer_status/{id}:
+    get:
+      operationId: getUserCustomerStatusById
+      summary: Get user_customer_status by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: user_customer_status object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserCustomerStatusResponse'
+    put:
+      operationId: updateUserCustomerStatu
+      summary: Update user_customer_status by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCustomerStatusRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserCustomerStatusResponse'
+    delete:
+      operationId: deleteUserCustomerStatu
+      summary: Delete user_customer_status by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Deleted
+components:
+  schemas:
+
+    UserCustomerStatusRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: integer
+        customer_status_id:
+          type: integer
+
+    UserCustomerStatusResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: integer
+        customer_status_id:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+  

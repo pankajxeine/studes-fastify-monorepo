@@ -1,0 +1,173 @@
+openapi: 3.0.0
+info:
+  title: BillingCancelPackageResponse API
+  version: 1.0.0
+paths:
+  /billing_cancel_package:
+    get:
+      operationId: listBillingCancelPackage
+      summary: Get all billing_cancel_package
+      responses:
+        '200':
+          description: List of billing_cancel_package
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BillingCancelPackageResponse'
+    post:
+      operationId: createBillingCancelPackage
+      summary: Create a new billing_cancel_package
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BillingCancelPackageRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillingCancelPackageResponse'
+
+  /billing_cancel_package/{id}:
+    get:
+      operationId: getBillingCancelPackageById
+      summary: Get billing_cancel_package by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: billing_cancel_package object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillingCancelPackageResponse'
+    put:
+      operationId: updateBillingCancelPackage
+      summary: Update billing_cancel_package by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BillingCancelPackageRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillingCancelPackageResponse'
+    delete:
+      operationId: deleteBillingCancelPackage
+      summary: Delete billing_cancel_package by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Deleted
+components:
+  schemas:
+
+    BillingCancelPackageRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        sub_id:
+          type: integer
+        sub_store_id:
+          type: integer
+        customer_id:
+          type: integer
+        feature_id:
+          type: integer
+        item:
+          type: string
+          maxLength: 100
+        price:
+          type: number
+        price_per_month:
+          type: number
+        cost_price:
+          type: number
+        type:
+          type: string
+        cancel_date:
+          type: string
+          format: date-time
+        billing_date:
+          type: string
+          format: date-time
+        expiry_date:
+          type: string
+          format: date-time
+        trial_period_days:
+          type: integer
+        description:
+          type: string
+          maxLength: 256
+
+    BillingCancelPackageResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        sub_id:
+          type: integer
+        sub_store_id:
+          type: integer
+        customer_id:
+          type: integer
+        feature_id:
+          type: integer
+        item:
+          type: string
+          maxLength: 100
+        price:
+          type: number
+        price_per_month:
+          type: number
+        cost_price:
+          type: number
+        type:
+          type: string
+        cancel_date:
+          type: string
+          format: date-time
+        billing_date:
+          type: string
+          format: date-time
+        expiry_date:
+          type: string
+          format: date-time
+        trial_period_days:
+          type: integer
+        description:
+          type: string
+          maxLength: 256
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+  

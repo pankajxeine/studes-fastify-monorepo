@@ -1,24 +1,42 @@
 import type { SubPackagesRequest } from './types/SubPackagesRequest'
 import type { SubPackagesResponse } from './types/SubPackagesResponse'
 import { FastifyInstance, FastifyRequest } from 'fastify'
-import type { SubPackagesController } from './SubPackagesController'
+import type { SubPackagesController, ListItem, PaginatedResponse } from './SubPackagesController'
 
 export class SubPackagesService implements SubPackagesController {
-  public async listSubPackages(app: FastifyInstance, request?: FastifyRequest): Promise<SubPackagesResponse[]> {
+      public async listSubPackages(app: FastifyInstance, request?: FastifyRequest): Promise<PaginatedResponse<ListItem<SubPackagesResponse[]>>> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.sub_packages.schema(schema!)
-      const rows = await model.findAll()
-      return rows.map((row) => row.get({ plain: true })) as SubPackagesResponse[]
+      const query = (request?.query ?? {}) as { page?: string | number; limit?: string | number }
+      const parsePositiveInteger = (value: string | number | undefined, fallback: number) => {
+        const parsed = Number(value)
+        return Number.isInteger(parsed) && parsed > 0 ? parsed : fallback
+      }
+      const page = parsePositiveInteger(query.page, 1)
+      const limit = Math.min(parsePositiveInteger(query.limit, 20), 100)
+      const { count, rows } = await model.findAndCountAll({
+        limit,
+        offset: (page - 1) * limit,
+      })
+      return {
+        data: rows.map((row) => row.get({ plain: true })) as ListItem<SubPackagesResponse[]>[],
+        pagination: {
+          page,
+          limit,
+          total: count,
+          totalPages: Math.ceil(count / limit),
+        },
+      }
     } catch (err) {
       app.log.error(err);
       throw err;
     }
   }
 
-  public async createSubPackage(app: FastifyInstance, input: SubPackagesRequest, request?: FastifyRequest): Promise<SubPackagesResponse> {
+      public async createSubPackage(app: FastifyInstance, input: SubPackagesRequest, request?: FastifyRequest): Promise<SubPackagesResponse> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
@@ -32,7 +50,7 @@ export class SubPackagesService implements SubPackagesController {
     }
   }
 
-  public async getSubPackagesById(app: FastifyInstance, request?: FastifyRequest): Promise<SubPackagesResponse> {
+      public async getSubPackagesById(app: FastifyInstance, request?: FastifyRequest): Promise<SubPackagesResponse> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
@@ -50,7 +68,7 @@ export class SubPackagesService implements SubPackagesController {
     }
   }
 
-  public async updateSubPackage(app: FastifyInstance, input: SubPackagesRequest, request?: FastifyRequest): Promise<SubPackagesResponse> {
+      public async updateSubPackage(app: FastifyInstance, input: SubPackagesRequest, request?: FastifyRequest): Promise<SubPackagesResponse> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
@@ -69,7 +87,7 @@ export class SubPackagesService implements SubPackagesController {
     }
   }
 
-  public async deleteSubPackage(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
+      public async deleteSubPackage(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;

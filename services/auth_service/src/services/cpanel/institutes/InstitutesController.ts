@@ -2,8 +2,20 @@ import type { InstitutesRequest } from './types/InstitutesRequest'
 import type { InstitutesResponse } from './types/InstitutesResponse'
 import { FastifyInstance, FastifyRequest } from 'fastify'
 
+export type ListItem<T> = T extends (infer Item)[] ? Item : T
+
+export interface PaginatedResponse<T> {
+  data: T[]
+  pagination: {
+    page: number
+    limit: number
+    total: number
+    totalPages: number
+  }
+}
+
 export interface InstitutesController {
-  listInstitutes(app: FastifyInstance, request?: FastifyRequest): Promise<InstitutesResponse[]>
+  listInstitutes(app: FastifyInstance, request?: FastifyRequest): Promise<PaginatedResponse<ListItem<InstitutesResponse[]>>>
   createInstitute(app: FastifyInstance, input: InstitutesRequest, request?: FastifyRequest): Promise<InstitutesResponse>
   getInstitutesById(app: FastifyInstance, request?: FastifyRequest): Promise<InstitutesResponse>
   updateInstitute(app: FastifyInstance, input: InstitutesRequest, request?: FastifyRequest): Promise<InstitutesResponse>

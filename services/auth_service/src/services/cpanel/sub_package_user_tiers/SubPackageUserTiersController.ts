@@ -2,8 +2,20 @@ import type { SubPackageUserTiersRequest } from './types/SubPackageUserTiersRequ
 import type { SubPackageUserTiersResponse } from './types/SubPackageUserTiersResponse'
 import { FastifyInstance, FastifyRequest } from 'fastify'
 
+export type ListItem<T> = T extends (infer Item)[] ? Item : T
+
+export interface PaginatedResponse<T> {
+  data: T[]
+  pagination: {
+    page: number
+    limit: number
+    total: number
+    totalPages: number
+  }
+}
+
 export interface SubPackageUserTiersController {
-  listSubPackageUserTiers(app: FastifyInstance, request?: FastifyRequest): Promise<SubPackageUserTiersResponse[]>
+  listSubPackageUserTiers(app: FastifyInstance, request?: FastifyRequest): Promise<PaginatedResponse<ListItem<SubPackageUserTiersResponse[]>>>
   createSubPackageUserTier(app: FastifyInstance, input: SubPackageUserTiersRequest, request?: FastifyRequest): Promise<SubPackageUserTiersResponse>
   getSubPackageUserTiersById(app: FastifyInstance, request?: FastifyRequest): Promise<SubPackageUserTiersResponse>
   updateSubPackageUserTier(app: FastifyInstance, input: SubPackageUserTiersRequest, request?: FastifyRequest): Promise<SubPackageUserTiersResponse>

@@ -1,24 +1,42 @@
 import type { CustomerExportTemplatesRequest } from './types/CustomerExportTemplatesRequest'
 import type { CustomerExportTemplatesResponse } from './types/CustomerExportTemplatesResponse'
 import { FastifyInstance, FastifyRequest } from 'fastify'
-import type { CustomerExportTemplatesController } from './CustomerExportTemplatesController'
+import type { CustomerExportTemplatesController, ListItem, PaginatedResponse } from './CustomerExportTemplatesController'
 
 export class CustomerExportTemplatesService implements CustomerExportTemplatesController {
-  public async listCustomerExportTemplates(app: FastifyInstance, request?: FastifyRequest): Promise<CustomerExportTemplatesResponse[]> {
+      public async listCustomerExportTemplates(app: FastifyInstance, request?: FastifyRequest): Promise<PaginatedResponse<ListItem<CustomerExportTemplatesResponse[]>>> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.customer_export_templates.schema(schema!)
-      const rows = await model.findAll()
-      return rows.map((row) => row.get({ plain: true })) as CustomerExportTemplatesResponse[]
+      const query = (request?.query ?? {}) as { page?: string | number; limit?: string | number }
+      const parsePositiveInteger = (value: string | number | undefined, fallback: number) => {
+        const parsed = Number(value)
+        return Number.isInteger(parsed) && parsed > 0 ? parsed : fallback
+      }
+      const page = parsePositiveInteger(query.page, 1)
+      const limit = Math.min(parsePositiveInteger(query.limit, 20), 100)
+      const { count, rows } = await model.findAndCountAll({
+        limit,
+        offset: (page - 1) * limit,
+      })
+      return {
+        data: rows.map((row) => row.get({ plain: true })) as ListItem<CustomerExportTemplatesResponse[]>[],
+        pagination: {
+          page,
+          limit,
+          total: count,
+          totalPages: Math.ceil(count / limit),
+        },
+      }
     } catch (err) {
       app.log.error(err);
       throw err;
     }
   }
 
-  public async createCustomerExportTemplate(app: FastifyInstance, input: CustomerExportTemplatesRequest, request?: FastifyRequest): Promise<CustomerExportTemplatesResponse> {
+      public async createCustomerExportTemplate(app: FastifyInstance, input: CustomerExportTemplatesRequest, request?: FastifyRequest): Promise<CustomerExportTemplatesResponse> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
@@ -32,7 +50,7 @@ export class CustomerExportTemplatesService implements CustomerExportTemplatesCo
     }
   }
 
-  public async getCustomerExportTemplatesById(app: FastifyInstance, request?: FastifyRequest): Promise<CustomerExportTemplatesResponse> {
+      public async getCustomerExportTemplatesById(app: FastifyInstance, request?: FastifyRequest): Promise<CustomerExportTemplatesResponse> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
@@ -50,7 +68,7 @@ export class CustomerExportTemplatesService implements CustomerExportTemplatesCo
     }
   }
 
-  public async updateCustomerExportTemplate(app: FastifyInstance, input: CustomerExportTemplatesRequest, request?: FastifyRequest): Promise<CustomerExportTemplatesResponse> {
+      public async updateCustomerExportTemplate(app: FastifyInstance, input: CustomerExportTemplatesRequest, request?: FastifyRequest): Promise<CustomerExportTemplatesResponse> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
@@ -69,7 +87,7 @@ export class CustomerExportTemplatesService implements CustomerExportTemplatesCo
     }
   }
 
-  public async deleteCustomerExportTemplate(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
+      public async deleteCustomerExportTemplate(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;

@@ -5,22 +5,24 @@ const EmailTemplateFieldsRoutes: FastifyPluginAsync = async (app) => {
   const controller = new EmailTemplateFieldsService()
 
   app.get('/email_template_fields', async (request, reply) => {
-
-    return await reply.send(controller.listEmailTemplateFields(app, request))
+    const result = await controller.listEmailTemplateFields(app, request)
+    return reply.send(result)
   })
   app.post('/email_template_fields', async (request, reply) => {
-    return await reply.send(controller.createEmailTemplateField(app, request.body as any, request))
+    const result = await controller.createEmailTemplateField(app, request.body as any, request)
+    return reply.send(result)
   })
   app.get('/email_template_fields/:id', async (request, reply) => {
-
-    return await reply.send(controller.getEmailTemplateFieldsById(app, request))
+    const result = await controller.getEmailTemplateFieldsById(app, request)
+    return reply.send(result)
   })
   app.put('/email_template_fields/:id', async (request, reply) => {
-    return await reply.send(controller.updateEmailTemplateField(app, request.body as any, request))
+    const result = await controller.updateEmailTemplateField(app, request.body as any, request)
+    return reply.send(result)
   })
   app.delete('/email_template_fields/:id', async (request, reply) => {
-
-    return await reply.send(controller.deleteEmailTemplateField(app, request))
+    const result = await controller.deleteEmailTemplateField(app, request)
+    return reply.send(result)
   })
 }
 

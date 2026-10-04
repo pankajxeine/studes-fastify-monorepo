@@ -1,24 +1,42 @@
 import type { AdminUsersRequest } from './types/AdminUsersRequest'
 import type { AdminUsersResponse } from './types/AdminUsersResponse'
 import { FastifyInstance, FastifyRequest } from 'fastify'
-import type { AdminUsersController } from './AdminUsersController'
+import type { AdminUsersController, ListItem, PaginatedResponse } from './AdminUsersController'
 
 export class AdminUsersService implements AdminUsersController {
-  public async listAdminUsers(app: FastifyInstance, request?: FastifyRequest): Promise<AdminUsersResponse[]> {
+      public async listAdminUsers(app: FastifyInstance, request?: FastifyRequest): Promise<PaginatedResponse<ListItem<AdminUsersResponse[]>>> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
       // bind model to tenant schema
       const model = app.cpanelModels.admin_users.schema(schema!)
-      const rows = await model.findAll()
-      return rows.map((row) => row.get({ plain: true })) as AdminUsersResponse[]
+      const query = (request?.query ?? {}) as { page?: string | number; limit?: string | number }
+      const parsePositiveInteger = (value: string | number | undefined, fallback: number) => {
+        const parsed = Number(value)
+        return Number.isInteger(parsed) && parsed > 0 ? parsed : fallback
+      }
+      const page = parsePositiveInteger(query.page, 1)
+      const limit = Math.min(parsePositiveInteger(query.limit, 20), 100)
+      const { count, rows } = await model.findAndCountAll({
+        limit,
+        offset: (page - 1) * limit,
+      })
+      return {
+        data: rows.map((row) => row.get({ plain: true })) as ListItem<AdminUsersResponse[]>[],
+        pagination: {
+          page,
+          limit,
+          total: count,
+          totalPages: Math.ceil(count / limit),
+        },
+      }
     } catch (err) {
       app.log.error(err);
       throw err;
     }
   }
 
-  public async createAdminUser(app: FastifyInstance, input: AdminUsersRequest, request?: FastifyRequest): Promise<AdminUsersResponse> {
+      public async createAdminUser(app: FastifyInstance, input: AdminUsersRequest, request?: FastifyRequest): Promise<AdminUsersResponse> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
@@ -32,7 +50,7 @@ export class AdminUsersService implements AdminUsersController {
     }
   }
 
-  public async getAdminUsersById(app: FastifyInstance, request?: FastifyRequest): Promise<AdminUsersResponse> {
+      public async getAdminUsersById(app: FastifyInstance, request?: FastifyRequest): Promise<AdminUsersResponse> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
@@ -50,7 +68,7 @@ export class AdminUsersService implements AdminUsersController {
     }
   }
 
-  public async updateAdminUser(app: FastifyInstance, input: AdminUsersRequest, request?: FastifyRequest): Promise<AdminUsersResponse> {
+      public async updateAdminUser(app: FastifyInstance, input: AdminUsersRequest, request?: FastifyRequest): Promise<AdminUsersResponse> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
@@ -69,7 +87,7 @@ export class AdminUsersService implements AdminUsersController {
     }
   }
 
-  public async deleteAdminUser(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
+      public async deleteAdminUser(app: FastifyInstance, request?: FastifyRequest): Promise<void> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;

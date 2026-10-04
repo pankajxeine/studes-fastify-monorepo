@@ -1,0 +1,121 @@
+openapi: 3.0.0
+info:
+  title: UserIconSequencesResponse API
+  version: 1.0.0
+paths:
+  /user_icon_sequences:
+    get:
+      operationId: listUserIconSequences
+      summary: Get all user_icon_sequences
+      responses:
+        '200':
+          description: List of user_icon_sequences
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserIconSequencesResponse'
+    post:
+      operationId: createUserIconSequence
+      summary: Create a new user_icon_sequences
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserIconSequencesRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserIconSequencesResponse'
+
+  /user_icon_sequences/{id}:
+    get:
+      operationId: getUserIconSequencesById
+      summary: Get user_icon_sequences by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: user_icon_sequences object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserIconSequencesResponse'
+    put:
+      operationId: updateUserIconSequence
+      summary: Update user_icon_sequences by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserIconSequencesRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserIconSequencesResponse'
+    delete:
+      operationId: deleteUserIconSequence
+      summary: Delete user_icon_sequences by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Deleted
+components:
+  schemas:
+
+    UserIconSequencesRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: integer
+        icon_key:
+          type: string
+          maxLength: 255
+        sequence:
+          type: integer
+
+    UserIconSequencesResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: integer
+        icon_key:
+          type: string
+          maxLength: 255
+        sequence:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+  

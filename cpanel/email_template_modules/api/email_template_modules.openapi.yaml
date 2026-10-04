@@ -1,0 +1,107 @@
+openapi: 3.0.0
+info:
+  title: EmailTemplateModulesResponse API
+  version: 1.0.0
+paths:
+  /email_template_modules:
+    get:
+      operationId: listEmailTemplateModules
+      summary: Get all email_template_modules
+      responses:
+        '200':
+          description: List of email_template_modules
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EmailTemplateModulesResponse'
+    post:
+      operationId: createEmailTemplateModule
+      summary: Create a new email_template_modules
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailTemplateModulesRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailTemplateModulesResponse'
+
+  /email_template_modules/{id}:
+    get:
+      operationId: getEmailTemplateModulesById
+      summary: Get email_template_modules by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: email_template_modules object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailTemplateModulesResponse'
+    put:
+      operationId: updateEmailTemplateModule
+      summary: Update email_template_modules by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailTemplateModulesRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailTemplateModulesResponse'
+    delete:
+      operationId: deleteEmailTemplateModule
+      summary: Delete email_template_modules by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Deleted
+components:
+  schemas:
+
+    EmailTemplateModulesRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        module:
+          type: string
+          maxLength: 50
+
+    EmailTemplateModulesResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        module:
+          type: string
+          maxLength: 50
+  

@@ -5,22 +5,24 @@ const SkeletonDetailsRoutes: FastifyPluginAsync = async (app) => {
   const controller = new SkeletonDetailsService()
 
   app.get('/skeleton_details', async (request, reply) => {
-
-    return await reply.send(controller.listSkeletonDetails(app, request))
+    const result = await controller.listSkeletonDetails(app, request)
+    return reply.send(result)
   })
   app.post('/skeleton_details', async (request, reply) => {
-    return await reply.send(controller.createSkeletonDetail(app, request.body as any, request))
+    const result = await controller.createSkeletonDetail(app, request.body as any, request)
+    return reply.send(result)
   })
   app.get('/skeleton_details/:id', async (request, reply) => {
-
-    return await reply.send(controller.getSkeletonDetailsById(app, request))
+    const result = await controller.getSkeletonDetailsById(app, request)
+    return reply.send(result)
   })
   app.put('/skeleton_details/:id', async (request, reply) => {
-    return await reply.send(controller.updateSkeletonDetail(app, request.body as any, request))
+    const result = await controller.updateSkeletonDetail(app, request.body as any, request)
+    return reply.send(result)
   })
   app.delete('/skeleton_details/:id', async (request, reply) => {
-
-    return await reply.send(controller.deleteSkeletonDetail(app, request))
+    const result = await controller.deleteSkeletonDetail(app, request)
+    return reply.send(result)
   })
 }
 
