@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { VerifoneLogsService } from '../services/cpanel/verifone_logs/VerifoneLogsService'
+import { VerifoneLogsService } from '../services/cpanels/verifone_logs/VerifoneLogsService'
 
 const VerifoneLogsRoutes: FastifyPluginAsync = async (app) => {
   const controller = new VerifoneLogsService()

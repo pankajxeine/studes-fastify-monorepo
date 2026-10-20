@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { ShippingMethodsService } from '../services/cpanel/shipping_methods/ShippingMethodsService'
+import { ShippingMethodsService } from '../services/cpanels/shipping_methods/ShippingMethodsService'
 
 const ShippingMethodsRoutes: FastifyPluginAsync = async (app) => {
   const controller = new ShippingMethodsService()

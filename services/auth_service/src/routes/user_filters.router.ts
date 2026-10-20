@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { UserFiltersService } from '../services/cpanel/user_filters/UserFiltersService'
+import { UserFiltersService } from '../services/cpanels/user_filters/UserFiltersService'
 
 const UserFiltersRoutes: FastifyPluginAsync = async (app) => {
   const controller = new UserFiltersService()

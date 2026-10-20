@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { AdminUsersService } from '../services/cpanel/admin_users/AdminUsersService'
+import { AdminUsersService } from '../services/cpanels/admin_users/AdminUsersService'
 
 const AdminUsersRoutes: FastifyPluginAsync = async (app) => {
   const controller = new AdminUsersService()

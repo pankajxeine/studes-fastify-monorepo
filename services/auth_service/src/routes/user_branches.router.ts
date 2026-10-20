@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { UserBranchesService } from '../services/cpanel/user_branches/UserBranchesService'
+import { UserBranchesService } from '../services/cpanels/user_branches/UserBranchesService'
 
 const UserBranchesRoutes: FastifyPluginAsync = async (app) => {
   const controller = new UserBranchesService()

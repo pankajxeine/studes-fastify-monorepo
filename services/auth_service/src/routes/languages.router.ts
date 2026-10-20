@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { LanguagesService } from '../services/cpanel/languages/LanguagesService'
+import { LanguagesService } from '../services/cpanels/languages/LanguagesService'
 
 const LanguagesRoutes: FastifyPluginAsync = async (app) => {
   const controller = new LanguagesService()

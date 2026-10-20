@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { SubCronsService } from '../services/cpanel/sub_crons/SubCronsService'
+import { SubCronsService } from '../services/cpanels/sub_crons/SubCronsService'
 
 const SubCronsRoutes: FastifyPluginAsync = async (app) => {
   const controller = new SubCronsService()

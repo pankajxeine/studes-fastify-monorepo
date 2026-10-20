@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { BillingAddPackageService } from '../services/cpanel/billing_add_package/BillingAddPackageService'
+import { BillingAddPackageService } from '../services/cpanels/billing_add_package/BillingAddPackageService'
 
 const BillingAddPackageRoutes: FastifyPluginAsync = async (app) => {
   const controller = new BillingAddPackageService()

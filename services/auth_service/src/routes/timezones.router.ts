@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { TimezonesService } from '../services/cpanel/timezones/TimezonesService'
+import { TimezonesService } from '../services/cpanels/timezones/TimezonesService'
 
 const TimezonesRoutes: FastifyPluginAsync = async (app) => {
   const controller = new TimezonesService()

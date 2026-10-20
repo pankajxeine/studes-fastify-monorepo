@@ -4,6 +4,14 @@
 BEGIN;
 SET search_path TO demo_cpanel;
 
+-- subs.package_id stores the package catalog ID, not a sub_packages row ID.
+-- Repair databases created from older versions of skeleton_cpanel.sql before
+-- inserting the seed subscriptions.
+ALTER TABLE "subs" DROP CONSTRAINT IF EXISTS subs_package_id_foreign;
+ALTER TABLE "subs"
+    ADD CONSTRAINT subs_package_id_foreign
+    FOREIGN KEY (package_id) REFERENCES "packages" (id) ON DELETE CASCADE;
+
 INSERT INTO "admin_users" ("id", "username", "email", "password", "first_name", "last_name", "phone", "role", "profile_image", "is_verified", "last_login", "status", "password_reset_token", "password_reset_expires", "created_at", "updated_at")
     SELECT 1, 'demo_user', 'demo@example.test', 'DEMO_NOT_A_REAL_SECRET', 'Demo first name', 'Demo last name', '5550100', 'Demo role', 'Demo profile image', 1, TIMESTAMP '2026-10-02 12:00:00', 'Active', NULL, NULL, TIMESTAMP '2026-10-02 12:00:00', TIMESTAMP '2026-10-02 12:00:00'
     WHERE NOT EXISTS (SELECT 1 FROM "admin_users" WHERE "admin_users"."id" = 1)
@@ -14665,10 +14673,10 @@ INSERT INTO "institute_audit_logs" ("id", "institute_id", "admin_user_id", "acti
     WHERE NOT EXISTS (SELECT 1 FROM "institute_audit_logs" WHERE "institute_audit_logs"."id" = 1)
     ON CONFLICT DO NOTHING;
 
-INSERT INTO "institute_subscriptions" ("id", "institute_id", "subscription_plan_id", "subscription_start_date", "subscription_end_date", "billing_cycle", "amount_paid", "payment_status", "subscription_status", "created_at", "updated_at")
-    SELECT 1, 1, 1, TIMESTAMP '2026-10-02 12:00:00', TIMESTAMP '2026-10-02 12:00:00', 'Monthly', 1.00, 'Pending', 'Active', TIMESTAMP '2026-10-02 12:00:00', TIMESTAMP '2026-10-02 12:00:00'
-    WHERE NOT EXISTS (SELECT 1 FROM "institute_subscriptions" WHERE "institute_subscriptions"."id" = 1)
-    ON CONFLICT DO NOTHING;
+-- INSERT INTO "institute_subscriptions" ("id", "institute_id", "subscription_plan_id", "subscription_start_date", "subscription_end_date", "billing_cycle", "amount_paid", "payment_status", "subscription_status", "created_at", "updated_at")
+--     SELECT 1, 1, 1, TIMESTAMP '2026-10-02 12:00:00', TIMESTAMP '2026-10-02 12:00:00', 'Monthly', 1.00, 'Pending', 'Active', TIMESTAMP '2026-10-02 12:00:00', TIMESTAMP '2026-10-02 12:00:00'
+--     WHERE NOT EXISTS (SELECT 1 FROM "institute_subscriptions" WHERE "institute_subscriptions"."id" = 1)
+--     ON CONFLICT DO NOTHING;
 
 INSERT INTO "subs" ("id", "customer_id", "subdomain", "protocol", "shortname", "database_name", "name", "logo", "cloud_print_logo", "logo_zpl", "site_logo", "favicon_icon", "mobile_logo", "industry_id", "package_id", "environment_id", "industry_environment_id", "auth_key", "decimal_value", "s3_folder", "status", "site_created", "allow_package_upgrade", "permission_based_on", "source_of_creation", "default_role", "is_role_synced", "language_id", "currency_id", "bundle_retail_price", "billing_frequency", "signup_date", "last_access", "created_at", "updated_at") VALUES
 (9, 1, 'demo-subs-9.example.test', 'https', 'demo-subs-9.example.test', 'demo-subs-9.example.test', 'Demo name 9', 'demo-logo.png', 'demo-cloud_print_logo.png', 'demo-logo_zpl.png', 'demo-site_logo.png', 'demo-favicon_icon.png', 'demo-mobile_logo.png', 3, 22, 1, 6, 'DEMO_NOT_A_REAL_SECRET', 2, 'demo-subs-9.example.test', 'Active', 'Yes', 'Yes', 'Role', 'CRM', 1, 'Yes', 29, 1, 100.000, 'Monthly', TIMESTAMP '2021-12-30 08:42:18', TIMESTAMP '2022-06-30 09:54:49', TIMESTAMP '2021-12-30 08:42:18', TIMESTAMP '2022-06-30 09:54:49'),

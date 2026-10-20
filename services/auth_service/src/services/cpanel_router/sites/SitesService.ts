@@ -3,13 +3,17 @@ import type { SitesResponse } from './types/SitesResponse'
 import { FastifyInstance, FastifyRequest } from 'fastify'
 import type { SitesController, ListItem, PaginatedResponse } from './SitesController'
 
+import { verifyDbSchema, verifyDbModel } from '../../../core/helper/db_utils';
+
 export class SitesService implements SitesController {
       public async listSites(app: FastifyInstance, request?: FastifyRequest): Promise<PaginatedResponse<ListItem<SitesResponse[]>>> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
+      verifyDbSchema(schema)
       // bind model to tenant schema
-      const model = app.cpanelRouterModels.sites.schema(schema!)
+      const models = app.cpanelRouterModels;
+      verifyDbModel(models);
       const query = (request?.query ?? {}) as { page?: string | number; limit?: string | number }
       const parsePositiveInteger = (value: string | number | undefined, fallback: number) => {
         const parsed = Number(value)
@@ -17,7 +21,7 @@ export class SitesService implements SitesController {
       }
       const page = parsePositiveInteger(query.page, 1)
       const limit = Math.min(parsePositiveInteger(query.limit, 20), 100)
-      const { count, rows } = await model.findAndCountAll({
+      const { count, rows } = await models.sites.schema(schema!).findAndCountAll({
         limit,
         offset: (page - 1) * limit,
       })
@@ -40,9 +44,11 @@ export class SitesService implements SitesController {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
+      verifyDbSchema(schema)
       // bind model to tenant schema
-      const model = app.cpanelRouterModels.sites.schema(schema!)
-      const row = await model.create(input as any)
+      const models = app.cpanelRouterModels;
+      verifyDbModel(models);
+      const row = await models.sites.schema(schema!).create(input as any)
       return row.get({ plain: true }) as SitesResponse
     } catch (err) {
       app.log.error(err);
@@ -54,10 +60,12 @@ export class SitesService implements SitesController {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
+      verifyDbSchema(schema)
       // bind model to tenant schema
-      const model = app.cpanelRouterModels.sites.schema(schema!)
+      const models = app.cpanelRouterModels;
+      verifyDbModel(models);
       const { id } = (request?.params ?? {}) as { id?: string | number }
-      const row = await model.findByPk(id)
+      const row = await models.sites.schema(schema!).findByPk(id)
       if (!row) {
         throw new Error('sites not found')
       }
@@ -72,10 +80,12 @@ export class SitesService implements SitesController {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
+      verifyDbSchema(schema)
       // bind model to tenant schema
-      const model = app.cpanelRouterModels.sites.schema(schema!)
+      const models = app.cpanelRouterModels;
+      verifyDbModel(models);
       const { id } = (request?.params ?? {}) as { id?: string | number }
-      const row = await model.findByPk(id)
+      const row = await models.sites.schema(schema!).findByPk(id)
       if (!row) {
         throw new Error('sites not found')
       }
@@ -91,10 +101,12 @@ export class SitesService implements SitesController {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
+      verifyDbSchema(schema)
       // bind model to tenant schema
-      const model = app.cpanelRouterModels.sites.schema(schema!)
+      const models = app.cpanelRouterModels;
+      verifyDbModel(models);
       const { id } = (request?.params ?? {}) as { id?: string | number }
-      await model.destroy({ where: { id } })
+      await models.sites.schema(schema!).destroy({ where: { id } })
       return undefined as void
     } catch (err) {
       app.log.error(err);

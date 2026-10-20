@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { CurrenciesService } from '../services/cpanel/currencies/CurrenciesService'
+import { CurrenciesService } from '../services/cpanels/currencies/CurrenciesService'
 
 const CurrenciesRoutes: FastifyPluginAsync = async (app) => {
   const controller = new CurrenciesService()

@@ -3,13 +3,17 @@ import type { CrmsResponse } from './types/CrmsResponse'
 import { FastifyInstance, FastifyRequest } from 'fastify'
 import type { CrmsController, ListItem, PaginatedResponse } from './CrmsController'
 
+import { verifyDbSchema, verifyDbModel } from '../../../core/helper/db_utils';
+
 export class CrmsService implements CrmsController {
       public async listCrms(app: FastifyInstance, request?: FastifyRequest): Promise<PaginatedResponse<ListItem<CrmsResponse[]>>> {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
+      verifyDbSchema(schema)
       // bind model to tenant schema
-      const model = app.cpanelRouterModels.crms.schema(schema!)
+      const models = app.cpanelRouterModels;
+      verifyDbModel(models);
       const query = (request?.query ?? {}) as { page?: string | number; limit?: string | number }
       const parsePositiveInteger = (value: string | number | undefined, fallback: number) => {
         const parsed = Number(value)
@@ -17,7 +21,7 @@ export class CrmsService implements CrmsController {
       }
       const page = parsePositiveInteger(query.page, 1)
       const limit = Math.min(parsePositiveInteger(query.limit, 20), 100)
-      const { count, rows } = await model.findAndCountAll({
+      const { count, rows } = await models.crms.schema(schema!).findAndCountAll({
         limit,
         offset: (page - 1) * limit,
       })
@@ -40,9 +44,11 @@ export class CrmsService implements CrmsController {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
+      verifyDbSchema(schema)
       // bind model to tenant schema
-      const model = app.cpanelRouterModels.crms.schema(schema!)
-      const row = await model.create(input as any)
+      const models = app.cpanelRouterModels;
+      verifyDbModel(models);
+      const row = await models.crms.schema(schema!).create(input as any)
       return row.get({ plain: true }) as CrmsResponse
     } catch (err) {
       app.log.error(err);
@@ -54,10 +60,12 @@ export class CrmsService implements CrmsController {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
+      verifyDbSchema(schema)
       // bind model to tenant schema
-      const model = app.cpanelRouterModels.crms.schema(schema!)
+      const models = app.cpanelRouterModels;
+      verifyDbModel(models);
       const { id } = (request?.params ?? {}) as { id?: string | number }
-      const row = await model.findByPk(id)
+      const row = await models.crms.schema(schema!).findByPk(id)
       if (!row) {
         throw new Error('crms not found')
       }
@@ -72,10 +80,12 @@ export class CrmsService implements CrmsController {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
+      verifyDbSchema(schema)
       // bind model to tenant schema
-      const model = app.cpanelRouterModels.crms.schema(schema!)
+      const models = app.cpanelRouterModels;
+      verifyDbModel(models);
       const { id } = (request?.params ?? {}) as { id?: string | number }
-      const row = await model.findByPk(id)
+      const row = await models.crms.schema(schema!).findByPk(id)
       if (!row) {
         throw new Error('crms not found')
       }
@@ -91,10 +101,12 @@ export class CrmsService implements CrmsController {
     try {
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
+      verifyDbSchema(schema)
       // bind model to tenant schema
-      const model = app.cpanelRouterModels.crms.schema(schema!)
+      const models = app.cpanelRouterModels;
+      verifyDbModel(models);
       const { id } = (request?.params ?? {}) as { id?: string | number }
-      await model.destroy({ where: { id } })
+      await models.crms.schema(schema!).destroy({ where: { id } })
       return undefined as void
     } catch (err) {
       app.log.error(err);

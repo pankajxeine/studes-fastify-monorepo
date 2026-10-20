@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { IndustryCronsService } from '../services/cpanel/industry_crons/IndustryCronsService'
+import { IndustryCronsService } from '../services/cpanels/industry_crons/IndustryCronsService'
 
 const IndustryCronsRoutes: FastifyPluginAsync = async (app) => {
   const controller = new IndustryCronsService()

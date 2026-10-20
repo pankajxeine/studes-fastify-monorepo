@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { PrimaryServiceRequestsService } from '../services/cpanel/primary_service_requests/PrimaryServiceRequestsService'
+import { PrimaryServiceRequestsService } from '../services/cpanels/primary_service_requests/PrimaryServiceRequestsService'
 
 const PrimaryServiceRequestsRoutes: FastifyPluginAsync = async (app) => {
   const controller = new PrimaryServiceRequestsService()

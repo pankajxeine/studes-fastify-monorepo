@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { PackageDiscountsService } from '../services/cpanel/package_discounts/PackageDiscountsService'
+import { PackageDiscountsService } from '../services/cpanels/package_discounts/PackageDiscountsService'
 
 const PackageDiscountsRoutes: FastifyPluginAsync = async (app) => {
   const controller = new PackageDiscountsService()

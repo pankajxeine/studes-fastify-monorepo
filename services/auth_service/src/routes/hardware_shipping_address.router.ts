@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { HardwareShippingAddressService } from '../services/cpanel/hardware_shipping_address/HardwareShippingAddressService'
+import { HardwareShippingAddressService } from '../services/cpanels/hardware_shipping_address/HardwareShippingAddressService'
 
 const HardwareShippingAddressRoutes: FastifyPluginAsync = async (app) => {
   const controller = new HardwareShippingAddressService()

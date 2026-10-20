@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { BillingHistoryService } from '../services/cpanel/billing_history/BillingHistoryService'
+import { BillingHistoryService } from '../services/cpanels/billing_history/BillingHistoryService'
 
 const BillingHistoryRoutes: FastifyPluginAsync = async (app) => {
   const controller = new BillingHistoryService()

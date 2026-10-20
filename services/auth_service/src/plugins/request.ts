@@ -30,6 +30,7 @@ export default fp(async (app) => {
 
     request.cpanelDbSchema = app.env.DEFAULT_CPANEL_SCHEMA;
     request.routerDbSchema = app.env.DEFAULT_CPANEL_ROUTE_SCHEMA;
+
     let tokenClaims: { tenantId?: string; tenantSlug?: string; audience?: string } | undefined;
     if (config.isPublic !== true) {
       await jwtAuthGuard(request, reply);

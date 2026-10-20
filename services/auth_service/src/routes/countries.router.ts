@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { CountriesService } from '../services/cpanel/countries/CountriesService'
+import { CountriesService } from '../services/cpanels/countries/CountriesService'
 
 const CountriesRoutes: FastifyPluginAsync = async (app) => {
   const controller = new CountriesService()

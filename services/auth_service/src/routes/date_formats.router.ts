@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { DateFormatsService } from '../services/cpanel/date_formats/DateFormatsService'
+import { DateFormatsService } from '../services/cpanels/date_formats/DateFormatsService'
 
 const DateFormatsRoutes: FastifyPluginAsync = async (app) => {
   const controller = new DateFormatsService()

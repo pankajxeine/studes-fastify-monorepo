@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { VerifoneEndpointsService } from '../services/cpanel/verifone_endpoints/VerifoneEndpointsService'
+import { VerifoneEndpointsService } from '../services/cpanels/verifone_endpoints/VerifoneEndpointsService'
 
 const VerifoneEndpointsRoutes: FastifyPluginAsync = async (app) => {
   const controller = new VerifoneEndpointsService()

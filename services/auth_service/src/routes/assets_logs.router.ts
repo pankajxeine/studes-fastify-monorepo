@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { AssetsLogsService } from '../services/cpanel/assets_logs/AssetsLogsService'
+import { AssetsLogsService } from '../services/cpanels/assets_logs/AssetsLogsService'
 
 const AssetsLogsRoutes: FastifyPluginAsync = async (app) => {
   const controller = new AssetsLogsService()

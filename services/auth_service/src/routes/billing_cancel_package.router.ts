@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { BillingCancelPackageService } from '../services/cpanel/billing_cancel_package/BillingCancelPackageService'
+import { BillingCancelPackageService } from '../services/cpanels/billing_cancel_package/BillingCancelPackageService'
 
 const BillingCancelPackageRoutes: FastifyPluginAsync = async (app) => {
   const controller = new BillingCancelPackageService()

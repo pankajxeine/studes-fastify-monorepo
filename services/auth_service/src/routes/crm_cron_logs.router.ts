@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { CrmCronLogsService } from '../services/cpanel/crm_cron_logs/CrmCronLogsService'
+import { CrmCronLogsService } from '../services/cpanels/crm_cron_logs/CrmCronLogsService'
 
 const CrmCronLogsRoutes: FastifyPluginAsync = async (app) => {
   const controller = new CrmCronLogsService()

@@ -4,6 +4,8 @@ import type { {{.}} } from './types/{{.}}'
 import { FastifyInstance, FastifyRequest } from 'fastify'
 import type { {{ControllerName}}, ListItem, PaginatedResponse } from './{{ControllerName}}'
 
+import { verifyDbSchema, verifyDbModel } from '../../../core/helper/db_utils';
+
 export class {{ServiceName}} implements {{ControllerName}} {
 {{#methods}}
       public async {{methodName}}({{methodParams}}): Promise<{{{returnType}}}> {
@@ -11,8 +13,10 @@ export class {{ServiceName}} implements {{ControllerName}} {
 {{#hasModel}}{{#isCrud}}
       // tenant schema comes from request context
       const schema = request?.cpanelDbSchema;
+      verifyDbSchema(schema)
       // bind model to tenant schema
-      const model = app.{{modelDecoratorName}}.{{modelKey}}.schema(schema!)
+      const models = app.{{modelDecoratorName}};
+      verifyDbModel(models);
 {{#isList}}
       const query = (request?.query ?? {}) as { page?: string | number; limit?: string | number }
       const parsePositiveInteger = (value: string | number | undefined, fallback: number) => {
@@ -21,7 +25,7 @@ export class {{ServiceName}} implements {{ControllerName}} {
       }
       const page = parsePositiveInteger(query.page, 1)
       const limit = Math.min(parsePositiveInteger(query.limit, 20), 100)
-      const { count, rows } = await model.findAndCountAll({
+      const { count, rows } = await models.{{modelKey}}.schema(schema!).findAndCountAll({
         limit,
         offset: (page - 1) * limit,
       })
@@ -35,18 +39,18 @@ export class {{ServiceName}} implements {{ControllerName}} {
         },
       }
 {{/isList}}{{#isCreate}}
-      const row = await model.create(input as any)
+      const row = await models.{{modelKey}}.schema(schema!).create(input as any)
       return row.get({ plain: true }) as {{returnType}}
 {{/isCreate}}{{#isRead}}
       const { id } = (request?.params ?? {}) as { id?: string | number }
-      const row = await model.findByPk(id)
+      const row = await models.{{modelKey}}.schema(schema!).findByPk(id)
       if (!row) {
         throw new Error('{{modelKey}} not found')
       }
       return row.get({ plain: true }) as {{returnType}}
 {{/isRead}}{{#isUpdate}}
       const { id } = (request?.params ?? {}) as { id?: string | number }
-      const row = await model.findByPk(id)
+      const row = await models.{{modelKey}}.schema(schema!).findByPk(id)
       if (!row) {
         throw new Error('{{modelKey}} not found')
       }
@@ -54,7 +58,7 @@ export class {{ServiceName}} implements {{ControllerName}} {
       return row.get({ plain: true }) as {{returnType}}
 {{/isUpdate}}{{#isDelete}}
       const { id } = (request?.params ?? {}) as { id?: string | number }
-      await model.destroy({ where: { id } })
+      await models.{{modelKey}}.schema(schema!).destroy({ where: { id } })
       return undefined as {{returnType}}
 {{/isDelete}}{{/isCrud}}{{^isCrud}}
       // TODO: implement logic using {{#hasInput}}app + input{{/hasInput}}{{^hasInput}}app + request{{/hasInput}}

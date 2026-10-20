@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { FilterModuleFieldsService } from '../services/cpanel/filter_module_fields/FilterModuleFieldsService'
+import { FilterModuleFieldsService } from '../services/cpanels/filter_module_fields/FilterModuleFieldsService'
 
 const FilterModuleFieldsRoutes: FastifyPluginAsync = async (app) => {
   const controller = new FilterModuleFieldsService()

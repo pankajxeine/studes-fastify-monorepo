@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { WizardContentsService } from '../services/cpanel/wizard_contents/WizardContentsService'
+import { WizardContentsService } from '../services/cpanels/wizard_contents/WizardContentsService'
 
 const WizardContentsRoutes: FastifyPluginAsync = async (app) => {
   const controller = new WizardContentsService()

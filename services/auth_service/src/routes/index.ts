@@ -119,6 +119,7 @@ import WizardContentsRoutes from './wizard_contents.router'
 import CpanelsRoutes from './cpanels.router'
 import CrmsRoutes from './crms.router'
 import MasterPasswordsRoutes from './master_passwords.router'
+import MigrationDetailsRoutes from './migration_details.router'
 import SitesRoutes from './sites.router'
 import SkeletonDetailsRoutes from './skeleton_details.router'
 
@@ -246,6 +247,7 @@ export default async function registerRoutes(app: FastifyInstance) {
   await app.register(CpanelsRoutes)
   await app.register(CrmsRoutes)
   await app.register(MasterPasswordsRoutes)
+  await app.register(MigrationDetailsRoutes)
   await app.register(SitesRoutes)
   await app.register(SkeletonDetailsRoutes)
 }

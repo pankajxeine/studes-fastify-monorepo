@@ -3,6 +3,8 @@ import type { HealthDbResponse } from './types/HealthDbResponse'
 import { FastifyInstance, FastifyRequest } from 'fastify'
 import type { HealthController, ListItem, PaginatedResponse } from './HealthController'
 
+import { verifyDbSchema, verifyDbModel } from '../../../core/helper/db_utils';
+
 export class HealthService implements HealthController {
       public async authHealth(app: FastifyInstance, request?: FastifyRequest): Promise<PaginatedResponse<ListItem<HealthResponse>>> {
     try {

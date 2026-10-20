@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { EnvironmentsService } from '../services/cpanel/environments/EnvironmentsService'
+import { EnvironmentsService } from '../services/cpanels/environments/EnvironmentsService'
 
 const EnvironmentsRoutes: FastifyPluginAsync = async (app) => {
   const controller = new EnvironmentsService()

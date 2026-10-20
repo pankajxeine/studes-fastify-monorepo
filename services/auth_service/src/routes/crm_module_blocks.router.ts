@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { CrmModuleBlocksService } from '../services/cpanel/crm_module_blocks/CrmModuleBlocksService'
+import { CrmModuleBlocksService } from '../services/cpanels/crm_module_blocks/CrmModuleBlocksService'
 
 const CrmModuleBlocksRoutes: FastifyPluginAsync = async (app) => {
   const controller = new CrmModuleBlocksService()

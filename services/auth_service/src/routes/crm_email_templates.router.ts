@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { CrmEmailTemplatesService } from '../services/cpanel/crm_email_templates/CrmEmailTemplatesService'
+import { CrmEmailTemplatesService } from '../services/cpanels/crm_email_templates/CrmEmailTemplatesService'
 
 const CrmEmailTemplatesRoutes: FastifyPluginAsync = async (app) => {
   const controller = new CrmEmailTemplatesService()

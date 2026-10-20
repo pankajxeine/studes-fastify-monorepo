@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { BusinessHoursService } from '../services/cpanel/business_hours/BusinessHoursService'
+import { BusinessHoursService } from '../services/cpanels/business_hours/BusinessHoursService'
 
 const BusinessHoursRoutes: FastifyPluginAsync = async (app) => {
   const controller = new BusinessHoursService()

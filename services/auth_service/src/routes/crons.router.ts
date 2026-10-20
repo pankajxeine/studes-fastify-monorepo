@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { CronsService } from '../services/cpanel/crons/CronsService'
+import { CronsService } from '../services/cpanels/crons/CronsService'
 
 const CronsRoutes: FastifyPluginAsync = async (app) => {
   const controller = new CronsService()

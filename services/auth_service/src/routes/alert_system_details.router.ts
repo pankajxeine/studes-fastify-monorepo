@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { AlertSystemDetailsService } from '../services/cpanel/alert_system_details/AlertSystemDetailsService'
+import { AlertSystemDetailsService } from '../services/cpanels/alert_system_details/AlertSystemDetailsService'
 
 const AlertSystemDetailsRoutes: FastifyPluginAsync = async (app) => {
   const controller = new AlertSystemDetailsService()

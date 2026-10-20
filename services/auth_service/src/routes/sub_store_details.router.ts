@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { SubStoreDetailsService } from '../services/cpanel/sub_store_details/SubStoreDetailsService'
+import { SubStoreDetailsService } from '../services/cpanels/sub_store_details/SubStoreDetailsService'
 
 const SubStoreDetailsRoutes: FastifyPluginAsync = async (app) => {
   const controller = new SubStoreDetailsService()

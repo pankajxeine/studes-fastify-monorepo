@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { CustomModulesService } from '../services/cpanel/custom_modules/CustomModulesService'
+import { CustomModulesService } from '../services/cpanels/custom_modules/CustomModulesService'
 
 const CustomModulesRoutes: FastifyPluginAsync = async (app) => {
   const controller = new CustomModulesService()

@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { CrmResourceFilesService } from '../services/cpanel/crm_resource_files/CrmResourceFilesService'
+import { CrmResourceFilesService } from '../services/cpanels/crm_resource_files/CrmResourceFilesService'
 
 const CrmResourceFilesRoutes: FastifyPluginAsync = async (app) => {
   const controller = new CrmResourceFilesService()

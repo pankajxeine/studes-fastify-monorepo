@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { UserServiceTicketTypesService } from '../services/cpanel/user_service_ticket_types/UserServiceTicketTypesService'
+import { UserServiceTicketTypesService } from '../services/cpanels/user_service_ticket_types/UserServiceTicketTypesService'
 
 const UserServiceTicketTypesRoutes: FastifyPluginAsync = async (app) => {
   const controller = new UserServiceTicketTypesService()

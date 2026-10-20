@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { PaxStoreLinksService } from '../services/cpanel/pax_store_links/PaxStoreLinksService'
+import { PaxStoreLinksService } from '../services/cpanels/pax_store_links/PaxStoreLinksService'
 
 const PaxStoreLinksRoutes: FastifyPluginAsync = async (app) => {
   const controller = new PaxStoreLinksService()

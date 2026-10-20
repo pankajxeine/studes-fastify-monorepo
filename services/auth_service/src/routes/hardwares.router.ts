@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { HardwaresService } from '../services/cpanel/hardwares/HardwaresService'
+import { HardwaresService } from '../services/cpanels/hardwares/HardwaresService'
 
 const HardwaresRoutes: FastifyPluginAsync = async (app) => {
   const controller = new HardwaresService()

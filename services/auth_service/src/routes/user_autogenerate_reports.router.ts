@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { UserAutogenerateReportsService } from '../services/cpanel/user_autogenerate_reports/UserAutogenerateReportsService'
+import { UserAutogenerateReportsService } from '../services/cpanels/user_autogenerate_reports/UserAutogenerateReportsService'
 
 const UserAutogenerateReportsRoutes: FastifyPluginAsync = async (app) => {
   const controller = new UserAutogenerateReportsService()

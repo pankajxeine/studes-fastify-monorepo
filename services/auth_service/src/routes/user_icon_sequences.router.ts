@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { UserIconSequencesService } from '../services/cpanel/user_icon_sequences/UserIconSequencesService'
+import { UserIconSequencesService } from '../services/cpanels/user_icon_sequences/UserIconSequencesService'
 
 const UserIconSequencesRoutes: FastifyPluginAsync = async (app) => {
   const controller = new UserIconSequencesService()

@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { UserAlertsTypeService } from '../services/cpanel/user_alerts_type/UserAlertsTypeService'
+import { UserAlertsTypeService } from '../services/cpanels/user_alerts_type/UserAlertsTypeService'
 
 const UserAlertsTypeRoutes: FastifyPluginAsync = async (app) => {
   const controller = new UserAlertsTypeService()

@@ -1,4 +1,4 @@
-﻿{
+{
   "info": {
     "name": "studes-fastify-api",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -11,7 +11,13 @@
           "name": "Gateway Health",
           "request": {
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
             "url": "{{gateway_url}}/health"
           }
         },
@@ -19,7 +25,13 @@
           "name": "Gateway Health Services",
           "request": {
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
             "url": "{{gateway_url}}/health/services"
           }
         },
@@ -27,7 +39,13 @@
           "name": "Gateway Health DB",
           "request": {
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
             "url": "{{gateway_url}}/health/db"
           }
         },
@@ -35,7 +53,13 @@
           "name": "Gateway Metrics",
           "request": {
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
             "url": "{{gateway_url}}/metrics"
           }
         },
@@ -44,9 +68,19 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "x-tenant-id", "value": "{{tenant_id}}" },
-              { "key": "x-tenant-slug", "value": "{{tenant_slug}}" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-tenant-slug",
+                "value": "{{tenant_slug}}"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -60,9 +94,19 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "x-tenant-id", "value": "{{tenant_id}}" },
-              { "key": "x-tenant-slug", "value": "{{tenant_slug}}" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-tenant-slug",
+                "value": "{{tenant_slug}}"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -76,9 +120,15 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Authorization", "value": "Bearer {{auth_token}}" },
-              { "key": "x-tenant-id", "value": "{{tenant_id}}" },
-              { "key": "x-tenant-slug", "value": "{{tenant_slug}}" }
+              {
+                "key": "x-tenant-slug",
+                "value": "{{tenant_slug}}"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
             ],
             "url": "{{gateway_url}}/auth/logout"
           }
@@ -88,7 +138,15 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -102,9 +160,15 @@
           "request": {
             "method": "GET",
             "header": [
-              { "key": "Authorization", "value": "Bearer {{auth_token}}" },
-              { "key": "x-tenant-id", "value": "{{tenant_id}}" },
-              { "key": "x-tenant-slug", "value": "{{tenant_slug}}" }
+              {
+                "key": "x-tenant-slug",
+                "value": "{{tenant_slug}}"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
             ],
             "url": "{{gateway_url}}/billing/invoices"
           }
@@ -114,10 +178,19 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{auth_token}}" },
-              { "key": "x-tenant-id", "value": "{{tenant_id}}" },
-              { "key": "x-tenant-slug", "value": "{{tenant_slug}}" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-tenant-slug",
+                "value": "{{tenant_slug}}"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -131,9 +204,15 @@
           "request": {
             "method": "GET",
             "header": [
-              { "key": "Authorization", "value": "Bearer {{auth_token}}" },
-              { "key": "x-tenant-id", "value": "{{tenant_id}}" },
-              { "key": "x-tenant-slug", "value": "{{tenant_slug}}" }
+              {
+                "key": "x-tenant-slug",
+                "value": "{{tenant_slug}}"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
             ],
             "url": "{{gateway_url}}/notifications"
           }
@@ -143,10 +222,19 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{auth_token}}" },
-              { "key": "x-tenant-id", "value": "{{tenant_id}}" },
-              { "key": "x-tenant-slug", "value": "{{tenant_slug}}" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-tenant-slug",
+                "value": "{{tenant_slug}}"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -164,7 +252,13 @@
           "name": "Auth Health",
           "request": {
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
             "url": "{{auth_url}}/health"
           }
         },
@@ -172,7 +266,13 @@
           "name": "Auth Health DB",
           "request": {
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
             "url": "{{auth_url}}/health/db"
           }
         },
@@ -181,9 +281,19 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "x-tenant-id", "value": "{{tenant_id}}" },
-              { "key": "x-tenant-slug", "value": "{{tenant_slug}}" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-tenant-slug",
+                "value": "{{tenant_slug}}"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -197,9 +307,19 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "x-tenant-id", "value": "{{tenant_id}}" },
-              { "key": "x-tenant-slug", "value": "{{tenant_slug}}" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-tenant-slug",
+                "value": "{{tenant_slug}}"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -213,9 +333,15 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Authorization", "value": "Bearer {{auth_token}}" },
-              { "key": "x-tenant-id", "value": "{{tenant_id}}" },
-              { "key": "x-tenant-slug", "value": "{{tenant_slug}}" }
+              {
+                "key": "x-tenant-slug",
+                "value": "{{tenant_slug}}"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
             ],
             "url": "{{auth_url}}/auth/logout"
           }
@@ -225,7 +351,15 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -243,7 +377,13 @@
           "name": "Billing Health",
           "request": {
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
             "url": "{{billing_url}}/health"
           }
         },
@@ -251,7 +391,13 @@
           "name": "Billing Health DB",
           "request": {
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
             "url": "{{billing_url}}/health/db"
           }
         },
@@ -260,9 +406,15 @@
           "request": {
             "method": "GET",
             "header": [
-              { "key": "Authorization", "value": "Bearer {{auth_token}}" },
-              { "key": "x-tenant-id", "value": "{{tenant_id}}" },
-              { "key": "x-tenant-slug", "value": "{{tenant_slug}}" }
+              {
+                "key": "x-tenant-slug",
+                "value": "{{tenant_slug}}"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
             ],
             "url": "{{billing_url}}/billing/invoices"
           }
@@ -272,10 +424,19 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{auth_token}}" },
-              { "key": "x-tenant-id", "value": "{{tenant_id}}" },
-              { "key": "x-tenant-slug", "value": "{{tenant_slug}}" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-tenant-slug",
+                "value": "{{tenant_slug}}"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -293,7 +454,13 @@
           "name": "Notification Health",
           "request": {
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
             "url": "{{notification_url}}/health"
           }
         },
@@ -301,7 +468,13 @@
           "name": "Notification Health DB",
           "request": {
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
             "url": "{{notification_url}}/health/db"
           }
         },
@@ -310,9 +483,15 @@
           "request": {
             "method": "GET",
             "header": [
-              { "key": "Authorization", "value": "Bearer {{auth_token}}" },
-              { "key": "x-tenant-id", "value": "{{tenant_id}}" },
-              { "key": "x-tenant-slug", "value": "{{tenant_slug}}" }
+              {
+                "key": "x-tenant-slug",
+                "value": "{{tenant_slug}}"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
             ],
             "url": "{{notification_url}}/notifications"
           }
@@ -322,10 +501,19 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{auth_token}}" },
-              { "key": "x-tenant-id", "value": "{{tenant_id}}" },
-              { "key": "x-tenant-slug", "value": "{{tenant_slug}}" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-tenant-slug",
+                "value": "{{tenant_slug}}"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -338,12 +526,33 @@
     }
   ],
   "variable": [
-    { "key": "gateway_url", "value": "http://localhost:3000" },
-    { "key": "auth_url", "value": "http://localhost:3001" },
-    { "key": "billing_url", "value": "http://localhost:3002" },
-    { "key": "notification_url", "value": "http://localhost:3003" },
-    { "key": "tenant_id", "value": "" },
-    { "key": "tenant_slug", "value": "acme" },
-    { "key": "auth_token", "value": "" }
+    {
+      "key": "gateway_url",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "auth_url",
+      "value": "http://localhost:3001"
+    },
+    {
+      "key": "billing_url",
+      "value": "http://localhost:3002"
+    },
+    {
+      "key": "notification_url",
+      "value": "http://localhost:3003"
+    },
+    {
+      "key": "tenant_id",
+      "value": ""
+    },
+    {
+      "key": "tenant_slug",
+      "value": "acme"
+    },
+    {
+      "key": "auth_token",
+      "value": ""
+    }
   ]
 }
