@@ -4,6 +4,6 @@ COPY . .
 WORKDIR /app
 RUN npm install --include=dev
 RUN npm run build
-EXPOSE 3020
+EXPOSE 3001
 CMD ["node", "dist/server.js"]
 

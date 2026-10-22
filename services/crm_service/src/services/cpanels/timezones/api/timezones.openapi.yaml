@@ -1,0 +1,131 @@
+openapi: 3.0.0
+info:
+  title: TimezonesResponse API
+  version: 1.0.0
+paths:
+  /timezones:
+    get:
+      operationId: listTimezones
+      summary: Get all timezones
+      responses:
+        '200':
+          description: List of timezones
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TimezonesResponse'
+    post:
+      operationId: createTimezone
+      summary: Create a new timezones
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TimezonesRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TimezonesResponse'
+
+  /timezones/{id}:
+    get:
+      operationId: getTimezonesById
+      summary: Get timezones by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: timezones object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TimezonesResponse'
+    put:
+      operationId: updateTimezone
+      summary: Update timezones by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TimezonesRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TimezonesResponse'
+    delete:
+      operationId: deleteTimezone
+      summary: Delete timezones by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Deleted
+components:
+  schemas:
+
+    TimezonesRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        country_id:
+          type: integer
+        country_iso_code:
+          type: string
+          maxLength: 3
+        name:
+          type: string
+          maxLength: 50
+        gmt_offset:
+          type: integer
+        status:
+          type: string
+          enum:
+            - "Active"
+            - "Inactive"
+
+    TimezonesResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        country_id:
+          type: integer
+        country_iso_code:
+          type: string
+          maxLength: 3
+        name:
+          type: string
+          maxLength: 50
+        gmt_offset:
+          type: integer
+        status:
+          type: string
+          enum:
+            - "Active"
+            - "Inactive"
+  

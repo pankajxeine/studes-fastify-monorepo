@@ -1,0 +1,133 @@
+openapi: 3.0.0
+info:
+  title: ModulesResponse API
+  version: 1.0.0
+paths:
+  /modules:
+    get:
+      operationId: listModules
+      summary: Get all modules
+      responses:
+        '200':
+          description: List of modules
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ModulesResponse'
+    post:
+      operationId: createModule
+      summary: Create a new modules
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ModulesRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModulesResponse'
+
+  /modules/{id}:
+    get:
+      operationId: getModulesById
+      summary: Get modules by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: modules object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModulesResponse'
+    put:
+      operationId: updateModule
+      summary: Update modules by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ModulesRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModulesResponse'
+    delete:
+      operationId: deleteModule
+      summary: Delete modules by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Deleted
+components:
+  schemas:
+
+    ModulesRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+          maxLength: 50
+        module_key:
+          type: string
+          maxLength: 50
+        permission_option:
+          type: string
+          maxLength: 500
+        relevant_modules:
+          type: object
+        hide_from_package_upgrade:
+          type: boolean
+
+    ModulesResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+          maxLength: 50
+        module_key:
+          type: string
+          maxLength: 50
+        permission_option:
+          type: string
+          maxLength: 500
+        relevant_modules:
+          type: object
+        hide_from_package_upgrade:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+  

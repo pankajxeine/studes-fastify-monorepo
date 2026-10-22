@@ -19,7 +19,20 @@ interface Table {
 }
 
 // Parse SQL file (very simplified)
-function parseSQL(sql: string): Table[] {
+function parseEnumTypes(sql: string): Map<string, string[]> {
+  const enumTypes = new Map<string, string[]>();
+  const enumRegex = /CREATE\s+TYPE\s+(?:IF\s+NOT\s+EXISTS\s+)?((?:"[^"]+"|[\w$]+)(?:\s*\.\s*(?:"[^"]+"|[\w$]+))?)\s+AS\s+ENUM\s*\(([^)]*)\)\s*;/gi;
+  let match: RegExpExecArray | null;
+  while ((match = enumRegex.exec(sql)) !== null) {
+    const typeName = match[1].split('.').pop()!.replace(/["\s]/g, '').toLowerCase();
+    const values = [...match[2].matchAll(/'((?:''|[^'])*)'/g)].map(value => value[1].replace(/''/g, "'"));
+    enumTypes.set(typeName, values);
+  }
+  return enumTypes;
+}
+
+function parseSQL(sql: string, knownEnumTypes = new Map<string, string[]>()): Table[] {
+  const enumTypes = new Map([...parseEnumTypes(sql), ...knownEnumTypes]);
   const tables: Table[] = [];
   const regex = /CREATE TABLE\s+(?:IF NOT EXISTS\s+)?(?:"([^"]+)"|`([^`]+)`|(\w+))\s*\(([\s\S]+?)\);/gi;
   let match;
@@ -62,8 +75,10 @@ function parseSQL(sql: string): Table[] {
         if (varcharMatch) maxLength = parseInt(varcharMatch[1], 10);
 
         let enumValues: string[] | undefined;
+        const enumTypeName = type?.split('.').pop()?.replace(/["`]/g, '').toLowerCase();
+        if (enumTypeName) enumValues = enumTypes.get(enumTypeName);
         const checkMatch = c.match(/check\s*\(\s*["`]?\w+["`]?\s+in\s*\(([^)]+)\)\)/i);
-        if (checkMatch) {
+        if (!enumValues && checkMatch) {
           enumValues = checkMatch[1]
             .split(',')
             .map(v => v.trim().replace(/['"]/g, ''));
@@ -131,6 +146,10 @@ function columnToOpenAPI(col: Column): string {
   ];
   if (openapiType.format) lines.push(`          format: ${openapiType.format}`);
   if (col.maxLength) lines.push(`          maxLength: ${col.maxLength}`);
+  if (col.enumValues?.length) {
+    lines.push('          enum:');
+    col.enumValues.forEach(value => lines.push(`            - ${JSON.stringify(value)}`));
+  }
   return lines.join('\n');
 }
 
@@ -270,11 +289,13 @@ function pgTypeToOpenAPI(pgType: string): { type: string; format?: string } {
 
 const args = process.argv.slice(2);
 let sqlFile: string | undefined;
+let enumsFile: string | undefined;
 let outDir: string | undefined;
 let service: string | undefined;
 
 for (let i = 0; i < args.length; i++) {
   if (args[i] === '--sql') sqlFile = args[i + 1];
+  if (args[i] === '--enums') enumsFile = args[i + 1];
   if (args[i] === '--service') service = args[i + 1];
   if (args[i] === '--out') outDir = args[i + 1];
 }
@@ -284,8 +305,14 @@ if (!sqlFile && !outDir && !service) {
   process.exit(1);
 }
 
-const sql = fs.readFileSync(path.resolve(sqlFile), 'utf-8');
-const tables = parseSQL(sql);
+const resolvedSqlFile = path.resolve(sqlFile!);
+const sql = fs.readFileSync(resolvedSqlFile, 'utf-8');
+// Enum declarations are commonly kept in infra/enums.sql beside the schema file.
+const companionEnumsFile = enumsFile
+  ? path.resolve(enumsFile)
+  : path.join(path.dirname(resolvedSqlFile), 'enums.sql');
+const enumSql = fs.existsSync(companionEnumsFile) ? fs.readFileSync(companionEnumsFile, 'utf-8') : '';
+const tables = parseSQL(sql, parseEnumTypes(enumSql));
 const serviceModulesDir = path.join(outDir, 'src', 'services', service)
 if (!fs.existsSync(outDir)) {
   fs.mkdirSync(outDir, { recursive: true })

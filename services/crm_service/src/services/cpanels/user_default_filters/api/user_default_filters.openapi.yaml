@@ -1,0 +1,119 @@
+openapi: 3.0.0
+info:
+  title: UserDefaultFiltersResponse API
+  version: 1.0.0
+paths:
+  /user_default_filters:
+    get:
+      operationId: listUserDefaultFilters
+      summary: Get all user_default_filters
+      responses:
+        '200':
+          description: List of user_default_filters
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserDefaultFiltersResponse'
+    post:
+      operationId: createUserDefaultFilter
+      summary: Create a new user_default_filters
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserDefaultFiltersRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDefaultFiltersResponse'
+
+  /user_default_filters/{id}:
+    get:
+      operationId: getUserDefaultFiltersById
+      summary: Get user_default_filters by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: user_default_filters object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDefaultFiltersResponse'
+    put:
+      operationId: updateUserDefaultFilter
+      summary: Update user_default_filters by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserDefaultFiltersRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDefaultFiltersResponse'
+    delete:
+      operationId: deleteUserDefaultFilter
+      summary: Delete user_default_filters by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Deleted
+components:
+  schemas:
+
+    UserDefaultFiltersRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        module_id:
+          type: integer
+        filter_id:
+          type: integer
+        user_id:
+          type: integer
+
+    UserDefaultFiltersResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        module_id:
+          type: integer
+        filter_id:
+          type: integer
+        user_id:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+  

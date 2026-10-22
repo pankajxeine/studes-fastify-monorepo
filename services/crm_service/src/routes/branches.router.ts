@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { BranchesService } from '../services/branches/BranchesService'
+import { BranchesService } from '../services/cpanels/branches/BranchesService'
 
 const BranchesRoutes: FastifyPluginAsync = async (app) => {
   const controller = new BranchesService()
@@ -9,11 +9,19 @@ const BranchesRoutes: FastifyPluginAsync = async (app) => {
     return reply.send(result)
   })
   app.post('/branches', async (request, reply) => {
-    const result = await controller.createBranch(app, request.body as any, request)
+    const result = await controller.createBranche(app, request.body as any, request)
     return reply.send(result)
   })
-  app.patch('/branches/:branchId', async (request, reply) => {
-    const result = await controller.updateBranch(app, request.body as any, request)
+  app.get('/branches/:id', async (request, reply) => {
+    const result = await controller.getBranchesById(app, request)
+    return reply.send(result)
+  })
+  app.put('/branches/:id', async (request, reply) => {
+    const result = await controller.updateBranche(app, request.body as any, request)
+    return reply.send(result)
+  })
+  app.delete('/branches/:id', async (request, reply) => {
+    const result = await controller.deleteBranche(app, request)
     return reply.send(result)
   })
 }

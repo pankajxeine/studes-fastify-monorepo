@@ -1,0 +1,117 @@
+openapi: 3.0.0
+info:
+  title: PrimaryServiceRequestsResponse API
+  version: 1.0.0
+paths:
+  /primary_service_requests:
+    get:
+      operationId: listPrimaryServiceRequests
+      summary: Get all primary_service_requests
+      responses:
+        '200':
+          description: List of primary_service_requests
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PrimaryServiceRequestsResponse'
+    post:
+      operationId: createPrimaryServiceRequest
+      summary: Create a new primary_service_requests
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PrimaryServiceRequestsRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PrimaryServiceRequestsResponse'
+
+  /primary_service_requests/{id}:
+    get:
+      operationId: getPrimaryServiceRequestsById
+      summary: Get primary_service_requests by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: primary_service_requests object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PrimaryServiceRequestsResponse'
+    put:
+      operationId: updatePrimaryServiceRequest
+      summary: Update primary_service_requests by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PrimaryServiceRequestsRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PrimaryServiceRequestsResponse'
+    delete:
+      operationId: deletePrimaryServiceRequest
+      summary: Delete primary_service_requests by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Deleted
+components:
+  schemas:
+
+    PrimaryServiceRequestsRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+          maxLength: 50
+        status:
+          type: string
+          enum:
+            - "Active"
+            - "Inactive"
+
+    PrimaryServiceRequestsResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+          maxLength: 50
+        status:
+          type: string
+          enum:
+            - "Active"
+            - "Inactive"
+  

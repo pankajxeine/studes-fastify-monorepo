@@ -1,0 +1,111 @@
+openapi: 3.0.0
+info:
+  title: UserTiersResponse API
+  version: 1.0.0
+paths:
+  /user_tiers:
+    get:
+      operationId: listUserTiers
+      summary: Get all user_tiers
+      responses:
+        '200':
+          description: List of user_tiers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserTiersResponse'
+    post:
+      operationId: createUserTier
+      summary: Create a new user_tiers
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserTiersRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserTiersResponse'
+
+  /user_tiers/{id}:
+    get:
+      operationId: getUserTiersById
+      summary: Get user_tiers by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: user_tiers object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserTiersResponse'
+    put:
+      operationId: updateUserTier
+      summary: Update user_tiers by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserTiersRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserTiersResponse'
+    delete:
+      operationId: deleteUserTier
+      summary: Delete user_tiers by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Deleted
+components:
+  schemas:
+
+    UserTiersRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        number_of_users:
+          type: integer
+
+    UserTiersResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        number_of_users:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+  

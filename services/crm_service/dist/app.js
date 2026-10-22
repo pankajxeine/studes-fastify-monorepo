@@ -40,8 +40,10 @@ exports.buildApp = buildApp;
 const fastify_1 = __importDefault(require("fastify"));
 const env_1 = __importDefault(require("./plugins/env"));
 const db_1 = __importDefault(require("./plugins/db"));
-const tenant_1 = __importDefault(require("./plugins/tenant"));
+const request_1 = __importDefault(require("./plugins/request"));
 const auth_1 = __importDefault(require("./plugins/auth"));
+const core_1 = require("./core");
+const routes_1 = __importDefault(require("./routes"));
 const node_fs_1 = require("node:fs");
 const node_path_1 = require("node:path");
 async function registerGeneratedRoutes(app) {
@@ -61,13 +63,20 @@ async function buildApp() {
     });
     await fastify.register(env_1.default);
     const corsOrigin = fastify.env?.CORS_ORIGIN ?? process.env.CORS_ORIGIN ?? '*';
+    await fastify.register(core_1.requestIdPlugin);
+    await fastify.register(core_1.requestBodyLoggerPlugin);
+    await fastify.register(core_1.requestLoggerPlugin);
     await fastify.register((await Promise.resolve().then(() => __importStar(require('@fastify/helmet')))).default);
     await fastify.register((await Promise.resolve().then(() => __importStar(require('@fastify/cors')))).default, {
         origin: corsOrigin
     });
     await fastify.register(db_1.default);
-    await fastify.register(tenant_1.default);
+    await fastify.register(request_1.default);
     await fastify.register(auth_1.default);
-    await registerGeneratedRoutes(fastify);
+    await fastify.register((0, core_1.createMetricsPlugin)({ includeTenant: true }));
+    (0, core_1.registerErrorHandler)(fastify, { includeZod: true });
+    // registerGeneratedRoutes(fastify) // Automatically register routes from the routes directory
+    (0, routes_1.default)(fastify);
+    fastify.log.info({ routes: fastify.printRoutes() }, 'registered routes');
     return fastify;
 }

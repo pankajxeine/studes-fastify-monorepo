@@ -1,0 +1,181 @@
+openapi: 3.0.0
+info:
+  title: CrmEmailLogsResponse API
+  version: 1.0.0
+paths:
+  /crm_email_logs:
+    get:
+      operationId: listCrmEmailLogs
+      summary: Get all crm_email_logs
+      responses:
+        '200':
+          description: List of crm_email_logs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CrmEmailLogsResponse'
+    post:
+      operationId: createCrmEmailLog
+      summary: Create a new crm_email_logs
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CrmEmailLogsRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CrmEmailLogsResponse'
+
+  /crm_email_logs/{id}:
+    get:
+      operationId: getCrmEmailLogsById
+      summary: Get crm_email_logs by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: crm_email_logs object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CrmEmailLogsResponse'
+    put:
+      operationId: updateCrmEmailLog
+      summary: Update crm_email_logs by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CrmEmailLogsRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CrmEmailLogsResponse'
+    delete:
+      operationId: deleteCrmEmailLog
+      summary: Delete crm_email_logs by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Deleted
+components:
+  schemas:
+
+    CrmEmailLogsRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        module_name:
+          type: string
+          maxLength: 100
+        sub_id:
+          type: integer
+        email_template_id:
+          type: integer
+        type:
+          type: string
+          enum:
+            - "Email"
+            - "Sms"
+        date_of_trigger:
+          type: string
+          format: date-time
+        user_id:
+          type: integer
+        email:
+          type: string
+        subject:
+          type: string
+          maxLength: 100
+        message:
+          type: string
+        finished:
+          type: string
+          enum:
+            - "E"
+            - "N"
+            - "Y"
+        finish_date_time:
+          type: string
+          format: date-time
+        response:
+          type: string
+        from_email:
+          type: string
+
+    CrmEmailLogsResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        module_name:
+          type: string
+          maxLength: 100
+        sub_id:
+          type: integer
+        email_template_id:
+          type: integer
+        type:
+          type: string
+          enum:
+            - "Email"
+            - "Sms"
+        date_of_trigger:
+          type: string
+          format: date-time
+        user_id:
+          type: integer
+        email:
+          type: string
+        subject:
+          type: string
+          maxLength: 100
+        message:
+          type: string
+        finished:
+          type: string
+          enum:
+            - "E"
+            - "N"
+            - "Y"
+        finish_date_time:
+          type: string
+          format: date-time
+        response:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        from_email:
+          type: string
+  

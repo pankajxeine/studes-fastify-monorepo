@@ -1,0 +1,275 @@
+openapi: 3.0.0
+info:
+  title: SubStoreDetailsResponse API
+  version: 1.0.0
+paths:
+  /sub_store_details:
+    get:
+      operationId: listSubStoreDetails
+      summary: Get all sub_store_details
+      responses:
+        '200':
+          description: List of sub_store_details
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SubStoreDetailsResponse'
+    post:
+      operationId: createSubStoreDetail
+      summary: Create a new sub_store_details
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubStoreDetailsRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubStoreDetailsResponse'
+
+  /sub_store_details/{id}:
+    get:
+      operationId: getSubStoreDetailsById
+      summary: Get sub_store_details by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: sub_store_details object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubStoreDetailsResponse'
+    put:
+      operationId: updateSubStoreDetail
+      summary: Update sub_store_details by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubStoreDetailsRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubStoreDetailsResponse'
+    delete:
+      operationId: deleteSubStoreDetail
+      summary: Delete sub_store_details by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Deleted
+components:
+  schemas:
+
+    SubStoreDetailsRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        sub_company_id:
+          type: integer
+        pos_store_id:
+          type: integer
+        sub_id:
+          type: integer
+        store_name:
+          type: string
+          maxLength: 100
+        phone:
+          type: string
+        billing_contact_person:
+          type: string
+          maxLength: 100
+        billing_address1:
+          type: string
+          maxLength: 100
+        billing_address2:
+          type: string
+          maxLength: 100
+        billing_country:
+          type: integer
+        billing_state:
+          type: integer
+        billing_city:
+          type: string
+          maxLength: 30
+        billing_postalcode:
+          type: string
+          maxLength: 10
+        shipping_contact_person:
+          type: string
+          maxLength: 100
+        shipping_address1:
+          type: string
+          maxLength: 100
+        shipping_address2:
+          type: string
+          maxLength: 100
+        shipping_country:
+          type: integer
+        shipping_state:
+          type: integer
+        shipping_city:
+          type: string
+          maxLength: 30
+        shipping_postalcode:
+          type: string
+          maxLength: 10
+        mid:
+          type: string
+          maxLength: 50
+        virtual_terminal:
+          type: string
+          maxLength: 200
+        routing_number:
+          type: string
+          maxLength: 50
+        account_number:
+          type: string
+          maxLength: 50
+        timezone_id:
+          type: integer
+        is_primary_store:
+          type: boolean
+        is_billing_shipping_same:
+          type: boolean
+        store_sequance:
+          type: integer
+        ach_company:
+          type: string
+          maxLength: 100
+        bank_account_type:
+          type: string
+          enum:
+            - "Business"
+            - "Personal"
+        receiving_account:
+          type: string
+          enum:
+            - "Checking"
+            - "Savings"
+        purchased_terms:
+          type: object
+
+    SubStoreDetailsResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        sub_company_id:
+          type: integer
+        pos_store_id:
+          type: integer
+        sub_id:
+          type: integer
+        store_name:
+          type: string
+          maxLength: 100
+        phone:
+          type: string
+        billing_contact_person:
+          type: string
+          maxLength: 100
+        billing_address1:
+          type: string
+          maxLength: 100
+        billing_address2:
+          type: string
+          maxLength: 100
+        billing_country:
+          type: integer
+        billing_state:
+          type: integer
+        billing_city:
+          type: string
+          maxLength: 30
+        billing_postalcode:
+          type: string
+          maxLength: 10
+        shipping_contact_person:
+          type: string
+          maxLength: 100
+        shipping_address1:
+          type: string
+          maxLength: 100
+        shipping_address2:
+          type: string
+          maxLength: 100
+        shipping_country:
+          type: integer
+        shipping_state:
+          type: integer
+        shipping_city:
+          type: string
+          maxLength: 30
+        shipping_postalcode:
+          type: string
+          maxLength: 10
+        mid:
+          type: string
+          maxLength: 50
+        virtual_terminal:
+          type: string
+          maxLength: 200
+        routing_number:
+          type: string
+          maxLength: 50
+        account_number:
+          type: string
+          maxLength: 50
+        timezone_id:
+          type: integer
+        is_primary_store:
+          type: boolean
+        is_billing_shipping_same:
+          type: boolean
+        store_sequance:
+          type: integer
+        ach_company:
+          type: string
+          maxLength: 100
+        bank_account_type:
+          type: string
+          enum:
+            - "Business"
+            - "Personal"
+        receiving_account:
+          type: string
+          enum:
+            - "Checking"
+            - "Savings"
+        purchased_terms:
+          type: object
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+  

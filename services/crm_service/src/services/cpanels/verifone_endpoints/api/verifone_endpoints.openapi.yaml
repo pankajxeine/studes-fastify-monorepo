@@ -1,0 +1,165 @@
+openapi: 3.0.0
+info:
+  title: VerifoneEndpointsResponse API
+  version: 1.0.0
+paths:
+  /verifone_endpoints:
+    get:
+      operationId: listVerifoneEndpoints
+      summary: Get all verifone_endpoints
+      responses:
+        '200':
+          description: List of verifone_endpoints
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/VerifoneEndpointsResponse'
+    post:
+      operationId: createVerifoneEndpoint
+      summary: Create a new verifone_endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifoneEndpointsRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerifoneEndpointsResponse'
+
+  /verifone_endpoints/{id}:
+    get:
+      operationId: getVerifoneEndpointsById
+      summary: Get verifone_endpoints by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: verifone_endpoints object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerifoneEndpointsResponse'
+    put:
+      operationId: updateVerifoneEndpoint
+      summary: Update verifone_endpoints by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifoneEndpointsRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerifoneEndpointsResponse'
+    delete:
+      operationId: deleteVerifoneEndpoint
+      summary: Delete verifone_endpoints by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Deleted
+components:
+  schemas:
+
+    VerifoneEndpointsRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        api_name:
+          type: string
+          maxLength: 255
+        end_point:
+          type: string
+        client_id:
+          type: string
+          maxLength: 255
+        client_secret:
+          type: string
+          maxLength: 255
+        auth_token:
+          type: string
+        expires_in:
+          type: string
+          maxLength: 20
+        customer_uid:
+          type: string
+          maxLength: 100
+        webhook_uid:
+          type: string
+          maxLength: 100
+        webhook_headers:
+          type: string
+          maxLength: 500
+        webhook_url:
+          type: string
+        active:
+          type: boolean
+
+    VerifoneEndpointsResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        api_name:
+          type: string
+          maxLength: 255
+        end_point:
+          type: string
+        client_id:
+          type: string
+          maxLength: 255
+        client_secret:
+          type: string
+          maxLength: 255
+        auth_token:
+          type: string
+        expires_in:
+          type: string
+          maxLength: 20
+        customer_uid:
+          type: string
+          maxLength: 100
+        webhook_uid:
+          type: string
+          maxLength: 100
+        webhook_headers:
+          type: string
+          maxLength: 500
+        webhook_url:
+          type: string
+        active:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+  

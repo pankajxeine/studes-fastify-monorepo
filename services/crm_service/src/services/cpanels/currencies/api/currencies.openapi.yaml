@@ -1,0 +1,139 @@
+openapi: 3.0.0
+info:
+  title: CurrenciesResponse API
+  version: 1.0.0
+paths:
+  /currencies:
+    get:
+      operationId: listCurrencies
+      summary: Get all currencies
+      responses:
+        '200':
+          description: List of currencies
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CurrenciesResponse'
+    post:
+      operationId: createCurrencie
+      summary: Create a new currencies
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CurrenciesRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CurrenciesResponse'
+
+  /currencies/{id}:
+    get:
+      operationId: getCurrenciesById
+      summary: Get currencies by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: currencies object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CurrenciesResponse'
+    put:
+      operationId: updateCurrencie
+      summary: Update currencies by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CurrenciesRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CurrenciesResponse'
+    delete:
+      operationId: deleteCurrencie
+      summary: Delete currencies by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Deleted
+components:
+  schemas:
+
+    CurrenciesRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+          maxLength: 30
+        code:
+          type: string
+          maxLength: 5
+        symbol_right:
+          type: string
+          maxLength: 10
+        symbol_left:
+          type: string
+          maxLength: 10
+        value:
+          type: number
+        status:
+          type: string
+          enum:
+            - "Active"
+            - "Inactive"
+
+    CurrenciesResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+          maxLength: 30
+        code:
+          type: string
+          maxLength: 5
+        symbol_right:
+          type: string
+          maxLength: 10
+        symbol_left:
+          type: string
+          maxLength: 10
+        value:
+          type: number
+        status:
+          type: string
+          enum:
+            - "Active"
+            - "Inactive"
+  

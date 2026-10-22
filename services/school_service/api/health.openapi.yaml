@@ -1,0 +1,43 @@
+﻿openapi: 3.0.3
+info:
+  title: Auth Service API
+  version: 0.1.0
+servers:
+  - url: http://localhost:3001
+paths:
+  /health:
+    get:
+      operationId: authHealth
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+  /health/db:
+    get:
+      operationId: authHealthDb
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthDbResponse'
+components:
+  schemas:
+    HealthResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+      required: [ok]
+    HealthDbResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+          db_status:
+            type: string
+      required: [ok]

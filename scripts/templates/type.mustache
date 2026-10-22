@@ -2,4 +2,6 @@
 import type { {{.}} } from './{{.}}'
 {{/imports}}
 
+{{#isEnum}}/** Allowed values from the OpenAPI enum schema. */
+{{/isEnum}}
 export type {{typeName}} = {{{typeDefinition}}}

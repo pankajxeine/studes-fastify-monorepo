@@ -1,0 +1,117 @@
+openapi: 3.0.0
+info:
+  title: CrmCronsResponse API
+  version: 1.0.0
+paths:
+  /crm_crons:
+    get:
+      operationId: listCrmCrons
+      summary: Get all crm_crons
+      responses:
+        '200':
+          description: List of crm_crons
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CrmCronsResponse'
+    post:
+      operationId: createCrmCron
+      summary: Create a new crm_crons
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CrmCronsRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CrmCronsResponse'
+
+  /crm_crons/{id}:
+    get:
+      operationId: getCrmCronsById
+      summary: Get crm_crons by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: crm_crons object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CrmCronsResponse'
+    put:
+      operationId: updateCrmCron
+      summary: Update crm_crons by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CrmCronsRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CrmCronsResponse'
+    delete:
+      operationId: deleteCrmCron
+      summary: Delete crm_crons by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Deleted
+components:
+  schemas:
+
+    CrmCronsRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+          maxLength: 200
+        is_active:
+          type: boolean
+
+    CrmCronsResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+          maxLength: 200
+        is_active:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+  

@@ -1,0 +1,347 @@
+openapi: 3.0.0
+info:
+  title: HardwaresResponse API
+  version: 1.0.0
+paths:
+  /hardwares:
+    get:
+      operationId: listHardwares
+      summary: Get all hardwares
+      responses:
+        '200':
+          description: List of hardwares
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HardwaresResponse'
+    post:
+      operationId: createHardware
+      summary: Create a new hardwares
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HardwaresRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HardwaresResponse'
+
+  /hardwares/{id}:
+    get:
+      operationId: getHardwaresById
+      summary: Get hardwares by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: hardwares object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HardwaresResponse'
+    put:
+      operationId: updateHardware
+      summary: Update hardwares by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HardwaresRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HardwaresResponse'
+    delete:
+      operationId: deleteHardware
+      summary: Delete hardwares by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Deleted
+components:
+  schemas:
+
+    HardwaresRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        device_id:
+          type: integer
+        customer_id:
+          type: integer
+        pos_tsys_setting_id:
+          type: integer
+        pos_expinet_terminal_id:
+          type: integer
+        pos_verifone_setting_id:
+          type: integer
+        purchase_date:
+          type: string
+          format: date
+        sold_by:
+          type: string
+          maxLength: 150
+        terminal_id:
+          type: string
+          maxLength: 150
+        tracking_number:
+          type: string
+          maxLength: 150
+        delivery_status:
+          type: string
+          enum:
+            - "Cancelled"
+            - "Delivered"
+            - "Ordered"
+            - "Shipped"
+        shipping_method_id:
+          type: integer
+        price:
+          type: number
+        notes:
+          type: string
+          maxLength: 250
+        serial_number:
+          type: string
+          maxLength: 250
+        transaction_id:
+          type: string
+          maxLength: 250
+        user_id:
+          type: string
+          maxLength: 250
+        api_key:
+          type: string
+          maxLength: 250
+        hash_key:
+          type: string
+          maxLength: 250
+        location_id:
+          type: string
+          maxLength: 250
+        mid:
+          type: string
+          maxLength: 250
+        virtual_terminal:
+          type: string
+          maxLength: 200
+        user_name:
+          type: string
+          maxLength: 150
+        password:
+          type: string
+          maxLength: 200
+        developer_id:
+          type: string
+          maxLength: 200
+        terminal_name:
+          type: string
+          maxLength: 200
+        terminal_type:
+          type: string
+          enum:
+            - "Auto_fuel_dispenser"
+            - "Auto_teller_machine"
+            - "Call_centre"
+            - "Electronic_cash_register"
+            - "Inflight_commerce_terminal"
+            - "Inter_voice_response"
+            - "Kiosk"
+            - "Mobile"
+            - "Point_of_sale"
+            - "Rf_device"
+            - "Standalone"
+            - "Ticket"
+            - "Unattended"
+            - "Unspecified"
+            - "Virtual"
+        terminal_status:
+          type: string
+          enum:
+            - "Active"
+            - "Inactive"
+        verifone_order_id:
+          type: string
+          maxLength: 255
+        device_id_value:
+          type: string
+          maxLength: 150
+        software_id:
+          type: integer
+        store_id:
+          type: integer
+        store_number:
+          type: string
+          maxLength: 4
+        terminal_number:
+          type: string
+          maxLength: 4
+        timezone:
+          type: string
+          maxLength: 255
+        is_store_address:
+          type: boolean
+        created_by:
+          type: integer
+        updated_by:
+          type: integer
+
+    HardwaresResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        device_id:
+          type: integer
+        customer_id:
+          type: integer
+        pos_tsys_setting_id:
+          type: integer
+        pos_expinet_terminal_id:
+          type: integer
+        pos_verifone_setting_id:
+          type: integer
+        purchase_date:
+          type: string
+          format: date
+        sold_by:
+          type: string
+          maxLength: 150
+        terminal_id:
+          type: string
+          maxLength: 150
+        tracking_number:
+          type: string
+          maxLength: 150
+        delivery_status:
+          type: string
+          enum:
+            - "Cancelled"
+            - "Delivered"
+            - "Ordered"
+            - "Shipped"
+        shipping_method_id:
+          type: integer
+        price:
+          type: number
+        notes:
+          type: string
+          maxLength: 250
+        serial_number:
+          type: string
+          maxLength: 250
+        transaction_id:
+          type: string
+          maxLength: 250
+        user_id:
+          type: string
+          maxLength: 250
+        api_key:
+          type: string
+          maxLength: 250
+        hash_key:
+          type: string
+          maxLength: 250
+        location_id:
+          type: string
+          maxLength: 250
+        mid:
+          type: string
+          maxLength: 250
+        virtual_terminal:
+          type: string
+          maxLength: 200
+        user_name:
+          type: string
+          maxLength: 150
+        password:
+          type: string
+          maxLength: 200
+        developer_id:
+          type: string
+          maxLength: 200
+        terminal_name:
+          type: string
+          maxLength: 200
+        terminal_type:
+          type: string
+          enum:
+            - "Auto_fuel_dispenser"
+            - "Auto_teller_machine"
+            - "Call_centre"
+            - "Electronic_cash_register"
+            - "Inflight_commerce_terminal"
+            - "Inter_voice_response"
+            - "Kiosk"
+            - "Mobile"
+            - "Point_of_sale"
+            - "Rf_device"
+            - "Standalone"
+            - "Ticket"
+            - "Unattended"
+            - "Unspecified"
+            - "Virtual"
+        terminal_status:
+          type: string
+          enum:
+            - "Active"
+            - "Inactive"
+        verifone_order_id:
+          type: string
+          maxLength: 255
+        device_id_value:
+          type: string
+          maxLength: 150
+        software_id:
+          type: integer
+        store_id:
+          type: integer
+        store_number:
+          type: string
+          maxLength: 4
+        terminal_number:
+          type: string
+          maxLength: 4
+        timezone:
+          type: string
+          maxLength: 255
+        is_store_address:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        created_by:
+          type: integer
+        updated_by:
+          type: integer
+  

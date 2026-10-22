@@ -1,4 +1,5 @@
-﻿import { buildApp } from './app'
+﻿import './telemetry'
+import { buildApp } from './app'
 
 async function main() {
   const app = await buildApp()
@@ -7,9 +8,9 @@ async function main() {
 
   try {
     await app.listen({ port, host })
-    app.log.info({ port }, 'crm service started')
+    app.log.info({ port }, 'server started')
   } catch (err) {
-    app.log.error(err, 'crm service failed to start')
+    app.log.error(err, 'server failed to start')
     process.exit(1)
   }
 }

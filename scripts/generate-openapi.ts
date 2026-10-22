@@ -6,6 +6,29 @@ const Mustache = require('mustache')
 
 const servicesDir = path.resolve(process.cwd(), 'services')
 
+function loadForeignKeyTables(): Set<string> {
+  const schemaPath = path.resolve(process.cwd(), 'infra', 'skeleton_cpanel.sql')
+  if (!fs.existsSync(schemaPath)) return new Set()
+
+  const sql = fs.readFileSync(schemaPath, 'utf8')
+  const tables = new Set<string>()
+  const foreignKeyPattern = /ALTER\s+TABLE\s+(?:"([\w$]+)"|`([\w$]+)`|([\w$]+))\s+ADD\s+(?:CONSTRAINT\s+[\w$]+\s+)?FOREIGN\s+KEY\s*\(/gi
+  let match: RegExpExecArray | null
+  while ((match = foreignKeyPattern.exec(sql)) !== null) {
+    tables.add((match[1] || match[2] || match[3]).toLowerCase())
+  }
+
+  const inlineForeignKeyPattern = /CREATE\s+TABLE\s+(?:"([\w$]+)"|`([\w$]+)`|([\w$]+))\s*\(([\s\S]*?)\n\);/gi
+  while ((match = inlineForeignKeyPattern.exec(sql)) !== null) {
+    if (/\bFOREIGN\s+KEY\s*\(/i.test(match[4])) {
+      tables.add((match[1] || match[2] || match[3]).toLowerCase())
+    }
+  }
+  return tables
+}
+
+const foreignKeyTables = loadForeignKeyTables()
+
 function toPascalCase(input: string): string {
   return input
     .split(/[^a-zA-Z0-9]+/)
@@ -37,8 +60,8 @@ function tsTypeFromSchema(schema: any): string {
     const intersect = schema.allOf.map(tsTypeFromSchema).join(' & ')
     return intersect || 'unknown'
   }
-  if (schema.enum) {
-    return schema.enum.map((v: string) => JSON.stringify(v)).join(' | ')
+  if (Array.isArray(schema.enum) && schema.enum.length > 0) {
+    return schema.enum.map((value: unknown) => JSON.stringify(value)).join(' | ')
   }
   if (schema.type === 'array') {
     const itemType = tsTypeFromSchema(schema.items)
@@ -290,6 +313,7 @@ function generateTypes(schemas: Record<string, any>, typesDir: string) {
     const data = {
       typeName: name,
       typeDefinition: tsType,
+      isEnum: Array.isArray(schema.enum) && schema.enum.length > 0,
       imports: imports.length > 0 ? imports : false,
     }
 
@@ -334,6 +358,7 @@ function generateService(
     ControllerName: controllerName,
     imports: schemaNames.length > 0 ? schemaNames : false,
     methods: methods.length > 0 ? methods : false,
+    hasForeignKeys: methods.some((method) => method.hasForeignKeys),
   }
 
   const output = Mustache.render(serviceTemplate, data)
@@ -475,6 +500,7 @@ function writeGeneratorFiles(outDir?: string, module?: string) {
         methodImpl.modelDecoratorName = modelDecoratorName
         methodImpl.modelKey = moduleName
         methodImpl.hasModel = Boolean(modelDecoratorName)
+        methodImpl.hasForeignKeys = modelDecoratorName === 'cpanelModels' && foreignKeyTables.has(moduleName.toLowerCase())
         methodImpl.isList = crudAction === 'list'
         methodImpl.isCreate = crudAction === 'create'
         methodImpl.isRead = crudAction === 'read'

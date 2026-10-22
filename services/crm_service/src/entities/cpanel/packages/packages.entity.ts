@@ -1,0 +1,146 @@
+import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
+
+export type PackagesAttributes = {
+  id?: string | number | null
+  name?: string | null
+  price?: number | null
+  costPrice?: number | null
+  industryId?: number | null
+  maxUsers?: number | null
+  packageType?: string
+  status?: string
+  allowedMultipleStores?: string
+  additionalPrice?: number | null
+  additionalCostPrice?: number | null
+  permissionBasedOn?: string
+  testPackage?: string
+  createdAt?: Date
+  updatedAt?: Date
+}
+
+export type PackagesCreationAttributes = Optional<PackagesAttributes, "id" | "name" | "price" | "costPrice" | "industryId" | "maxUsers" | "packageType" | "status" | "allowedMultipleStores" | "additionalPrice" | "additionalCostPrice" | "permissionBasedOn" | "testPackage" | "createdAt" | "updatedAt">
+
+export class PackagesEntity
+  extends Model<PackagesAttributes, PackagesCreationAttributes>
+  implements PackagesAttributes
+{
+  declare id: string | number | null
+  declare name: string | null
+  declare price: number | null
+  declare costPrice: number | null
+  declare industryId: number | null
+  declare maxUsers: number | null
+  declare packageType: string
+  declare status: string
+  declare allowedMultipleStores: string
+  declare additionalPrice: number | null
+  declare additionalCostPrice: number | null
+  declare permissionBasedOn: string
+  declare testPackage: string
+  declare createdAt: Date
+  declare updatedAt: Date
+}
+
+export function initPackagesEntity(sequelize: Sequelize): typeof PackagesEntity {
+  PackagesEntity.init(
+    {
+      id: {
+        type: DataTypes.BIGINT,
+        field: 'id',
+        allowNull: true,
+        primaryKey: true,
+        autoIncrement: true,
+        defaultValue: "AS IDENTITY",
+      },
+      name: {
+        type: DataTypes.STRING(200),
+        field: 'name',
+        allowNull: true,
+      },
+      price: {
+        type: DataTypes.DECIMAL(15, 2),
+        field: 'price',
+        allowNull: true,
+      },
+      costPrice: {
+        type: DataTypes.DECIMAL(15, 2),
+        field: 'cost_price',
+        allowNull: true,
+      },
+      industryId: {
+        type: DataTypes.TEXT,
+        field: 'industry_id',
+        allowNull: true,
+      },
+      maxUsers: {
+        type: DataTypes.TEXT,
+        field: 'max_users',
+        allowNull: true,
+        defaultValue: 0,
+      },
+      packageType: {
+        type: DataTypes.TEXT,
+        field: 'package_type',
+        allowNull: false,
+        defaultValue: "Lite",
+      },
+      status: {
+        type: DataTypes.TEXT,
+        field: 'status',
+        allowNull: false,
+        defaultValue: "Active",
+      },
+      allowedMultipleStores: {
+        type: DataTypes.TEXT,
+        field: 'allowed_multiple_stores',
+        allowNull: false,
+        defaultValue: "FALSE",
+      },
+      additionalPrice: {
+        type: DataTypes.DECIMAL(15, 1),
+        field: 'additional_price',
+        allowNull: true,
+      },
+      additionalCostPrice: {
+        type: DataTypes.DECIMAL(15, 1),
+        field: 'additional_cost_price',
+        allowNull: true,
+      },
+      permissionBasedOn: {
+        type: DataTypes.TEXT,
+        field: 'permission_based_on',
+        allowNull: false,
+        defaultValue: "Role",
+      },
+      testPackage: {
+        type: DataTypes.TEXT,
+        field: 'test_package',
+        allowNull: false,
+        defaultValue: "FALSE",
+      },
+      createdAt: {
+        type: DataTypes.DATE,
+        field: 'created_at',
+        allowNull: false,
+        defaultValue: "DataTypes.NOW",
+      },
+      updatedAt: {
+        type: DataTypes.DATE,
+        field: 'updated_at',
+        allowNull: false,
+        defaultValue: "DataTypes.NOW",
+      }
+    },
+    {
+      sequelize,
+      tableName: 'packages',
+      timestamps: true,
+      underscored: true,
+      freezeTableName: true,
+      indexes: [
+      { unique: true, fields: ['id'] }
+      ]
+    }
+  )
+  return PackagesEntity
+}

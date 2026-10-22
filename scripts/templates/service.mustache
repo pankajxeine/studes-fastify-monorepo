@@ -6,6 +6,43 @@ import type { {{ControllerName}}, ListItem, PaginatedResponse } from './{{Contro
 
 import { verifyDbSchema, verifyDbModel } from '../../../core/helper/db_utils';
 
+{{#hasForeignKeys}}
+function getBelongsToIncludes(model: any, schema: string) {
+  const associations = Object.values(model.associations ?? {}) as any[]
+  const byForeignKey = new Map<string, any>()
+
+  for (const association of associations) {
+    if (association.associationType !== 'BelongsTo') continue
+
+    const foreignKey = String(association.foreignKey ?? '')
+    const key = foreignKey
+      .replace(/([a-z0-9])([A-Z])/g, '$1_$2')
+      .replace(/_?id$/i, '')
+      .toLowerCase()
+    if (!key) continue
+
+    const current = byForeignKey.get(key)
+    if (!current || String(association.as).toLowerCase() === key) {
+      byForeignKey.set(key, association)
+    }
+  }
+
+  return Array.from(byForeignKey.values()).map((association) => {
+    const target = association.target
+    const targetAttributes = target.rawAttributes ?? {}
+    const labelAttribute = ['name', 'title', 'username', 'code', 'firstName']
+      .find((attribute) => Object.prototype.hasOwnProperty.call(targetAttributes, attribute))
+    const attributes = ['id', ...(labelAttribute ? [labelAttribute] : [])]
+
+    return {
+      model: target.schema(schema),
+      as: association.as,
+      attributes,
+    }
+  })
+}
+{{/hasForeignKeys}}
+
 export class {{ServiceName}} implements {{ControllerName}} {
 {{#methods}}
       public async {{methodName}}({{methodParams}}): Promise<{{{returnType}}}> {
@@ -17,6 +54,9 @@ export class {{ServiceName}} implements {{ControllerName}} {
       // bind model to tenant schema
       const models = app.{{modelDecoratorName}};
       verifyDbModel(models);
+      const model = models.{{modelKey}}.schema(schema!);
+{{#hasForeignKeys}}      const include = getBelongsToIncludes(model, schema!);
+{{/hasForeignKeys}}
 {{#isList}}
       const query = (request?.query ?? {}) as { page?: string | number; limit?: string | number }
       const parsePositiveInteger = (value: string | number | undefined, fallback: number) => {
@@ -25,7 +65,10 @@ export class {{ServiceName}} implements {{ControllerName}} {
       }
       const page = parsePositiveInteger(query.page, 1)
       const limit = Math.min(parsePositiveInteger(query.limit, 20), 100)
-      const { count, rows } = await models.{{modelKey}}.schema(schema!).findAndCountAll({
+      const { count, rows } = await model.findAndCountAll({
+{{#hasForeignKeys}}        include,
+        distinct: true,
+{{/hasForeignKeys}}
         limit,
         offset: (page - 1) * limit,
       })
@@ -43,14 +86,14 @@ export class {{ServiceName}} implements {{ControllerName}} {
       return row.get({ plain: true }) as {{returnType}}
 {{/isCreate}}{{#isRead}}
       const { id } = (request?.params ?? {}) as { id?: string | number }
-      const row = await models.{{modelKey}}.schema(schema!).findByPk(id)
+      const row = await model.findByPk(id{{#hasForeignKeys}}, { include }{{/hasForeignKeys}})
       if (!row) {
         throw new Error('{{modelKey}} not found')
       }
       return row.get({ plain: true }) as {{returnType}}
 {{/isRead}}{{#isUpdate}}
       const { id } = (request?.params ?? {}) as { id?: string | number }
-      const row = await models.{{modelKey}}.schema(schema!).findByPk(id)
+      const row = await model.findByPk(id{{#hasForeignKeys}}, { include }{{/hasForeignKeys}})
       if (!row) {
         throw new Error('{{modelKey}} not found')
       }

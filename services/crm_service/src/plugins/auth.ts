@@ -1,32 +1,21 @@
 ﻿import fp from 'fastify-plugin'
-import { UnauthorizedError } from '../core';
+import jwt from '@fastify/jwt'
+import cookie from '@fastify/cookie'
 
 export default fp(async (app) => {
   const jwtSecret = app.env?.JWT_SECRET ?? process.env.JWT_SECRET
+  const cookieSecret = app.env?.SESSION_COOKIE_SECRET ?? process.env.SESSION_COOKIE_SECRET
+
   if (!jwtSecret) {
     throw new Error('JWT_SECRET is required')
   }
+  if (!cookieSecret) {
+    throw new Error('SESSION_COOKIE_SECRET is required')
+  }
 
-  await app.register((await import('@fastify/jwt')).default, { secret: jwtSecret })
-
-  app.addHook('onRequest', async (request) => {
-    const config = request.routeOptions.config ?? {}
-    if (config.requireAuth === false) return
-
-    try {
-      await request.jwtVerify()
-    } catch {
-      throw new UnauthorizedError('Invalid or missing token')
-    }
+  await app.register(jwt, { secret: jwtSecret })
+  await app.register(cookie, {
+    secret: cookieSecret,
+    hook: 'onRequest'
   })
 })
-
-declare module 'fastify' {
-  interface FastifyContextConfig {
-    requireAuth?: boolean
-  }
-
-  interface FastifyRouteConfig {
-    requireAuth?: boolean
-  }
-}

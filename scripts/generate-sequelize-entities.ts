@@ -16,9 +16,18 @@ type Column = {
   onUpdate?: string;
 };
 
+type ForeignKey = {
+  column: string;
+  model: string;
+  key: string;
+  onDelete?: string;
+  onUpdate?: string;
+};
+
 type Table = {
   name: string
   columns: Column[]
+  foreignKeys: ForeignKey[]
   indexes: any[]
   comment?: string
 }
@@ -193,13 +202,12 @@ function toLowerCamelCase(str: string): string {
 
 // Extract identifiers from PRIMARY KEY, UNIQUE, FOREIGN KEY clauses
 function extractIdentifiers(value: string): string[] {
-  // First try quoted identifiers
-  const quoted = Array.from(value.matchAll(/"([^"]+)"/g)).map(m => m[1]);
-  if (quoted.length > 0) return quoted;
-
-  // Otherwise grab bare words inside parentheses
+  // Only read the key list inside parentheses; a quoted constraint name is not a key.
   const parenMatch = value.match(/\(([^)]+)\)/);
   if (parenMatch) {
+    const quoted = Array.from(parenMatch[1].matchAll(/"([^"]+)"/g)).map(m => m[1]);
+    if (quoted.length > 0) return quoted;
+
     return parenMatch[1]
       .split(',')
       .map(s => s.trim().replace(/["']/g, ''))
@@ -287,6 +295,36 @@ function parseColumn(definition: string): Column | null {
 function extractBacktickNames(value: string): string[] {
   return Array.from(value.matchAll(/`([^`]+)`/g)).map((match) => match[1])
 }
+
+function unquoteIdentifier(value: string): string {
+  return value.trim().replace(/^["`]|["`]$/g, '')
+}
+
+function parseForeignKeyDefinitions(sql: string): ForeignKey[] {
+  const foreignKeys: ForeignKey[] = []
+  const pattern = /foreign\s+key\s*\(([^)]+)\)\s*references\s+((?:"[^"]+"|`[^`]+`|[\w$]+)(?:\s*\.\s*(?:"[^"]+"|`[^`]+`|[\w$]+))?)\s*\(([^)]+)\)([\s\S]*?)(?=,\s*(?:constraint\b|foreign\s+key\b|primary\s+key\b|unique\b)|$)/gi
+  let match: RegExpExecArray | null
+
+  while ((match = pattern.exec(sql)) !== null) {
+    const sourceColumn = unquoteIdentifier(match[1].split(',')[0])
+    const targetTable = unquoteIdentifier(match[2].split('.').pop() ?? match[2])
+    const targetColumn = unquoteIdentifier(match[3].split(',')[0])
+    const actions = match[4]
+    const onDelete = actions.match(/on\s+delete\s+(cascade|set\s+null|set\s+default|restrict|no\s+action)/i)?.[1]
+    const onUpdate = actions.match(/on\s+update\s+(cascade|set\s+null|set\s+default|restrict|no\s+action)/i)?.[1]
+
+    foreignKeys.push({
+      column: sourceColumn,
+      model: targetTable,
+      key: targetColumn,
+      onDelete: onDelete?.replace(/\s+/g, ' ').toUpperCase(),
+      onUpdate: onUpdate?.replace(/\s+/g, ' ').toUpperCase(),
+    })
+  }
+
+  return foreignKeys
+}
+
 // Table parser
 function parseTable(statement: string): Table | null {
   const tableMatch = statement.match(/create\s+table\s+(?:if\s+not\s+exists\s+)?("?[\w]+"?(?:\."?[\w]+"?)?)/i);
@@ -299,6 +337,7 @@ function parseTable(statement: string): Table | null {
 
   const body = statement.slice(bodyStart + 1, bodyEnd);
   const columns: Column[] = [];
+  const foreignKeys: ForeignKey[] = [];
   const indexes: { fields: string[]; unique?: boolean }[] = [];
   const primaryKeyColumns = new Set<string>();
   const uniqueColumns = new Set<string>();
@@ -307,6 +346,18 @@ function parseTable(statement: string): Table | null {
     const column = parseColumn(part);
     if (column && !/^(PRIMARY|CONSTRAINT)$/i.test(column.name)) {
       columns.push(column);
+      const referenceMatch = part.match(/references\s+((?:"[^"]+"|`[^`]+`|[\w$]+)(?:\s*\.\s*(?:"[^"]+"|`[^`]+`|[\w$]+))?)\s*\(([^)]+)\)/i)
+      if (referenceMatch) {
+        const targetTable = unquoteIdentifier(referenceMatch[1].split('.').pop() ?? referenceMatch[1])
+        const targetColumn = unquoteIdentifier(referenceMatch[2].split(',')[0])
+        foreignKeys.push({
+          column: column.name,
+          model: targetTable,
+          key: targetColumn,
+          onDelete: part.match(/on\s+delete\s+(cascade|set\s+null|set\s+default|restrict|no\s+action)/i)?.[1]?.replace(/\s+/g, ' ').toUpperCase(),
+          onUpdate: part.match(/on\s+update\s+(cascade|set\s+null|set\s+default|restrict|no\s+action)/i)?.[1]?.replace(/\s+/g, ' ').toUpperCase(),
+        })
+      }
       continue;
     }
 
@@ -325,22 +376,7 @@ function parseTable(statement: string): Table | null {
       continue;
     }
 
-    // FOREIGN KEY ... REFERENCES
-    if (/references/i.test(part)) {
-      const fkMatch = part.match(/references\s+"?(\w+)"?\s*\("?(\w+)"?\)/i);
-      if (fkMatch) {
-        const colNames = extractIdentifiers(part);
-        for (const colName of colNames) {
-          const col = columns.find(c => c.name === colName);
-          if (col) {
-            col.references = { model: fkMatch[1], key: fkMatch[2] };
-            if (/on delete cascade/i.test(part)) col.onDelete = 'CASCADE';
-            if (/on delete set null/i.test(part)) col.onDelete = 'SET NULL';
-            if (/on update cascade/i.test(part)) col.onUpdate = 'CASCADE';
-          }
-        }
-      }
-    }
+    foreignKeys.push(...parseForeignKeyDefinitions(part))
   }
 
   // Apply PK/Unique flags
@@ -349,7 +385,15 @@ function parseTable(statement: string): Table | null {
     if (primaryKeyColumns.has(column.name)) column.primaryKey = true;
   }
 
-  return { name: tableName, columns, indexes }
+  for (const foreignKey of foreignKeys) {
+    const column = columns.find((item) => item.name === foreignKey.column)
+    if (!column) continue
+    column.references = { model: foreignKey.model, key: foreignKey.key }
+    if (foreignKey.onDelete) column.onDelete = foreignKey.onDelete
+    if (foreignKey.onUpdate) column.onUpdate = foreignKey.onUpdate
+  }
+
+  return { name: tableName, columns, foreignKeys, indexes }
 }
 
 
@@ -389,6 +433,11 @@ function renderEntity(table: Table, schemaName?: string): string {
   const attributesName = `${className.replace('Entity', '')}Attributes`;
   const creationName = `${className.replace('Entity', '')}CreationAttributes`;
   const initName = `init${className}`;
+  const hasDeletedAt = table.columns.some((column) => column.name.toLowerCase() === 'deleted_at');
+  const hasCreatedAt = table.columns.some((column) => column.name.toLowerCase() === 'created_at');
+  const hasUpdatedAt = table.columns.some((column) => column.name.toLowerCase() === 'updated_at');
+  const usesTimestamps = hasCreatedAt && hasUpdatedAt;
+  const usesParanoidDeletes = hasDeletedAt && usesTimestamps;
 
   const attributes = table.columns.map(col => {
     const optional = col.allowNull || col.defaultValue || col.autoIncrement ? '?' : '';
@@ -451,10 +500,9 @@ ${fields}
     {
       sequelize,
       tableName: '${table.name}',
-      timestamps: true,
+      timestamps: ${usesTimestamps},
       underscored: true,
-      freezeTableName: true,
-      paranoid: false${schemaName ? `,\n      schema: '${schemaName}'` : ''}${table.comment ? `,\n      comment: '${table.comment}'` : ''}${indexes ? `,\n      indexes: [\n${indexes}\n      ]` : ''}
+      freezeTableName: true${usesParanoidDeletes ? `,\n      paranoid: true,\n      deletedAt: 'deletedAt'` : ''}${schemaName ? `,\n      schema: '${schemaName}'` : ''}${table.comment ? `,\n      comment: '${table.comment}'` : ''}${indexes ? `,\n      indexes: [\n${indexes}\n      ]` : ''}
     }
   )
   return ${className}
@@ -486,6 +534,42 @@ function renderIndex(tables: Table[]): string {
     )
     .join(',\n')
 
+  const tableNames = new Set(tables.map((table) => table.name.toLowerCase()))
+  const belongsToAliases = new Map<string, Set<string>>()
+  const hasManyAliases = new Map<string, Set<string>>()
+  const associationLines: string[] = []
+  for (const table of tables) {
+    for (const foreignKey of table.foreignKeys) {
+      const target = tables.find((item) => item.name.toLowerCase() === foreignKey.model.toLowerCase())
+      if (!target || !tableNames.has(table.name.toLowerCase())) continue
+
+      const foreignKeyAttribute = toCamelCase(foreignKey.column)
+      const targetKeyAttribute = toCamelCase(foreignKey.key)
+      const baseAlias = toLowerCamelCase(foreignKey.column.replace(/_id$/i, '')) || toLowerCamelCase(target.name)
+      const sourceAliases = belongsToAliases.get(table.name) ?? new Set<string>()
+      const belongsToAlias = sourceAliases.has(baseAlias) ? `${baseAlias}${toPascalCase(target.name)}` : baseAlias
+      sourceAliases.add(belongsToAlias)
+      belongsToAliases.set(table.name, sourceAliases)
+
+      const targetAliases = hasManyAliases.get(target.name) ?? new Set<string>()
+      const reverseBaseAlias = toLowerCamelCase(table.name)
+      const hasManyAlias = targetAliases.has(reverseBaseAlias)
+        ? `${reverseBaseAlias}By${toPascalCase(foreignKey.column)}`
+        : reverseBaseAlias
+      targetAliases.add(hasManyAlias)
+      hasManyAliases.set(target.name, targetAliases)
+
+      const options = [
+        `foreignKey: '${foreignKeyAttribute}'`,
+        `targetKey: '${targetKeyAttribute}'`,
+        ...(foreignKey.onDelete ? [`onDelete: '${foreignKey.onDelete}'`] : []),
+        ...(foreignKey.onUpdate ? [`onUpdate: '${foreignKey.onUpdate}'`] : []),
+      ].join(', ')
+      associationLines.push(`  models.${table.name}.belongsTo(models.${target.name}, { as: '${belongsToAlias}', ${options} })`)
+      associationLines.push(`  models.${target.name}.hasMany(models.${table.name}, { as: '${hasManyAlias}', foreignKey: '${foreignKeyAttribute}', sourceKey: '${targetKeyAttribute}'${foreignKey.onDelete ? `, onDelete: '${foreignKey.onDelete}'` : ''}${foreignKey.onUpdate ? `, onUpdate: '${foreignKey.onUpdate}'` : ''} })`)
+    }
+  }
+
   return `import type { Sequelize } from 'sequelize'
 ${imports}
 
@@ -494,13 +578,44 @@ ${typeEntries}
 }
 
 export function initGeneratedEntities(sequelize: Sequelize): { models: GeneratedModels } {
-  return {
-    models: {
+  const models: GeneratedModels = {
 ${models}
-    }
+  }
+${associationLines.join('\n')}
+  return {
+    models
   }
 }
 `
+}
+
+function addAlterTableForeignKeys(sql: string, tables: Table[]) {
+  const tableByName = new Map(tables.map((table) => [table.name.toLowerCase(), table]))
+  const alterPattern = /alter\s+table\s+(?:only\s+)?((?:"[^"]+"|`[^`]+`|[\w$]+)(?:\s*\.\s*(?:"[^"]+"|`[^`]+`|[\w$]+))?)\s+([\s\S]*?);/gi
+  let match: RegExpExecArray | null
+
+  while ((match = alterPattern.exec(sql)) !== null) {
+    const tableName = unquoteIdentifier(match[1].split('.').pop() ?? match[1]).toLowerCase()
+    const table = tableByName.get(tableName)
+    if (!table) continue
+
+    for (const foreignKey of parseForeignKeyDefinitions(match[2])) {
+      const duplicate = table.foreignKeys.some((existing) =>
+        existing.column === foreignKey.column &&
+        existing.model.toLowerCase() === foreignKey.model.toLowerCase() &&
+        existing.key === foreignKey.key
+      )
+      if (duplicate) continue
+      table.foreignKeys.push(foreignKey)
+
+      const column = table.columns.find((item) => item.name === foreignKey.column)
+      if (column) {
+        column.references = { model: foreignKey.model, key: foreignKey.key }
+        if (foreignKey.onDelete) column.onDelete = foreignKey.onDelete
+        if (foreignKey.onUpdate) column.onUpdate = foreignKey.onUpdate
+      }
+    }
+  }
 }
 
 function renderRootEntitiesIndex(modules: EntityModule[]): string {
@@ -603,6 +718,8 @@ function main() {
   const options = parseArgs(process.argv.slice(2))
   const sql = stripMysqlComments(fs.readFileSync(options.sqlFile, 'utf8'))
   const tables = findCreateTableStatements(sql).map(parseTable).filter((table): table is Table => Boolean(table))
+
+  addAlterTableForeignKeys(sql, tables)
 
   if (tables.length === 0) {
     throw new Error(`No CREATE TABLE statements found in ${options.sqlFile}`)

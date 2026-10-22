@@ -15,6 +15,9 @@
 *.sql
 !infra/skeleton_cpanel.sql
 !infra/skeleton_cpanel_dml.sql
+!infra/enums.sql
+!infra/domain.sql
+!infra/utils.sql
 *.pem
 .env
 .DS_Store

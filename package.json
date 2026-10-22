@@ -11,7 +11,7 @@
     "format": "prettier --write .",
     "db:init": "tsx scripts/db-init.ts",
     "db:create-tenant": "tsx scripts/create-tenant.ts",
-    "dev:auth": "npm -w services/auth_service run dev",
+    "dev:auth": "npm -w services/crm_service run dev",
     "dev:billing": "npm -w services/billing_service run dev",
     "dev:notification": "npm -w services/notification_service run dev",
     "dev:gateway": "npm -w services/api_gateway run dev",
