@@ -1,0 +1,297 @@
+openapi: 3.0.0
+x-sql-table: alumni_alumni_employment
+info:
+  title: AlumniEmploymentResponse API
+  version: 1.0.0
+paths:
+  /alumni_employment:
+    get:
+      operationId: listAlumniEmployment
+      summary: Get all alumni_employment
+      responses:
+        '200':
+          description: List of alumni_employment
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AlumniEmploymentResponse'
+    post:
+      operationId: createAlumniEmployment
+      summary: Create a new alumni_employment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlumniEmploymentRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlumniEmploymentResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /alumni_employment/{id}:
+    get:
+      operationId: getAlumniEmploymentById
+      summary: Get alumni_employment by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: alumni_employment object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlumniEmploymentResponse'
+        '404':
+          description: alumni_employment not found
+    put:
+      operationId: updateAlumniEmployment
+      summary: Update alumni_employment by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlumniEmploymentUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlumniEmploymentResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: alumni_employment not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteAlumniEmployment
+      summary: Delete alumni_employment by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: alumni_employment not found
+components:
+  schemas:
+
+    AlumniEmploymentRequest:
+      type: object
+      required:
+        - alumnus_id
+        - employer_name
+        - job_title
+        - start_date
+      additionalProperties: false
+      properties:
+        alumnus_id:
+          type: string
+          format: uuid
+        employer_name:
+          type: string
+        job_title:
+          type: string
+        employment_type:
+          type: string
+          maxLength: 20
+          default: "full_time"
+        industry:
+          type: string
+          nullable: true
+        city:
+          type: string
+          nullable: true
+        country_code:
+          type: string
+          nullable: true
+          maxLength: 2
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+          nullable: true
+        is_primary:
+          type: boolean
+          default: true
+        is_current:
+          type: boolean
+          nullable: true
+        description:
+          type: string
+          nullable: true
+
+    AlumniEmploymentUpdateRequest:
+      type: object
+      required:
+        - alumnus_id
+        - employer_name
+        - job_title
+        - employment_type
+        - industry
+        - city
+        - country_code
+        - start_date
+        - end_date
+        - is_primary
+        - is_current
+        - description
+      additionalProperties: false
+      properties:
+        alumnus_id:
+          type: string
+          format: uuid
+        employer_name:
+          type: string
+        job_title:
+          type: string
+        employment_type:
+          type: string
+          maxLength: 20
+          default: "full_time"
+        industry:
+          type: string
+          nullable: true
+        city:
+          type: string
+          nullable: true
+        country_code:
+          type: string
+          nullable: true
+          maxLength: 2
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+          nullable: true
+        is_primary:
+          type: boolean
+          default: true
+        is_current:
+          type: boolean
+          nullable: true
+        description:
+          type: string
+          nullable: true
+
+    AlumniEmploymentResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - alumni_employment_id
+        - alumnus_id
+        - employer_name
+        - job_title
+        - employment_type
+        - start_date
+        - is_primary
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        alumni_employment_id:
+          type: string
+          format: uuid
+          readOnly: true
+        alumnus_id:
+          type: string
+          format: uuid
+        employer_name:
+          type: string
+        job_title:
+          type: string
+        employment_type:
+          type: string
+          maxLength: 20
+          default: "full_time"
+        industry:
+          type: string
+          nullable: true
+        city:
+          type: string
+          nullable: true
+        country_code:
+          type: string
+          nullable: true
+          maxLength: 2
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+          nullable: true
+        is_primary:
+          type: boolean
+          default: true
+        is_current:
+          type: boolean
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

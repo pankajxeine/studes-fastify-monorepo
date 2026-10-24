@@ -1,8 +1,10 @@
 import type { GetCpanelRouteDomainResponse } from './types/GetCpanelRouteDomainResponse'
-import { FastifyInstance, FastifyRequest } from 'fastify'
-import type { CommonController, ListItem, PaginatedResponse } from './CommonController'
+import type { FastifyInstance, FastifyRequest } from 'fastify'
+import type { CommonController } from './CommonController'
 
-import { verifyDbSchema, verifyDbModel } from '../../../core/helper/db_utils';
+
+
+
 
 
 export class CommonService implements CommonController {

@@ -1,0 +1,479 @@
+openapi: 3.0.0
+x-sql-table: prtn_placement_drive
+info:
+  title: PlacementDriveResponse API
+  version: 1.0.0
+paths:
+  /placement_drive:
+    get:
+      operationId: listPlacementDrive
+      summary: Get all placement_drive
+      responses:
+        '200':
+          description: List of placement_drive
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PlacementDriveResponse'
+    post:
+      operationId: createPlacementDrive
+      summary: Create a new placement_drive
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlacementDriveRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlacementDriveResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /placement_drive/{id}:
+    get:
+      operationId: getPlacementDriveById
+      summary: Get placement_drive by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: placement_drive object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlacementDriveResponse'
+        '404':
+          description: placement_drive not found
+    put:
+      operationId: updatePlacementDrive
+      summary: Update placement_drive by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlacementDriveUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlacementDriveResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: placement_drive not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deletePlacementDrive
+      summary: Delete placement_drive by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: placement_drive not found
+components:
+  schemas:
+
+    PlacementDriveRequest:
+      type: object
+      required:
+        - partner_organization_id
+        - campus_id
+        - academic_year_id
+        - coordinator_staff_id
+        - code
+        - title
+        - drive_kind
+        - role_title
+        - registration_opens_on
+        - registration_closes_on
+      additionalProperties: false
+      properties:
+        partner_organization_id:
+          type: string
+          format: uuid
+        campus_id:
+          type: string
+          format: uuid
+        academic_year_id:
+          type: string
+          format: uuid
+        coordinator_staff_id:
+          type: string
+          format: uuid
+        posted_by_partner_contact_id:
+          type: string
+          format: uuid
+          nullable: true
+        code:
+          type: string
+          maxLength: 30
+        title:
+          type: string
+        drive_kind:
+          type: string
+          maxLength: 12
+        role_title:
+          type: string
+        job_description:
+          type: string
+          nullable: true
+        work_location:
+          type: string
+          nullable: true
+        work_mode:
+          type: string
+          maxLength: 10
+          default: "onsite"
+        positions_count:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 500
+          default: 1
+        ctc_min_amount:
+          type: string
+          nullable: true
+        ctc_max_amount:
+          type: string
+          nullable: true
+        stipend_amount:
+          type: string
+          nullable: true
+        engagement_start_on:
+          type: string
+          format: date
+          nullable: true
+        engagement_end_on:
+          type: string
+          format: date
+          nullable: true
+        registration_opens_on:
+          type: string
+          format: date
+        registration_closes_on:
+          type: string
+          format: date
+        status:
+          type: string
+          default: "draft"
+          enum:
+            - "draft"
+            - "open"
+            - "closed"
+            - "in_progress"
+            - "completed"
+            - "cancelled"
+        approved_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        approved_at:
+          type: string
+          format: date-time
+          nullable: true
+        cancellation_reason:
+          type: string
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+
+    PlacementDriveUpdateRequest:
+      type: object
+      required:
+        - partner_organization_id
+        - campus_id
+        - academic_year_id
+        - coordinator_staff_id
+        - posted_by_partner_contact_id
+        - code
+        - title
+        - drive_kind
+        - role_title
+        - job_description
+        - work_location
+        - work_mode
+        - positions_count
+        - ctc_min_amount
+        - ctc_max_amount
+        - stipend_amount
+        - engagement_start_on
+        - engagement_end_on
+        - registration_opens_on
+        - registration_closes_on
+        - status
+        - approved_by_user_id
+        - approved_at
+        - cancellation_reason
+        - notes
+      additionalProperties: false
+      properties:
+        partner_organization_id:
+          type: string
+          format: uuid
+        campus_id:
+          type: string
+          format: uuid
+        academic_year_id:
+          type: string
+          format: uuid
+        coordinator_staff_id:
+          type: string
+          format: uuid
+        posted_by_partner_contact_id:
+          type: string
+          format: uuid
+          nullable: true
+        code:
+          type: string
+          maxLength: 30
+        title:
+          type: string
+        drive_kind:
+          type: string
+          maxLength: 12
+        role_title:
+          type: string
+        job_description:
+          type: string
+          nullable: true
+        work_location:
+          type: string
+          nullable: true
+        work_mode:
+          type: string
+          maxLength: 10
+          default: "onsite"
+        positions_count:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 500
+          default: 1
+        ctc_min_amount:
+          type: string
+          nullable: true
+        ctc_max_amount:
+          type: string
+          nullable: true
+        stipend_amount:
+          type: string
+          nullable: true
+        engagement_start_on:
+          type: string
+          format: date
+          nullable: true
+        engagement_end_on:
+          type: string
+          format: date
+          nullable: true
+        registration_opens_on:
+          type: string
+          format: date
+        registration_closes_on:
+          type: string
+          format: date
+        status:
+          type: string
+          default: "draft"
+          enum:
+            - "draft"
+            - "open"
+            - "closed"
+            - "in_progress"
+            - "completed"
+            - "cancelled"
+        approved_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        approved_at:
+          type: string
+          format: date-time
+          nullable: true
+        cancellation_reason:
+          type: string
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+
+    PlacementDriveResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - placement_drive_id
+        - partner_organization_id
+        - campus_id
+        - academic_year_id
+        - coordinator_staff_id
+        - code
+        - title
+        - drive_kind
+        - role_title
+        - work_mode
+        - positions_count
+        - registration_opens_on
+        - registration_closes_on
+        - status
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        placement_drive_id:
+          type: string
+          format: uuid
+          readOnly: true
+        partner_organization_id:
+          type: string
+          format: uuid
+        campus_id:
+          type: string
+          format: uuid
+        academic_year_id:
+          type: string
+          format: uuid
+        coordinator_staff_id:
+          type: string
+          format: uuid
+        posted_by_partner_contact_id:
+          type: string
+          format: uuid
+          nullable: true
+        code:
+          type: string
+          maxLength: 30
+        title:
+          type: string
+        drive_kind:
+          type: string
+          maxLength: 12
+        role_title:
+          type: string
+        job_description:
+          type: string
+          nullable: true
+        work_location:
+          type: string
+          nullable: true
+        work_mode:
+          type: string
+          maxLength: 10
+          default: "onsite"
+        positions_count:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 500
+          default: 1
+        ctc_min_amount:
+          type: string
+          nullable: true
+        ctc_max_amount:
+          type: string
+          nullable: true
+        stipend_amount:
+          type: string
+          nullable: true
+        engagement_start_on:
+          type: string
+          format: date
+          nullable: true
+        engagement_end_on:
+          type: string
+          format: date
+          nullable: true
+        registration_opens_on:
+          type: string
+          format: date
+        registration_closes_on:
+          type: string
+          format: date
+        status:
+          type: string
+          default: "draft"
+          enum:
+            - "draft"
+            - "open"
+            - "closed"
+            - "in_progress"
+            - "completed"
+            - "cancelled"
+        approved_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        approved_at:
+          type: string
+          format: date-time
+          nullable: true
+        cancellation_reason:
+          type: string
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

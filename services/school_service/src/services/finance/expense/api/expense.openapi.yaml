@@ -1,0 +1,396 @@
+openapi: 3.0.0
+x-sql-table: fin_expense
+info:
+  title: ExpenseResponse API
+  version: 1.0.0
+paths:
+  /expense:
+    get:
+      operationId: listExpense
+      summary: Get all expense
+      responses:
+        '200':
+          description: List of expense
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ExpenseResponse'
+    post:
+      operationId: createExpense
+      summary: Create a new expense
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExpenseRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExpenseResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /expense/{id}:
+    get:
+      operationId: getExpenseById
+      summary: Get expense by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: expense object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExpenseResponse'
+        '404':
+          description: expense not found
+    put:
+      operationId: updateExpense
+      summary: Update expense by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExpenseUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExpenseResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: expense not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteExpense
+      summary: Delete expense by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: expense not found
+components:
+  schemas:
+
+    ExpenseRequest:
+      type: object
+      required:
+        - expense_no
+        - campus_id
+        - expense_category_code
+        - description
+        - expense_date
+        - amount
+        - submitted_by_user_id
+      additionalProperties: false
+      properties:
+        expense_no:
+          type: string
+          maxLength: 30
+        campus_id:
+          type: string
+          format: uuid
+        expense_category_code:
+          type: string
+        vendor_id:
+          type: string
+          format: uuid
+          nullable: true
+        file_id:
+          type: string
+          format: uuid
+          nullable: true
+        description:
+          type: string
+        vendor_invoice_no:
+          type: string
+          nullable: true
+          maxLength: 40
+        expense_date:
+          type: string
+          format: date
+        amount:
+          type: string
+        tax_amount:
+          type: string
+          default: 0
+        total_amount:
+          type: number
+          format: double
+          nullable: true
+        status:
+          type: string
+          default: "pending"
+        submitted_by_user_id:
+          type: string
+          format: uuid
+        submitted_at:
+          type: string
+          format: date-time
+        approved_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        approved_at:
+          type: string
+          format: date-time
+          nullable: true
+        rejection_reason:
+          type: string
+          nullable: true
+        payment_method:
+          type: string
+          nullable: true
+        paid_on:
+          type: string
+          format: date
+          nullable: true
+        payment_reference_no:
+          type: string
+          nullable: true
+          maxLength: 80
+
+    ExpenseUpdateRequest:
+      type: object
+      required:
+        - expense_no
+        - campus_id
+        - expense_category_code
+        - vendor_id
+        - file_id
+        - description
+        - vendor_invoice_no
+        - expense_date
+        - amount
+        - tax_amount
+        - total_amount
+        - status
+        - submitted_by_user_id
+        - submitted_at
+        - approved_by_user_id
+        - approved_at
+        - rejection_reason
+        - payment_method
+        - paid_on
+        - payment_reference_no
+      additionalProperties: false
+      properties:
+        expense_no:
+          type: string
+          maxLength: 30
+        campus_id:
+          type: string
+          format: uuid
+        expense_category_code:
+          type: string
+        vendor_id:
+          type: string
+          format: uuid
+          nullable: true
+        file_id:
+          type: string
+          format: uuid
+          nullable: true
+        description:
+          type: string
+        vendor_invoice_no:
+          type: string
+          nullable: true
+          maxLength: 40
+        expense_date:
+          type: string
+          format: date
+        amount:
+          type: string
+        tax_amount:
+          type: string
+          default: 0
+        total_amount:
+          type: number
+          format: double
+          nullable: true
+        status:
+          type: string
+          default: "pending"
+        submitted_by_user_id:
+          type: string
+          format: uuid
+        submitted_at:
+          type: string
+          format: date-time
+        approved_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        approved_at:
+          type: string
+          format: date-time
+          nullable: true
+        rejection_reason:
+          type: string
+          nullable: true
+        payment_method:
+          type: string
+          nullable: true
+        paid_on:
+          type: string
+          format: date
+          nullable: true
+        payment_reference_no:
+          type: string
+          nullable: true
+          maxLength: 80
+
+    ExpenseResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - expense_id
+        - expense_no
+        - campus_id
+        - expense_category_code
+        - description
+        - expense_date
+        - amount
+        - tax_amount
+        - status
+        - submitted_by_user_id
+        - submitted_at
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        expense_id:
+          type: string
+          format: uuid
+          readOnly: true
+        expense_no:
+          type: string
+          maxLength: 30
+        campus_id:
+          type: string
+          format: uuid
+        expense_category_code:
+          type: string
+        vendor_id:
+          type: string
+          format: uuid
+          nullable: true
+        file_id:
+          type: string
+          format: uuid
+          nullable: true
+        description:
+          type: string
+        vendor_invoice_no:
+          type: string
+          nullable: true
+          maxLength: 40
+        expense_date:
+          type: string
+          format: date
+        amount:
+          type: string
+        tax_amount:
+          type: string
+          default: 0
+        total_amount:
+          type: number
+          format: double
+          nullable: true
+        status:
+          type: string
+          default: "pending"
+        submitted_by_user_id:
+          type: string
+          format: uuid
+        submitted_at:
+          type: string
+          format: date-time
+        approved_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        approved_at:
+          type: string
+          format: date-time
+          nullable: true
+        rejection_reason:
+          type: string
+          nullable: true
+        payment_method:
+          type: string
+          nullable: true
+        paid_on:
+          type: string
+          format: date
+          nullable: true
+        payment_reference_no:
+          type: string
+          nullable: true
+          maxLength: 80
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

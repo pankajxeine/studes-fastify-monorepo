@@ -1,0 +1,288 @@
+openapi: 3.0.0
+x-sql-table: hr_leave_balance
+info:
+  title: LeaveBalanceResponse API
+  version: 1.0.0
+paths:
+  /leave_balance:
+    get:
+      operationId: listLeaveBalance
+      summary: Get all leave_balance
+      responses:
+        '200':
+          description: List of leave_balance
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LeaveBalanceResponse'
+    post:
+      operationId: createLeaveBalance
+      summary: Create a new leave_balance
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LeaveBalanceRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LeaveBalanceResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /leave_balance/{id}:
+    get:
+      operationId: getLeaveBalanceById
+      summary: Get leave_balance by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: leave_balance object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LeaveBalanceResponse'
+        '404':
+          description: leave_balance not found
+    put:
+      operationId: updateLeaveBalance
+      summary: Update leave_balance by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LeaveBalanceUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LeaveBalanceResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: leave_balance not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteLeaveBalance
+      summary: Delete leave_balance by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: leave_balance not found
+components:
+  schemas:
+
+    LeaveBalanceRequest:
+      type: object
+      required:
+        - staff_id
+        - leave_type_code
+        - period_start_on
+        - period_end_on
+      additionalProperties: false
+      properties:
+        staff_id:
+          type: string
+          format: uuid
+        leave_type_code:
+          type: string
+        period_start_on:
+          type: string
+          format: date
+        period_end_on:
+          type: string
+          format: date
+        opening_days:
+          type: number
+          format: double
+          default: 0
+        accrued_days:
+          type: number
+          format: double
+          default: 0
+        adjusted_days:
+          type: number
+          format: double
+          default: 0
+        used_days:
+          type: number
+          format: double
+          default: 0
+        available_days:
+          type: number
+          format: double
+          nullable: true
+        period:
+          type: string
+          nullable: true
+
+    LeaveBalanceUpdateRequest:
+      type: object
+      required:
+        - staff_id
+        - leave_type_code
+        - period_start_on
+        - period_end_on
+        - opening_days
+        - accrued_days
+        - adjusted_days
+        - used_days
+        - available_days
+        - period
+      additionalProperties: false
+      properties:
+        staff_id:
+          type: string
+          format: uuid
+        leave_type_code:
+          type: string
+        period_start_on:
+          type: string
+          format: date
+        period_end_on:
+          type: string
+          format: date
+        opening_days:
+          type: number
+          format: double
+          default: 0
+        accrued_days:
+          type: number
+          format: double
+          default: 0
+        adjusted_days:
+          type: number
+          format: double
+          default: 0
+        used_days:
+          type: number
+          format: double
+          default: 0
+        available_days:
+          type: number
+          format: double
+          nullable: true
+        period:
+          type: string
+          nullable: true
+
+    LeaveBalanceResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - leave_balance_id
+        - staff_id
+        - leave_type_code
+        - period_start_on
+        - period_end_on
+        - opening_days
+        - accrued_days
+        - adjusted_days
+        - used_days
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        leave_balance_id:
+          type: string
+          format: uuid
+          readOnly: true
+        staff_id:
+          type: string
+          format: uuid
+        leave_type_code:
+          type: string
+        period_start_on:
+          type: string
+          format: date
+        period_end_on:
+          type: string
+          format: date
+        opening_days:
+          type: number
+          format: double
+          default: 0
+        accrued_days:
+          type: number
+          format: double
+          default: 0
+        adjusted_days:
+          type: number
+          format: double
+          default: 0
+        used_days:
+          type: number
+          format: double
+          default: 0
+        available_days:
+          type: number
+          format: double
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        period:
+          type: string
+          nullable: true
+  

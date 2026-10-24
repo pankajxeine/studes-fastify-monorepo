@@ -1,0 +1,260 @@
+openapi: 3.0.0
+x-sql-table: hr_staff_experience
+info:
+  title: StaffExperienceResponse API
+  version: 1.0.0
+paths:
+  /staff_experience:
+    get:
+      operationId: listStaffExperience
+      summary: Get all staff_experience
+      responses:
+        '200':
+          description: List of staff_experience
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StaffExperienceResponse'
+    post:
+      operationId: createStaffExperience
+      summary: Create a new staff_experience
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StaffExperienceRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StaffExperienceResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /staff_experience/{id}:
+    get:
+      operationId: getStaffExperienceById
+      summary: Get staff_experience by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: staff_experience object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StaffExperienceResponse'
+        '404':
+          description: staff_experience not found
+    put:
+      operationId: updateStaffExperience
+      summary: Update staff_experience by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StaffExperienceUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StaffExperienceResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: staff_experience not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteStaffExperience
+      summary: Delete staff_experience by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: staff_experience not found
+components:
+  schemas:
+
+    StaffExperienceRequest:
+      type: object
+      required:
+        - staff_id
+        - employer_name
+        - job_title
+        - start_date
+      additionalProperties: false
+      properties:
+        staff_id:
+          type: string
+          format: uuid
+        employer_name:
+          type: string
+        job_title:
+          type: string
+        location:
+          type: string
+          nullable: true
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+          nullable: true
+        responsibilities:
+          type: string
+          nullable: true
+        reason_for_leaving:
+          type: string
+          nullable: true
+        is_verified:
+          type: boolean
+          default: false
+
+    StaffExperienceUpdateRequest:
+      type: object
+      required:
+        - staff_id
+        - employer_name
+        - job_title
+        - location
+        - start_date
+        - end_date
+        - responsibilities
+        - reason_for_leaving
+        - is_verified
+      additionalProperties: false
+      properties:
+        staff_id:
+          type: string
+          format: uuid
+        employer_name:
+          type: string
+        job_title:
+          type: string
+        location:
+          type: string
+          nullable: true
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+          nullable: true
+        responsibilities:
+          type: string
+          nullable: true
+        reason_for_leaving:
+          type: string
+          nullable: true
+        is_verified:
+          type: boolean
+          default: false
+
+    StaffExperienceResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - staff_experience_id
+        - staff_id
+        - employer_name
+        - job_title
+        - start_date
+        - is_verified
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        staff_experience_id:
+          type: string
+          format: uuid
+          readOnly: true
+        staff_id:
+          type: string
+          format: uuid
+        employer_name:
+          type: string
+        job_title:
+          type: string
+        location:
+          type: string
+          nullable: true
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+          nullable: true
+        responsibilities:
+          type: string
+          nullable: true
+        reason_for_leaving:
+          type: string
+          nullable: true
+        is_verified:
+          type: boolean
+          default: false
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

@@ -1,0 +1,316 @@
+openapi: 3.0.0
+x-sql-table: prtn_placement_interview_round
+info:
+  title: PlacementInterviewRoundResponse API
+  version: 1.0.0
+paths:
+  /placement_interview_round:
+    get:
+      operationId: listPlacementInterviewRound
+      summary: Get all placement_interview_round
+      responses:
+        '200':
+          description: List of placement_interview_round
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PlacementInterviewRoundResponse'
+    post:
+      operationId: createPlacementInterviewRound
+      summary: Create a new placement_interview_round
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlacementInterviewRoundRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlacementInterviewRoundResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /placement_interview_round/{id}:
+    get:
+      operationId: getPlacementInterviewRoundById
+      summary: Get placement_interview_round by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: placement_interview_round object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlacementInterviewRoundResponse'
+        '404':
+          description: placement_interview_round not found
+    put:
+      operationId: updatePlacementInterviewRound
+      summary: Update placement_interview_round by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlacementInterviewRoundUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlacementInterviewRoundResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: placement_interview_round not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deletePlacementInterviewRound
+      summary: Delete placement_interview_round by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: placement_interview_round not found
+components:
+  schemas:
+
+    PlacementInterviewRoundRequest:
+      type: object
+      required:
+        - placement_drive_id
+        - round_no
+        - name
+        - round_type
+      additionalProperties: false
+      properties:
+        placement_drive_id:
+          type: string
+          format: uuid
+        round_no:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 20
+        name:
+          type: string
+        round_type:
+          type: string
+          maxLength: 20
+        mode:
+          type: string
+          maxLength: 10
+          default: "onsite"
+        scheduled_at:
+          type: string
+          format: date-time
+          nullable: true
+        duration_minutes:
+          type: integer
+          format: int32
+          nullable: true
+          minimum: 5
+          maximum: 600
+        venue:
+          type: string
+          nullable: true
+        meeting_url:
+          type: string
+          nullable: true
+        is_elimination:
+          type: boolean
+          default: true
+        status:
+          type: string
+          maxLength: 12
+          default: "scheduled"
+        notes:
+          type: string
+          nullable: true
+
+    PlacementInterviewRoundUpdateRequest:
+      type: object
+      required:
+        - placement_drive_id
+        - round_no
+        - name
+        - round_type
+        - mode
+        - scheduled_at
+        - duration_minutes
+        - venue
+        - meeting_url
+        - is_elimination
+        - status
+        - notes
+      additionalProperties: false
+      properties:
+        placement_drive_id:
+          type: string
+          format: uuid
+        round_no:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 20
+        name:
+          type: string
+        round_type:
+          type: string
+          maxLength: 20
+        mode:
+          type: string
+          maxLength: 10
+          default: "onsite"
+        scheduled_at:
+          type: string
+          format: date-time
+          nullable: true
+        duration_minutes:
+          type: integer
+          format: int32
+          nullable: true
+          minimum: 5
+          maximum: 600
+        venue:
+          type: string
+          nullable: true
+        meeting_url:
+          type: string
+          nullable: true
+        is_elimination:
+          type: boolean
+          default: true
+        status:
+          type: string
+          maxLength: 12
+          default: "scheduled"
+        notes:
+          type: string
+          nullable: true
+
+    PlacementInterviewRoundResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - placement_interview_round_id
+        - placement_drive_id
+        - round_no
+        - name
+        - round_type
+        - mode
+        - is_elimination
+        - status
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        placement_interview_round_id:
+          type: string
+          format: uuid
+          readOnly: true
+        placement_drive_id:
+          type: string
+          format: uuid
+        round_no:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 20
+        name:
+          type: string
+        round_type:
+          type: string
+          maxLength: 20
+        mode:
+          type: string
+          maxLength: 10
+          default: "onsite"
+        scheduled_at:
+          type: string
+          format: date-time
+          nullable: true
+        duration_minutes:
+          type: integer
+          format: int32
+          nullable: true
+          minimum: 5
+          maximum: 600
+        venue:
+          type: string
+          nullable: true
+        meeting_url:
+          type: string
+          nullable: true
+        is_elimination:
+          type: boolean
+          default: true
+        status:
+          type: string
+          maxLength: 12
+          default: "scheduled"
+        notes:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

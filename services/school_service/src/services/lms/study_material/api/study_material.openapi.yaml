@@ -1,0 +1,350 @@
+openapi: 3.0.0
+x-sql-table: lms_study_material
+info:
+  title: StudyMaterialResponse API
+  version: 1.0.0
+paths:
+  /study_material:
+    get:
+      operationId: listStudyMaterial
+      summary: Get all study_material
+      responses:
+        '200':
+          description: List of study_material
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StudyMaterialResponse'
+    post:
+      operationId: createStudyMaterial
+      summary: Create a new study_material
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudyMaterialRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudyMaterialResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /study_material/{id}:
+    get:
+      operationId: getStudyMaterialById
+      summary: Get study_material by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: study_material object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudyMaterialResponse'
+        '404':
+          description: study_material not found
+    put:
+      operationId: updateStudyMaterial
+      summary: Update study_material by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudyMaterialUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudyMaterialResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: study_material not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteStudyMaterial
+      summary: Delete study_material by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: study_material not found
+components:
+  schemas:
+
+    StudyMaterialRequest:
+      type: object
+      required:
+        - course_offering_id
+        - title
+        - material_type
+        - uploaded_by_user_id
+      additionalProperties: false
+      properties:
+        course_offering_id:
+          type: string
+          format: uuid
+        lesson_plan_id:
+          type: string
+          format: uuid
+          nullable: true
+        title:
+          type: string
+        description:
+          type: string
+          nullable: true
+        material_type:
+          type: string
+        file_id:
+          type: string
+          format: uuid
+          nullable: true
+        external_url:
+          type: string
+          nullable: true
+        unit_title:
+          type: string
+          nullable: true
+        uploaded_by_user_id:
+          type: string
+          format: uuid
+        is_published:
+          type: boolean
+          default: false
+        published_at:
+          type: string
+          format: date-time
+          nullable: true
+        available_from:
+          type: string
+          format: date
+          nullable: true
+        available_until:
+          type: string
+          format: date
+          nullable: true
+        availability:
+          type: string
+          nullable: true
+        view_count:
+          type: integer
+          format: int32
+          default: 0
+        sort_order:
+          type: integer
+          format: int32
+          default: 0
+
+    StudyMaterialUpdateRequest:
+      type: object
+      required:
+        - course_offering_id
+        - lesson_plan_id
+        - title
+        - description
+        - material_type
+        - file_id
+        - external_url
+        - unit_title
+        - uploaded_by_user_id
+        - is_published
+        - published_at
+        - available_from
+        - available_until
+        - availability
+        - view_count
+        - sort_order
+      additionalProperties: false
+      properties:
+        course_offering_id:
+          type: string
+          format: uuid
+        lesson_plan_id:
+          type: string
+          format: uuid
+          nullable: true
+        title:
+          type: string
+        description:
+          type: string
+          nullable: true
+        material_type:
+          type: string
+        file_id:
+          type: string
+          format: uuid
+          nullable: true
+        external_url:
+          type: string
+          nullable: true
+        unit_title:
+          type: string
+          nullable: true
+        uploaded_by_user_id:
+          type: string
+          format: uuid
+        is_published:
+          type: boolean
+          default: false
+        published_at:
+          type: string
+          format: date-time
+          nullable: true
+        available_from:
+          type: string
+          format: date
+          nullable: true
+        available_until:
+          type: string
+          format: date
+          nullable: true
+        availability:
+          type: string
+          nullable: true
+        view_count:
+          type: integer
+          format: int32
+          default: 0
+        sort_order:
+          type: integer
+          format: int32
+          default: 0
+
+    StudyMaterialResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - study_material_id
+        - course_offering_id
+        - title
+        - material_type
+        - uploaded_by_user_id
+        - is_published
+        - view_count
+        - sort_order
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        study_material_id:
+          type: string
+          format: uuid
+          readOnly: true
+        course_offering_id:
+          type: string
+          format: uuid
+        lesson_plan_id:
+          type: string
+          format: uuid
+          nullable: true
+        title:
+          type: string
+        description:
+          type: string
+          nullable: true
+        material_type:
+          type: string
+        file_id:
+          type: string
+          format: uuid
+          nullable: true
+        external_url:
+          type: string
+          nullable: true
+        unit_title:
+          type: string
+          nullable: true
+        uploaded_by_user_id:
+          type: string
+          format: uuid
+        is_published:
+          type: boolean
+          default: false
+        published_at:
+          type: string
+          format: date-time
+          nullable: true
+        available_from:
+          type: string
+          format: date
+          nullable: true
+        available_until:
+          type: string
+          format: date
+          nullable: true
+        availability:
+          type: string
+          nullable: true
+        view_count:
+          type: integer
+          format: int32
+          default: 0
+        sort_order:
+          type: integer
+          format: int32
+          default: 0
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

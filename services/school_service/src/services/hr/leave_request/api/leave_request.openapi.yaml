@@ -1,0 +1,371 @@
+openapi: 3.0.0
+x-sql-table: hr_leave_request
+info:
+  title: LeaveRequestResponse API
+  version: 1.0.0
+paths:
+  /leave_request:
+    get:
+      operationId: listLeaveRequest
+      summary: Get all leave_request
+      responses:
+        '200':
+          description: List of leave_request
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LeaveRequestResponse'
+    post:
+      operationId: createLeaveRequest
+      summary: Create a new leave_request
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LeaveRequestRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LeaveRequestResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /leave_request/{id}:
+    get:
+      operationId: getLeaveRequestById
+      summary: Get leave_request by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: leave_request object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LeaveRequestResponse'
+        '404':
+          description: leave_request not found
+    put:
+      operationId: updateLeaveRequest
+      summary: Update leave_request by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LeaveRequestUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LeaveRequestResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: leave_request not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteLeaveRequest
+      summary: Delete leave_request by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: leave_request not found
+components:
+  schemas:
+
+    LeaveRequestRequest:
+      type: object
+      required:
+        - staff_id
+        - leave_type_code
+        - start_date
+        - end_date
+        - leave_days
+        - reason
+      additionalProperties: false
+      properties:
+        staff_id:
+          type: string
+          format: uuid
+        leave_type_code:
+          type: string
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        is_half_day:
+          type: boolean
+          default: false
+        half_day_session:
+          type: string
+          nullable: true
+          maxLength: 2
+        leave_days:
+          type: number
+          format: double
+        reason:
+          type: string
+        contact_during_leave:
+          type: string
+          nullable: true
+        substitute_staff_id:
+          type: string
+          format: uuid
+          nullable: true
+        file_id:
+          type: string
+          format: uuid
+          nullable: true
+        status:
+          type: string
+          default: "pending"
+        applied_at:
+          type: string
+          format: date-time
+        approved_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        decided_at:
+          type: string
+          format: date-time
+          nullable: true
+        decision_note:
+          type: string
+          nullable: true
+        cancelled_at:
+          type: string
+          format: date-time
+          nullable: true
+        leave_period:
+          type: string
+          nullable: true
+
+    LeaveRequestUpdateRequest:
+      type: object
+      required:
+        - staff_id
+        - leave_type_code
+        - start_date
+        - end_date
+        - is_half_day
+        - half_day_session
+        - leave_days
+        - reason
+        - contact_during_leave
+        - substitute_staff_id
+        - file_id
+        - status
+        - applied_at
+        - approved_by_user_id
+        - decided_at
+        - decision_note
+        - cancelled_at
+        - leave_period
+      additionalProperties: false
+      properties:
+        staff_id:
+          type: string
+          format: uuid
+        leave_type_code:
+          type: string
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        is_half_day:
+          type: boolean
+          default: false
+        half_day_session:
+          type: string
+          nullable: true
+          maxLength: 2
+        leave_days:
+          type: number
+          format: double
+        reason:
+          type: string
+        contact_during_leave:
+          type: string
+          nullable: true
+        substitute_staff_id:
+          type: string
+          format: uuid
+          nullable: true
+        file_id:
+          type: string
+          format: uuid
+          nullable: true
+        status:
+          type: string
+          default: "pending"
+        applied_at:
+          type: string
+          format: date-time
+        approved_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        decided_at:
+          type: string
+          format: date-time
+          nullable: true
+        decision_note:
+          type: string
+          nullable: true
+        cancelled_at:
+          type: string
+          format: date-time
+          nullable: true
+        leave_period:
+          type: string
+          nullable: true
+
+    LeaveRequestResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - leave_request_id
+        - staff_id
+        - leave_type_code
+        - start_date
+        - end_date
+        - is_half_day
+        - leave_days
+        - reason
+        - status
+        - applied_at
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        leave_request_id:
+          type: string
+          format: uuid
+          readOnly: true
+        staff_id:
+          type: string
+          format: uuid
+        leave_type_code:
+          type: string
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        is_half_day:
+          type: boolean
+          default: false
+        half_day_session:
+          type: string
+          nullable: true
+          maxLength: 2
+        leave_days:
+          type: number
+          format: double
+        reason:
+          type: string
+        contact_during_leave:
+          type: string
+          nullable: true
+        substitute_staff_id:
+          type: string
+          format: uuid
+          nullable: true
+        file_id:
+          type: string
+          format: uuid
+          nullable: true
+        status:
+          type: string
+          default: "pending"
+        applied_at:
+          type: string
+          format: date-time
+        approved_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        decided_at:
+          type: string
+          format: date-time
+          nullable: true
+        decision_note:
+          type: string
+          nullable: true
+        cancelled_at:
+          type: string
+          format: date-time
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        leave_period:
+          type: string
+          nullable: true
+  

@@ -1,0 +1,294 @@
+openapi: 3.0.0
+x-sql-table: prtn_placement_round_result
+info:
+  title: PlacementRoundResultResponse API
+  version: 1.0.0
+paths:
+  /placement_round_result:
+    get:
+      operationId: listPlacementRoundResult
+      summary: Get all placement_round_result
+      responses:
+        '200':
+          description: List of placement_round_result
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PlacementRoundResultResponse'
+    post:
+      operationId: createPlacementRoundResult
+      summary: Create a new placement_round_result
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlacementRoundResultRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlacementRoundResultResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /placement_round_result/{id}:
+    get:
+      operationId: getPlacementRoundResultById
+      summary: Get placement_round_result by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: placement_round_result object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlacementRoundResultResponse'
+        '404':
+          description: placement_round_result not found
+    put:
+      operationId: updatePlacementRoundResult
+      summary: Update placement_round_result by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlacementRoundResultUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlacementRoundResultResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: placement_round_result not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deletePlacementRoundResult
+      summary: Delete placement_round_result by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: placement_round_result not found
+components:
+  schemas:
+
+    PlacementRoundResultRequest:
+      type: object
+      required:
+        - placement_interview_round_id
+        - placement_application_id
+        - placement_drive_id
+      additionalProperties: false
+      properties:
+        placement_interview_round_id:
+          type: string
+          format: uuid
+        placement_application_id:
+          type: string
+          format: uuid
+        placement_drive_id:
+          type: string
+          format: uuid
+        result:
+          type: string
+          default: "pending"
+          enum:
+            - "pending"
+            - "passed"
+            - "failed"
+            - "absent"
+            - "on_hold"
+        score:
+          type: number
+          format: double
+          nullable: true
+          minimum: 0
+          maximum: 100
+        interviewer_name:
+          type: string
+          nullable: true
+        feedback:
+          type: string
+          nullable: true
+        evaluated_at:
+          type: string
+          format: date-time
+          nullable: true
+        recorded_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+
+    PlacementRoundResultUpdateRequest:
+      type: object
+      required:
+        - placement_interview_round_id
+        - placement_application_id
+        - placement_drive_id
+        - result
+        - score
+        - interviewer_name
+        - feedback
+        - evaluated_at
+        - recorded_by_user_id
+      additionalProperties: false
+      properties:
+        placement_interview_round_id:
+          type: string
+          format: uuid
+        placement_application_id:
+          type: string
+          format: uuid
+        placement_drive_id:
+          type: string
+          format: uuid
+        result:
+          type: string
+          default: "pending"
+          enum:
+            - "pending"
+            - "passed"
+            - "failed"
+            - "absent"
+            - "on_hold"
+        score:
+          type: number
+          format: double
+          nullable: true
+          minimum: 0
+          maximum: 100
+        interviewer_name:
+          type: string
+          nullable: true
+        feedback:
+          type: string
+          nullable: true
+        evaluated_at:
+          type: string
+          format: date-time
+          nullable: true
+        recorded_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+
+    PlacementRoundResultResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - placement_round_result_id
+        - placement_interview_round_id
+        - placement_application_id
+        - placement_drive_id
+        - result
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        placement_round_result_id:
+          type: string
+          format: uuid
+          readOnly: true
+        placement_interview_round_id:
+          type: string
+          format: uuid
+        placement_application_id:
+          type: string
+          format: uuid
+        placement_drive_id:
+          type: string
+          format: uuid
+        result:
+          type: string
+          default: "pending"
+          enum:
+            - "pending"
+            - "passed"
+            - "failed"
+            - "absent"
+            - "on_hold"
+        score:
+          type: number
+          format: double
+          nullable: true
+          minimum: 0
+          maximum: 100
+        interviewer_name:
+          type: string
+          nullable: true
+        feedback:
+          type: string
+          nullable: true
+        evaluated_at:
+          type: string
+          format: date-time
+          nullable: true
+        recorded_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

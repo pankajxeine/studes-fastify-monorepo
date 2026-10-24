@@ -1,0 +1,319 @@
+openapi: 3.0.0
+x-sql-table: comms_notice
+info:
+  title: NoticeResponse API
+  version: 1.0.0
+paths:
+  /notice:
+    get:
+      operationId: listNotice
+      summary: Get all notice
+      responses:
+        '200':
+          description: List of notice
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/NoticeResponse'
+    post:
+      operationId: createNotice
+      summary: Create a new notice
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NoticeRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoticeResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /notice/{id}:
+    get:
+      operationId: getNoticeById
+      summary: Get notice by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: notice object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoticeResponse'
+        '404':
+          description: notice not found
+    put:
+      operationId: updateNotice
+      summary: Update notice by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NoticeUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoticeResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: notice not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteNotice
+      summary: Delete notice by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: notice not found
+components:
+  schemas:
+
+    NoticeRequest:
+      type: object
+      required:
+        - title
+        - body
+        - created_by_user_id
+      additionalProperties: false
+      properties:
+        campus_id:
+          type: string
+          format: uuid
+          nullable: true
+        title:
+          type: string
+        body:
+          type: string
+        category:
+          type: string
+          maxLength: 20
+          default: "general"
+        priority:
+          type: string
+          maxLength: 10
+          default: "normal"
+        publish_at:
+          type: string
+          format: date-time
+          nullable: true
+        expires_at:
+          type: string
+          format: date-time
+          nullable: true
+        is_pinned:
+          type: boolean
+          default: false
+        requires_acknowledgement:
+          type: boolean
+          default: false
+        file_id:
+          type: string
+          format: uuid
+          nullable: true
+        created_by_user_id:
+          type: string
+          format: uuid
+        status:
+          type: string
+          default: "draft"
+          enum:
+            - "draft"
+            - "published"
+            - "archived"
+
+    NoticeUpdateRequest:
+      type: object
+      required:
+        - campus_id
+        - title
+        - body
+        - category
+        - priority
+        - publish_at
+        - expires_at
+        - is_pinned
+        - requires_acknowledgement
+        - file_id
+        - created_by_user_id
+        - status
+      additionalProperties: false
+      properties:
+        campus_id:
+          type: string
+          format: uuid
+          nullable: true
+        title:
+          type: string
+        body:
+          type: string
+        category:
+          type: string
+          maxLength: 20
+          default: "general"
+        priority:
+          type: string
+          maxLength: 10
+          default: "normal"
+        publish_at:
+          type: string
+          format: date-time
+          nullable: true
+        expires_at:
+          type: string
+          format: date-time
+          nullable: true
+        is_pinned:
+          type: boolean
+          default: false
+        requires_acknowledgement:
+          type: boolean
+          default: false
+        file_id:
+          type: string
+          format: uuid
+          nullable: true
+        created_by_user_id:
+          type: string
+          format: uuid
+        status:
+          type: string
+          default: "draft"
+          enum:
+            - "draft"
+            - "published"
+            - "archived"
+
+    NoticeResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - notice_id
+        - title
+        - body
+        - category
+        - priority
+        - is_pinned
+        - requires_acknowledgement
+        - created_by_user_id
+        - status
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        notice_id:
+          type: string
+          format: uuid
+          readOnly: true
+        campus_id:
+          type: string
+          format: uuid
+          nullable: true
+        title:
+          type: string
+        body:
+          type: string
+        category:
+          type: string
+          maxLength: 20
+          default: "general"
+        priority:
+          type: string
+          maxLength: 10
+          default: "normal"
+        publish_at:
+          type: string
+          format: date-time
+          nullable: true
+        expires_at:
+          type: string
+          format: date-time
+          nullable: true
+        is_pinned:
+          type: boolean
+          default: false
+        requires_acknowledgement:
+          type: boolean
+          default: false
+        file_id:
+          type: string
+          format: uuid
+          nullable: true
+        created_by_user_id:
+          type: string
+          format: uuid
+        status:
+          type: string
+          default: "draft"
+          enum:
+            - "draft"
+            - "published"
+            - "archived"
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

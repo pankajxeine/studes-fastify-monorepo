@@ -1,0 +1,273 @@
+openapi: 3.0.0
+x-sql-table: comms_notice_audience
+info:
+  title: NoticeAudienceResponse API
+  version: 1.0.0
+paths:
+  /notice_audience:
+    get:
+      operationId: listNoticeAudience
+      summary: Get all notice_audience
+      responses:
+        '200':
+          description: List of notice_audience
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/NoticeAudienceResponse'
+    post:
+      operationId: createNoticeAudience
+      summary: Create a new notice_audience
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NoticeAudienceRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoticeAudienceResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /notice_audience/{id}:
+    get:
+      operationId: getNoticeAudienceById
+      summary: Get notice_audience by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: notice_audience object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoticeAudienceResponse'
+        '404':
+          description: notice_audience not found
+    put:
+      operationId: updateNoticeAudience
+      summary: Update notice_audience by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NoticeAudienceUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoticeAudienceResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: notice_audience not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteNoticeAudience
+      summary: Delete notice_audience by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: notice_audience not found
+components:
+  schemas:
+
+    NoticeAudienceRequest:
+      type: object
+      required:
+        - notice_id
+        - audience_type
+      additionalProperties: false
+      properties:
+        notice_id:
+          type: string
+          format: uuid
+        audience_type:
+          type: string
+        campus_id:
+          type: string
+          format: uuid
+          nullable: true
+        role_code:
+          type: string
+          nullable: true
+        program_id:
+          type: string
+          format: uuid
+          nullable: true
+        grade_level_id:
+          type: string
+          format: uuid
+          nullable: true
+        section_id:
+          type: string
+          format: uuid
+          nullable: true
+        course_offering_id:
+          type: string
+          format: uuid
+          nullable: true
+        person_id:
+          type: string
+          format: uuid
+          nullable: true
+
+    NoticeAudienceUpdateRequest:
+      type: object
+      required:
+        - notice_id
+        - audience_type
+        - campus_id
+        - role_code
+        - program_id
+        - grade_level_id
+        - section_id
+        - course_offering_id
+        - person_id
+      additionalProperties: false
+      properties:
+        notice_id:
+          type: string
+          format: uuid
+        audience_type:
+          type: string
+        campus_id:
+          type: string
+          format: uuid
+          nullable: true
+        role_code:
+          type: string
+          nullable: true
+        program_id:
+          type: string
+          format: uuid
+          nullable: true
+        grade_level_id:
+          type: string
+          format: uuid
+          nullable: true
+        section_id:
+          type: string
+          format: uuid
+          nullable: true
+        course_offering_id:
+          type: string
+          format: uuid
+          nullable: true
+        person_id:
+          type: string
+          format: uuid
+          nullable: true
+
+    NoticeAudienceResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - notice_audience_id
+        - notice_id
+        - audience_type
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        notice_audience_id:
+          type: string
+          format: uuid
+          readOnly: true
+        notice_id:
+          type: string
+          format: uuid
+        audience_type:
+          type: string
+        campus_id:
+          type: string
+          format: uuid
+          nullable: true
+        role_code:
+          type: string
+          nullable: true
+        program_id:
+          type: string
+          format: uuid
+          nullable: true
+        grade_level_id:
+          type: string
+          format: uuid
+          nullable: true
+        section_id:
+          type: string
+          format: uuid
+          nullable: true
+        course_offering_id:
+          type: string
+          format: uuid
+          nullable: true
+        person_id:
+          type: string
+          format: uuid
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

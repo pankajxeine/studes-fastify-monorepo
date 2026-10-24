@@ -1,0 +1,274 @@
+openapi: 3.0.0
+x-sql-table: provisioning_deprovision_request
+info:
+  title: DeprovisionRequestResponse API
+  version: 1.0.0
+paths:
+  /deprovision_request:
+    get:
+      operationId: listDeprovisionRequest
+      summary: Get all deprovision_request
+      responses:
+        '200':
+          description: List of deprovision_request
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DeprovisionRequestResponse'
+    post:
+      operationId: createDeprovisionRequest
+      summary: Create a new deprovision_request
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeprovisionRequestRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeprovisionRequestResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /deprovision_request/{id}:
+    get:
+      operationId: getDeprovisionRequestById
+      summary: Get deprovision_request by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: deprovision_request object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeprovisionRequestResponse'
+        '404':
+          description: deprovision_request not found
+    put:
+      operationId: updateDeprovisionRequest
+      summary: Update deprovision_request by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeprovisionRequestUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeprovisionRequestResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: deprovision_request not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteDeprovisionRequest
+      summary: Delete deprovision_request by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: deprovision_request not found
+components:
+  schemas:
+
+    DeprovisionRequestRequest:
+      type: object
+      required:
+        - tenant_id
+        - reason
+        - requested_by_user_id
+      additionalProperties: false
+      properties:
+        tenant_id:
+          type: string
+          format: uuid
+        reason:
+          type: string
+        export_requested:
+          type: boolean
+          default: true
+        export_ref:
+          type: string
+          nullable: true
+        retention_until:
+          type: string
+          format: date
+          nullable: true
+        status:
+          type: string
+          maxLength: 10
+          default: "requested"
+        requested_by_user_id:
+          type: string
+          format: uuid
+        approved_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        approved_at:
+          type: string
+          format: date-time
+          nullable: true
+        completed_at:
+          type: string
+          format: date-time
+          nullable: true
+
+    DeprovisionRequestUpdateRequest:
+      type: object
+      required:
+        - tenant_id
+        - reason
+        - export_requested
+        - export_ref
+        - retention_until
+        - status
+        - requested_by_user_id
+        - approved_by_user_id
+        - approved_at
+        - completed_at
+      additionalProperties: false
+      properties:
+        tenant_id:
+          type: string
+          format: uuid
+        reason:
+          type: string
+        export_requested:
+          type: boolean
+          default: true
+        export_ref:
+          type: string
+          nullable: true
+        retention_until:
+          type: string
+          format: date
+          nullable: true
+        status:
+          type: string
+          maxLength: 10
+          default: "requested"
+        requested_by_user_id:
+          type: string
+          format: uuid
+        approved_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        approved_at:
+          type: string
+          format: date-time
+          nullable: true
+        completed_at:
+          type: string
+          format: date-time
+          nullable: true
+
+    DeprovisionRequestResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - deprovision_request_id
+        - tenant_id
+        - reason
+        - export_requested
+        - status
+        - requested_by_user_id
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        deprovision_request_id:
+          type: string
+          format: uuid
+          readOnly: true
+        tenant_id:
+          type: string
+          format: uuid
+        reason:
+          type: string
+        export_requested:
+          type: boolean
+          default: true
+        export_ref:
+          type: string
+          nullable: true
+        retention_until:
+          type: string
+          format: date
+          nullable: true
+        status:
+          type: string
+          maxLength: 10
+          default: "requested"
+        requested_by_user_id:
+          type: string
+          format: uuid
+        approved_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        approved_at:
+          type: string
+          format: date-time
+          nullable: true
+        completed_at:
+          type: string
+          format: date-time
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+  

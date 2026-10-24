@@ -1,0 +1,17 @@
+
+export type TicketMessageResponse = 
+{
+  id: number
+  public_id: string
+  record_code: string
+  ticket_message_id: string
+  ticket_id: string
+  author_type: string
+  author_user_id?: (string) | null
+  author_contact_id?: (string) | null
+  body: string
+  is_internal: boolean
+  channel: string
+  attachments?: (unknown) | null
+  created_at: string
+}

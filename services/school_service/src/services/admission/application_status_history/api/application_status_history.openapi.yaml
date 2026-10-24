@@ -1,0 +1,219 @@
+openapi: 3.0.0
+x-sql-table: admis_application_status_history
+info:
+  title: ApplicationStatusHistoryResponse API
+  version: 1.0.0
+paths:
+  /application_status_history:
+    get:
+      operationId: listApplicationStatusHistory
+      summary: Get all application_status_history
+      responses:
+        '200':
+          description: List of application_status_history
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApplicationStatusHistoryResponse'
+    post:
+      operationId: createApplicationStatusHistory
+      summary: Create a new application_status_history
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApplicationStatusHistoryRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationStatusHistoryResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /application_status_history/{id}:
+    get:
+      operationId: getApplicationStatusHistoryById
+      summary: Get application_status_history by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: application_status_history object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationStatusHistoryResponse'
+        '404':
+          description: application_status_history not found
+    put:
+      operationId: updateApplicationStatusHistory
+      summary: Update application_status_history by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApplicationStatusHistoryUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationStatusHistoryResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: application_status_history not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteApplicationStatusHistory
+      summary: Delete application_status_history by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: application_status_history not found
+components:
+  schemas:
+
+    ApplicationStatusHistoryRequest:
+      type: object
+      required:
+        - application_id
+        - to_status
+      additionalProperties: false
+      properties:
+        application_id:
+          type: string
+          format: uuid
+        from_status:
+          type: string
+          nullable: true
+        to_status:
+          type: string
+        changed_at:
+          type: string
+          format: date-time
+        changed_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        remarks:
+          type: string
+          nullable: true
+
+    ApplicationStatusHistoryUpdateRequest:
+      type: object
+      required:
+        - application_id
+        - from_status
+        - to_status
+        - changed_at
+        - changed_by_user_id
+        - remarks
+      additionalProperties: false
+      properties:
+        application_id:
+          type: string
+          format: uuid
+        from_status:
+          type: string
+          nullable: true
+        to_status:
+          type: string
+        changed_at:
+          type: string
+          format: date-time
+        changed_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        remarks:
+          type: string
+          nullable: true
+
+    ApplicationStatusHistoryResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - application_status_history_id
+        - application_id
+        - to_status
+        - changed_at
+        - created_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        application_status_history_id:
+          type: string
+          format: uuid
+          readOnly: true
+        application_id:
+          type: string
+          format: uuid
+        from_status:
+          type: string
+          nullable: true
+        to_status:
+          type: string
+        changed_at:
+          type: string
+          format: date-time
+        changed_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        remarks:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

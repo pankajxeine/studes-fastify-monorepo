@@ -1,0 +1,230 @@
+openapi: 3.0.0
+x-sql-table: prtn_placement_drive_eligibility
+info:
+  title: PlacementDriveEligibilityResponse API
+  version: 1.0.0
+paths:
+  /placement_drive_eligibility:
+    get:
+      operationId: listPlacementDriveEligibility
+      summary: Get all placement_drive_eligibility
+      responses:
+        '200':
+          description: List of placement_drive_eligibility
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PlacementDriveEligibilityResponse'
+    post:
+      operationId: createPlacementDriveEligibility
+      summary: Create a new placement_drive_eligibility
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlacementDriveEligibilityRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlacementDriveEligibilityResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /placement_drive_eligibility/{id}:
+    get:
+      operationId: getPlacementDriveEligibilityById
+      summary: Get placement_drive_eligibility by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: placement_drive_eligibility object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlacementDriveEligibilityResponse'
+        '404':
+          description: placement_drive_eligibility not found
+    put:
+      operationId: updatePlacementDriveEligibility
+      summary: Update placement_drive_eligibility by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlacementDriveEligibilityUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlacementDriveEligibilityResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: placement_drive_eligibility not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deletePlacementDriveEligibility
+      summary: Delete placement_drive_eligibility by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: placement_drive_eligibility not found
+components:
+  schemas:
+
+    PlacementDriveEligibilityRequest:
+      type: object
+      required:
+        - placement_drive_id
+        - program_id
+      additionalProperties: false
+      properties:
+        placement_drive_id:
+          type: string
+          format: uuid
+        program_id:
+          type: string
+          format: uuid
+        grade_level_id:
+          type: string
+          format: uuid
+          nullable: true
+        min_cgpa:
+          type: number
+          format: double
+          nullable: true
+          minimum: 0
+          maximum: 4
+        notes:
+          type: string
+          nullable: true
+
+    PlacementDriveEligibilityUpdateRequest:
+      type: object
+      required:
+        - placement_drive_id
+        - program_id
+        - grade_level_id
+        - min_cgpa
+        - notes
+      additionalProperties: false
+      properties:
+        placement_drive_id:
+          type: string
+          format: uuid
+        program_id:
+          type: string
+          format: uuid
+        grade_level_id:
+          type: string
+          format: uuid
+          nullable: true
+        min_cgpa:
+          type: number
+          format: double
+          nullable: true
+          minimum: 0
+          maximum: 4
+        notes:
+          type: string
+          nullable: true
+
+    PlacementDriveEligibilityResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - placement_drive_eligibility_id
+        - placement_drive_id
+        - program_id
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        placement_drive_eligibility_id:
+          type: string
+          format: uuid
+          readOnly: true
+        placement_drive_id:
+          type: string
+          format: uuid
+        program_id:
+          type: string
+          format: uuid
+        grade_level_id:
+          type: string
+          format: uuid
+          nullable: true
+        min_cgpa:
+          type: number
+          format: double
+          nullable: true
+          minimum: 0
+          maximum: 4
+        notes:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

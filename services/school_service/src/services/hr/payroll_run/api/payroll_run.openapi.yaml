@@ -1,0 +1,390 @@
+openapi: 3.0.0
+x-sql-table: hr_payroll_run
+info:
+  title: PayrollRunResponse API
+  version: 1.0.0
+paths:
+  /payroll_run:
+    get:
+      operationId: listPayrollRun
+      summary: Get all payroll_run
+      responses:
+        '200':
+          description: List of payroll_run
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PayrollRunResponse'
+    post:
+      operationId: createPayrollRun
+      summary: Create a new payroll_run
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PayrollRunRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PayrollRunResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /payroll_run/{id}:
+    get:
+      operationId: getPayrollRunById
+      summary: Get payroll_run by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: payroll_run object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PayrollRunResponse'
+        '404':
+          description: payroll_run not found
+    put:
+      operationId: updatePayrollRun
+      summary: Update payroll_run by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PayrollRunUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PayrollRunResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: payroll_run not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deletePayrollRun
+      summary: Delete payroll_run by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: payroll_run not found
+components:
+  schemas:
+
+    PayrollRunRequest:
+      type: object
+      required:
+        - campus_id
+        - run_code
+        - period_start_on
+        - period_end_on
+        - pay_date
+        - working_days
+      additionalProperties: false
+      properties:
+        campus_id:
+          type: string
+          format: uuid
+        run_code:
+          type: string
+          maxLength: 20
+        period_start_on:
+          type: string
+          format: date
+        period_end_on:
+          type: string
+          format: date
+        pay_date:
+          type: string
+          format: date
+        working_days:
+          type: number
+          format: double
+          minimum: 0
+          maximum: 31
+        status:
+          type: string
+          default: "draft"
+        staff_count:
+          type: integer
+          format: int32
+          default: 0
+        gross_amount:
+          type: string
+          default: 0
+        deduction_amount:
+          type: string
+          default: 0
+        net_amount:
+          type: number
+          format: double
+          nullable: true
+        processed_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        processed_at:
+          type: string
+          format: date-time
+          nullable: true
+        approved_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        approved_at:
+          type: string
+          format: date-time
+          nullable: true
+        paid_at:
+          type: string
+          format: date-time
+          nullable: true
+        cancelled_at:
+          type: string
+          format: date-time
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+
+    PayrollRunUpdateRequest:
+      type: object
+      required:
+        - campus_id
+        - run_code
+        - period_start_on
+        - period_end_on
+        - pay_date
+        - working_days
+        - status
+        - staff_count
+        - gross_amount
+        - deduction_amount
+        - net_amount
+        - processed_by_user_id
+        - processed_at
+        - approved_by_user_id
+        - approved_at
+        - paid_at
+        - cancelled_at
+        - notes
+      additionalProperties: false
+      properties:
+        campus_id:
+          type: string
+          format: uuid
+        run_code:
+          type: string
+          maxLength: 20
+        period_start_on:
+          type: string
+          format: date
+        period_end_on:
+          type: string
+          format: date
+        pay_date:
+          type: string
+          format: date
+        working_days:
+          type: number
+          format: double
+          minimum: 0
+          maximum: 31
+        status:
+          type: string
+          default: "draft"
+        staff_count:
+          type: integer
+          format: int32
+          default: 0
+        gross_amount:
+          type: string
+          default: 0
+        deduction_amount:
+          type: string
+          default: 0
+        net_amount:
+          type: number
+          format: double
+          nullable: true
+        processed_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        processed_at:
+          type: string
+          format: date-time
+          nullable: true
+        approved_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        approved_at:
+          type: string
+          format: date-time
+          nullable: true
+        paid_at:
+          type: string
+          format: date-time
+          nullable: true
+        cancelled_at:
+          type: string
+          format: date-time
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+
+    PayrollRunResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - payroll_run_id
+        - campus_id
+        - run_code
+        - period_start_on
+        - period_end_on
+        - pay_date
+        - working_days
+        - status
+        - staff_count
+        - gross_amount
+        - deduction_amount
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        payroll_run_id:
+          type: string
+          format: uuid
+          readOnly: true
+        campus_id:
+          type: string
+          format: uuid
+        run_code:
+          type: string
+          maxLength: 20
+        period_start_on:
+          type: string
+          format: date
+        period_end_on:
+          type: string
+          format: date
+        pay_date:
+          type: string
+          format: date
+        working_days:
+          type: number
+          format: double
+          minimum: 0
+          maximum: 31
+        status:
+          type: string
+          default: "draft"
+        staff_count:
+          type: integer
+          format: int32
+          default: 0
+        gross_amount:
+          type: string
+          default: 0
+        deduction_amount:
+          type: string
+          default: 0
+        net_amount:
+          type: number
+          format: double
+          nullable: true
+        processed_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        processed_at:
+          type: string
+          format: date-time
+          nullable: true
+        approved_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        approved_at:
+          type: string
+          format: date-time
+          nullable: true
+        paid_at:
+          type: string
+          format: date-time
+          nullable: true
+        cancelled_at:
+          type: string
+          format: date-time
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

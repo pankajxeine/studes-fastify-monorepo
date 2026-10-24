@@ -1,0 +1,290 @@
+openapi: 3.0.0
+x-sql-table: alumni_alumni_higher_education
+info:
+  title: AlumniHigherEducationResponse API
+  version: 1.0.0
+paths:
+  /alumni_higher_education:
+    get:
+      operationId: listAlumniHigherEducation
+      summary: Get all alumni_higher_education
+      responses:
+        '200':
+          description: List of alumni_higher_education
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AlumniHigherEducationResponse'
+    post:
+      operationId: createAlumniHigherEducation
+      summary: Create a new alumni_higher_education
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlumniHigherEducationRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlumniHigherEducationResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /alumni_higher_education/{id}:
+    get:
+      operationId: getAlumniHigherEducationById
+      summary: Get alumni_higher_education by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: alumni_higher_education object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlumniHigherEducationResponse'
+        '404':
+          description: alumni_higher_education not found
+    put:
+      operationId: updateAlumniHigherEducation
+      summary: Update alumni_higher_education by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlumniHigherEducationUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlumniHigherEducationResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: alumni_higher_education not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteAlumniHigherEducation
+      summary: Delete alumni_higher_education by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: alumni_higher_education not found
+components:
+  schemas:
+
+    AlumniHigherEducationRequest:
+      type: object
+      required:
+        - alumnus_id
+        - institution_name
+        - degree
+        - start_year
+      additionalProperties: false
+      properties:
+        alumnus_id:
+          type: string
+          format: uuid
+        institution_name:
+          type: string
+        degree:
+          type: string
+        field_of_study:
+          type: string
+          nullable: true
+        study_mode:
+          type: string
+          maxLength: 20
+          default: "full_time"
+        start_year:
+          type: integer
+          format: int32
+        end_year:
+          type: integer
+          format: int32
+          nullable: true
+        status:
+          type: string
+          maxLength: 20
+          default: "enrolled"
+        grade_obtained:
+          type: string
+          nullable: true
+        city:
+          type: string
+          nullable: true
+        country_code:
+          type: string
+          nullable: true
+          maxLength: 2
+
+    AlumniHigherEducationUpdateRequest:
+      type: object
+      required:
+        - alumnus_id
+        - institution_name
+        - degree
+        - field_of_study
+        - study_mode
+        - start_year
+        - end_year
+        - status
+        - grade_obtained
+        - city
+        - country_code
+      additionalProperties: false
+      properties:
+        alumnus_id:
+          type: string
+          format: uuid
+        institution_name:
+          type: string
+        degree:
+          type: string
+        field_of_study:
+          type: string
+          nullable: true
+        study_mode:
+          type: string
+          maxLength: 20
+          default: "full_time"
+        start_year:
+          type: integer
+          format: int32
+        end_year:
+          type: integer
+          format: int32
+          nullable: true
+        status:
+          type: string
+          maxLength: 20
+          default: "enrolled"
+        grade_obtained:
+          type: string
+          nullable: true
+        city:
+          type: string
+          nullable: true
+        country_code:
+          type: string
+          nullable: true
+          maxLength: 2
+
+    AlumniHigherEducationResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - alumni_higher_education_id
+        - alumnus_id
+        - institution_name
+        - degree
+        - study_mode
+        - start_year
+        - status
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        alumni_higher_education_id:
+          type: string
+          format: uuid
+          readOnly: true
+        alumnus_id:
+          type: string
+          format: uuid
+        institution_name:
+          type: string
+        degree:
+          type: string
+        field_of_study:
+          type: string
+          nullable: true
+        study_mode:
+          type: string
+          maxLength: 20
+          default: "full_time"
+        start_year:
+          type: integer
+          format: int32
+        end_year:
+          type: integer
+          format: int32
+          nullable: true
+        status:
+          type: string
+          maxLength: 20
+          default: "enrolled"
+        grade_obtained:
+          type: string
+          nullable: true
+        city:
+          type: string
+          nullable: true
+        country_code:
+          type: string
+          nullable: true
+          maxLength: 2
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

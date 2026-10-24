@@ -13,8 +13,14 @@ import type { InvoiceList } from './types/InvoiceList'
 import type { NotificationCreateRequest } from './types/NotificationCreateRequest'
 import type { Notification } from './types/Notification'
 import type { NotificationList } from './types/NotificationList'
-import { FastifyInstance, FastifyRequest } from 'fastify'
-import type { ApiGatewayController, ListItem, PaginatedResponse } from './ApiGatewayController'
+import type { FastifyInstance, FastifyRequest } from 'fastify'
+import type { ApiGatewayController } from './ApiGatewayController'
+import type { ListItem, PaginatedResponse } from '../../types/PaginatedResponse'
+
+
+
+
+
 
 export class ApiGatewayService implements ApiGatewayController {
       public async gatewayHealth(app: FastifyInstance, request?: FastifyRequest): Promise<PaginatedResponse<ListItem<HealthResponse>>> {

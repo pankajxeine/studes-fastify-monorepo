@@ -1,0 +1,482 @@
+openapi: 3.0.0
+x-sql-table: visitor_gate_pass
+info:
+  title: GatePassResponse API
+  version: 1.0.0
+paths:
+  /gate_pass:
+    get:
+      operationId: listGatePass
+      summary: Get all gate_pass
+      responses:
+        '200':
+          description: List of gate_pass
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GatePassResponse'
+    post:
+      operationId: createGatePass
+      summary: Create a new gate_pass
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GatePassRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GatePassResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /gate_pass/{id}:
+    get:
+      operationId: getGatePassById
+      summary: Get gate_pass by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: gate_pass object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GatePassResponse'
+        '404':
+          description: gate_pass not found
+    put:
+      operationId: updateGatePass
+      summary: Update gate_pass by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GatePassUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GatePassResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: gate_pass not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteGatePass
+      summary: Delete gate_pass by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: gate_pass not found
+components:
+  schemas:
+
+    GatePassRequest:
+      type: object
+      required:
+        - pass_no
+        - student_id
+        - campus_id
+        - pass_type
+        - reason
+        - out_from
+        - valid_until
+        - verification_code
+      additionalProperties: false
+      properties:
+        pass_no:
+          type: string
+          maxLength: 30
+        student_id:
+          type: string
+          format: uuid
+        campus_id:
+          type: string
+          format: uuid
+        pass_type:
+          type: string
+          maxLength: 20
+        reason:
+          type: string
+        status:
+          type: string
+          default: "requested"
+          enum:
+            - "requested"
+            - "approved"
+            - "rejected"
+            - "exited"
+            - "returned"
+            - "cancelled"
+            - "expired"
+        out_from:
+          type: string
+          format: date-time
+        valid_until:
+          type: string
+          format: date-time
+        pass_window:
+          type: string
+          nullable: true
+        is_return_expected:
+          type: boolean
+          default: false
+        pickup_person_id:
+          type: string
+          format: uuid
+          nullable: true
+        requested_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        requested_at:
+          type: string
+          format: date-time
+        approved_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        approved_at:
+          type: string
+          format: date-time
+          nullable: true
+        rejection_reason:
+          type: string
+          nullable: true
+        verification_code:
+          type: string
+          maxLength: 12
+        guardian_notified_at:
+          type: string
+          format: date-time
+          nullable: true
+        exited_at:
+          type: string
+          format: date-time
+          nullable: true
+        exit_recorded_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        pickup_id_verified:
+          type: boolean
+          default: false
+        returned_at:
+          type: string
+          format: date-time
+          nullable: true
+        return_recorded_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        cancelled_reason:
+          type: string
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+
+    GatePassUpdateRequest:
+      type: object
+      required:
+        - pass_no
+        - student_id
+        - campus_id
+        - pass_type
+        - reason
+        - status
+        - out_from
+        - valid_until
+        - pass_window
+        - is_return_expected
+        - pickup_person_id
+        - requested_by_user_id
+        - requested_at
+        - approved_by_user_id
+        - approved_at
+        - rejection_reason
+        - verification_code
+        - guardian_notified_at
+        - exited_at
+        - exit_recorded_by_user_id
+        - pickup_id_verified
+        - returned_at
+        - return_recorded_by_user_id
+        - cancelled_reason
+        - notes
+      additionalProperties: false
+      properties:
+        pass_no:
+          type: string
+          maxLength: 30
+        student_id:
+          type: string
+          format: uuid
+        campus_id:
+          type: string
+          format: uuid
+        pass_type:
+          type: string
+          maxLength: 20
+        reason:
+          type: string
+        status:
+          type: string
+          default: "requested"
+          enum:
+            - "requested"
+            - "approved"
+            - "rejected"
+            - "exited"
+            - "returned"
+            - "cancelled"
+            - "expired"
+        out_from:
+          type: string
+          format: date-time
+        valid_until:
+          type: string
+          format: date-time
+        pass_window:
+          type: string
+          nullable: true
+        is_return_expected:
+          type: boolean
+          default: false
+        pickup_person_id:
+          type: string
+          format: uuid
+          nullable: true
+        requested_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        requested_at:
+          type: string
+          format: date-time
+        approved_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        approved_at:
+          type: string
+          format: date-time
+          nullable: true
+        rejection_reason:
+          type: string
+          nullable: true
+        verification_code:
+          type: string
+          maxLength: 12
+        guardian_notified_at:
+          type: string
+          format: date-time
+          nullable: true
+        exited_at:
+          type: string
+          format: date-time
+          nullable: true
+        exit_recorded_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        pickup_id_verified:
+          type: boolean
+          default: false
+        returned_at:
+          type: string
+          format: date-time
+          nullable: true
+        return_recorded_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        cancelled_reason:
+          type: string
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+
+    GatePassResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - gate_pass_id
+        - pass_no
+        - student_id
+        - campus_id
+        - pass_type
+        - reason
+        - status
+        - out_from
+        - valid_until
+        - is_return_expected
+        - requested_at
+        - verification_code
+        - pickup_id_verified
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        gate_pass_id:
+          type: string
+          format: uuid
+          readOnly: true
+        pass_no:
+          type: string
+          maxLength: 30
+        student_id:
+          type: string
+          format: uuid
+        campus_id:
+          type: string
+          format: uuid
+        pass_type:
+          type: string
+          maxLength: 20
+        reason:
+          type: string
+        status:
+          type: string
+          default: "requested"
+          enum:
+            - "requested"
+            - "approved"
+            - "rejected"
+            - "exited"
+            - "returned"
+            - "cancelled"
+            - "expired"
+        out_from:
+          type: string
+          format: date-time
+        valid_until:
+          type: string
+          format: date-time
+        pass_window:
+          type: string
+          nullable: true
+        is_return_expected:
+          type: boolean
+          default: false
+        pickup_person_id:
+          type: string
+          format: uuid
+          nullable: true
+        requested_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        requested_at:
+          type: string
+          format: date-time
+        approved_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        approved_at:
+          type: string
+          format: date-time
+          nullable: true
+        rejection_reason:
+          type: string
+          nullable: true
+        verification_code:
+          type: string
+          maxLength: 12
+        guardian_notified_at:
+          type: string
+          format: date-time
+          nullable: true
+        exited_at:
+          type: string
+          format: date-time
+          nullable: true
+        exit_recorded_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        pickup_id_verified:
+          type: boolean
+          default: false
+        returned_at:
+          type: string
+          format: date-time
+          nullable: true
+        return_recorded_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        cancelled_reason:
+          type: string
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

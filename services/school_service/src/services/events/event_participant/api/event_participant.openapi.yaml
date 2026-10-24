@@ -1,0 +1,269 @@
+openapi: 3.0.0
+x-sql-table: evnt_event_participant
+info:
+  title: EventParticipantResponse API
+  version: 1.0.0
+paths:
+  /event_participant:
+    get:
+      operationId: listEventParticipant
+      summary: Get all event_participant
+      responses:
+        '200':
+          description: List of event_participant
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EventParticipantResponse'
+    post:
+      operationId: createEventParticipant
+      summary: Create a new event_participant
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventParticipantRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventParticipantResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /event_participant/{id}:
+    get:
+      operationId: getEventParticipantById
+      summary: Get event_participant by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: event_participant object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventParticipantResponse'
+        '404':
+          description: event_participant not found
+    put:
+      operationId: updateEventParticipant
+      summary: Update event_participant by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventParticipantUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventParticipantResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: event_participant not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteEventParticipant
+      summary: Delete event_participant by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: event_participant not found
+components:
+  schemas:
+
+    EventParticipantRequest:
+      type: object
+      required:
+        - event_id
+        - person_id
+      additionalProperties: false
+      properties:
+        event_id:
+          type: string
+          format: uuid
+        person_id:
+          type: string
+          format: uuid
+        participant_role:
+          type: string
+          maxLength: 20
+          default: "attendee"
+        rsvp_status:
+          type: string
+          default: "invited"
+        responded_at:
+          type: string
+          format: date-time
+          nullable: true
+        guest_count:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 10
+          default: 0
+        checked_in_at:
+          type: string
+          format: date-time
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+
+    EventParticipantUpdateRequest:
+      type: object
+      required:
+        - event_id
+        - person_id
+        - participant_role
+        - rsvp_status
+        - responded_at
+        - guest_count
+        - checked_in_at
+        - notes
+      additionalProperties: false
+      properties:
+        event_id:
+          type: string
+          format: uuid
+        person_id:
+          type: string
+          format: uuid
+        participant_role:
+          type: string
+          maxLength: 20
+          default: "attendee"
+        rsvp_status:
+          type: string
+          default: "invited"
+        responded_at:
+          type: string
+          format: date-time
+          nullable: true
+        guest_count:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 10
+          default: 0
+        checked_in_at:
+          type: string
+          format: date-time
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+
+    EventParticipantResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - event_participant_id
+        - event_id
+        - person_id
+        - participant_role
+        - rsvp_status
+        - guest_count
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        event_participant_id:
+          type: string
+          format: uuid
+          readOnly: true
+        event_id:
+          type: string
+          format: uuid
+        person_id:
+          type: string
+          format: uuid
+        participant_role:
+          type: string
+          maxLength: 20
+          default: "attendee"
+        rsvp_status:
+          type: string
+          default: "invited"
+        responded_at:
+          type: string
+          format: date-time
+          nullable: true
+        guest_count:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 10
+          default: 0
+        checked_in_at:
+          type: string
+          format: date-time
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

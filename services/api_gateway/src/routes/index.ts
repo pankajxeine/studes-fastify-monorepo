@@ -1,4 +1,4 @@
-import ApiGatewayRoutes from './api_gateway.router'
+import ApiGatewayRoutes from './api_gateway/api_gateway.router'
 
 import type { FastifyInstance } from 'fastify'
 

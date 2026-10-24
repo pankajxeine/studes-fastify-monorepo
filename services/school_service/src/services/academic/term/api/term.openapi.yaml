@@ -1,0 +1,299 @@
+openapi: 3.0.0
+x-sql-table: acad_term
+info:
+  title: TermResponse API
+  version: 1.0.0
+paths:
+  /term:
+    get:
+      operationId: listTerm
+      summary: Get all term
+      responses:
+        '200':
+          description: List of term
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TermResponse'
+    post:
+      operationId: createTerm
+      summary: Create a new term
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TermRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TermResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /term/{id}:
+    get:
+      operationId: getTermById
+      summary: Get term by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: term object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TermResponse'
+        '404':
+          description: term not found
+    put:
+      operationId: updateTerm
+      summary: Update term by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TermUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TermResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: term not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteTerm
+      summary: Delete term by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: term not found
+components:
+  schemas:
+
+    TermRequest:
+      type: object
+      required:
+        - academic_year_id
+        - code
+        - name
+        - sequence_no
+        - start_date
+        - end_date
+      additionalProperties: false
+      properties:
+        academic_year_id:
+          type: string
+          format: uuid
+        campus_id:
+          type: string
+          format: uuid
+          nullable: true
+        code:
+          type: string
+          maxLength: 20
+        name:
+          type: string
+        kind:
+          type: string
+          default: "term"
+        sequence_no:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 12
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        span:
+          type: string
+          nullable: true
+        registration_opens_on:
+          type: string
+          format: date
+          nullable: true
+        registration_closes_on:
+          type: string
+          format: date
+          nullable: true
+
+    TermUpdateRequest:
+      type: object
+      required:
+        - academic_year_id
+        - campus_id
+        - code
+        - name
+        - kind
+        - sequence_no
+        - start_date
+        - end_date
+        - span
+        - registration_opens_on
+        - registration_closes_on
+      additionalProperties: false
+      properties:
+        academic_year_id:
+          type: string
+          format: uuid
+        campus_id:
+          type: string
+          format: uuid
+          nullable: true
+        code:
+          type: string
+          maxLength: 20
+        name:
+          type: string
+        kind:
+          type: string
+          default: "term"
+        sequence_no:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 12
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        span:
+          type: string
+          nullable: true
+        registration_opens_on:
+          type: string
+          format: date
+          nullable: true
+        registration_closes_on:
+          type: string
+          format: date
+          nullable: true
+
+    TermResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - term_id
+        - academic_year_id
+        - code
+        - name
+        - kind
+        - sequence_no
+        - start_date
+        - end_date
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        term_id:
+          type: string
+          format: uuid
+          readOnly: true
+        academic_year_id:
+          type: string
+          format: uuid
+        campus_id:
+          type: string
+          format: uuid
+          nullable: true
+        code:
+          type: string
+          maxLength: 20
+        name:
+          type: string
+        kind:
+          type: string
+          default: "term"
+        sequence_no:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 12
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        span:
+          type: string
+          nullable: true
+        registration_opens_on:
+          type: string
+          format: date
+          nullable: true
+        registration_closes_on:
+          type: string
+          format: date
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

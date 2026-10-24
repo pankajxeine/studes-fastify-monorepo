@@ -1,0 +1,364 @@
+openapi: 3.0.0
+x-sql-table: health_clinic_visit
+info:
+  title: ClinicVisitResponse API
+  version: 1.0.0
+paths:
+  /clinic_visit:
+    get:
+      operationId: listClinicVisit
+      summary: Get all clinic_visit
+      responses:
+        '200':
+          description: List of clinic_visit
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ClinicVisitResponse'
+    post:
+      operationId: createClinicVisit
+      summary: Create a new clinic_visit
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClinicVisitRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClinicVisitResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /clinic_visit/{id}:
+    get:
+      operationId: getClinicVisitById
+      summary: Get clinic_visit by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: clinic_visit object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClinicVisitResponse'
+        '404':
+          description: clinic_visit not found
+    put:
+      operationId: updateClinicVisit
+      summary: Update clinic_visit by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClinicVisitUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClinicVisitResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: clinic_visit not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteClinicVisit
+      summary: Delete clinic_visit by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: clinic_visit not found
+components:
+  schemas:
+
+    ClinicVisitRequest:
+      type: object
+      required:
+        - person_id
+        - campus_id
+        - complaint
+      additionalProperties: false
+      properties:
+        person_id:
+          type: string
+          format: uuid
+        campus_id:
+          type: string
+          format: uuid
+        clinic_room_id:
+          type: string
+          format: uuid
+          nullable: true
+        visit_at:
+          type: string
+          format: date-time
+        complaint:
+          type: string
+        temperature_c:
+          type: number
+          format: double
+          nullable: true
+          minimum: 30
+          maximum: 45
+        pulse_bpm:
+          type: integer
+          format: int32
+          nullable: true
+          minimum: 20
+          maximum: 250
+        diagnosis:
+          type: string
+          nullable: true
+        treatment:
+          type: string
+          nullable: true
+        medication_given:
+          type: string
+          nullable: true
+        attended_by_staff_id:
+          type: string
+          format: uuid
+          nullable: true
+        outcome:
+          type: string
+          nullable: true
+          maxLength: 20
+        released_at:
+          type: string
+          format: date-time
+          nullable: true
+        guardian_notified_at:
+          type: string
+          format: date-time
+          nullable: true
+        follow_up_on:
+          type: string
+          format: date
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+
+    ClinicVisitUpdateRequest:
+      type: object
+      required:
+        - person_id
+        - campus_id
+        - clinic_room_id
+        - visit_at
+        - complaint
+        - temperature_c
+        - pulse_bpm
+        - diagnosis
+        - treatment
+        - medication_given
+        - attended_by_staff_id
+        - outcome
+        - released_at
+        - guardian_notified_at
+        - follow_up_on
+        - notes
+      additionalProperties: false
+      properties:
+        person_id:
+          type: string
+          format: uuid
+        campus_id:
+          type: string
+          format: uuid
+        clinic_room_id:
+          type: string
+          format: uuid
+          nullable: true
+        visit_at:
+          type: string
+          format: date-time
+        complaint:
+          type: string
+        temperature_c:
+          type: number
+          format: double
+          nullable: true
+          minimum: 30
+          maximum: 45
+        pulse_bpm:
+          type: integer
+          format: int32
+          nullable: true
+          minimum: 20
+          maximum: 250
+        diagnosis:
+          type: string
+          nullable: true
+        treatment:
+          type: string
+          nullable: true
+        medication_given:
+          type: string
+          nullable: true
+        attended_by_staff_id:
+          type: string
+          format: uuid
+          nullable: true
+        outcome:
+          type: string
+          nullable: true
+          maxLength: 20
+        released_at:
+          type: string
+          format: date-time
+          nullable: true
+        guardian_notified_at:
+          type: string
+          format: date-time
+          nullable: true
+        follow_up_on:
+          type: string
+          format: date
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+
+    ClinicVisitResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - clinic_visit_id
+        - person_id
+        - campus_id
+        - visit_at
+        - complaint
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        clinic_visit_id:
+          type: string
+          format: uuid
+          readOnly: true
+        person_id:
+          type: string
+          format: uuid
+        campus_id:
+          type: string
+          format: uuid
+        clinic_room_id:
+          type: string
+          format: uuid
+          nullable: true
+        visit_at:
+          type: string
+          format: date-time
+        complaint:
+          type: string
+        temperature_c:
+          type: number
+          format: double
+          nullable: true
+          minimum: 30
+          maximum: 45
+        pulse_bpm:
+          type: integer
+          format: int32
+          nullable: true
+          minimum: 20
+          maximum: 250
+        diagnosis:
+          type: string
+          nullable: true
+        treatment:
+          type: string
+          nullable: true
+        medication_given:
+          type: string
+          nullable: true
+        attended_by_staff_id:
+          type: string
+          format: uuid
+          nullable: true
+        outcome:
+          type: string
+          nullable: true
+          maxLength: 20
+        released_at:
+          type: string
+          format: date-time
+          nullable: true
+        guardian_notified_at:
+          type: string
+          format: date-time
+          nullable: true
+        follow_up_on:
+          type: string
+          format: date
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

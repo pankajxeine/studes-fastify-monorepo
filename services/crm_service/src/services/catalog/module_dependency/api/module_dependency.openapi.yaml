@@ -1,0 +1,163 @@
+openapi: 3.0.0
+x-sql-table: catalog_module_dependency
+info:
+  title: ModuleDependencyResponse API
+  version: 1.0.0
+paths:
+  /module_dependency:
+    get:
+      operationId: listModuleDependency
+      summary: Get all module_dependency
+      responses:
+        '200':
+          description: List of module_dependency
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ModuleDependencyResponse'
+    post:
+      operationId: createModuleDependency
+      summary: Create a new module_dependency
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ModuleDependencyRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModuleDependencyResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /module_dependency/{id}:
+    get:
+      operationId: getModuleDependencyById
+      summary: Get module_dependency by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: module_dependency object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModuleDependencyResponse'
+        '404':
+          description: module_dependency not found
+    put:
+      operationId: updateModuleDependency
+      summary: Update module_dependency by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ModuleDependencyUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModuleDependencyResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: module_dependency not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteModuleDependency
+      summary: Delete module_dependency by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: module_dependency not found
+components:
+  schemas:
+
+    ModuleDependencyRequest:
+      type: object
+      required:
+        - module_id
+        - requires_module_id
+      additionalProperties: false
+      properties:
+        module_id:
+          type: string
+          format: uuid
+        requires_module_id:
+          type: string
+          format: uuid
+
+    ModuleDependencyUpdateRequest:
+      type: object
+      required:
+        - module_id
+        - requires_module_id
+      additionalProperties: false
+      properties:
+        module_id:
+          type: string
+          format: uuid
+        requires_module_id:
+          type: string
+          format: uuid
+
+    ModuleDependencyResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - module_id
+        - requires_module_id
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        module_id:
+          type: string
+          format: uuid
+        requires_module_id:
+          type: string
+          format: uuid
+  

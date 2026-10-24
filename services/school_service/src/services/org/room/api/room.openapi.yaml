@@ -1,0 +1,329 @@
+openapi: 3.0.0
+x-sql-table: org_room
+info:
+  title: RoomResponse API
+  version: 1.0.0
+paths:
+  /room:
+    get:
+      operationId: listRoom
+      summary: Get all room
+      responses:
+        '200':
+          description: List of room
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RoomResponse'
+    post:
+      operationId: createRoom
+      summary: Create a new room
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoomRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoomResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /room/{id}:
+    get:
+      operationId: getRoomById
+      summary: Get room by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: room object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoomResponse'
+        '404':
+          description: room not found
+    put:
+      operationId: updateRoom
+      summary: Update room by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoomUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoomResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: room not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteRoom
+      summary: Delete room by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: room not found
+components:
+  schemas:
+
+    RoomRequest:
+      type: object
+      required:
+        - building_id
+        - campus_id
+        - room_type_code
+        - code
+        - name
+      additionalProperties: false
+      properties:
+        building_id:
+          type: string
+          format: uuid
+        campus_id:
+          type: string
+          format: uuid
+        room_type_code:
+          type: string
+        code:
+          type: string
+          maxLength: 20
+        name:
+          type: string
+        floor_no:
+          type: integer
+          format: int32
+          minimum: -5
+          maximum: 60
+          default: 0
+        capacity:
+          type: integer
+          format: int32
+          nullable: true
+          minimum: 1
+          maximum: 5000
+        area_sqm:
+          type: number
+          format: double
+          nullable: true
+        is_bookable:
+          type: boolean
+          default: true
+        has_projector:
+          type: boolean
+          default: false
+        is_accessible:
+          type: boolean
+          default: false
+        is_active:
+          type: boolean
+          default: true
+        notes:
+          type: string
+          nullable: true
+
+    RoomUpdateRequest:
+      type: object
+      required:
+        - building_id
+        - campus_id
+        - room_type_code
+        - code
+        - name
+        - floor_no
+        - capacity
+        - area_sqm
+        - is_bookable
+        - has_projector
+        - is_accessible
+        - is_active
+        - notes
+      additionalProperties: false
+      properties:
+        building_id:
+          type: string
+          format: uuid
+        campus_id:
+          type: string
+          format: uuid
+        room_type_code:
+          type: string
+        code:
+          type: string
+          maxLength: 20
+        name:
+          type: string
+        floor_no:
+          type: integer
+          format: int32
+          minimum: -5
+          maximum: 60
+          default: 0
+        capacity:
+          type: integer
+          format: int32
+          nullable: true
+          minimum: 1
+          maximum: 5000
+        area_sqm:
+          type: number
+          format: double
+          nullable: true
+        is_bookable:
+          type: boolean
+          default: true
+        has_projector:
+          type: boolean
+          default: false
+        is_accessible:
+          type: boolean
+          default: false
+        is_active:
+          type: boolean
+          default: true
+        notes:
+          type: string
+          nullable: true
+
+    RoomResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - room_id
+        - building_id
+        - campus_id
+        - room_type_code
+        - code
+        - name
+        - floor_no
+        - is_bookable
+        - has_projector
+        - is_accessible
+        - is_active
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        room_id:
+          type: string
+          format: uuid
+          readOnly: true
+        building_id:
+          type: string
+          format: uuid
+        campus_id:
+          type: string
+          format: uuid
+        room_type_code:
+          type: string
+        code:
+          type: string
+          maxLength: 20
+        name:
+          type: string
+        floor_no:
+          type: integer
+          format: int32
+          minimum: -5
+          maximum: 60
+          default: 0
+        capacity:
+          type: integer
+          format: int32
+          nullable: true
+          minimum: 1
+          maximum: 5000
+        area_sqm:
+          type: number
+          format: double
+          nullable: true
+        is_bookable:
+          type: boolean
+          default: true
+        has_projector:
+          type: boolean
+          default: false
+        is_accessible:
+          type: boolean
+          default: false
+        is_active:
+          type: boolean
+          default: true
+        notes:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        deleted_at:
+          type: string
+          format: date-time
+          nullable: true
+          readOnly: true
+  

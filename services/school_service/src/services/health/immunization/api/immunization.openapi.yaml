@@ -1,0 +1,289 @@
+openapi: 3.0.0
+x-sql-table: health_immunization
+info:
+  title: ImmunizationResponse API
+  version: 1.0.0
+paths:
+  /immunization:
+    get:
+      operationId: listImmunization
+      summary: Get all immunization
+      responses:
+        '200':
+          description: List of immunization
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ImmunizationResponse'
+    post:
+      operationId: createImmunization
+      summary: Create a new immunization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImmunizationRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImmunizationResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /immunization/{id}:
+    get:
+      operationId: getImmunizationById
+      summary: Get immunization by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: immunization object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImmunizationResponse'
+        '404':
+          description: immunization not found
+    put:
+      operationId: updateImmunization
+      summary: Update immunization by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImmunizationUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImmunizationResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: immunization not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteImmunization
+      summary: Delete immunization by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: immunization not found
+components:
+  schemas:
+
+    ImmunizationRequest:
+      type: object
+      required:
+        - person_id
+        - vaccine_name
+        - administered_on
+      additionalProperties: false
+      properties:
+        person_id:
+          type: string
+          format: uuid
+        vaccine_name:
+          type: string
+        dose_no:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 20
+          default: 1
+        administered_on:
+          type: string
+          format: date
+        next_due_on:
+          type: string
+          format: date
+          nullable: true
+        provider:
+          type: string
+          nullable: true
+        batch_no:
+          type: string
+          nullable: true
+          maxLength: 40
+        file_id:
+          type: string
+          format: uuid
+          nullable: true
+        verified_by_staff_id:
+          type: string
+          format: uuid
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+
+    ImmunizationUpdateRequest:
+      type: object
+      required:
+        - person_id
+        - vaccine_name
+        - dose_no
+        - administered_on
+        - next_due_on
+        - provider
+        - batch_no
+        - file_id
+        - verified_by_staff_id
+        - notes
+      additionalProperties: false
+      properties:
+        person_id:
+          type: string
+          format: uuid
+        vaccine_name:
+          type: string
+        dose_no:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 20
+          default: 1
+        administered_on:
+          type: string
+          format: date
+        next_due_on:
+          type: string
+          format: date
+          nullable: true
+        provider:
+          type: string
+          nullable: true
+        batch_no:
+          type: string
+          nullable: true
+          maxLength: 40
+        file_id:
+          type: string
+          format: uuid
+          nullable: true
+        verified_by_staff_id:
+          type: string
+          format: uuid
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+
+    ImmunizationResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - immunization_id
+        - person_id
+        - vaccine_name
+        - dose_no
+        - administered_on
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        immunization_id:
+          type: string
+          format: uuid
+          readOnly: true
+        person_id:
+          type: string
+          format: uuid
+        vaccine_name:
+          type: string
+        dose_no:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 20
+          default: 1
+        administered_on:
+          type: string
+          format: date
+        next_due_on:
+          type: string
+          format: date
+          nullable: true
+        provider:
+          type: string
+          nullable: true
+        batch_no:
+          type: string
+          nullable: true
+          maxLength: 40
+        file_id:
+          type: string
+          format: uuid
+          nullable: true
+        verified_by_staff_id:
+          type: string
+          format: uuid
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

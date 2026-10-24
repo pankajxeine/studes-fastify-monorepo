@@ -1,0 +1,225 @@
+openapi: 3.0.0
+x-sql-table: catalog_tenant_role_template
+info:
+  title: TenantRoleTemplateResponse API
+  version: 1.0.0
+paths:
+  /tenant_role_template:
+    get:
+      operationId: listTenantRoleTemplate
+      summary: Get all tenant_role_template
+      responses:
+        '200':
+          description: List of tenant_role_template
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TenantRoleTemplateResponse'
+    post:
+      operationId: createTenantRoleTemplate
+      summary: Create a new tenant_role_template
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TenantRoleTemplateRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TenantRoleTemplateResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /tenant_role_template/{id}:
+    get:
+      operationId: getTenantRoleTemplateById
+      summary: Get tenant_role_template by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: tenant_role_template object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TenantRoleTemplateResponse'
+        '404':
+          description: tenant_role_template not found
+    put:
+      operationId: updateTenantRoleTemplate
+      summary: Update tenant_role_template by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TenantRoleTemplateUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TenantRoleTemplateResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: tenant_role_template not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteTenantRoleTemplate
+      summary: Delete tenant_role_template by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: tenant_role_template not found
+components:
+  schemas:
+
+    TenantRoleTemplateRequest:
+      type: object
+      required:
+        - application_id
+        - role_code
+        - name
+      additionalProperties: false
+      properties:
+        application_id:
+          type: string
+          format: uuid
+        role_code:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        permission_codes:
+          type: string
+          default: "{}"
+        is_tenant_admin:
+          type: boolean
+          default: false
+        sort_order:
+          type: integer
+          format: int32
+          default: 0
+
+    TenantRoleTemplateUpdateRequest:
+      type: object
+      required:
+        - application_id
+        - role_code
+        - name
+        - description
+        - permission_codes
+        - is_tenant_admin
+        - sort_order
+      additionalProperties: false
+      properties:
+        application_id:
+          type: string
+          format: uuid
+        role_code:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        permission_codes:
+          type: string
+          default: "{}"
+        is_tenant_admin:
+          type: boolean
+          default: false
+        sort_order:
+          type: integer
+          format: int32
+          default: 0
+
+    TenantRoleTemplateResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - application_id
+        - role_code
+        - name
+        - permission_codes
+        - is_tenant_admin
+        - sort_order
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        application_id:
+          type: string
+          format: uuid
+        role_code:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        permission_codes:
+          type: string
+          default: "{}"
+        is_tenant_admin:
+          type: boolean
+          default: false
+        sort_order:
+          type: integer
+          format: int32
+          default: 0
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+  

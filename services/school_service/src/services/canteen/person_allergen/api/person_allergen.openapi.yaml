@@ -1,0 +1,289 @@
+openapi: 3.0.0
+x-sql-table: cntn_person_allergen
+info:
+  title: PersonAllergenResponse API
+  version: 1.0.0
+paths:
+  /person_allergen:
+    get:
+      operationId: listPersonAllergen
+      summary: Get all person_allergen
+      responses:
+        '200':
+          description: List of person_allergen
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PersonAllergenResponse'
+    post:
+      operationId: createPersonAllergen
+      summary: Create a new person_allergen
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PersonAllergenRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonAllergenResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /person_allergen/{id}:
+    get:
+      operationId: getPersonAllergenById
+      summary: Get person_allergen by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: person_allergen object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonAllergenResponse'
+        '404':
+          description: person_allergen not found
+    put:
+      operationId: updatePersonAllergen
+      summary: Update person_allergen by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PersonAllergenUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonAllergenResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: person_allergen not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deletePersonAllergen
+      summary: Delete person_allergen by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: person_allergen not found
+components:
+  schemas:
+
+    PersonAllergenRequest:
+      type: object
+      required:
+        - person_id
+        - allergen_code
+        - severity
+      additionalProperties: false
+      properties:
+        person_id:
+          type: string
+          format: uuid
+        allergen_code:
+          type: string
+        medical_profile_id:
+          type: string
+          format: uuid
+          nullable: true
+        severity:
+          type: string
+          enum:
+            - "mild"
+            - "moderate"
+            - "severe"
+            - "anaphylaxis"
+        reaction:
+          type: string
+          nullable: true
+        action_plan:
+          type: string
+          nullable: true
+        is_active:
+          type: boolean
+          default: true
+        verified_on:
+          type: string
+          format: date
+          nullable: true
+        verified_by_staff_id:
+          type: string
+          format: uuid
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+
+    PersonAllergenUpdateRequest:
+      type: object
+      required:
+        - person_id
+        - allergen_code
+        - medical_profile_id
+        - severity
+        - reaction
+        - action_plan
+        - is_active
+        - verified_on
+        - verified_by_staff_id
+        - notes
+      additionalProperties: false
+      properties:
+        person_id:
+          type: string
+          format: uuid
+        allergen_code:
+          type: string
+        medical_profile_id:
+          type: string
+          format: uuid
+          nullable: true
+        severity:
+          type: string
+          enum:
+            - "mild"
+            - "moderate"
+            - "severe"
+            - "anaphylaxis"
+        reaction:
+          type: string
+          nullable: true
+        action_plan:
+          type: string
+          nullable: true
+        is_active:
+          type: boolean
+          default: true
+        verified_on:
+          type: string
+          format: date
+          nullable: true
+        verified_by_staff_id:
+          type: string
+          format: uuid
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+
+    PersonAllergenResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - person_allergen_id
+        - person_id
+        - allergen_code
+        - severity
+        - is_active
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        person_allergen_id:
+          type: string
+          format: uuid
+          readOnly: true
+        person_id:
+          type: string
+          format: uuid
+        allergen_code:
+          type: string
+        medical_profile_id:
+          type: string
+          format: uuid
+          nullable: true
+        severity:
+          type: string
+          enum:
+            - "mild"
+            - "moderate"
+            - "severe"
+            - "anaphylaxis"
+        reaction:
+          type: string
+          nullable: true
+        action_plan:
+          type: string
+          nullable: true
+        is_active:
+          type: boolean
+          default: true
+        verified_on:
+          type: string
+          format: date
+          nullable: true
+        verified_by_staff_id:
+          type: string
+          format: uuid
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

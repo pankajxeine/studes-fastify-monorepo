@@ -1,0 +1,323 @@
+openapi: 3.0.0
+x-sql-table: admis_application_assessment
+info:
+  title: ApplicationAssessmentResponse API
+  version: 1.0.0
+paths:
+  /application_assessment:
+    get:
+      operationId: listApplicationAssessment
+      summary: Get all application_assessment
+      responses:
+        '200':
+          description: List of application_assessment
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApplicationAssessmentResponse'
+    post:
+      operationId: createApplicationAssessment
+      summary: Create a new application_assessment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApplicationAssessmentRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationAssessmentResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /application_assessment/{id}:
+    get:
+      operationId: getApplicationAssessmentById
+      summary: Get application_assessment by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: application_assessment object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationAssessmentResponse'
+        '404':
+          description: application_assessment not found
+    put:
+      operationId: updateApplicationAssessment
+      summary: Update application_assessment by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApplicationAssessmentUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationAssessmentResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: application_assessment not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteApplicationAssessment
+      summary: Delete application_assessment by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: application_assessment not found
+components:
+  schemas:
+
+    ApplicationAssessmentRequest:
+      type: object
+      required:
+        - application_id
+        - assessment_type
+        - scheduled_at
+        - ends_at
+      additionalProperties: false
+      properties:
+        application_id:
+          type: string
+          format: uuid
+        assessor_staff_id:
+          type: string
+          format: uuid
+          nullable: true
+        room_id:
+          type: string
+          format: uuid
+          nullable: true
+        assessment_type:
+          type: string
+          maxLength: 20
+        scheduled_at:
+          type: string
+          format: date-time
+        ends_at:
+          type: string
+          format: date-time
+        slot:
+          type: string
+          nullable: true
+        status:
+          type: string
+          default: "scheduled"
+          enum:
+            - "scheduled"
+            - "completed"
+            - "no_show"
+            - "cancelled"
+        score:
+          type: number
+          format: double
+          nullable: true
+        max_score:
+          type: number
+          format: double
+          nullable: true
+        result:
+          type: string
+          nullable: true
+          maxLength: 20
+        remarks:
+          type: string
+          nullable: true
+
+    ApplicationAssessmentUpdateRequest:
+      type: object
+      required:
+        - application_id
+        - assessor_staff_id
+        - room_id
+        - assessment_type
+        - scheduled_at
+        - ends_at
+        - slot
+        - status
+        - score
+        - max_score
+        - result
+        - remarks
+      additionalProperties: false
+      properties:
+        application_id:
+          type: string
+          format: uuid
+        assessor_staff_id:
+          type: string
+          format: uuid
+          nullable: true
+        room_id:
+          type: string
+          format: uuid
+          nullable: true
+        assessment_type:
+          type: string
+          maxLength: 20
+        scheduled_at:
+          type: string
+          format: date-time
+        ends_at:
+          type: string
+          format: date-time
+        slot:
+          type: string
+          nullable: true
+        status:
+          type: string
+          default: "scheduled"
+          enum:
+            - "scheduled"
+            - "completed"
+            - "no_show"
+            - "cancelled"
+        score:
+          type: number
+          format: double
+          nullable: true
+        max_score:
+          type: number
+          format: double
+          nullable: true
+        result:
+          type: string
+          nullable: true
+          maxLength: 20
+        remarks:
+          type: string
+          nullable: true
+
+    ApplicationAssessmentResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - application_assessment_id
+        - application_id
+        - assessment_type
+        - scheduled_at
+        - ends_at
+        - status
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        application_assessment_id:
+          type: string
+          format: uuid
+          readOnly: true
+        application_id:
+          type: string
+          format: uuid
+        assessor_staff_id:
+          type: string
+          format: uuid
+          nullable: true
+        room_id:
+          type: string
+          format: uuid
+          nullable: true
+        assessment_type:
+          type: string
+          maxLength: 20
+        scheduled_at:
+          type: string
+          format: date-time
+        ends_at:
+          type: string
+          format: date-time
+        slot:
+          type: string
+          nullable: true
+        status:
+          type: string
+          default: "scheduled"
+          enum:
+            - "scheduled"
+            - "completed"
+            - "no_show"
+            - "cancelled"
+        score:
+          type: number
+          format: double
+          nullable: true
+        max_score:
+          type: number
+          format: double
+          nullable: true
+        result:
+          type: string
+          nullable: true
+          maxLength: 20
+        remarks:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

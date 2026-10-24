@@ -1,0 +1,408 @@
+openapi: 3.0.0
+x-sql-table: visitor_watchlist
+info:
+  title: WatchlistResponse API
+  version: 1.0.0
+paths:
+  /watchlist:
+    get:
+      operationId: listWatchlist
+      summary: Get all watchlist
+      responses:
+        '200':
+          description: List of watchlist
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WatchlistResponse'
+    post:
+      operationId: createWatchlist
+      summary: Create a new watchlist
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WatchlistRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WatchlistResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /watchlist/{id}:
+    get:
+      operationId: getWatchlistById
+      summary: Get watchlist by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: watchlist object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WatchlistResponse'
+        '404':
+          description: watchlist not found
+    put:
+      operationId: updateWatchlist
+      summary: Update watchlist by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WatchlistUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WatchlistResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: watchlist not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteWatchlist
+      summary: Delete watchlist by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: watchlist not found
+components:
+  schemas:
+
+    WatchlistRequest:
+      type: object
+      required:
+        - full_name
+        - reason_category
+        - reason
+        - added_by_user_id
+      additionalProperties: false
+      properties:
+        person_id:
+          type: string
+          format: uuid
+          nullable: true
+        full_name:
+          type: string
+        date_of_birth:
+          type: string
+          format: date
+          nullable: true
+        id_document_type:
+          type: string
+          nullable: true
+          maxLength: 20
+        id_document_no:
+          type: string
+          nullable: true
+          maxLength: 40
+        id_document_key:
+          type: string
+          nullable: true
+          maxLength: 40
+        photo_file_id:
+          type: string
+          format: uuid
+          nullable: true
+        campus_id:
+          type: string
+          format: uuid
+          nullable: true
+        reason_category:
+          type: string
+          maxLength: 30
+        reason:
+          type: string
+        reference_no:
+          type: string
+          nullable: true
+          maxLength: 40
+        match_action:
+          type: string
+          maxLength: 20
+          default: "deny_entry"
+        severity:
+          type: string
+          maxLength: 10
+          default: "high"
+        valid_from:
+          type: string
+          format: date
+        valid_to:
+          type: string
+          format: date
+          nullable: true
+        validity:
+          type: string
+          nullable: true
+        added_by_user_id:
+          type: string
+          format: uuid
+        lifted_at:
+          type: string
+          format: date-time
+          nullable: true
+        lifted_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        lift_reason:
+          type: string
+          nullable: true
+
+    WatchlistUpdateRequest:
+      type: object
+      required:
+        - person_id
+        - full_name
+        - date_of_birth
+        - id_document_type
+        - id_document_no
+        - id_document_key
+        - photo_file_id
+        - campus_id
+        - reason_category
+        - reason
+        - reference_no
+        - match_action
+        - severity
+        - valid_from
+        - valid_to
+        - validity
+        - added_by_user_id
+        - lifted_at
+        - lifted_by_user_id
+        - lift_reason
+      additionalProperties: false
+      properties:
+        person_id:
+          type: string
+          format: uuid
+          nullable: true
+        full_name:
+          type: string
+        date_of_birth:
+          type: string
+          format: date
+          nullable: true
+        id_document_type:
+          type: string
+          nullable: true
+          maxLength: 20
+        id_document_no:
+          type: string
+          nullable: true
+          maxLength: 40
+        id_document_key:
+          type: string
+          nullable: true
+          maxLength: 40
+        photo_file_id:
+          type: string
+          format: uuid
+          nullable: true
+        campus_id:
+          type: string
+          format: uuid
+          nullable: true
+        reason_category:
+          type: string
+          maxLength: 30
+        reason:
+          type: string
+        reference_no:
+          type: string
+          nullable: true
+          maxLength: 40
+        match_action:
+          type: string
+          maxLength: 20
+          default: "deny_entry"
+        severity:
+          type: string
+          maxLength: 10
+          default: "high"
+        valid_from:
+          type: string
+          format: date
+        valid_to:
+          type: string
+          format: date
+          nullable: true
+        validity:
+          type: string
+          nullable: true
+        added_by_user_id:
+          type: string
+          format: uuid
+        lifted_at:
+          type: string
+          format: date-time
+          nullable: true
+        lifted_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        lift_reason:
+          type: string
+          nullable: true
+
+    WatchlistResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - watchlist_id
+        - full_name
+        - reason_category
+        - reason
+        - match_action
+        - severity
+        - valid_from
+        - added_by_user_id
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        watchlist_id:
+          type: string
+          format: uuid
+          readOnly: true
+        person_id:
+          type: string
+          format: uuid
+          nullable: true
+        full_name:
+          type: string
+        date_of_birth:
+          type: string
+          format: date
+          nullable: true
+        id_document_type:
+          type: string
+          nullable: true
+          maxLength: 20
+        id_document_no:
+          type: string
+          nullable: true
+          maxLength: 40
+        id_document_key:
+          type: string
+          nullable: true
+          maxLength: 40
+        photo_file_id:
+          type: string
+          format: uuid
+          nullable: true
+        campus_id:
+          type: string
+          format: uuid
+          nullable: true
+        reason_category:
+          type: string
+          maxLength: 30
+        reason:
+          type: string
+        reference_no:
+          type: string
+          nullable: true
+          maxLength: 40
+        match_action:
+          type: string
+          maxLength: 20
+          default: "deny_entry"
+        severity:
+          type: string
+          maxLength: 10
+          default: "high"
+        valid_from:
+          type: string
+          format: date
+        valid_to:
+          type: string
+          format: date
+          nullable: true
+        validity:
+          type: string
+          nullable: true
+        added_by_user_id:
+          type: string
+          format: uuid
+        lifted_at:
+          type: string
+          format: date-time
+          nullable: true
+        lifted_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        lift_reason:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

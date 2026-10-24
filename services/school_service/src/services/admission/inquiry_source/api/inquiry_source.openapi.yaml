@@ -1,0 +1,203 @@
+openapi: 3.0.0
+x-sql-table: admis_inquiry_source
+info:
+  title: InquirySourceResponse API
+  version: 1.0.0
+paths:
+  /inquiry_source:
+    get:
+      operationId: listInquirySource
+      summary: Get all inquiry_source
+      responses:
+        '200':
+          description: List of inquiry_source
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/InquirySourceResponse'
+    post:
+      operationId: createInquirySource
+      summary: Create a new inquiry_source
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InquirySourceRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InquirySourceResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /inquiry_source/{id}:
+    get:
+      operationId: getInquirySourceById
+      summary: Get inquiry_source by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: inquiry_source object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InquirySourceResponse'
+        '404':
+          description: inquiry_source not found
+    put:
+      operationId: updateInquirySource
+      summary: Update inquiry_source by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InquirySourceUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InquirySourceResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: inquiry_source not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteInquirySource
+      summary: Delete inquiry_source by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: inquiry_source not found
+components:
+  schemas:
+
+    InquirySourceRequest:
+      type: object
+      required:
+        - name
+      additionalProperties: false
+      properties:
+        inquiry_source_code:
+          type: string
+          nullable: true
+        name:
+          type: string
+        sort_order:
+          type: integer
+          format: int32
+          default: 0
+        is_active:
+          type: boolean
+          default: true
+
+    InquirySourceUpdateRequest:
+      type: object
+      required:
+        - inquiry_source_code
+        - name
+        - sort_order
+        - is_active
+      additionalProperties: false
+      properties:
+        inquiry_source_code:
+          type: string
+          nullable: true
+        name:
+          type: string
+        sort_order:
+          type: integer
+          format: int32
+          default: 0
+        is_active:
+          type: boolean
+          default: true
+
+    InquirySourceResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - name
+        - sort_order
+        - is_active
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        inquiry_source_code:
+          type: string
+          nullable: true
+        name:
+          type: string
+        sort_order:
+          type: integer
+          format: int32
+          default: 0
+        is_active:
+          type: boolean
+          default: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

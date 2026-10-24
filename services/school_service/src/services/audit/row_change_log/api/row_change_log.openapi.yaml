@@ -1,0 +1,295 @@
+openapi: 3.0.0
+x-sql-table: audit_row_change_log
+info:
+  title: RowChangeLogResponse API
+  version: 1.0.0
+paths:
+  /row_change_log:
+    get:
+      operationId: listRowChangeLog
+      summary: Get all row_change_log
+      responses:
+        '200':
+          description: List of row_change_log
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RowChangeLogResponse'
+    post:
+      operationId: createRowChangeLog
+      summary: Create a new row_change_log
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RowChangeLogRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RowChangeLogResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /row_change_log/{id}:
+    get:
+      operationId: getRowChangeLogById
+      summary: Get row_change_log by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: row_change_log object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RowChangeLogResponse'
+        '404':
+          description: row_change_log not found
+    put:
+      operationId: updateRowChangeLog
+      summary: Update row_change_log by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RowChangeLogUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RowChangeLogResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: row_change_log not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteRowChangeLog
+      summary: Delete row_change_log by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: row_change_log not found
+components:
+  schemas:
+
+    RowChangeLogRequest:
+      type: object
+      required:
+        - schema_name
+        - table_name
+        - operation
+        - row_pk
+      additionalProperties: false
+      properties:
+        changed_at:
+          type: string
+          format: date-time
+        transaction_id:
+          type: integer
+          format: int64
+        schema_name:
+          type: string
+        table_name:
+          type: string
+        operation:
+          type: string
+          maxLength: 6
+        row_pk:
+        row_id:
+          type: string
+          nullable: true
+        old_data:
+          nullable: true
+        new_data:
+          nullable: true
+        changed_columns:
+          type: string
+          nullable: true
+        app_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        campus_id:
+          type: string
+          format: uuid
+          nullable: true
+        request_id:
+          type: string
+          nullable: true
+        db_user:
+          type: string
+        application_name:
+          type: string
+          nullable: true
+        client_addr:
+          type: string
+          nullable: true
+
+    RowChangeLogUpdateRequest:
+      type: object
+      required:
+        - changed_at
+        - transaction_id
+        - schema_name
+        - table_name
+        - operation
+        - row_pk
+        - row_id
+        - old_data
+        - new_data
+        - changed_columns
+        - app_user_id
+        - campus_id
+        - request_id
+        - db_user
+        - application_name
+        - client_addr
+      additionalProperties: false
+      properties:
+        changed_at:
+          type: string
+          format: date-time
+        transaction_id:
+          type: integer
+          format: int64
+        schema_name:
+          type: string
+        table_name:
+          type: string
+        operation:
+          type: string
+          maxLength: 6
+        row_pk:
+        row_id:
+          type: string
+          nullable: true
+        old_data:
+          nullable: true
+        new_data:
+          nullable: true
+        changed_columns:
+          type: string
+          nullable: true
+        app_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        campus_id:
+          type: string
+          format: uuid
+          nullable: true
+        request_id:
+          type: string
+          nullable: true
+        db_user:
+          type: string
+        application_name:
+          type: string
+          nullable: true
+        client_addr:
+          type: string
+          nullable: true
+
+    RowChangeLogResponse:
+      type: object
+      required:
+        - public_id
+        - record_code
+        - row_change_log_id
+        - changed_at
+        - transaction_id
+        - schema_name
+        - table_name
+        - operation
+        - row_pk
+        - db_user
+      additionalProperties: false
+      properties:
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        row_change_log_id:
+          type: integer
+          format: int64
+          readOnly: true
+        changed_at:
+          type: string
+          format: date-time
+        transaction_id:
+          type: integer
+          format: int64
+        schema_name:
+          type: string
+        table_name:
+          type: string
+        operation:
+          type: string
+          maxLength: 6
+        row_pk:
+        row_id:
+          type: string
+          nullable: true
+        old_data:
+          nullable: true
+        new_data:
+          nullable: true
+        changed_columns:
+          type: string
+          nullable: true
+        app_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        campus_id:
+          type: string
+          format: uuid
+          nullable: true
+        request_id:
+          type: string
+          nullable: true
+        db_user:
+          type: string
+        application_name:
+          type: string
+          nullable: true
+        client_addr:
+          type: string
+          nullable: true
+  

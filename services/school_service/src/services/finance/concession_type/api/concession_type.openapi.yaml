@@ -1,0 +1,249 @@
+openapi: 3.0.0
+x-sql-table: fin_concession_type
+info:
+  title: ConcessionTypeResponse API
+  version: 1.0.0
+paths:
+  /concession_type:
+    get:
+      operationId: listConcessionType
+      summary: Get all concession_type
+      responses:
+        '200':
+          description: List of concession_type
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ConcessionTypeResponse'
+    post:
+      operationId: createConcessionType
+      summary: Create a new concession_type
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConcessionTypeRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConcessionTypeResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /concession_type/{id}:
+    get:
+      operationId: getConcessionTypeById
+      summary: Get concession_type by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: concession_type object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConcessionTypeResponse'
+        '404':
+          description: concession_type not found
+    put:
+      operationId: updateConcessionType
+      summary: Update concession_type by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConcessionTypeUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConcessionTypeResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: concession_type not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteConcessionType
+      summary: Delete concession_type by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: concession_type not found
+components:
+  schemas:
+
+    ConcessionTypeRequest:
+      type: object
+      required:
+        - name
+      additionalProperties: false
+      properties:
+        concession_type_code:
+          type: string
+          nullable: true
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        default_discount_kind:
+          type: string
+          default: "percent"
+        default_discount_value:
+          type: number
+          format: double
+          default: 0
+        requires_document:
+          type: boolean
+          default: false
+        sort_order:
+          type: integer
+          format: int32
+          default: 0
+        is_active:
+          type: boolean
+          default: true
+
+    ConcessionTypeUpdateRequest:
+      type: object
+      required:
+        - concession_type_code
+        - name
+        - description
+        - default_discount_kind
+        - default_discount_value
+        - requires_document
+        - sort_order
+        - is_active
+      additionalProperties: false
+      properties:
+        concession_type_code:
+          type: string
+          nullable: true
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        default_discount_kind:
+          type: string
+          default: "percent"
+        default_discount_value:
+          type: number
+          format: double
+          default: 0
+        requires_document:
+          type: boolean
+          default: false
+        sort_order:
+          type: integer
+          format: int32
+          default: 0
+        is_active:
+          type: boolean
+          default: true
+
+    ConcessionTypeResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - name
+        - default_discount_kind
+        - default_discount_value
+        - requires_document
+        - sort_order
+        - is_active
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        concession_type_code:
+          type: string
+          nullable: true
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        default_discount_kind:
+          type: string
+          default: "percent"
+        default_discount_value:
+          type: number
+          format: double
+          default: 0
+        requires_document:
+          type: boolean
+          default: false
+        sort_order:
+          type: integer
+          format: int32
+          default: 0
+        is_active:
+          type: boolean
+          default: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

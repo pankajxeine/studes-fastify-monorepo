@@ -1,0 +1,174 @@
+openapi: 3.0.0
+x-sql-table: metering_usage_dedup
+info:
+  title: UsageDedupResponse API
+  version: 1.0.0
+paths:
+  /usage_dedup:
+    get:
+      operationId: listUsageDedup
+      summary: Get all usage_dedup
+      responses:
+        '200':
+          description: List of usage_dedup
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UsageDedupResponse'
+    post:
+      operationId: createUsageDedup
+      summary: Create a new usage_dedup
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UsageDedupRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsageDedupResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /usage_dedup/{id}:
+    get:
+      operationId: getUsageDedupById
+      summary: Get usage_dedup by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: usage_dedup object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsageDedupResponse'
+        '404':
+          description: usage_dedup not found
+    put:
+      operationId: updateUsageDedup
+      summary: Update usage_dedup by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UsageDedupUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsageDedupResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: usage_dedup not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteUsageDedup
+      summary: Delete usage_dedup by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: usage_dedup not found
+components:
+  schemas:
+
+    UsageDedupRequest:
+      type: object
+      required:
+        - tenant_application_id
+        - idempotency_key
+      additionalProperties: false
+      properties:
+        tenant_application_id:
+          type: string
+          format: uuid
+        idempotency_key:
+          type: string
+          maxLength: 100
+        received_at:
+          type: string
+          format: date-time
+
+    UsageDedupUpdateRequest:
+      type: object
+      required:
+        - tenant_application_id
+        - idempotency_key
+        - received_at
+      additionalProperties: false
+      properties:
+        tenant_application_id:
+          type: string
+          format: uuid
+        idempotency_key:
+          type: string
+          maxLength: 100
+        received_at:
+          type: string
+          format: date-time
+
+    UsageDedupResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - tenant_application_id
+        - idempotency_key
+        - received_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        tenant_application_id:
+          type: string
+          format: uuid
+        idempotency_key:
+          type: string
+          maxLength: 100
+        received_at:
+          type: string
+          format: date-time
+  

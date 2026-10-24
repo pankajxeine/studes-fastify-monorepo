@@ -1,0 +1,237 @@
+openapi: 3.0.0
+x-sql-table: fin_fee_head
+info:
+  title: FeeHeadResponse API
+  version: 1.0.0
+paths:
+  /fee_head:
+    get:
+      operationId: listFeeHead
+      summary: Get all fee_head
+      responses:
+        '200':
+          description: List of fee_head
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FeeHeadResponse'
+    post:
+      operationId: createFeeHead
+      summary: Create a new fee_head
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FeeHeadRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeeHeadResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /fee_head/{id}:
+    get:
+      operationId: getFeeHeadById
+      summary: Get fee_head by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: fee_head object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeeHeadResponse'
+        '404':
+          description: fee_head not found
+    put:
+      operationId: updateFeeHead
+      summary: Update fee_head by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FeeHeadUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeeHeadResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: fee_head not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteFeeHead
+      summary: Delete fee_head by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: fee_head not found
+components:
+  schemas:
+
+    FeeHeadRequest:
+      type: object
+      required:
+        - name
+      additionalProperties: false
+      properties:
+        fee_head_code:
+          type: string
+          nullable: true
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        is_refundable:
+          type: boolean
+          default: true
+        gl_account_code:
+          type: string
+          nullable: true
+          maxLength: 20
+        sort_order:
+          type: integer
+          format: int32
+          default: 0
+        is_active:
+          type: boolean
+          default: true
+
+    FeeHeadUpdateRequest:
+      type: object
+      required:
+        - fee_head_code
+        - name
+        - description
+        - is_refundable
+        - gl_account_code
+        - sort_order
+        - is_active
+      additionalProperties: false
+      properties:
+        fee_head_code:
+          type: string
+          nullable: true
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        is_refundable:
+          type: boolean
+          default: true
+        gl_account_code:
+          type: string
+          nullable: true
+          maxLength: 20
+        sort_order:
+          type: integer
+          format: int32
+          default: 0
+        is_active:
+          type: boolean
+          default: true
+
+    FeeHeadResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - name
+        - is_refundable
+        - sort_order
+        - is_active
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        fee_head_code:
+          type: string
+          nullable: true
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        is_refundable:
+          type: boolean
+          default: true
+        gl_account_code:
+          type: string
+          nullable: true
+          maxLength: 20
+        sort_order:
+          type: integer
+          format: int32
+          default: 0
+        is_active:
+          type: boolean
+          default: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

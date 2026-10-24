@@ -1,0 +1,240 @@
+openapi: 3.0.0
+x-sql-table: support_ticket_message
+info:
+  title: TicketMessageResponse API
+  version: 1.0.0
+paths:
+  /ticket_message:
+    get:
+      operationId: listTicketMessage
+      summary: Get all ticket_message
+      responses:
+        '200':
+          description: List of ticket_message
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TicketMessageResponse'
+    post:
+      operationId: createTicketMessage
+      summary: Create a new ticket_message
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TicketMessageRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TicketMessageResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /ticket_message/{id}:
+    get:
+      operationId: getTicketMessageById
+      summary: Get ticket_message by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: ticket_message object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TicketMessageResponse'
+        '404':
+          description: ticket_message not found
+    put:
+      operationId: updateTicketMessage
+      summary: Update ticket_message by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TicketMessageUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TicketMessageResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: ticket_message not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteTicketMessage
+      summary: Delete ticket_message by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: ticket_message not found
+components:
+  schemas:
+
+    TicketMessageRequest:
+      type: object
+      required:
+        - ticket_id
+        - author_type
+        - body
+      additionalProperties: false
+      properties:
+        ticket_id:
+          type: string
+          format: uuid
+        author_type:
+          type: string
+          maxLength: 8
+        author_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        author_contact_id:
+          type: string
+          format: uuid
+          nullable: true
+        body:
+          type: string
+        is_internal:
+          type: boolean
+          default: false
+        channel:
+          type: string
+          maxLength: 8
+          default: "portal"
+        attachments:
+          nullable: true
+
+    TicketMessageUpdateRequest:
+      type: object
+      required:
+        - ticket_id
+        - author_type
+        - author_user_id
+        - author_contact_id
+        - body
+        - is_internal
+        - channel
+        - attachments
+      additionalProperties: false
+      properties:
+        ticket_id:
+          type: string
+          format: uuid
+        author_type:
+          type: string
+          maxLength: 8
+        author_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        author_contact_id:
+          type: string
+          format: uuid
+          nullable: true
+        body:
+          type: string
+        is_internal:
+          type: boolean
+          default: false
+        channel:
+          type: string
+          maxLength: 8
+          default: "portal"
+        attachments:
+          nullable: true
+
+    TicketMessageResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - ticket_message_id
+        - ticket_id
+        - author_type
+        - body
+        - is_internal
+        - channel
+        - created_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        ticket_message_id:
+          type: string
+          format: uuid
+          readOnly: true
+        ticket_id:
+          type: string
+          format: uuid
+        author_type:
+          type: string
+          maxLength: 8
+        author_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        author_contact_id:
+          type: string
+          format: uuid
+          nullable: true
+        body:
+          type: string
+        is_internal:
+          type: boolean
+          default: false
+        channel:
+          type: string
+          maxLength: 8
+          default: "portal"
+        attachments:
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+  

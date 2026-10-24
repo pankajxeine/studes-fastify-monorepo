@@ -1,0 +1,425 @@
+openapi: 3.0.0
+x-sql-table: org_organization
+info:
+  title: OrganizationResponse API
+  version: 1.0.0
+paths:
+  /organization:
+    get:
+      operationId: listOrganization
+      summary: Get all organization
+      responses:
+        '200':
+          description: List of organization
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrganizationResponse'
+    post:
+      operationId: createOrganization
+      summary: Create a new organization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrganizationRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /organization/{id}:
+    get:
+      operationId: getOrganizationById
+      summary: Get organization by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: organization object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationResponse'
+        '404':
+          description: organization not found
+    put:
+      operationId: updateOrganization
+      summary: Update organization by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrganizationUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: organization not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteOrganization
+      summary: Delete organization by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: organization not found
+components:
+  schemas:
+
+    OrganizationRequest:
+      type: object
+      required:
+        - name
+        - country_code
+        - currency_code
+        - timezone
+      additionalProperties: false
+      properties:
+        is_singleton:
+          type: boolean
+          default: true
+        name:
+          type: string
+        short_name:
+          type: string
+          nullable: true
+          maxLength: 30
+        legal_name:
+          type: string
+          nullable: true
+        registration_no:
+          type: string
+          nullable: true
+          maxLength: 60
+        tax_id:
+          type: string
+          nullable: true
+          maxLength: 40
+        email:
+          type: string
+          nullable: true
+        phone:
+          type: string
+          nullable: true
+        website:
+          type: string
+          nullable: true
+        address_line1:
+          type: string
+          nullable: true
+        address_line2:
+          type: string
+          nullable: true
+        city:
+          type: string
+          nullable: true
+        state_region:
+          type: string
+          nullable: true
+        postal_code:
+          type: string
+          nullable: true
+          maxLength: 20
+        country_code:
+          type: string
+          maxLength: 2
+        currency_code:
+          type: string
+          maxLength: 3
+        timezone:
+          type: string
+        locale:
+          type: string
+          maxLength: 10
+          default: "en-US"
+        academic_year_start_month:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 12
+          default: 8
+        logo_file_id:
+          type: string
+          format: uuid
+          nullable: true
+        motto:
+          type: string
+          nullable: true
+        founded_year:
+          type: integer
+          format: int32
+          nullable: true
+          minimum: 1500
+          maximum: 2100
+
+    OrganizationUpdateRequest:
+      type: object
+      required:
+        - is_singleton
+        - name
+        - short_name
+        - legal_name
+        - registration_no
+        - tax_id
+        - email
+        - phone
+        - website
+        - address_line1
+        - address_line2
+        - city
+        - state_region
+        - postal_code
+        - country_code
+        - currency_code
+        - timezone
+        - locale
+        - academic_year_start_month
+        - logo_file_id
+        - motto
+        - founded_year
+      additionalProperties: false
+      properties:
+        is_singleton:
+          type: boolean
+          default: true
+        name:
+          type: string
+        short_name:
+          type: string
+          nullable: true
+          maxLength: 30
+        legal_name:
+          type: string
+          nullable: true
+        registration_no:
+          type: string
+          nullable: true
+          maxLength: 60
+        tax_id:
+          type: string
+          nullable: true
+          maxLength: 40
+        email:
+          type: string
+          nullable: true
+        phone:
+          type: string
+          nullable: true
+        website:
+          type: string
+          nullable: true
+        address_line1:
+          type: string
+          nullable: true
+        address_line2:
+          type: string
+          nullable: true
+        city:
+          type: string
+          nullable: true
+        state_region:
+          type: string
+          nullable: true
+        postal_code:
+          type: string
+          nullable: true
+          maxLength: 20
+        country_code:
+          type: string
+          maxLength: 2
+        currency_code:
+          type: string
+          maxLength: 3
+        timezone:
+          type: string
+        locale:
+          type: string
+          maxLength: 10
+          default: "en-US"
+        academic_year_start_month:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 12
+          default: 8
+        logo_file_id:
+          type: string
+          format: uuid
+          nullable: true
+        motto:
+          type: string
+          nullable: true
+        founded_year:
+          type: integer
+          format: int32
+          nullable: true
+          minimum: 1500
+          maximum: 2100
+
+    OrganizationResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - organization_id
+        - is_singleton
+        - name
+        - country_code
+        - currency_code
+        - timezone
+        - locale
+        - academic_year_start_month
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        organization_id:
+          type: string
+          format: uuid
+          readOnly: true
+        is_singleton:
+          type: boolean
+          default: true
+        name:
+          type: string
+        short_name:
+          type: string
+          nullable: true
+          maxLength: 30
+        legal_name:
+          type: string
+          nullable: true
+        registration_no:
+          type: string
+          nullable: true
+          maxLength: 60
+        tax_id:
+          type: string
+          nullable: true
+          maxLength: 40
+        email:
+          type: string
+          nullable: true
+        phone:
+          type: string
+          nullable: true
+        website:
+          type: string
+          nullable: true
+        address_line1:
+          type: string
+          nullable: true
+        address_line2:
+          type: string
+          nullable: true
+        city:
+          type: string
+          nullable: true
+        state_region:
+          type: string
+          nullable: true
+        postal_code:
+          type: string
+          nullable: true
+          maxLength: 20
+        country_code:
+          type: string
+          maxLength: 2
+        currency_code:
+          type: string
+          maxLength: 3
+        timezone:
+          type: string
+        locale:
+          type: string
+          maxLength: 10
+          default: "en-US"
+        academic_year_start_month:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 12
+          default: 8
+        logo_file_id:
+          type: string
+          format: uuid
+          nullable: true
+        motto:
+          type: string
+          nullable: true
+        founded_year:
+          type: integer
+          format: int32
+          nullable: true
+          minimum: 1500
+          maximum: 2100
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

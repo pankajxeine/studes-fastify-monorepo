@@ -1,0 +1,395 @@
+openapi: 3.0.0
+x-sql-table: docs_issued_certificate
+info:
+  title: IssuedCertificateResponse API
+  version: 1.0.0
+paths:
+  /issued_certificate:
+    get:
+      operationId: listIssuedCertificate
+      summary: Get all issued_certificate
+      responses:
+        '200':
+          description: List of issued_certificate
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/IssuedCertificateResponse'
+    post:
+      operationId: createIssuedCertificate
+      summary: Create a new issued_certificate
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IssuedCertificateRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IssuedCertificateResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /issued_certificate/{id}:
+    get:
+      operationId: getIssuedCertificateById
+      summary: Get issued_certificate by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: issued_certificate object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IssuedCertificateResponse'
+        '404':
+          description: issued_certificate not found
+    put:
+      operationId: updateIssuedCertificate
+      summary: Update issued_certificate by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IssuedCertificateUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IssuedCertificateResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: issued_certificate not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteIssuedCertificate
+      summary: Delete issued_certificate by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: issued_certificate not found
+components:
+  schemas:
+
+    IssuedCertificateRequest:
+      type: object
+      required:
+        - certificate_template_id
+        - person_id
+        - purpose
+      additionalProperties: false
+      properties:
+        certificate_template_id:
+          type: string
+          format: uuid
+        person_id:
+          type: string
+          format: uuid
+        status:
+          type: string
+          default: "requested"
+          enum:
+            - "requested"
+            - "approved"
+            - "issued"
+            - "rejected"
+            - "revoked"
+        purpose:
+          type: string
+        requested_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        requested_at:
+          type: string
+          format: date-time
+        approved_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        approved_at:
+          type: string
+          format: date-time
+          nullable: true
+        certificate_no:
+          type: string
+          nullable: true
+          maxLength: 30
+        verification_code:
+          type: string
+          nullable: true
+          maxLength: 16
+        issued_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        issued_on:
+          type: string
+          format: date
+          nullable: true
+        valid_until:
+          type: string
+          format: date
+          nullable: true
+        file_id:
+          type: string
+          format: uuid
+          nullable: true
+        merge_data:
+          default: "{}"
+        rejection_reason:
+          type: string
+          nullable: true
+        revoked_at:
+          type: string
+          format: date-time
+          nullable: true
+        revocation_reason:
+          type: string
+          nullable: true
+
+    IssuedCertificateUpdateRequest:
+      type: object
+      required:
+        - certificate_template_id
+        - person_id
+        - status
+        - purpose
+        - requested_by_user_id
+        - requested_at
+        - approved_by_user_id
+        - approved_at
+        - certificate_no
+        - verification_code
+        - issued_by_user_id
+        - issued_on
+        - valid_until
+        - file_id
+        - merge_data
+        - rejection_reason
+        - revoked_at
+        - revocation_reason
+      additionalProperties: false
+      properties:
+        certificate_template_id:
+          type: string
+          format: uuid
+        person_id:
+          type: string
+          format: uuid
+        status:
+          type: string
+          default: "requested"
+          enum:
+            - "requested"
+            - "approved"
+            - "issued"
+            - "rejected"
+            - "revoked"
+        purpose:
+          type: string
+        requested_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        requested_at:
+          type: string
+          format: date-time
+        approved_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        approved_at:
+          type: string
+          format: date-time
+          nullable: true
+        certificate_no:
+          type: string
+          nullable: true
+          maxLength: 30
+        verification_code:
+          type: string
+          nullable: true
+          maxLength: 16
+        issued_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        issued_on:
+          type: string
+          format: date
+          nullable: true
+        valid_until:
+          type: string
+          format: date
+          nullable: true
+        file_id:
+          type: string
+          format: uuid
+          nullable: true
+        merge_data:
+          default: "{}"
+        rejection_reason:
+          type: string
+          nullable: true
+        revoked_at:
+          type: string
+          format: date-time
+          nullable: true
+        revocation_reason:
+          type: string
+          nullable: true
+
+    IssuedCertificateResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - issued_certificate_id
+        - certificate_template_id
+        - person_id
+        - status
+        - purpose
+        - requested_at
+        - merge_data
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        issued_certificate_id:
+          type: string
+          format: uuid
+          readOnly: true
+        certificate_template_id:
+          type: string
+          format: uuid
+        person_id:
+          type: string
+          format: uuid
+        status:
+          type: string
+          default: "requested"
+          enum:
+            - "requested"
+            - "approved"
+            - "issued"
+            - "rejected"
+            - "revoked"
+        purpose:
+          type: string
+        requested_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        requested_at:
+          type: string
+          format: date-time
+        approved_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        approved_at:
+          type: string
+          format: date-time
+          nullable: true
+        certificate_no:
+          type: string
+          nullable: true
+          maxLength: 30
+        verification_code:
+          type: string
+          nullable: true
+          maxLength: 16
+        issued_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        issued_on:
+          type: string
+          format: date
+          nullable: true
+        valid_until:
+          type: string
+          format: date
+          nullable: true
+        file_id:
+          type: string
+          format: uuid
+          nullable: true
+        merge_data:
+          default: "{}"
+        rejection_reason:
+          type: string
+          nullable: true
+        revoked_at:
+          type: string
+          format: date-time
+          nullable: true
+        revocation_reason:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

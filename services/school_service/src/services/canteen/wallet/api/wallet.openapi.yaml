@@ -1,0 +1,290 @@
+openapi: 3.0.0
+x-sql-table: cntn_wallet
+info:
+  title: WalletResponse API
+  version: 1.0.0
+paths:
+  /wallet:
+    get:
+      operationId: listWallet
+      summary: Get all wallet
+      responses:
+        '200':
+          description: List of wallet
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WalletResponse'
+    post:
+      operationId: createWallet
+      summary: Create a new wallet
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WalletRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WalletResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /wallet/{id}:
+    get:
+      operationId: getWalletById
+      summary: Get wallet by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: wallet object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WalletResponse'
+        '404':
+          description: wallet not found
+    put:
+      operationId: updateWallet
+      summary: Update wallet by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WalletUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WalletResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: wallet not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteWallet
+      summary: Delete wallet by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: wallet not found
+components:
+  schemas:
+
+    WalletRequest:
+      type: object
+      required:
+        - person_id
+      additionalProperties: false
+      properties:
+        person_id:
+          type: string
+          format: uuid
+        balance_amount:
+          type: string
+          default: 0
+        daily_limit_amount:
+          type: string
+          nullable: true
+        low_balance_alert_amount:
+          type: string
+          nullable: true
+        status:
+          type: string
+          default: "active"
+          enum:
+            - "active"
+            - "frozen"
+            - "closed"
+        frozen_at:
+          type: string
+          format: date-time
+          nullable: true
+        frozen_reason:
+          type: string
+          nullable: true
+        frozen_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        opened_on:
+          type: string
+          format: date
+        last_txn_at:
+          type: string
+          format: date-time
+          nullable: true
+
+    WalletUpdateRequest:
+      type: object
+      required:
+        - person_id
+        - balance_amount
+        - daily_limit_amount
+        - low_balance_alert_amount
+        - status
+        - frozen_at
+        - frozen_reason
+        - frozen_by_user_id
+        - opened_on
+        - last_txn_at
+      additionalProperties: false
+      properties:
+        person_id:
+          type: string
+          format: uuid
+        balance_amount:
+          type: string
+          default: 0
+        daily_limit_amount:
+          type: string
+          nullable: true
+        low_balance_alert_amount:
+          type: string
+          nullable: true
+        status:
+          type: string
+          default: "active"
+          enum:
+            - "active"
+            - "frozen"
+            - "closed"
+        frozen_at:
+          type: string
+          format: date-time
+          nullable: true
+        frozen_reason:
+          type: string
+          nullable: true
+        frozen_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        opened_on:
+          type: string
+          format: date
+        last_txn_at:
+          type: string
+          format: date-time
+          nullable: true
+
+    WalletResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - wallet_id
+        - person_id
+        - balance_amount
+        - status
+        - opened_on
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        wallet_id:
+          type: string
+          format: uuid
+          readOnly: true
+        person_id:
+          type: string
+          format: uuid
+        balance_amount:
+          type: string
+          default: 0
+        daily_limit_amount:
+          type: string
+          nullable: true
+        low_balance_alert_amount:
+          type: string
+          nullable: true
+        status:
+          type: string
+          default: "active"
+          enum:
+            - "active"
+            - "frozen"
+            - "closed"
+        frozen_at:
+          type: string
+          format: date-time
+          nullable: true
+        frozen_reason:
+          type: string
+          nullable: true
+        frozen_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        opened_on:
+          type: string
+          format: date
+        last_txn_at:
+          type: string
+          format: date-time
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

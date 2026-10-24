@@ -1,0 +1,239 @@
+openapi: 3.0.0
+x-sql-table: acad_grading_scheme
+info:
+  title: GradingSchemeResponse API
+  version: 1.0.0
+paths:
+  /grading_scheme:
+    get:
+      operationId: listGradingScheme
+      summary: Get all grading_scheme
+      responses:
+        '200':
+          description: List of grading_scheme
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GradingSchemeResponse'
+    post:
+      operationId: createGradingScheme
+      summary: Create a new grading_scheme
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GradingSchemeRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GradingSchemeResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /grading_scheme/{id}:
+    get:
+      operationId: getGradingSchemeById
+      summary: Get grading_scheme by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: grading_scheme object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GradingSchemeResponse'
+        '404':
+          description: grading_scheme not found
+    put:
+      operationId: updateGradingScheme
+      summary: Update grading_scheme by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GradingSchemeUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GradingSchemeResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: grading_scheme not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteGradingScheme
+      summary: Delete grading_scheme by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: grading_scheme not found
+components:
+  schemas:
+
+    GradingSchemeRequest:
+      type: object
+      required:
+        - code
+        - name
+        - grading_type
+      additionalProperties: false
+      properties:
+        code:
+          type: string
+          maxLength: 20
+        name:
+          type: string
+        grading_type:
+          type: string
+        pass_percentage:
+          type: string
+          default: 40
+        max_grade_point:
+          type: number
+          format: double
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        is_active:
+          type: boolean
+          default: true
+
+    GradingSchemeUpdateRequest:
+      type: object
+      required:
+        - code
+        - name
+        - grading_type
+        - pass_percentage
+        - max_grade_point
+        - description
+        - is_active
+      additionalProperties: false
+      properties:
+        code:
+          type: string
+          maxLength: 20
+        name:
+          type: string
+        grading_type:
+          type: string
+        pass_percentage:
+          type: string
+          default: 40
+        max_grade_point:
+          type: number
+          format: double
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        is_active:
+          type: boolean
+          default: true
+
+    GradingSchemeResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - grading_scheme_id
+        - code
+        - name
+        - grading_type
+        - pass_percentage
+        - is_active
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        grading_scheme_id:
+          type: string
+          format: uuid
+          readOnly: true
+        code:
+          type: string
+          maxLength: 20
+        name:
+          type: string
+        grading_type:
+          type: string
+        pass_percentage:
+          type: string
+          default: 40
+        max_grade_point:
+          type: number
+          format: double
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        is_active:
+          type: boolean
+          default: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

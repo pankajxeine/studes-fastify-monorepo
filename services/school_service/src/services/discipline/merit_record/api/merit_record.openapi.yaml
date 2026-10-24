@@ -1,0 +1,268 @@
+openapi: 3.0.0
+x-sql-table: disp_merit_record
+info:
+  title: MeritRecordResponse API
+  version: 1.0.0
+paths:
+  /merit_record:
+    get:
+      operationId: listMeritRecord
+      summary: Get all merit_record
+      responses:
+        '200':
+          description: List of merit_record
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MeritRecordResponse'
+    post:
+      operationId: createMeritRecord
+      summary: Create a new merit_record
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MeritRecordRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MeritRecordResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /merit_record/{id}:
+    get:
+      operationId: getMeritRecordById
+      summary: Get merit_record by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: merit_record object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MeritRecordResponse'
+        '404':
+          description: merit_record not found
+    put:
+      operationId: updateMeritRecord
+      summary: Update merit_record by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MeritRecordUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MeritRecordResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: merit_record not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteMeritRecord
+      summary: Delete merit_record by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: merit_record not found
+components:
+  schemas:
+
+    MeritRecordRequest:
+      type: object
+      required:
+        - student_id
+        - academic_year_id
+        - awarded_by_staff_id
+        - points
+        - category
+        - reason
+      additionalProperties: false
+      properties:
+        student_id:
+          type: string
+          format: uuid
+        academic_year_id:
+          type: string
+          format: uuid
+        awarded_by_staff_id:
+          type: string
+          format: uuid
+        awarded_on:
+          type: string
+          format: date
+        points:
+          type: integer
+          format: int32
+        category:
+          type: string
+          maxLength: 30
+        reason:
+          type: string
+        incident_id:
+          type: string
+          format: uuid
+          nullable: true
+        is_visible_to_guardian:
+          type: boolean
+          default: true
+
+    MeritRecordUpdateRequest:
+      type: object
+      required:
+        - student_id
+        - academic_year_id
+        - awarded_by_staff_id
+        - awarded_on
+        - points
+        - category
+        - reason
+        - incident_id
+        - is_visible_to_guardian
+      additionalProperties: false
+      properties:
+        student_id:
+          type: string
+          format: uuid
+        academic_year_id:
+          type: string
+          format: uuid
+        awarded_by_staff_id:
+          type: string
+          format: uuid
+        awarded_on:
+          type: string
+          format: date
+        points:
+          type: integer
+          format: int32
+        category:
+          type: string
+          maxLength: 30
+        reason:
+          type: string
+        incident_id:
+          type: string
+          format: uuid
+          nullable: true
+        is_visible_to_guardian:
+          type: boolean
+          default: true
+
+    MeritRecordResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - merit_record_id
+        - student_id
+        - academic_year_id
+        - awarded_by_staff_id
+        - awarded_on
+        - points
+        - category
+        - reason
+        - is_visible_to_guardian
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        merit_record_id:
+          type: string
+          format: uuid
+          readOnly: true
+        student_id:
+          type: string
+          format: uuid
+        academic_year_id:
+          type: string
+          format: uuid
+        awarded_by_staff_id:
+          type: string
+          format: uuid
+        awarded_on:
+          type: string
+          format: date
+        points:
+          type: integer
+          format: int32
+        category:
+          type: string
+          maxLength: 30
+        reason:
+          type: string
+        incident_id:
+          type: string
+          format: uuid
+          nullable: true
+        is_visible_to_guardian:
+          type: boolean
+          default: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

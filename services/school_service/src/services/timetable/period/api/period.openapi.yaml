@@ -1,0 +1,270 @@
+openapi: 3.0.0
+x-sql-table: ttbl_period
+info:
+  title: PeriodResponse API
+  version: 1.0.0
+paths:
+  /period:
+    get:
+      operationId: listPeriod
+      summary: Get all period
+      responses:
+        '200':
+          description: List of period
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PeriodResponse'
+    post:
+      operationId: createPeriod
+      summary: Create a new period
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PeriodRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PeriodResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /period/{id}:
+    get:
+      operationId: getPeriodById
+      summary: Get period by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: period object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PeriodResponse'
+        '404':
+          description: period not found
+    put:
+      operationId: updatePeriod
+      summary: Update period by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PeriodUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PeriodResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: period not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deletePeriod
+      summary: Delete period by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: period not found
+components:
+  schemas:
+
+    PeriodRequest:
+      type: object
+      required:
+        - bell_schedule_id
+        - code
+        - name
+        - sequence_no
+        - start_time
+        - end_time
+      additionalProperties: false
+      properties:
+        bell_schedule_id:
+          type: string
+          format: uuid
+        code:
+          type: string
+        name:
+          type: string
+        sequence_no:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 30
+        start_time:
+          type: string
+          format: time
+        end_time:
+          type: string
+          format: time
+        is_break:
+          type: boolean
+          default: false
+        duration_minutes:
+          type: integer
+          format: int32
+          nullable: true
+        time_span:
+          type: string
+          nullable: true
+
+    PeriodUpdateRequest:
+      type: object
+      required:
+        - bell_schedule_id
+        - code
+        - name
+        - sequence_no
+        - start_time
+        - end_time
+        - is_break
+        - duration_minutes
+        - time_span
+      additionalProperties: false
+      properties:
+        bell_schedule_id:
+          type: string
+          format: uuid
+        code:
+          type: string
+        name:
+          type: string
+        sequence_no:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 30
+        start_time:
+          type: string
+          format: time
+        end_time:
+          type: string
+          format: time
+        is_break:
+          type: boolean
+          default: false
+        duration_minutes:
+          type: integer
+          format: int32
+          nullable: true
+        time_span:
+          type: string
+          nullable: true
+
+    PeriodResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - period_id
+        - bell_schedule_id
+        - code
+        - name
+        - sequence_no
+        - start_time
+        - end_time
+        - is_break
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        period_id:
+          type: string
+          format: uuid
+          readOnly: true
+        bell_schedule_id:
+          type: string
+          format: uuid
+        code:
+          type: string
+        name:
+          type: string
+        sequence_no:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 30
+        start_time:
+          type: string
+          format: time
+        end_time:
+          type: string
+          format: time
+        is_break:
+          type: boolean
+          default: false
+        duration_minutes:
+          type: integer
+          format: int32
+          nullable: true
+        time_span:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

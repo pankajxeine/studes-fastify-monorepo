@@ -50,7 +50,7 @@ function usage(): never {
   tsx scripts/generate-sequelize-entities.ts --sql infra/cpanel_default.sql --out services/auth_service/src/entities
 
 Options:
-  --sql <file>       MySQL .sql dump or schema file to read
+  --sql <file>       PostgreSQL .sql schema file to read
   --out <dir>        Directory where entity folders will be created
   --schema <name>    Optional Sequelize schema/database name for generated models
   --dry-run          Parse and print table count without writing files
@@ -223,8 +223,8 @@ function dataTypeFor(sqlType: string): string {
 
   if (normalized.includes('serial')) return 'DataTypes.INTEGER';
   if (normalized === 'uuid') return 'DataTypes.UUID';
-  if (normalized.startsWith('varchar')) return length ? `DataTypes.STRING(${length})` : 'DataTypes.STRING';
-  if (normalized.startsWith('char')) return length ? `DataTypes.CHAR(${length})` : 'DataTypes.CHAR';
+  if (normalized.startsWith('character varying') || normalized.startsWith('varchar')) return length ? `DataTypes.STRING(${length})` : 'DataTypes.STRING';
+  if (normalized.startsWith('character') || normalized.startsWith('char')) return length ? `DataTypes.CHAR(${length})` : 'DataTypes.CHAR';
   if (normalized === 'text') return 'DataTypes.TEXT';
   if (normalized === 'bytea') return 'DataTypes.BLOB';
   if (normalized === 'boolean') return 'DataTypes.BOOLEAN';
@@ -237,6 +237,7 @@ function dataTypeFor(sqlType: string): string {
   if (normalized.startsWith('float')) return 'DataTypes.FLOAT';
   if (normalized.startsWith('double')) return 'DataTypes.DOUBLE';
   if (normalized.startsWith('bigint')) return 'DataTypes.BIGINT';
+  if (normalized.startsWith('smallint')) return 'DataTypes.SMALLINT';
   if (normalized.startsWith('int')) return 'DataTypes.INTEGER';
 
   return 'DataTypes.TEXT';
@@ -250,7 +251,7 @@ function parseColumn(definition: string): Column | null {
   const name = match[1] || match[2];
   const rest = match[3].trim();
 
-  const sqlType = rest.match(/^([a-zA-Z]+(?:\s+[a-zA-Z]+)?)(?:\s*\([^)]*\))?/i)?.[0] ?? 'text';
+  const sqlType = rest.match(/^(?:[a-zA-Z_][\w$]*\.)?[a-zA-Z_][\w$]*(?:\s+[a-zA-Z_][\w$]*)?(?:\s*\([^)]*\))?/i)?.[0] ?? 'text';
 
   // Map PostgreSQL types → Sequelize DataTypes
   let dataType: string;
@@ -264,18 +265,34 @@ function parseColumn(definition: string): Column | null {
   }
   else if (/^text/i.test(sqlType)) dataType = 'DataTypes.TEXT';
   else if (/^jsonb/i.test(sqlType)) dataType = 'DataTypes.JSONB';
+  else if (/^json\b/i.test(sqlType)) dataType = 'DataTypes.JSON';
   else if (/^timestamp/i.test(sqlType)) dataType = 'DataTypes.DATE';
+  else if (/^date\b/i.test(sqlType)) dataType = 'DataTypes.DATEONLY';
+  else if (/^time\b/i.test(sqlType)) dataType = 'DataTypes.TIME';
   else if (/^uuid/i.test(sqlType)) dataType = 'DataTypes.UUID';
+  else if (/^boolean/i.test(sqlType)) dataType = 'DataTypes.BOOLEAN';
+  else if (/^bytea/i.test(sqlType)) dataType = 'DataTypes.BLOB';
+  else if (/^numeric|^decimal/i.test(sqlType)) {
+    const precision = sqlType.match(/\((\d+)\s*,\s*(\d+)\)/);
+    dataType = precision ? `DataTypes.DECIMAL(${precision[1]}, ${precision[2]})` : 'DataTypes.DECIMAL';
+  }
+  else if (/^double/i.test(sqlType)) dataType = 'DataTypes.DOUBLE';
+  else if (/^real|^float/i.test(sqlType)) dataType = 'DataTypes.FLOAT';
+  else if (/^character varying|^varchar/i.test(sqlType)) {
+    const len = sqlType.match(/\((\d+)\)/)?.[1];
+    dataType = len ? `DataTypes.STRING(${len})` : 'DataTypes.STRING';
+  }
+  else if (/^character|^char/i.test(sqlType)) {
+    const len = sqlType.match(/\((\d+)\)/)?.[1];
+    dataType = len ? `DataTypes.CHAR(${len})` : 'DataTypes.CHAR';
+  }
   else dataType = 'DataTypes.STRING';
 
   // Normalize defaults
   let defaultValue: string | undefined;
-  const defaultMatch = rest.match(/\bDEFAULT\s+([^,]+)/i);
+  const defaultMatch = rest.match(/\bDEFAULT\s+([\s\S]*?)(?=\s+(?:NOT\s+NULL|NULL|PRIMARY\s+KEY|UNIQUE|REFERENCES|CHECK|CONSTRAINT|COLLATE|GENERATED)\b|$)/i);
   if (defaultMatch) {
     defaultValue = defaultMatch[1].trim();
-    if (/^null(::[a-z\s]+)?$/i.test(defaultValue)) defaultValue = null;
-    else if (/^current_timestamp/i.test(defaultValue) || /^now\(\)/i.test(defaultValue)) defaultValue = 'DataTypes.NOW';
-    else if (/^uuid_generate_v4\(\)/i.test(defaultValue)) defaultValue = 'Sequelize.fn("uuid_generate_v4")';
   }
 
   return {
@@ -398,33 +415,25 @@ function parseTable(statement: string): Table | null {
 
 
 
-// function defaultValueFor(raw?: string): string | undefined {
-//   if (!raw) return undefined
-//   const value = raw.trim()
-//   const lower = value.toLowerCase()
-
-//   if (lower === 'null') return 'null'
-//   if (lower === 'current_timestamp' || lower === 'current_timestamp()' || lower === 'now()') return 'DataTypes.NOW'
-//   if (/^'.*'$/.test(value)) return JSON.stringify(value.slice(1, -1).replace(/\\'/g, "'"))
-//   if (/^-?\d+(?:\.\d+)?$/.test(value)) return value
-
-//   return undefined
-// }
-
 function defaultValueFor(raw?: string): string | undefined {
   if (!raw) return undefined;
-  const lower = raw.toLowerCase();
+  const value = raw.trim();
+  const lower = value.toLowerCase();
 
-  if (lower === 'null') return 'null';
-  if (lower.includes('now()')) return 'DataTypes.NOW';
-  if (lower.includes('uuid_generate_v4()')) return 'Sequelize.fn("uuid_generate_v4")';
-  if (/^-?\d+(?:\.\d+)?$/.test(raw)) return raw; // numeric
-  if (/^'.*'$/.test(raw)) {
-    const inner = raw.slice(1, -1).replace(/\\'/g, "'");
-    return JSON.stringify(inner);
+  // NULL means there is no useful Sequelize default; the column's nullability
+  // already controls whether callers may omit or provide null.
+  if (/^null(?:\s*::\s*[\w. ]+)?$/i.test(value)) return undefined;
+  if (/^(?:now\s*\(\)|current_timestamp(?:\s*\(\s*\d*\s*\))?)$/i.test(value)) return 'DataTypes.NOW';
+  if (/^(?:true|false)$/i.test(value)) return lower;
+  if (/^-?\d+(?:\.\d+)?$/.test(value)) return value;
+  if (/^'(?:[^']|'')*'(?:\s*::\s*[\w. ]+)?$/s.test(value)) {
+    const quoted = value.match(/^'((?:[^']|'')*)'/s)?.[1] ?? '';
+    return JSON.stringify(quoted.replace(/''/g, "'"));
   }
 
-  return JSON.stringify(raw);
+  // Database functions and expressions need to run in PostgreSQL. Plain
+  // strings would persist the expression text instead of its value.
+  return `Sequelize.literal(${JSON.stringify(value)})`;
 }
 
 
@@ -460,7 +469,8 @@ function renderEntity(table: Table, schemaName?: string): string {
     if (col.primaryKey) lines.push('        primaryKey: true,');
     if (col.autoIncrement) lines.push('        autoIncrement: true,');
     if (col.unique) lines.push('        unique: true,');
-    if (col.defaultValue) lines.push(`        defaultValue: ${defaultValueFor(col.defaultValue)},`);
+    const renderedDefault = defaultValueFor(col.defaultValue);
+    if (renderedDefault) lines.push(`        defaultValue: ${renderedDefault},`);
     if (col.comment) lines.push(`        comment: '${col.comment}',`);
     if (col.references) {
       lines.push(`        references: { model: '${col.references.model}', key: '${col.references.key}' },`);
@@ -577,14 +587,15 @@ export type GeneratedModels = {
 ${typeEntries}
 }
 
-export function initGeneratedEntities(sequelize: Sequelize): { models: GeneratedModels } {
+export function createGeneratedModels(sequelize: Sequelize): GeneratedModels {
   const models: GeneratedModels = {
 ${models}
   }
+  return models
+}
+
+export function associateGeneratedModels(models: GeneratedModels): void {
 ${associationLines.join('\n')}
-  return {
-    models
-  }
 }
 `
 }
@@ -622,45 +633,47 @@ function renderRootEntitiesIndex(modules: EntityModule[]): string {
   const imports = modules
     .map(
       (module) =>
-        `import { initGeneratedEntities as init${module.exportName}Entities, type GeneratedModels as ${module.exportName}Models } from './${module.dirName}'`
+        `import { createGeneratedModels as create${module.exportName}Models, associateGeneratedModels as associate${module.exportName}Models, type GeneratedModels as ${module.exportName}Models } from './${module.dirName}'`
     )
     .join('\n')
 
-  const moduleEntries = modules
-    .map((module) => `  ${module.decoratorName}: ${module.exportName}Models`)
+  const createLines = modules
+    .map((module) => `  const ${module.decoratorName} = create${module.exportName}Models(sequelize)`)
     .join('\n')
 
-  const registerLines = modules
-    .map((module) => `  app.decorate('${module.decoratorName}', init${module.exportName}Entities(sequelize).models)`)
+  const associationLines = modules
+    .map((module) => `  associate${module.exportName}Models(${module.decoratorName})`)
     .join('\n')
 
-  const returnLines = modules
-    .map((module) => `    ${module.decoratorName}: app.${module.decoratorName}`)
+  const modelTypeEntries = modules
+    .map((module) => `  ${module.exportName}Models`)
+    .join(' &\n')
+
+  const registryEntries = modules
+    .map((module) => `    ...${module.decoratorName}`)
     .join(',\n')
-
-  const fastifyEntries = modules
-    .map((module) => `    ${module.decoratorName}: ${module.exportName}Models`)
-    .join('\n')
 
   return `import type { FastifyInstance } from 'fastify'
 import type { Sequelize } from 'sequelize'
 ${imports}
 
-export type GeneratedEntityDecorations = {
-${moduleEntries}
-}
+export type GeneratedEntityDecorations =
+${modelTypeEntries}
 
 export function registerGeneratedEntityDecorators(app: FastifyInstance, sequelize: Sequelize): GeneratedEntityDecorations {
-${registerLines}
-
-  return {
-${returnLines}
+${createLines}
+${associationLines}
+  const models: GeneratedEntityDecorations = {
+${registryEntries}
   }
+  app.decorate('models', models)
+
+  return models
 }
 
 declare module 'fastify' {
   interface FastifyInstance {
-${fastifyEntries}
+    models: GeneratedEntityDecorations
   }
 }
 `

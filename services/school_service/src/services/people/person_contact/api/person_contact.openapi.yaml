@@ -1,0 +1,243 @@
+openapi: 3.0.0
+x-sql-table: ppl_person_contact
+info:
+  title: PersonContactResponse API
+  version: 1.0.0
+paths:
+  /person_contact:
+    get:
+      operationId: listPersonContact
+      summary: Get all person_contact
+      responses:
+        '200':
+          description: List of person_contact
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PersonContactResponse'
+    post:
+      operationId: createPersonContact
+      summary: Create a new person_contact
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PersonContactRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonContactResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /person_contact/{id}:
+    get:
+      operationId: getPersonContactById
+      summary: Get person_contact by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: person_contact object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonContactResponse'
+        '404':
+          description: person_contact not found
+    put:
+      operationId: updatePersonContact
+      summary: Update person_contact by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PersonContactUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonContactResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: person_contact not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deletePersonContact
+      summary: Delete person_contact by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: person_contact not found
+components:
+  schemas:
+
+    PersonContactRequest:
+      type: object
+      required:
+        - person_id
+        - contact_type
+        - contact_value
+      additionalProperties: false
+      properties:
+        person_id:
+          type: string
+          format: uuid
+        contact_type:
+          type: string
+          maxLength: 12
+        contact_value:
+          type: string
+        is_primary:
+          type: boolean
+          default: false
+        is_verified:
+          type: boolean
+          default: false
+        verified_at:
+          type: string
+          format: date-time
+          nullable: true
+        is_opted_in:
+          type: boolean
+          default: true
+
+    PersonContactUpdateRequest:
+      type: object
+      required:
+        - person_id
+        - contact_type
+        - contact_value
+        - is_primary
+        - is_verified
+        - verified_at
+        - is_opted_in
+      additionalProperties: false
+      properties:
+        person_id:
+          type: string
+          format: uuid
+        contact_type:
+          type: string
+          maxLength: 12
+        contact_value:
+          type: string
+        is_primary:
+          type: boolean
+          default: false
+        is_verified:
+          type: boolean
+          default: false
+        verified_at:
+          type: string
+          format: date-time
+          nullable: true
+        is_opted_in:
+          type: boolean
+          default: true
+
+    PersonContactResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - person_contact_id
+        - person_id
+        - contact_type
+        - contact_value
+        - is_primary
+        - is_verified
+        - is_opted_in
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        person_contact_id:
+          type: string
+          format: uuid
+          readOnly: true
+        person_id:
+          type: string
+          format: uuid
+        contact_type:
+          type: string
+          maxLength: 12
+        contact_value:
+          type: string
+        is_primary:
+          type: boolean
+          default: false
+        is_verified:
+          type: boolean
+          default: false
+        verified_at:
+          type: string
+          format: date-time
+          nullable: true
+        is_opted_in:
+          type: boolean
+          default: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

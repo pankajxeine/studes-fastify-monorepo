@@ -1,0 +1,319 @@
+openapi: 3.0.0
+x-sql-table: admis_admission_cycle
+info:
+  title: AdmissionCycleResponse API
+  version: 1.0.0
+paths:
+  /admission_cycle:
+    get:
+      operationId: listAdmissionCycle
+      summary: Get all admission_cycle
+      responses:
+        '200':
+          description: List of admission_cycle
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AdmissionCycleResponse'
+    post:
+      operationId: createAdmissionCycle
+      summary: Create a new admission_cycle
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdmissionCycleRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdmissionCycleResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /admission_cycle/{id}:
+    get:
+      operationId: getAdmissionCycleById
+      summary: Get admission_cycle by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: admission_cycle object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdmissionCycleResponse'
+        '404':
+          description: admission_cycle not found
+    put:
+      operationId: updateAdmissionCycle
+      summary: Update admission_cycle by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdmissionCycleUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdmissionCycleResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: admission_cycle not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteAdmissionCycle
+      summary: Delete admission_cycle by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: admission_cycle not found
+components:
+  schemas:
+
+    AdmissionCycleRequest:
+      type: object
+      required:
+        - academic_year_id
+        - campus_id
+        - program_id
+        - code
+        - name
+        - opens_on
+        - closes_on
+      additionalProperties: false
+      properties:
+        academic_year_id:
+          type: string
+          format: uuid
+        campus_id:
+          type: string
+          format: uuid
+        program_id:
+          type: string
+          format: uuid
+        code:
+          type: string
+          maxLength: 30
+        name:
+          type: string
+        opens_on:
+          type: string
+          format: date
+        closes_on:
+          type: string
+          format: date
+        application_window:
+          type: string
+          nullable: true
+        status:
+          type: string
+          default: "planned"
+          enum:
+            - "planned"
+            - "open"
+            - "closed"
+        application_fee_amount:
+          type: string
+          default: 0
+        offer_validity_days:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 90
+          default: 14
+        description:
+          type: string
+          nullable: true
+
+    AdmissionCycleUpdateRequest:
+      type: object
+      required:
+        - academic_year_id
+        - campus_id
+        - program_id
+        - code
+        - name
+        - opens_on
+        - closes_on
+        - application_window
+        - status
+        - application_fee_amount
+        - offer_validity_days
+        - description
+      additionalProperties: false
+      properties:
+        academic_year_id:
+          type: string
+          format: uuid
+        campus_id:
+          type: string
+          format: uuid
+        program_id:
+          type: string
+          format: uuid
+        code:
+          type: string
+          maxLength: 30
+        name:
+          type: string
+        opens_on:
+          type: string
+          format: date
+        closes_on:
+          type: string
+          format: date
+        application_window:
+          type: string
+          nullable: true
+        status:
+          type: string
+          default: "planned"
+          enum:
+            - "planned"
+            - "open"
+            - "closed"
+        application_fee_amount:
+          type: string
+          default: 0
+        offer_validity_days:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 90
+          default: 14
+        description:
+          type: string
+          nullable: true
+
+    AdmissionCycleResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - admission_cycle_id
+        - academic_year_id
+        - campus_id
+        - program_id
+        - code
+        - name
+        - opens_on
+        - closes_on
+        - status
+        - application_fee_amount
+        - offer_validity_days
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        admission_cycle_id:
+          type: string
+          format: uuid
+          readOnly: true
+        academic_year_id:
+          type: string
+          format: uuid
+        campus_id:
+          type: string
+          format: uuid
+        program_id:
+          type: string
+          format: uuid
+        code:
+          type: string
+          maxLength: 30
+        name:
+          type: string
+        opens_on:
+          type: string
+          format: date
+        closes_on:
+          type: string
+          format: date
+        application_window:
+          type: string
+          nullable: true
+        status:
+          type: string
+          default: "planned"
+          enum:
+            - "planned"
+            - "open"
+            - "closed"
+        application_fee_amount:
+          type: string
+          default: 0
+        offer_validity_days:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 90
+          default: 14
+        description:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

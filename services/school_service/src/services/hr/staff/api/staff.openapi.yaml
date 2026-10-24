@@ -1,0 +1,450 @@
+openapi: 3.0.0
+x-sql-table: hr_staff
+info:
+  title: StaffResponse API
+  version: 1.0.0
+paths:
+  /staff:
+    get:
+      operationId: listStaff
+      summary: Get all staff
+      responses:
+        '200':
+          description: List of staff
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StaffResponse'
+    post:
+      operationId: createStaff
+      summary: Create a new staff
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StaffRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StaffResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /staff/{id}:
+    get:
+      operationId: getStaffById
+      summary: Get staff by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: staff object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StaffResponse'
+        '404':
+          description: staff not found
+    put:
+      operationId: updateStaff
+      summary: Update staff by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StaffUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StaffResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: staff not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteStaff
+      summary: Delete staff by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: staff not found
+components:
+  schemas:
+
+    StaffRequest:
+      type: object
+      required:
+        - person_id
+        - campus_id
+        - designation_code
+        - employee_no
+        - staff_category
+        - joined_on
+      additionalProperties: false
+      properties:
+        person_id:
+          type: string
+          format: uuid
+        campus_id:
+          type: string
+          format: uuid
+        department_id:
+          type: string
+          format: uuid
+          nullable: true
+        designation_code:
+          type: string
+        employee_no:
+          type: string
+          maxLength: 20
+        staff_category:
+          type: string
+        employment_type:
+          type: string
+          default: "permanent"
+        status:
+          type: string
+          default: "active"
+        joined_on:
+          type: string
+          format: date
+        probation_end_on:
+          type: string
+          format: date
+          nullable: true
+        confirmed_on:
+          type: string
+          format: date
+          nullable: true
+        exit_on:
+          type: string
+          format: date
+          nullable: true
+        exit_reason:
+          type: string
+          nullable: true
+        reporting_to_staff_id:
+          type: string
+          format: uuid
+          nullable: true
+        work_email:
+          type: string
+          nullable: true
+        work_phone:
+          type: string
+          nullable: true
+        max_weekly_periods:
+          type: integer
+          format: int32
+          nullable: true
+          minimum: 0
+          maximum: 60
+        notice_period_days:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 365
+          default: 30
+        tax_id:
+          type: string
+          nullable: true
+          maxLength: 30
+        bank_account_name:
+          type: string
+          nullable: true
+        bank_account_no:
+          type: string
+          nullable: true
+          maxLength: 34
+        bank_routing_code:
+          type: string
+          nullable: true
+          maxLength: 20
+        notes:
+          type: string
+          nullable: true
+
+    StaffUpdateRequest:
+      type: object
+      required:
+        - person_id
+        - campus_id
+        - department_id
+        - designation_code
+        - employee_no
+        - staff_category
+        - employment_type
+        - status
+        - joined_on
+        - probation_end_on
+        - confirmed_on
+        - exit_on
+        - exit_reason
+        - reporting_to_staff_id
+        - work_email
+        - work_phone
+        - max_weekly_periods
+        - notice_period_days
+        - tax_id
+        - bank_account_name
+        - bank_account_no
+        - bank_routing_code
+        - notes
+      additionalProperties: false
+      properties:
+        person_id:
+          type: string
+          format: uuid
+        campus_id:
+          type: string
+          format: uuid
+        department_id:
+          type: string
+          format: uuid
+          nullable: true
+        designation_code:
+          type: string
+        employee_no:
+          type: string
+          maxLength: 20
+        staff_category:
+          type: string
+        employment_type:
+          type: string
+          default: "permanent"
+        status:
+          type: string
+          default: "active"
+        joined_on:
+          type: string
+          format: date
+        probation_end_on:
+          type: string
+          format: date
+          nullable: true
+        confirmed_on:
+          type: string
+          format: date
+          nullable: true
+        exit_on:
+          type: string
+          format: date
+          nullable: true
+        exit_reason:
+          type: string
+          nullable: true
+        reporting_to_staff_id:
+          type: string
+          format: uuid
+          nullable: true
+        work_email:
+          type: string
+          nullable: true
+        work_phone:
+          type: string
+          nullable: true
+        max_weekly_periods:
+          type: integer
+          format: int32
+          nullable: true
+          minimum: 0
+          maximum: 60
+        notice_period_days:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 365
+          default: 30
+        tax_id:
+          type: string
+          nullable: true
+          maxLength: 30
+        bank_account_name:
+          type: string
+          nullable: true
+        bank_account_no:
+          type: string
+          nullable: true
+          maxLength: 34
+        bank_routing_code:
+          type: string
+          nullable: true
+          maxLength: 20
+        notes:
+          type: string
+          nullable: true
+
+    StaffResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - staff_id
+        - person_id
+        - campus_id
+        - designation_code
+        - employee_no
+        - staff_category
+        - employment_type
+        - status
+        - joined_on
+        - notice_period_days
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        staff_id:
+          type: string
+          format: uuid
+          readOnly: true
+        person_id:
+          type: string
+          format: uuid
+        campus_id:
+          type: string
+          format: uuid
+        department_id:
+          type: string
+          format: uuid
+          nullable: true
+        designation_code:
+          type: string
+        employee_no:
+          type: string
+          maxLength: 20
+        staff_category:
+          type: string
+        employment_type:
+          type: string
+          default: "permanent"
+        status:
+          type: string
+          default: "active"
+        joined_on:
+          type: string
+          format: date
+        probation_end_on:
+          type: string
+          format: date
+          nullable: true
+        confirmed_on:
+          type: string
+          format: date
+          nullable: true
+        exit_on:
+          type: string
+          format: date
+          nullable: true
+        exit_reason:
+          type: string
+          nullable: true
+        reporting_to_staff_id:
+          type: string
+          format: uuid
+          nullable: true
+        work_email:
+          type: string
+          nullable: true
+        work_phone:
+          type: string
+          nullable: true
+        max_weekly_periods:
+          type: integer
+          format: int32
+          nullable: true
+          minimum: 0
+          maximum: 60
+        notice_period_days:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 365
+          default: 30
+        tax_id:
+          type: string
+          nullable: true
+          maxLength: 30
+        bank_account_name:
+          type: string
+          nullable: true
+        bank_account_no:
+          type: string
+          nullable: true
+          maxLength: 34
+        bank_routing_code:
+          type: string
+          nullable: true
+          maxLength: 20
+        notes:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        deleted_at:
+          type: string
+          format: date-time
+          nullable: true
+          readOnly: true
+  

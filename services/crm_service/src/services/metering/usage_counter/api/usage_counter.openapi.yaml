@@ -1,0 +1,218 @@
+openapi: 3.0.0
+x-sql-table: metering_usage_counter
+info:
+  title: UsageCounterResponse API
+  version: 1.0.0
+paths:
+  /usage_counter:
+    get:
+      operationId: listUsageCounter
+      summary: Get all usage_counter
+      responses:
+        '200':
+          description: List of usage_counter
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UsageCounterResponse'
+    post:
+      operationId: createUsageCounter
+      summary: Create a new usage_counter
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UsageCounterRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsageCounterResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /usage_counter/{id}:
+    get:
+      operationId: getUsageCounterById
+      summary: Get usage_counter by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: usage_counter object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsageCounterResponse'
+        '404':
+          description: usage_counter not found
+    put:
+      operationId: updateUsageCounter
+      summary: Update usage_counter by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UsageCounterUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsageCounterResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: usage_counter not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteUsageCounter
+      summary: Delete usage_counter by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: usage_counter not found
+components:
+  schemas:
+
+    UsageCounterRequest:
+      type: object
+      required:
+        - tenant_application_id
+        - meter_id
+        - period_start
+        - period_end
+        - last_event_at
+      additionalProperties: false
+      properties:
+        tenant_application_id:
+          type: string
+          format: uuid
+        meter_id:
+          type: string
+          format: uuid
+        period_start:
+          type: string
+          format: date-time
+        period_end:
+          type: string
+          format: date-time
+        quantity:
+          type: number
+          format: double
+          default: 0
+        last_event_at:
+          type: string
+          format: date-time
+
+    UsageCounterUpdateRequest:
+      type: object
+      required:
+        - tenant_application_id
+        - meter_id
+        - period_start
+        - period_end
+        - quantity
+        - last_event_at
+      additionalProperties: false
+      properties:
+        tenant_application_id:
+          type: string
+          format: uuid
+        meter_id:
+          type: string
+          format: uuid
+        period_start:
+          type: string
+          format: date-time
+        period_end:
+          type: string
+          format: date-time
+        quantity:
+          type: number
+          format: double
+          default: 0
+        last_event_at:
+          type: string
+          format: date-time
+
+    UsageCounterResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - tenant_application_id
+        - meter_id
+        - period_start
+        - period_end
+        - quantity
+        - last_event_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        tenant_application_id:
+          type: string
+          format: uuid
+        meter_id:
+          type: string
+          format: uuid
+        period_start:
+          type: string
+          format: date-time
+        period_end:
+          type: string
+          format: date-time
+        quantity:
+          type: number
+          format: double
+          default: 0
+        last_event_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+  

@@ -1,0 +1,244 @@
+openapi: 3.0.0
+x-sql-table: acad_program_course
+info:
+  title: ProgramCourseResponse API
+  version: 1.0.0
+paths:
+  /program_course:
+    get:
+      operationId: listProgramCourse
+      summary: Get all program_course
+      responses:
+        '200':
+          description: List of program_course
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProgramCourseResponse'
+    post:
+      operationId: createProgramCourse
+      summary: Create a new program_course
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProgramCourseRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProgramCourseResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /program_course/{id}:
+    get:
+      operationId: getProgramCourseById
+      summary: Get program_course by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: program_course object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProgramCourseResponse'
+        '404':
+          description: program_course not found
+    put:
+      operationId: updateProgramCourse
+      summary: Update program_course by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProgramCourseUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProgramCourseResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: program_course not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteProgramCourse
+      summary: Delete program_course by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: program_course not found
+components:
+  schemas:
+
+    ProgramCourseRequest:
+      type: object
+      required:
+        - program_id
+        - course_id
+      additionalProperties: false
+      properties:
+        program_id:
+          type: string
+          format: uuid
+        grade_level_id:
+          type: string
+          format: uuid
+          nullable: true
+        course_id:
+          type: string
+          format: uuid
+        is_mandatory:
+          type: boolean
+          default: true
+        recommended_term_no:
+          type: integer
+          format: int32
+          nullable: true
+          minimum: 1
+          maximum: 12
+        effective_from_academic_year_id:
+          type: string
+          format: uuid
+          nullable: true
+
+    ProgramCourseUpdateRequest:
+      type: object
+      required:
+        - program_id
+        - grade_level_id
+        - course_id
+        - is_mandatory
+        - recommended_term_no
+        - effective_from_academic_year_id
+      additionalProperties: false
+      properties:
+        program_id:
+          type: string
+          format: uuid
+        grade_level_id:
+          type: string
+          format: uuid
+          nullable: true
+        course_id:
+          type: string
+          format: uuid
+        is_mandatory:
+          type: boolean
+          default: true
+        recommended_term_no:
+          type: integer
+          format: int32
+          nullable: true
+          minimum: 1
+          maximum: 12
+        effective_from_academic_year_id:
+          type: string
+          format: uuid
+          nullable: true
+
+    ProgramCourseResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - program_course_id
+        - program_id
+        - course_id
+        - is_mandatory
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        program_course_id:
+          type: string
+          format: uuid
+          readOnly: true
+        program_id:
+          type: string
+          format: uuid
+        grade_level_id:
+          type: string
+          format: uuid
+          nullable: true
+        course_id:
+          type: string
+          format: uuid
+        is_mandatory:
+          type: boolean
+          default: true
+        recommended_term_no:
+          type: integer
+          format: int32
+          nullable: true
+          minimum: 1
+          maximum: 12
+        effective_from_academic_year_id:
+          type: string
+          format: uuid
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

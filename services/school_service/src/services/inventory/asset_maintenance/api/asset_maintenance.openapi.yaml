@@ -1,0 +1,317 @@
+openapi: 3.0.0
+x-sql-table: invnt_asset_maintenance
+info:
+  title: AssetMaintenanceResponse API
+  version: 1.0.0
+paths:
+  /asset_maintenance:
+    get:
+      operationId: listAssetMaintenance
+      summary: Get all asset_maintenance
+      responses:
+        '200':
+          description: List of asset_maintenance
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AssetMaintenanceResponse'
+    post:
+      operationId: createAssetMaintenance
+      summary: Create a new asset_maintenance
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssetMaintenanceRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssetMaintenanceResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /asset_maintenance/{id}:
+    get:
+      operationId: getAssetMaintenanceById
+      summary: Get asset_maintenance by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: asset_maintenance object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssetMaintenanceResponse'
+        '404':
+          description: asset_maintenance not found
+    put:
+      operationId: updateAssetMaintenance
+      summary: Update asset_maintenance by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssetMaintenanceUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssetMaintenanceResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: asset_maintenance not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteAssetMaintenance
+      summary: Delete asset_maintenance by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: asset_maintenance not found
+components:
+  schemas:
+
+    AssetMaintenanceRequest:
+      type: object
+      required:
+        - asset_id
+        - maintenance_type
+        - reported_on
+        - issue_description
+      additionalProperties: false
+      properties:
+        asset_id:
+          type: string
+          format: uuid
+        vendor_id:
+          type: string
+          format: uuid
+          nullable: true
+        maintenance_type:
+          type: string
+          maxLength: 20
+        status:
+          type: string
+          maxLength: 20
+          default: "scheduled"
+        reported_on:
+          type: string
+          format: date
+        scheduled_on:
+          type: string
+          format: date
+          nullable: true
+        completed_on:
+          type: string
+          format: date
+          nullable: true
+        issue_description:
+          type: string
+        work_done:
+          type: string
+          nullable: true
+        cost_amount:
+          type: string
+          default: 0
+        is_under_warranty:
+          type: boolean
+          default: false
+        reported_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+
+    AssetMaintenanceUpdateRequest:
+      type: object
+      required:
+        - asset_id
+        - vendor_id
+        - maintenance_type
+        - status
+        - reported_on
+        - scheduled_on
+        - completed_on
+        - issue_description
+        - work_done
+        - cost_amount
+        - is_under_warranty
+        - reported_by_user_id
+        - notes
+      additionalProperties: false
+      properties:
+        asset_id:
+          type: string
+          format: uuid
+        vendor_id:
+          type: string
+          format: uuid
+          nullable: true
+        maintenance_type:
+          type: string
+          maxLength: 20
+        status:
+          type: string
+          maxLength: 20
+          default: "scheduled"
+        reported_on:
+          type: string
+          format: date
+        scheduled_on:
+          type: string
+          format: date
+          nullable: true
+        completed_on:
+          type: string
+          format: date
+          nullable: true
+        issue_description:
+          type: string
+        work_done:
+          type: string
+          nullable: true
+        cost_amount:
+          type: string
+          default: 0
+        is_under_warranty:
+          type: boolean
+          default: false
+        reported_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+
+    AssetMaintenanceResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - asset_maintenance_id
+        - asset_id
+        - maintenance_type
+        - status
+        - reported_on
+        - issue_description
+        - cost_amount
+        - is_under_warranty
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        asset_maintenance_id:
+          type: string
+          format: uuid
+          readOnly: true
+        asset_id:
+          type: string
+          format: uuid
+        vendor_id:
+          type: string
+          format: uuid
+          nullable: true
+        maintenance_type:
+          type: string
+          maxLength: 20
+        status:
+          type: string
+          maxLength: 20
+          default: "scheduled"
+        reported_on:
+          type: string
+          format: date
+        scheduled_on:
+          type: string
+          format: date
+          nullable: true
+        completed_on:
+          type: string
+          format: date
+          nullable: true
+        issue_description:
+          type: string
+        work_done:
+          type: string
+          nullable: true
+        cost_amount:
+          type: string
+          default: 0
+        is_under_warranty:
+          type: boolean
+          default: false
+        reported_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

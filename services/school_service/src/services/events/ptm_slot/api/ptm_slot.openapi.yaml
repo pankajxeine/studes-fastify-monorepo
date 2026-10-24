@@ -1,0 +1,334 @@
+openapi: 3.0.0
+x-sql-table: evnt_ptm_slot
+info:
+  title: PtmSlotResponse API
+  version: 1.0.0
+paths:
+  /ptm_slot:
+    get:
+      operationId: listPtmSlot
+      summary: Get all ptm_slot
+      responses:
+        '200':
+          description: List of ptm_slot
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PtmSlotResponse'
+    post:
+      operationId: createPtmSlot
+      summary: Create a new ptm_slot
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PtmSlotRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PtmSlotResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /ptm_slot/{id}:
+    get:
+      operationId: getPtmSlotById
+      summary: Get ptm_slot by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: ptm_slot object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PtmSlotResponse'
+        '404':
+          description: ptm_slot not found
+    put:
+      operationId: updatePtmSlot
+      summary: Update ptm_slot by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PtmSlotUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PtmSlotResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: ptm_slot not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deletePtmSlot
+      summary: Delete ptm_slot by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: ptm_slot not found
+components:
+  schemas:
+
+    PtmSlotRequest:
+      type: object
+      required:
+        - event_id
+        - staff_id
+        - starts_at
+        - ends_at
+      additionalProperties: false
+      properties:
+        event_id:
+          type: string
+          format: uuid
+        staff_id:
+          type: string
+          format: uuid
+        room_id:
+          type: string
+          format: uuid
+          nullable: true
+        starts_at:
+          type: string
+          format: date-time
+        ends_at:
+          type: string
+          format: date-time
+        slot:
+          type: string
+          nullable: true
+        meeting_mode:
+          type: string
+          maxLength: 10
+          default: "in_person"
+        student_id:
+          type: string
+          format: uuid
+          nullable: true
+        booked_by_guardian_id:
+          type: string
+          format: uuid
+          nullable: true
+        booked_at:
+          type: string
+          format: date-time
+          nullable: true
+        status:
+          type: string
+          default: "available"
+          enum:
+            - "available"
+            - "booked"
+            - "completed"
+            - "cancelled"
+        meeting_notes:
+          type: string
+          nullable: true
+        cancelled_reason:
+          type: string
+          nullable: true
+
+    PtmSlotUpdateRequest:
+      type: object
+      required:
+        - event_id
+        - staff_id
+        - room_id
+        - starts_at
+        - ends_at
+        - slot
+        - meeting_mode
+        - student_id
+        - booked_by_guardian_id
+        - booked_at
+        - status
+        - meeting_notes
+        - cancelled_reason
+      additionalProperties: false
+      properties:
+        event_id:
+          type: string
+          format: uuid
+        staff_id:
+          type: string
+          format: uuid
+        room_id:
+          type: string
+          format: uuid
+          nullable: true
+        starts_at:
+          type: string
+          format: date-time
+        ends_at:
+          type: string
+          format: date-time
+        slot:
+          type: string
+          nullable: true
+        meeting_mode:
+          type: string
+          maxLength: 10
+          default: "in_person"
+        student_id:
+          type: string
+          format: uuid
+          nullable: true
+        booked_by_guardian_id:
+          type: string
+          format: uuid
+          nullable: true
+        booked_at:
+          type: string
+          format: date-time
+          nullable: true
+        status:
+          type: string
+          default: "available"
+          enum:
+            - "available"
+            - "booked"
+            - "completed"
+            - "cancelled"
+        meeting_notes:
+          type: string
+          nullable: true
+        cancelled_reason:
+          type: string
+          nullable: true
+
+    PtmSlotResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - ptm_slot_id
+        - event_id
+        - staff_id
+        - starts_at
+        - ends_at
+        - meeting_mode
+        - status
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        ptm_slot_id:
+          type: string
+          format: uuid
+          readOnly: true
+        event_id:
+          type: string
+          format: uuid
+        staff_id:
+          type: string
+          format: uuid
+        room_id:
+          type: string
+          format: uuid
+          nullable: true
+        starts_at:
+          type: string
+          format: date-time
+        ends_at:
+          type: string
+          format: date-time
+        slot:
+          type: string
+          nullable: true
+        meeting_mode:
+          type: string
+          maxLength: 10
+          default: "in_person"
+        student_id:
+          type: string
+          format: uuid
+          nullable: true
+        booked_by_guardian_id:
+          type: string
+          format: uuid
+          nullable: true
+        booked_at:
+          type: string
+          format: date-time
+          nullable: true
+        status:
+          type: string
+          default: "available"
+          enum:
+            - "available"
+            - "booked"
+            - "completed"
+            - "cancelled"
+        meeting_notes:
+          type: string
+          nullable: true
+        cancelled_reason:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

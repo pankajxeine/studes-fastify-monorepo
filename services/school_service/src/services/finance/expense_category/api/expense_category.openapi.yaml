@@ -1,0 +1,236 @@
+openapi: 3.0.0
+x-sql-table: fin_expense_category
+info:
+  title: ExpenseCategoryResponse API
+  version: 1.0.0
+paths:
+  /expense_category:
+    get:
+      operationId: listExpenseCategory
+      summary: Get all expense_category
+      responses:
+        '200':
+          description: List of expense_category
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ExpenseCategoryResponse'
+    post:
+      operationId: createExpenseCategory
+      summary: Create a new expense_category
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExpenseCategoryRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExpenseCategoryResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /expense_category/{id}:
+    get:
+      operationId: getExpenseCategoryById
+      summary: Get expense_category by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: expense_category object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExpenseCategoryResponse'
+        '404':
+          description: expense_category not found
+    put:
+      operationId: updateExpenseCategory
+      summary: Update expense_category by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExpenseCategoryUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExpenseCategoryResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: expense_category not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteExpenseCategory
+      summary: Delete expense_category by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: expense_category not found
+components:
+  schemas:
+
+    ExpenseCategoryRequest:
+      type: object
+      required:
+        - name
+      additionalProperties: false
+      properties:
+        expense_category_code:
+          type: string
+          nullable: true
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        gl_account_code:
+          type: string
+          nullable: true
+          maxLength: 20
+        approval_limit_amount:
+          type: string
+          nullable: true
+        sort_order:
+          type: integer
+          format: int32
+          default: 0
+        is_active:
+          type: boolean
+          default: true
+
+    ExpenseCategoryUpdateRequest:
+      type: object
+      required:
+        - expense_category_code
+        - name
+        - description
+        - gl_account_code
+        - approval_limit_amount
+        - sort_order
+        - is_active
+      additionalProperties: false
+      properties:
+        expense_category_code:
+          type: string
+          nullable: true
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        gl_account_code:
+          type: string
+          nullable: true
+          maxLength: 20
+        approval_limit_amount:
+          type: string
+          nullable: true
+        sort_order:
+          type: integer
+          format: int32
+          default: 0
+        is_active:
+          type: boolean
+          default: true
+
+    ExpenseCategoryResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - name
+        - sort_order
+        - is_active
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        expense_category_code:
+          type: string
+          nullable: true
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        gl_account_code:
+          type: string
+          nullable: true
+          maxLength: 20
+        approval_limit_amount:
+          type: string
+          nullable: true
+        sort_order:
+          type: integer
+          format: int32
+          default: 0
+        is_active:
+          type: boolean
+          default: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

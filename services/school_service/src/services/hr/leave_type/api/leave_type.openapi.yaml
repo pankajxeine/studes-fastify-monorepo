@@ -1,0 +1,325 @@
+openapi: 3.0.0
+x-sql-table: hr_leave_type
+info:
+  title: LeaveTypeResponse API
+  version: 1.0.0
+paths:
+  /leave_type:
+    get:
+      operationId: listLeaveType
+      summary: Get all leave_type
+      responses:
+        '200':
+          description: List of leave_type
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LeaveTypeResponse'
+    post:
+      operationId: createLeaveType
+      summary: Create a new leave_type
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LeaveTypeRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LeaveTypeResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /leave_type/{id}:
+    get:
+      operationId: getLeaveTypeById
+      summary: Get leave_type by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: leave_type object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LeaveTypeResponse'
+        '404':
+          description: leave_type not found
+    put:
+      operationId: updateLeaveType
+      summary: Update leave_type by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LeaveTypeUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LeaveTypeResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: leave_type not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteLeaveType
+      summary: Delete leave_type by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: leave_type not found
+components:
+  schemas:
+
+    LeaveTypeRequest:
+      type: object
+      required:
+        - name
+      additionalProperties: false
+      properties:
+        leave_type_code:
+          type: string
+          nullable: true
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        is_paid:
+          type: boolean
+          default: true
+        is_balance_tracked:
+          type: boolean
+          default: true
+        annual_quota_days:
+          type: number
+          format: double
+          nullable: true
+          minimum: 0
+          maximum: 365
+        carry_forward_max_days:
+          type: number
+          format: double
+          default: 0
+        max_consecutive_days:
+          type: integer
+          format: int32
+          nullable: true
+        allows_half_day:
+          type: boolean
+          default: true
+        requires_document_after_days:
+          type: integer
+          format: int32
+          nullable: true
+        applicable_category:
+          type: string
+          nullable: true
+        applicable_gender_code:
+          type: string
+          nullable: true
+        sort_order:
+          type: integer
+          format: int32
+          default: 0
+        is_active:
+          type: boolean
+          default: true
+
+    LeaveTypeUpdateRequest:
+      type: object
+      required:
+        - leave_type_code
+        - name
+        - description
+        - is_paid
+        - is_balance_tracked
+        - annual_quota_days
+        - carry_forward_max_days
+        - max_consecutive_days
+        - allows_half_day
+        - requires_document_after_days
+        - applicable_category
+        - applicable_gender_code
+        - sort_order
+        - is_active
+      additionalProperties: false
+      properties:
+        leave_type_code:
+          type: string
+          nullable: true
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        is_paid:
+          type: boolean
+          default: true
+        is_balance_tracked:
+          type: boolean
+          default: true
+        annual_quota_days:
+          type: number
+          format: double
+          nullable: true
+          minimum: 0
+          maximum: 365
+        carry_forward_max_days:
+          type: number
+          format: double
+          default: 0
+        max_consecutive_days:
+          type: integer
+          format: int32
+          nullable: true
+        allows_half_day:
+          type: boolean
+          default: true
+        requires_document_after_days:
+          type: integer
+          format: int32
+          nullable: true
+        applicable_category:
+          type: string
+          nullable: true
+        applicable_gender_code:
+          type: string
+          nullable: true
+        sort_order:
+          type: integer
+          format: int32
+          default: 0
+        is_active:
+          type: boolean
+          default: true
+
+    LeaveTypeResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - name
+        - is_paid
+        - is_balance_tracked
+        - carry_forward_max_days
+        - allows_half_day
+        - sort_order
+        - is_active
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        leave_type_code:
+          type: string
+          nullable: true
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        is_paid:
+          type: boolean
+          default: true
+        is_balance_tracked:
+          type: boolean
+          default: true
+        annual_quota_days:
+          type: number
+          format: double
+          nullable: true
+          minimum: 0
+          maximum: 365
+        carry_forward_max_days:
+          type: number
+          format: double
+          default: 0
+        max_consecutive_days:
+          type: integer
+          format: int32
+          nullable: true
+        allows_half_day:
+          type: boolean
+          default: true
+        requires_document_after_days:
+          type: integer
+          format: int32
+          nullable: true
+        applicable_category:
+          type: string
+          nullable: true
+        applicable_gender_code:
+          type: string
+          nullable: true
+        sort_order:
+          type: integer
+          format: int32
+          default: 0
+        is_active:
+          type: boolean
+          default: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

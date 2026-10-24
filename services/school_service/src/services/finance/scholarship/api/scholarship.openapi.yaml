@@ -1,0 +1,334 @@
+openapi: 3.0.0
+x-sql-table: fin_scholarship
+info:
+  title: ScholarshipResponse API
+  version: 1.0.0
+paths:
+  /scholarship:
+    get:
+      operationId: listScholarship
+      summary: Get all scholarship
+      responses:
+        '200':
+          description: List of scholarship
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ScholarshipResponse'
+    post:
+      operationId: createScholarship
+      summary: Create a new scholarship
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScholarshipRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScholarshipResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /scholarship/{id}:
+    get:
+      operationId: getScholarshipById
+      summary: Get scholarship by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: scholarship object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScholarshipResponse'
+        '404':
+          description: scholarship not found
+    put:
+      operationId: updateScholarship
+      summary: Update scholarship by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScholarshipUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScholarshipResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: scholarship not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteScholarship
+      summary: Delete scholarship by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: scholarship not found
+components:
+  schemas:
+
+    ScholarshipRequest:
+      type: object
+      required:
+        - academic_year_id
+        - code
+        - name
+        - discount_value
+      additionalProperties: false
+      properties:
+        academic_year_id:
+          type: string
+          format: uuid
+        campus_id:
+          type: string
+          format: uuid
+          nullable: true
+        code:
+          type: string
+          maxLength: 30
+        name:
+          type: string
+        sponsor_name:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        discount_kind:
+          type: string
+          default: "percent"
+        discount_value:
+          type: number
+          format: double
+        max_amount:
+          type: string
+          nullable: true
+        budget_amount:
+          type: string
+          nullable: true
+        awarded_amount:
+          type: string
+          default: 0
+        max_awards:
+          type: integer
+          format: int32
+          nullable: true
+        eligibility_criteria:
+          type: string
+          nullable: true
+        application_deadline:
+          type: string
+          format: date
+          nullable: true
+        status:
+          type: string
+          maxLength: 12
+          default: "draft"
+
+    ScholarshipUpdateRequest:
+      type: object
+      required:
+        - academic_year_id
+        - campus_id
+        - code
+        - name
+        - sponsor_name
+        - description
+        - discount_kind
+        - discount_value
+        - max_amount
+        - budget_amount
+        - awarded_amount
+        - max_awards
+        - eligibility_criteria
+        - application_deadline
+        - status
+      additionalProperties: false
+      properties:
+        academic_year_id:
+          type: string
+          format: uuid
+        campus_id:
+          type: string
+          format: uuid
+          nullable: true
+        code:
+          type: string
+          maxLength: 30
+        name:
+          type: string
+        sponsor_name:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        discount_kind:
+          type: string
+          default: "percent"
+        discount_value:
+          type: number
+          format: double
+        max_amount:
+          type: string
+          nullable: true
+        budget_amount:
+          type: string
+          nullable: true
+        awarded_amount:
+          type: string
+          default: 0
+        max_awards:
+          type: integer
+          format: int32
+          nullable: true
+        eligibility_criteria:
+          type: string
+          nullable: true
+        application_deadline:
+          type: string
+          format: date
+          nullable: true
+        status:
+          type: string
+          maxLength: 12
+          default: "draft"
+
+    ScholarshipResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - scholarship_id
+        - academic_year_id
+        - code
+        - name
+        - discount_kind
+        - discount_value
+        - awarded_amount
+        - status
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        scholarship_id:
+          type: string
+          format: uuid
+          readOnly: true
+        academic_year_id:
+          type: string
+          format: uuid
+        campus_id:
+          type: string
+          format: uuid
+          nullable: true
+        code:
+          type: string
+          maxLength: 30
+        name:
+          type: string
+        sponsor_name:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        discount_kind:
+          type: string
+          default: "percent"
+        discount_value:
+          type: number
+          format: double
+        max_amount:
+          type: string
+          nullable: true
+        budget_amount:
+          type: string
+          nullable: true
+        awarded_amount:
+          type: string
+          default: 0
+        max_awards:
+          type: integer
+          format: int32
+          nullable: true
+        eligibility_criteria:
+          type: string
+          nullable: true
+        application_deadline:
+          type: string
+          format: date
+          nullable: true
+        status:
+          type: string
+          maxLength: 12
+          default: "draft"
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

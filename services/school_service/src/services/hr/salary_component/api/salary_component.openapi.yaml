@@ -1,0 +1,257 @@
+openapi: 3.0.0
+x-sql-table: hr_salary_component
+info:
+  title: SalaryComponentResponse API
+  version: 1.0.0
+paths:
+  /salary_component:
+    get:
+      operationId: listSalaryComponent
+      summary: Get all salary_component
+      responses:
+        '200':
+          description: List of salary_component
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SalaryComponentResponse'
+    post:
+      operationId: createSalaryComponent
+      summary: Create a new salary_component
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SalaryComponentRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SalaryComponentResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /salary_component/{id}:
+    get:
+      operationId: getSalaryComponentById
+      summary: Get salary_component by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: salary_component object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SalaryComponentResponse'
+        '404':
+          description: salary_component not found
+    put:
+      operationId: updateSalaryComponent
+      summary: Update salary_component by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SalaryComponentUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SalaryComponentResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: salary_component not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteSalaryComponent
+      summary: Delete salary_component by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: salary_component not found
+components:
+  schemas:
+
+    SalaryComponentRequest:
+      type: object
+      required:
+        - name
+        - kind
+      additionalProperties: false
+      properties:
+        salary_component_code:
+          type: string
+          nullable: true
+        name:
+          type: string
+        kind:
+          type: string
+        description:
+          type: string
+          nullable: true
+        is_taxable:
+          type: boolean
+          default: true
+        is_statutory:
+          type: boolean
+          default: false
+        payslip_label:
+          type: string
+          nullable: true
+          maxLength: 40
+        sort_order:
+          type: integer
+          format: int32
+          default: 0
+        is_active:
+          type: boolean
+          default: true
+
+    SalaryComponentUpdateRequest:
+      type: object
+      required:
+        - salary_component_code
+        - name
+        - kind
+        - description
+        - is_taxable
+        - is_statutory
+        - payslip_label
+        - sort_order
+        - is_active
+      additionalProperties: false
+      properties:
+        salary_component_code:
+          type: string
+          nullable: true
+        name:
+          type: string
+        kind:
+          type: string
+        description:
+          type: string
+          nullable: true
+        is_taxable:
+          type: boolean
+          default: true
+        is_statutory:
+          type: boolean
+          default: false
+        payslip_label:
+          type: string
+          nullable: true
+          maxLength: 40
+        sort_order:
+          type: integer
+          format: int32
+          default: 0
+        is_active:
+          type: boolean
+          default: true
+
+    SalaryComponentResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - name
+        - kind
+        - is_taxable
+        - is_statutory
+        - sort_order
+        - is_active
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        salary_component_code:
+          type: string
+          nullable: true
+        name:
+          type: string
+        kind:
+          type: string
+        description:
+          type: string
+          nullable: true
+        is_taxable:
+          type: boolean
+          default: true
+        is_statutory:
+          type: boolean
+          default: false
+        payslip_label:
+          type: string
+          nullable: true
+          maxLength: 40
+        sort_order:
+          type: integer
+          format: int32
+          default: 0
+        is_active:
+          type: boolean
+          default: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

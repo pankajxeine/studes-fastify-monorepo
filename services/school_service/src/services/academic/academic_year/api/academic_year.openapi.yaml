@@ -1,0 +1,234 @@
+openapi: 3.0.0
+x-sql-table: acad_academic_year
+info:
+  title: AcademicYearResponse API
+  version: 1.0.0
+paths:
+  /academic_year:
+    get:
+      operationId: listAcademicYear
+      summary: Get all academic_year
+      responses:
+        '200':
+          description: List of academic_year
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AcademicYearResponse'
+    post:
+      operationId: createAcademicYear
+      summary: Create a new academic_year
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AcademicYearRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcademicYearResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /academic_year/{id}:
+    get:
+      operationId: getAcademicYearById
+      summary: Get academic_year by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: academic_year object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcademicYearResponse'
+        '404':
+          description: academic_year not found
+    put:
+      operationId: updateAcademicYear
+      summary: Update academic_year by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AcademicYearUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcademicYearResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: academic_year not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteAcademicYear
+      summary: Delete academic_year by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: academic_year not found
+components:
+  schemas:
+
+    AcademicYearRequest:
+      type: object
+      required:
+        - name
+        - start_date
+        - end_date
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+          maxLength: 20
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        span:
+          type: string
+          nullable: true
+        is_current:
+          type: boolean
+          default: false
+        closed_at:
+          type: string
+          format: date-time
+          nullable: true
+
+    AcademicYearUpdateRequest:
+      type: object
+      required:
+        - name
+        - start_date
+        - end_date
+        - span
+        - is_current
+        - closed_at
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+          maxLength: 20
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        span:
+          type: string
+          nullable: true
+        is_current:
+          type: boolean
+          default: false
+        closed_at:
+          type: string
+          format: date-time
+          nullable: true
+
+    AcademicYearResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - academic_year_id
+        - name
+        - start_date
+        - end_date
+        - is_current
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        academic_year_id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          maxLength: 20
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        span:
+          type: string
+          nullable: true
+        is_current:
+          type: boolean
+          default: false
+        closed_at:
+          type: string
+          format: date-time
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

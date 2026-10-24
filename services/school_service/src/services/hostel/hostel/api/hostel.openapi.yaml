@@ -1,0 +1,298 @@
+openapi: 3.0.0
+x-sql-table: hstl_hostel
+info:
+  title: HostelResponse API
+  version: 1.0.0
+paths:
+  /hostel:
+    get:
+      operationId: listHostel
+      summary: Get all hostel
+      responses:
+        '200':
+          description: List of hostel
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HostelResponse'
+    post:
+      operationId: createHostel
+      summary: Create a new hostel
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HostelRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HostelResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /hostel/{id}:
+    get:
+      operationId: getHostelById
+      summary: Get hostel by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: hostel object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HostelResponse'
+        '404':
+          description: hostel not found
+    put:
+      operationId: updateHostel
+      summary: Update hostel by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HostelUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HostelResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: hostel not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteHostel
+      summary: Delete hostel by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: hostel not found
+components:
+  schemas:
+
+    HostelRequest:
+      type: object
+      required:
+        - campus_id
+        - code
+        - name
+        - gender_policy
+      additionalProperties: false
+      properties:
+        campus_id:
+          type: string
+          format: uuid
+        building_id:
+          type: string
+          format: uuid
+          nullable: true
+        code:
+          type: string
+          maxLength: 20
+        name:
+          type: string
+        gender_policy:
+          type: string
+        warden_staff_id:
+          type: string
+          format: uuid
+          nullable: true
+        phone:
+          type: string
+          nullable: true
+        curfew_time:
+          type: string
+          format: time
+          default: "21:00"
+        visiting_hours:
+          type: string
+          nullable: true
+        term_fee_amount:
+          type: string
+          default: 0
+        is_active:
+          type: boolean
+          default: true
+        notes:
+          type: string
+          nullable: true
+
+    HostelUpdateRequest:
+      type: object
+      required:
+        - campus_id
+        - building_id
+        - code
+        - name
+        - gender_policy
+        - warden_staff_id
+        - phone
+        - curfew_time
+        - visiting_hours
+        - term_fee_amount
+        - is_active
+        - notes
+      additionalProperties: false
+      properties:
+        campus_id:
+          type: string
+          format: uuid
+        building_id:
+          type: string
+          format: uuid
+          nullable: true
+        code:
+          type: string
+          maxLength: 20
+        name:
+          type: string
+        gender_policy:
+          type: string
+        warden_staff_id:
+          type: string
+          format: uuid
+          nullable: true
+        phone:
+          type: string
+          nullable: true
+        curfew_time:
+          type: string
+          format: time
+          default: "21:00"
+        visiting_hours:
+          type: string
+          nullable: true
+        term_fee_amount:
+          type: string
+          default: 0
+        is_active:
+          type: boolean
+          default: true
+        notes:
+          type: string
+          nullable: true
+
+    HostelResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - hostel_id
+        - campus_id
+        - code
+        - name
+        - gender_policy
+        - curfew_time
+        - term_fee_amount
+        - is_active
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        hostel_id:
+          type: string
+          format: uuid
+          readOnly: true
+        campus_id:
+          type: string
+          format: uuid
+        building_id:
+          type: string
+          format: uuid
+          nullable: true
+        code:
+          type: string
+          maxLength: 20
+        name:
+          type: string
+        gender_policy:
+          type: string
+        warden_staff_id:
+          type: string
+          format: uuid
+          nullable: true
+        phone:
+          type: string
+          nullable: true
+        curfew_time:
+          type: string
+          format: time
+          default: "21:00"
+        visiting_hours:
+          type: string
+          nullable: true
+        term_fee_amount:
+          type: string
+          default: 0
+        is_active:
+          type: boolean
+          default: true
+        notes:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

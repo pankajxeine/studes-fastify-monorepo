@@ -1,0 +1,359 @@
+openapi: 3.0.0
+x-sql-table: billing_invoice_line
+info:
+  title: InvoiceLineResponse API
+  version: 1.0.0
+paths:
+  /invoice_line:
+    get:
+      operationId: listInvoiceLine
+      summary: Get all invoice_line
+      responses:
+        '200':
+          description: List of invoice_line
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/InvoiceLineResponse'
+    post:
+      operationId: createInvoiceLine
+      summary: Create a new invoice_line
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InvoiceLineRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvoiceLineResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /invoice_line/{id}:
+    get:
+      operationId: getInvoiceLineById
+      summary: Get invoice_line by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: invoice_line object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvoiceLineResponse'
+        '404':
+          description: invoice_line not found
+    put:
+      operationId: updateInvoiceLine
+      summary: Update invoice_line by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InvoiceLineUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvoiceLineResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: invoice_line not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteInvoiceLine
+      summary: Delete invoice_line by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: invoice_line not found
+components:
+  schemas:
+
+    InvoiceLineRequest:
+      type: object
+      required:
+        - invoice_id
+        - line_no
+        - line_type
+        - description
+        - unit_amount
+      additionalProperties: false
+      properties:
+        invoice_id:
+          type: string
+          format: uuid
+        line_no:
+          type: integer
+          format: int32
+        line_type:
+          type: string
+          maxLength: 12
+        description:
+          type: string
+        plan_price_id:
+          type: string
+          format: uuid
+          nullable: true
+        addon_price_id:
+          type: string
+          format: uuid
+          nullable: true
+        subscription_item_id:
+          type: string
+          format: uuid
+          nullable: true
+        feature_id:
+          type: string
+          format: uuid
+          nullable: true
+        coupon_id:
+          type: string
+          format: uuid
+          nullable: true
+        period_start:
+          type: string
+          format: date-time
+          nullable: true
+        period_end:
+          type: string
+          format: date-time
+          nullable: true
+        quantity:
+          type: number
+          format: double
+          default: 1
+        unit_amount:
+          type: string
+        discount_amount:
+          type: string
+          default: 0
+        tax_rate_id:
+          type: string
+          format: uuid
+          nullable: true
+        tax_rate:
+          type: string
+          default: 0
+        tax_amount:
+          type: string
+          default: 0
+        net_amount:
+          type: string
+          nullable: true
+
+    InvoiceLineUpdateRequest:
+      type: object
+      required:
+        - invoice_id
+        - line_no
+        - line_type
+        - description
+        - plan_price_id
+        - addon_price_id
+        - subscription_item_id
+        - feature_id
+        - coupon_id
+        - period_start
+        - period_end
+        - quantity
+        - unit_amount
+        - discount_amount
+        - tax_rate_id
+        - tax_rate
+        - tax_amount
+        - net_amount
+      additionalProperties: false
+      properties:
+        invoice_id:
+          type: string
+          format: uuid
+        line_no:
+          type: integer
+          format: int32
+        line_type:
+          type: string
+          maxLength: 12
+        description:
+          type: string
+        plan_price_id:
+          type: string
+          format: uuid
+          nullable: true
+        addon_price_id:
+          type: string
+          format: uuid
+          nullable: true
+        subscription_item_id:
+          type: string
+          format: uuid
+          nullable: true
+        feature_id:
+          type: string
+          format: uuid
+          nullable: true
+        coupon_id:
+          type: string
+          format: uuid
+          nullable: true
+        period_start:
+          type: string
+          format: date-time
+          nullable: true
+        period_end:
+          type: string
+          format: date-time
+          nullable: true
+        quantity:
+          type: number
+          format: double
+          default: 1
+        unit_amount:
+          type: string
+        discount_amount:
+          type: string
+          default: 0
+        tax_rate_id:
+          type: string
+          format: uuid
+          nullable: true
+        tax_rate:
+          type: string
+          default: 0
+        tax_amount:
+          type: string
+          default: 0
+        net_amount:
+          type: string
+          nullable: true
+
+    InvoiceLineResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - invoice_line_id
+        - invoice_id
+        - line_no
+        - line_type
+        - description
+        - quantity
+        - unit_amount
+        - discount_amount
+        - tax_rate
+        - tax_amount
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        invoice_line_id:
+          type: string
+          format: uuid
+          readOnly: true
+        invoice_id:
+          type: string
+          format: uuid
+        line_no:
+          type: integer
+          format: int32
+        line_type:
+          type: string
+          maxLength: 12
+        description:
+          type: string
+        plan_price_id:
+          type: string
+          format: uuid
+          nullable: true
+        addon_price_id:
+          type: string
+          format: uuid
+          nullable: true
+        subscription_item_id:
+          type: string
+          format: uuid
+          nullable: true
+        feature_id:
+          type: string
+          format: uuid
+          nullable: true
+        coupon_id:
+          type: string
+          format: uuid
+          nullable: true
+        period_start:
+          type: string
+          format: date-time
+          nullable: true
+        period_end:
+          type: string
+          format: date-time
+          nullable: true
+        quantity:
+          type: number
+          format: double
+          default: 1
+        unit_amount:
+          type: string
+        discount_amount:
+          type: string
+          default: 0
+        tax_rate_id:
+          type: string
+          format: uuid
+          nullable: true
+        tax_rate:
+          type: string
+          default: 0
+        tax_amount:
+          type: string
+          default: 0
+        net_amount:
+          type: string
+          nullable: true
+  

@@ -1,0 +1,387 @@
+openapi: 3.0.0
+x-sql-table: exam_course_result
+info:
+  title: CourseResultResponse API
+  version: 1.0.0
+paths:
+  /course_result:
+    get:
+      operationId: listCourseResult
+      summary: Get all course_result
+      responses:
+        '200':
+          description: List of course_result
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CourseResultResponse'
+    post:
+      operationId: createCourseResult
+      summary: Create a new course_result
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CourseResultRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CourseResultResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /course_result/{id}:
+    get:
+      operationId: getCourseResultById
+      summary: Get course_result by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: course_result object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CourseResultResponse'
+        '404':
+          description: course_result not found
+    put:
+      operationId: updateCourseResult
+      summary: Update course_result by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CourseResultUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CourseResultResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: course_result not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteCourseResult
+      summary: Delete course_result by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: course_result not found
+components:
+  schemas:
+
+    CourseResultRequest:
+      type: object
+      required:
+        - student_id
+        - course_offering_id
+        - term_id
+      additionalProperties: false
+      properties:
+        student_id:
+          type: string
+          format: uuid
+        course_offering_id:
+          type: string
+          format: uuid
+        term_id:
+          type: string
+          format: uuid
+        percentage:
+          type: string
+          nullable: true
+        letter_grade:
+          type: string
+          nullable: true
+          maxLength: 5
+        grade_point:
+          type: number
+          format: double
+          nullable: true
+          minimum: 0
+          maximum: 4
+        credits_attempted:
+          type: number
+          format: double
+          nullable: true
+        credits_earned:
+          type: number
+          format: double
+          nullable: true
+        quality_points:
+          type: number
+          format: double
+          nullable: true
+        result:
+          type: string
+          nullable: true
+        status:
+          type: string
+          default: "provisional"
+          enum:
+            - "provisional"
+            - "under_review"
+            - "published"
+            - "withheld"
+        is_published:
+          type: boolean
+          nullable: true
+        class_rank:
+          type: integer
+          format: int32
+          nullable: true
+        computed_at:
+          type: string
+          format: date-time
+        published_at:
+          type: string
+          format: date-time
+          nullable: true
+        published_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        remarks:
+          type: string
+          nullable: true
+
+    CourseResultUpdateRequest:
+      type: object
+      required:
+        - student_id
+        - course_offering_id
+        - term_id
+        - percentage
+        - letter_grade
+        - grade_point
+        - credits_attempted
+        - credits_earned
+        - quality_points
+        - result
+        - status
+        - is_published
+        - class_rank
+        - computed_at
+        - published_at
+        - published_by_user_id
+        - remarks
+      additionalProperties: false
+      properties:
+        student_id:
+          type: string
+          format: uuid
+        course_offering_id:
+          type: string
+          format: uuid
+        term_id:
+          type: string
+          format: uuid
+        percentage:
+          type: string
+          nullable: true
+        letter_grade:
+          type: string
+          nullable: true
+          maxLength: 5
+        grade_point:
+          type: number
+          format: double
+          nullable: true
+          minimum: 0
+          maximum: 4
+        credits_attempted:
+          type: number
+          format: double
+          nullable: true
+        credits_earned:
+          type: number
+          format: double
+          nullable: true
+        quality_points:
+          type: number
+          format: double
+          nullable: true
+        result:
+          type: string
+          nullable: true
+        status:
+          type: string
+          default: "provisional"
+          enum:
+            - "provisional"
+            - "under_review"
+            - "published"
+            - "withheld"
+        is_published:
+          type: boolean
+          nullable: true
+        class_rank:
+          type: integer
+          format: int32
+          nullable: true
+        computed_at:
+          type: string
+          format: date-time
+        published_at:
+          type: string
+          format: date-time
+          nullable: true
+        published_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        remarks:
+          type: string
+          nullable: true
+
+    CourseResultResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - course_result_id
+        - student_id
+        - course_offering_id
+        - term_id
+        - status
+        - computed_at
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        course_result_id:
+          type: string
+          format: uuid
+          readOnly: true
+        student_id:
+          type: string
+          format: uuid
+        course_offering_id:
+          type: string
+          format: uuid
+        term_id:
+          type: string
+          format: uuid
+        percentage:
+          type: string
+          nullable: true
+        letter_grade:
+          type: string
+          nullable: true
+          maxLength: 5
+        grade_point:
+          type: number
+          format: double
+          nullable: true
+          minimum: 0
+          maximum: 4
+        credits_attempted:
+          type: number
+          format: double
+          nullable: true
+        credits_earned:
+          type: number
+          format: double
+          nullable: true
+        quality_points:
+          type: number
+          format: double
+          nullable: true
+        result:
+          type: string
+          nullable: true
+        status:
+          type: string
+          default: "provisional"
+          enum:
+            - "provisional"
+            - "under_review"
+            - "published"
+            - "withheld"
+        is_published:
+          type: boolean
+          nullable: true
+        class_rank:
+          type: integer
+          format: int32
+          nullable: true
+        computed_at:
+          type: string
+          format: date-time
+        published_at:
+          type: string
+          format: date-time
+          nullable: true
+        published_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        remarks:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

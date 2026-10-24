@@ -1,0 +1,291 @@
+openapi: 3.0.0
+x-sql-table: disp_disciplinary_action
+info:
+  title: DisciplinaryActionResponse API
+  version: 1.0.0
+paths:
+  /disciplinary_action:
+    get:
+      operationId: listDisciplinaryAction
+      summary: Get all disciplinary_action
+      responses:
+        '200':
+          description: List of disciplinary_action
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DisciplinaryActionResponse'
+    post:
+      operationId: createDisciplinaryAction
+      summary: Create a new disciplinary_action
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DisciplinaryActionRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DisciplinaryActionResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /disciplinary_action/{id}:
+    get:
+      operationId: getDisciplinaryActionById
+      summary: Get disciplinary_action by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: disciplinary_action object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DisciplinaryActionResponse'
+        '404':
+          description: disciplinary_action not found
+    put:
+      operationId: updateDisciplinaryAction
+      summary: Update disciplinary_action by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DisciplinaryActionUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DisciplinaryActionResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: disciplinary_action not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteDisciplinaryAction
+      summary: Delete disciplinary_action by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: disciplinary_action not found
+components:
+  schemas:
+
+    DisciplinaryActionRequest:
+      type: object
+      required:
+        - incident_party_id
+        - action_type
+        - issued_by_user_id
+      additionalProperties: false
+      properties:
+        incident_party_id:
+          type: string
+          format: uuid
+        action_type:
+          type: string
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+          nullable: true
+        details:
+          type: string
+          nullable: true
+        issued_by_user_id:
+          type: string
+          format: uuid
+        issued_at:
+          type: string
+          format: date-time
+        guardian_informed_at:
+          type: string
+          format: date-time
+          nullable: true
+        status:
+          type: string
+          default: "active"
+          enum:
+            - "pending"
+            - "active"
+            - "completed"
+            - "revoked"
+        revoked_reason:
+          type: string
+          nullable: true
+
+    DisciplinaryActionUpdateRequest:
+      type: object
+      required:
+        - incident_party_id
+        - action_type
+        - start_date
+        - end_date
+        - details
+        - issued_by_user_id
+        - issued_at
+        - guardian_informed_at
+        - status
+        - revoked_reason
+      additionalProperties: false
+      properties:
+        incident_party_id:
+          type: string
+          format: uuid
+        action_type:
+          type: string
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+          nullable: true
+        details:
+          type: string
+          nullable: true
+        issued_by_user_id:
+          type: string
+          format: uuid
+        issued_at:
+          type: string
+          format: date-time
+        guardian_informed_at:
+          type: string
+          format: date-time
+          nullable: true
+        status:
+          type: string
+          default: "active"
+          enum:
+            - "pending"
+            - "active"
+            - "completed"
+            - "revoked"
+        revoked_reason:
+          type: string
+          nullable: true
+
+    DisciplinaryActionResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - disciplinary_action_id
+        - incident_party_id
+        - action_type
+        - start_date
+        - issued_by_user_id
+        - issued_at
+        - status
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        disciplinary_action_id:
+          type: string
+          format: uuid
+          readOnly: true
+        incident_party_id:
+          type: string
+          format: uuid
+        action_type:
+          type: string
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+          nullable: true
+        details:
+          type: string
+          nullable: true
+        issued_by_user_id:
+          type: string
+          format: uuid
+        issued_at:
+          type: string
+          format: date-time
+        guardian_informed_at:
+          type: string
+          format: date-time
+          nullable: true
+        status:
+          type: string
+          default: "active"
+          enum:
+            - "pending"
+            - "active"
+            - "completed"
+            - "revoked"
+        revoked_reason:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

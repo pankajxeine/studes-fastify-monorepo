@@ -1,0 +1,284 @@
+openapi: 3.0.0
+x-sql-table: ppl_guardian
+info:
+  title: GuardianResponse API
+  version: 1.0.0
+paths:
+  /guardian:
+    get:
+      operationId: listGuardian
+      summary: Get all guardian
+      responses:
+        '200':
+          description: List of guardian
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GuardianResponse'
+    post:
+      operationId: createGuardian
+      summary: Create a new guardian
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GuardianRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GuardianResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /guardian/{id}:
+    get:
+      operationId: getGuardianById
+      summary: Get guardian by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: guardian object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GuardianResponse'
+        '404':
+          description: guardian not found
+    put:
+      operationId: updateGuardian
+      summary: Update guardian by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GuardianUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GuardianResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: guardian not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteGuardian
+      summary: Delete guardian by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: guardian not found
+components:
+  schemas:
+
+    GuardianRequest:
+      type: object
+      required:
+        - person_id
+      additionalProperties: false
+      properties:
+        person_id:
+          type: string
+          format: uuid
+        occupation:
+          type: string
+          nullable: true
+        employer:
+          type: string
+          nullable: true
+        education_level:
+          type: string
+          nullable: true
+          maxLength: 20
+        annual_income_band:
+          type: string
+          nullable: true
+          maxLength: 20
+        work_phone:
+          type: string
+          nullable: true
+        work_email:
+          type: string
+          nullable: true
+        preferred_contact_channel:
+          type: string
+          maxLength: 10
+          default: "email"
+        preferred_language:
+          type: string
+          nullable: true
+          maxLength: 40
+        notes:
+          type: string
+          nullable: true
+
+    GuardianUpdateRequest:
+      type: object
+      required:
+        - person_id
+        - occupation
+        - employer
+        - education_level
+        - annual_income_band
+        - work_phone
+        - work_email
+        - preferred_contact_channel
+        - preferred_language
+        - notes
+      additionalProperties: false
+      properties:
+        person_id:
+          type: string
+          format: uuid
+        occupation:
+          type: string
+          nullable: true
+        employer:
+          type: string
+          nullable: true
+        education_level:
+          type: string
+          nullable: true
+          maxLength: 20
+        annual_income_band:
+          type: string
+          nullable: true
+          maxLength: 20
+        work_phone:
+          type: string
+          nullable: true
+        work_email:
+          type: string
+          nullable: true
+        preferred_contact_channel:
+          type: string
+          maxLength: 10
+          default: "email"
+        preferred_language:
+          type: string
+          nullable: true
+          maxLength: 40
+        notes:
+          type: string
+          nullable: true
+
+    GuardianResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - guardian_id
+        - person_id
+        - preferred_contact_channel
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        guardian_id:
+          type: string
+          format: uuid
+          readOnly: true
+        person_id:
+          type: string
+          format: uuid
+        occupation:
+          type: string
+          nullable: true
+        employer:
+          type: string
+          nullable: true
+        education_level:
+          type: string
+          nullable: true
+          maxLength: 20
+        annual_income_band:
+          type: string
+          nullable: true
+          maxLength: 20
+        work_phone:
+          type: string
+          nullable: true
+        work_email:
+          type: string
+          nullable: true
+        preferred_contact_channel:
+          type: string
+          maxLength: 10
+          default: "email"
+        preferred_language:
+          type: string
+          nullable: true
+          maxLength: 40
+        notes:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        deleted_at:
+          type: string
+          format: date-time
+          nullable: true
+          readOnly: true
+  

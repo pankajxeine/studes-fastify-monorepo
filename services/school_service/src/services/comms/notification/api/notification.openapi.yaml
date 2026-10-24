@@ -1,0 +1,312 @@
+openapi: 3.0.0
+x-sql-table: comms_notification
+info:
+  title: NotificationResponse API
+  version: 1.0.0
+paths:
+  /notification:
+    get:
+      operationId: listNotification
+      summary: Get all notification
+      responses:
+        '200':
+          description: List of notification
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/NotificationResponse'
+    post:
+      operationId: createNotification
+      summary: Create a new notification
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /notification/{id}:
+    get:
+      operationId: getNotificationById
+      summary: Get notification by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: notification object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationResponse'
+        '404':
+          description: notification not found
+    put:
+      operationId: updateNotification
+      summary: Update notification by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: notification not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteNotification
+      summary: Delete notification by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: notification not found
+components:
+  schemas:
+
+    NotificationRequest:
+      type: object
+      required:
+        - app_user_id
+        - channel
+        - title
+        - body
+      additionalProperties: false
+      properties:
+        app_user_id:
+          type: string
+          format: uuid
+        notification_template_code:
+          type: string
+          nullable: true
+        channel:
+          type: string
+        title:
+          type: string
+        body:
+          type: string
+        payload:
+          default: "{}"
+        status:
+          type: string
+          default: "queued"
+        scheduled_at:
+          type: string
+          format: date-time
+        sent_at:
+          type: string
+          format: date-time
+          nullable: true
+        delivered_at:
+          type: string
+          format: date-time
+          nullable: true
+        read_at:
+          type: string
+          format: date-time
+          nullable: true
+        retry_count:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 20
+          default: 0
+        failure_reason:
+          type: string
+          nullable: true
+
+    NotificationUpdateRequest:
+      type: object
+      required:
+        - app_user_id
+        - notification_template_code
+        - channel
+        - title
+        - body
+        - payload
+        - status
+        - scheduled_at
+        - sent_at
+        - delivered_at
+        - read_at
+        - retry_count
+        - failure_reason
+      additionalProperties: false
+      properties:
+        app_user_id:
+          type: string
+          format: uuid
+        notification_template_code:
+          type: string
+          nullable: true
+        channel:
+          type: string
+        title:
+          type: string
+        body:
+          type: string
+        payload:
+          default: "{}"
+        status:
+          type: string
+          default: "queued"
+        scheduled_at:
+          type: string
+          format: date-time
+        sent_at:
+          type: string
+          format: date-time
+          nullable: true
+        delivered_at:
+          type: string
+          format: date-time
+          nullable: true
+        read_at:
+          type: string
+          format: date-time
+          nullable: true
+        retry_count:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 20
+          default: 0
+        failure_reason:
+          type: string
+          nullable: true
+
+    NotificationResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - notification_id
+        - app_user_id
+        - channel
+        - title
+        - body
+        - payload
+        - status
+        - scheduled_at
+        - retry_count
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        notification_id:
+          type: string
+          format: uuid
+          readOnly: true
+        app_user_id:
+          type: string
+          format: uuid
+        notification_template_code:
+          type: string
+          nullable: true
+        channel:
+          type: string
+        title:
+          type: string
+        body:
+          type: string
+        payload:
+          default: "{}"
+        status:
+          type: string
+          default: "queued"
+        scheduled_at:
+          type: string
+          format: date-time
+        sent_at:
+          type: string
+          format: date-time
+          nullable: true
+        delivered_at:
+          type: string
+          format: date-time
+          nullable: true
+        read_at:
+          type: string
+          format: date-time
+          nullable: true
+        retry_count:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 20
+          default: 0
+        failure_reason:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

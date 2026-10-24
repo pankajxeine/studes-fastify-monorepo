@@ -1,0 +1,404 @@
+openapi: 3.0.0
+x-sql-table: subscription_subscription
+info:
+  title: SubscriptionResponse API
+  version: 1.0.0
+paths:
+  /subscription:
+    get:
+      operationId: listSubscription
+      summary: Get all subscription
+      responses:
+        '200':
+          description: List of subscription
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SubscriptionResponse'
+    post:
+      operationId: createSubscription
+      summary: Create a new subscription
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubscriptionRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /subscription/{id}:
+    get:
+      operationId: getSubscriptionById
+      summary: Get subscription by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: subscription object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionResponse'
+        '404':
+          description: subscription not found
+    put:
+      operationId: updateSubscription
+      summary: Update subscription by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubscriptionUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: subscription not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteSubscription
+      summary: Delete subscription by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: subscription not found
+components:
+  schemas:
+
+    SubscriptionRequest:
+      type: object
+      required:
+        - tenant_application_id
+        - billing_account_id
+        - plan_version_id
+        - plan_price_id
+        - status
+        - current_period_start
+        - current_period_end
+      additionalProperties: false
+      properties:
+        subscription_number:
+          type: string
+          maxLength: 20
+        tenant_application_id:
+          type: string
+          format: uuid
+        billing_account_id:
+          type: string
+          format: uuid
+        plan_version_id:
+          type: string
+          format: uuid
+        plan_price_id:
+          type: string
+          format: uuid
+        quote_id:
+          type: string
+          format: uuid
+          nullable: true
+        status:
+          type: string
+        quantity:
+          type: integer
+          format: int32
+          default: 1
+        discount_percent:
+          type: string
+          default: 0
+        trial_ends_at:
+          type: string
+          format: date-time
+          nullable: true
+        started_at:
+          type: string
+          format: date-time
+        current_period_start:
+          type: string
+          format: date-time
+        current_period_end:
+          type: string
+          format: date-time
+        grace_until:
+          type: string
+          format: date-time
+          nullable: true
+        cancel_at:
+          type: string
+          format: date-time
+          nullable: true
+        cancelled_at:
+          type: string
+          format: date-time
+          nullable: true
+        cancel_reason:
+          type: string
+          nullable: true
+        auto_renew:
+          type: boolean
+          default: true
+        contract_ref:
+          type: string
+          nullable: true
+          maxLength: 40
+        sales_agent_id:
+          type: string
+          format: uuid
+          nullable: true
+
+    SubscriptionUpdateRequest:
+      type: object
+      required:
+        - subscription_number
+        - tenant_application_id
+        - billing_account_id
+        - plan_version_id
+        - plan_price_id
+        - quote_id
+        - status
+        - quantity
+        - discount_percent
+        - trial_ends_at
+        - started_at
+        - current_period_start
+        - current_period_end
+        - grace_until
+        - cancel_at
+        - cancelled_at
+        - cancel_reason
+        - auto_renew
+        - contract_ref
+        - sales_agent_id
+      additionalProperties: false
+      properties:
+        subscription_number:
+          type: string
+          maxLength: 20
+        tenant_application_id:
+          type: string
+          format: uuid
+        billing_account_id:
+          type: string
+          format: uuid
+        plan_version_id:
+          type: string
+          format: uuid
+        plan_price_id:
+          type: string
+          format: uuid
+        quote_id:
+          type: string
+          format: uuid
+          nullable: true
+        status:
+          type: string
+        quantity:
+          type: integer
+          format: int32
+          default: 1
+        discount_percent:
+          type: string
+          default: 0
+        trial_ends_at:
+          type: string
+          format: date-time
+          nullable: true
+        started_at:
+          type: string
+          format: date-time
+        current_period_start:
+          type: string
+          format: date-time
+        current_period_end:
+          type: string
+          format: date-time
+        grace_until:
+          type: string
+          format: date-time
+          nullable: true
+        cancel_at:
+          type: string
+          format: date-time
+          nullable: true
+        cancelled_at:
+          type: string
+          format: date-time
+          nullable: true
+        cancel_reason:
+          type: string
+          nullable: true
+        auto_renew:
+          type: boolean
+          default: true
+        contract_ref:
+          type: string
+          nullable: true
+          maxLength: 40
+        sales_agent_id:
+          type: string
+          format: uuid
+          nullable: true
+
+    SubscriptionResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - subscription_id
+        - subscription_number
+        - tenant_application_id
+        - billing_account_id
+        - plan_version_id
+        - plan_price_id
+        - status
+        - quantity
+        - discount_percent
+        - started_at
+        - current_period_start
+        - current_period_end
+        - auto_renew
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        subscription_id:
+          type: string
+          format: uuid
+          readOnly: true
+        subscription_number:
+          type: string
+          maxLength: 20
+        tenant_application_id:
+          type: string
+          format: uuid
+        billing_account_id:
+          type: string
+          format: uuid
+        plan_version_id:
+          type: string
+          format: uuid
+        plan_price_id:
+          type: string
+          format: uuid
+        quote_id:
+          type: string
+          format: uuid
+          nullable: true
+        status:
+          type: string
+        quantity:
+          type: integer
+          format: int32
+          default: 1
+        discount_percent:
+          type: string
+          default: 0
+        trial_ends_at:
+          type: string
+          format: date-time
+          nullable: true
+        started_at:
+          type: string
+          format: date-time
+        current_period_start:
+          type: string
+          format: date-time
+        current_period_end:
+          type: string
+          format: date-time
+        grace_until:
+          type: string
+          format: date-time
+          nullable: true
+        cancel_at:
+          type: string
+          format: date-time
+          nullable: true
+        cancelled_at:
+          type: string
+          format: date-time
+          nullable: true
+        cancel_reason:
+          type: string
+          nullable: true
+        auto_renew:
+          type: boolean
+          default: true
+        contract_ref:
+          type: string
+          nullable: true
+          maxLength: 40
+        sales_agent_id:
+          type: string
+          format: uuid
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

@@ -1,0 +1,240 @@
+openapi: 3.0.0
+x-sql-table: fin_fee_structure_item
+info:
+  title: FeeStructureItemResponse API
+  version: 1.0.0
+paths:
+  /fee_structure_item:
+    get:
+      operationId: listFeeStructureItem
+      summary: Get all fee_structure_item
+      responses:
+        '200':
+          description: List of fee_structure_item
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FeeStructureItemResponse'
+    post:
+      operationId: createFeeStructureItem
+      summary: Create a new fee_structure_item
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FeeStructureItemRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeeStructureItemResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /fee_structure_item/{id}:
+    get:
+      operationId: getFeeStructureItemById
+      summary: Get fee_structure_item by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: fee_structure_item object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeeStructureItemResponse'
+        '404':
+          description: fee_structure_item not found
+    put:
+      operationId: updateFeeStructureItem
+      summary: Update fee_structure_item by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FeeStructureItemUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeeStructureItemResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: fee_structure_item not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteFeeStructureItem
+      summary: Delete fee_structure_item by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: fee_structure_item not found
+components:
+  schemas:
+
+    FeeStructureItemRequest:
+      type: object
+      required:
+        - fee_structure_id
+        - fee_head_code
+        - amount
+      additionalProperties: false
+      properties:
+        fee_structure_id:
+          type: string
+          format: uuid
+        fee_head_code:
+          type: string
+        amount:
+          type: string
+        frequency:
+          type: string
+          default: "term"
+        is_optional:
+          type: boolean
+          default: false
+        sort_order:
+          type: integer
+          format: int32
+          default: 0
+        notes:
+          type: string
+          nullable: true
+
+    FeeStructureItemUpdateRequest:
+      type: object
+      required:
+        - fee_structure_id
+        - fee_head_code
+        - amount
+        - frequency
+        - is_optional
+        - sort_order
+        - notes
+      additionalProperties: false
+      properties:
+        fee_structure_id:
+          type: string
+          format: uuid
+        fee_head_code:
+          type: string
+        amount:
+          type: string
+        frequency:
+          type: string
+          default: "term"
+        is_optional:
+          type: boolean
+          default: false
+        sort_order:
+          type: integer
+          format: int32
+          default: 0
+        notes:
+          type: string
+          nullable: true
+
+    FeeStructureItemResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - fee_structure_item_id
+        - fee_structure_id
+        - fee_head_code
+        - amount
+        - frequency
+        - is_optional
+        - sort_order
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        fee_structure_item_id:
+          type: string
+          format: uuid
+          readOnly: true
+        fee_structure_id:
+          type: string
+          format: uuid
+        fee_head_code:
+          type: string
+        amount:
+          type: string
+        frequency:
+          type: string
+          default: "term"
+        is_optional:
+          type: boolean
+          default: false
+        sort_order:
+          type: integer
+          format: int32
+          default: 0
+        notes:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

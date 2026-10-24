@@ -1,0 +1,27 @@
+
+export type ProgramResponse = 
+{
+  id: number
+  public_id: string
+  record_code: string
+  program_id: string
+  campus_id: string
+  department_id?: (string) | null
+  grading_scheme_id: string
+  code: string
+  name: string
+  level: string
+  is_credit_based: boolean
+  award_title?: (string) | null
+  duration_terms?: (number) | null
+  total_credits_required?: (number) | null
+  min_credits_per_term?: (number) | null
+  max_credits_per_term?: (number) | null
+  description?: (string) | null
+  is_active: boolean
+  created_at: string
+  created_by?: (string) | null
+  updated_at: string
+  updated_by?: (string) | null
+  deleted_at?: (string) | null
+}

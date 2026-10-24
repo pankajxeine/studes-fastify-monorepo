@@ -1,0 +1,264 @@
+openapi: 3.0.0
+x-sql-table: org_department
+info:
+  title: DepartmentResponse API
+  version: 1.0.0
+paths:
+  /department:
+    get:
+      operationId: listDepartment
+      summary: Get all department
+      responses:
+        '200':
+          description: List of department
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DepartmentResponse'
+    post:
+      operationId: createDepartment
+      summary: Create a new department
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DepartmentRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DepartmentResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /department/{id}:
+    get:
+      operationId: getDepartmentById
+      summary: Get department by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: department object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DepartmentResponse'
+        '404':
+          description: department not found
+    put:
+      operationId: updateDepartment
+      summary: Update department by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DepartmentUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DepartmentResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: department not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteDepartment
+      summary: Delete department by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: department not found
+components:
+  schemas:
+
+    DepartmentRequest:
+      type: object
+      required:
+        - code
+        - name
+        - kind
+      additionalProperties: false
+      properties:
+        campus_id:
+          type: string
+          format: uuid
+          nullable: true
+        parent_department_id:
+          type: string
+          format: uuid
+          nullable: true
+        code:
+          type: string
+          maxLength: 20
+        name:
+          type: string
+        kind:
+          type: string
+        head_staff_id:
+          type: string
+          format: uuid
+          nullable: true
+        email:
+          type: string
+          nullable: true
+        phone:
+          type: string
+          nullable: true
+        is_active:
+          type: boolean
+          default: true
+
+    DepartmentUpdateRequest:
+      type: object
+      required:
+        - campus_id
+        - parent_department_id
+        - code
+        - name
+        - kind
+        - head_staff_id
+        - email
+        - phone
+        - is_active
+      additionalProperties: false
+      properties:
+        campus_id:
+          type: string
+          format: uuid
+          nullable: true
+        parent_department_id:
+          type: string
+          format: uuid
+          nullable: true
+        code:
+          type: string
+          maxLength: 20
+        name:
+          type: string
+        kind:
+          type: string
+        head_staff_id:
+          type: string
+          format: uuid
+          nullable: true
+        email:
+          type: string
+          nullable: true
+        phone:
+          type: string
+          nullable: true
+        is_active:
+          type: boolean
+          default: true
+
+    DepartmentResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - department_id
+        - code
+        - name
+        - kind
+        - is_active
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        department_id:
+          type: string
+          format: uuid
+          readOnly: true
+        campus_id:
+          type: string
+          format: uuid
+          nullable: true
+        parent_department_id:
+          type: string
+          format: uuid
+          nullable: true
+        code:
+          type: string
+          maxLength: 20
+        name:
+          type: string
+        kind:
+          type: string
+        head_staff_id:
+          type: string
+          format: uuid
+          nullable: true
+        email:
+          type: string
+          nullable: true
+        phone:
+          type: string
+          nullable: true
+        is_active:
+          type: boolean
+          default: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

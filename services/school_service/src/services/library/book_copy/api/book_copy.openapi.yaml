@@ -1,0 +1,332 @@
+openapi: 3.0.0
+x-sql-table: lib_book_copy
+info:
+  title: BookCopyResponse API
+  version: 1.0.0
+paths:
+  /book_copy:
+    get:
+      operationId: listBookCopy
+      summary: Get all book_copy
+      responses:
+        '200':
+          description: List of book_copy
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BookCopyResponse'
+    post:
+      operationId: createBookCopy
+      summary: Create a new book_copy
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookCopyRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookCopyResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /book_copy/{id}:
+    get:
+      operationId: getBookCopyById
+      summary: Get book_copy by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: book_copy object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookCopyResponse'
+        '404':
+          description: book_copy not found
+    put:
+      operationId: updateBookCopy
+      summary: Update book_copy by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookCopyUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookCopyResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: book_copy not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteBookCopy
+      summary: Delete book_copy by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: book_copy not found
+components:
+  schemas:
+
+    BookCopyRequest:
+      type: object
+      required:
+        - book_id
+        - campus_id
+        - accession_no
+        - barcode
+        - acquired_on
+      additionalProperties: false
+      properties:
+        book_id:
+          type: string
+          format: uuid
+        campus_id:
+          type: string
+          format: uuid
+        room_id:
+          type: string
+          format: uuid
+          nullable: true
+        accession_no:
+          type: string
+          maxLength: 30
+        barcode:
+          type: string
+          maxLength: 40
+        shelf_location:
+          type: string
+          nullable: true
+          maxLength: 40
+        status:
+          type: string
+          default: "available"
+        is_loanable:
+          type: boolean
+          default: true
+        acquired_on:
+          type: string
+          format: date
+        acquisition_source:
+          type: string
+          maxLength: 12
+          default: "purchase"
+        price_amount:
+          type: string
+          nullable: true
+        vendor_id:
+          type: string
+          format: uuid
+          nullable: true
+        condition_note:
+          type: string
+          nullable: true
+        withdrawn_on:
+          type: string
+          format: date
+          nullable: true
+
+    BookCopyUpdateRequest:
+      type: object
+      required:
+        - book_id
+        - campus_id
+        - room_id
+        - accession_no
+        - barcode
+        - shelf_location
+        - status
+        - is_loanable
+        - acquired_on
+        - acquisition_source
+        - price_amount
+        - vendor_id
+        - condition_note
+        - withdrawn_on
+      additionalProperties: false
+      properties:
+        book_id:
+          type: string
+          format: uuid
+        campus_id:
+          type: string
+          format: uuid
+        room_id:
+          type: string
+          format: uuid
+          nullable: true
+        accession_no:
+          type: string
+          maxLength: 30
+        barcode:
+          type: string
+          maxLength: 40
+        shelf_location:
+          type: string
+          nullable: true
+          maxLength: 40
+        status:
+          type: string
+          default: "available"
+        is_loanable:
+          type: boolean
+          default: true
+        acquired_on:
+          type: string
+          format: date
+        acquisition_source:
+          type: string
+          maxLength: 12
+          default: "purchase"
+        price_amount:
+          type: string
+          nullable: true
+        vendor_id:
+          type: string
+          format: uuid
+          nullable: true
+        condition_note:
+          type: string
+          nullable: true
+        withdrawn_on:
+          type: string
+          format: date
+          nullable: true
+
+    BookCopyResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - book_copy_id
+        - book_id
+        - campus_id
+        - accession_no
+        - barcode
+        - status
+        - is_loanable
+        - acquired_on
+        - acquisition_source
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        book_copy_id:
+          type: string
+          format: uuid
+          readOnly: true
+        book_id:
+          type: string
+          format: uuid
+        campus_id:
+          type: string
+          format: uuid
+        room_id:
+          type: string
+          format: uuid
+          nullable: true
+        accession_no:
+          type: string
+          maxLength: 30
+        barcode:
+          type: string
+          maxLength: 40
+        shelf_location:
+          type: string
+          nullable: true
+          maxLength: 40
+        status:
+          type: string
+          default: "available"
+        is_loanable:
+          type: boolean
+          default: true
+        acquired_on:
+          type: string
+          format: date
+        acquisition_source:
+          type: string
+          maxLength: 12
+          default: "purchase"
+        price_amount:
+          type: string
+          nullable: true
+        vendor_id:
+          type: string
+          format: uuid
+          nullable: true
+        condition_note:
+          type: string
+          nullable: true
+        withdrawn_on:
+          type: string
+          format: date
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

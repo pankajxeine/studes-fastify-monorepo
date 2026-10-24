@@ -1,0 +1,270 @@
+openapi: 3.0.0
+x-sql-table: onboarding_kyc_document
+info:
+  title: KycDocumentResponse API
+  version: 1.0.0
+paths:
+  /kyc_document:
+    get:
+      operationId: listKycDocument
+      summary: Get all kyc_document
+      responses:
+        '200':
+          description: List of kyc_document
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/KycDocumentResponse'
+    post:
+      operationId: createKycDocument
+      summary: Create a new kyc_document
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KycDocumentRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KycDocumentResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /kyc_document/{id}:
+    get:
+      operationId: getKycDocumentById
+      summary: Get kyc_document by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: kyc_document object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KycDocumentResponse'
+        '404':
+          description: kyc_document not found
+    put:
+      operationId: updateKycDocument
+      summary: Update kyc_document by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KycDocumentUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KycDocumentResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: kyc_document not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteKycDocument
+      summary: Delete kyc_document by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: kyc_document not found
+components:
+  schemas:
+
+    KycDocumentRequest:
+      type: object
+      required:
+        - account_id
+        - doc_type
+        - storage_ref
+      additionalProperties: false
+      properties:
+        account_id:
+          type: string
+          format: uuid
+        request_id:
+          type: string
+          format: uuid
+          nullable: true
+        doc_type:
+          type: string
+        storage_ref:
+          type: string
+        status:
+          type: string
+          maxLength: 10
+          default: "pending"
+        verified_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        verified_at:
+          type: string
+          format: date-time
+          nullable: true
+        rejection_reason:
+          type: string
+          nullable: true
+        expires_on:
+          type: string
+          format: date
+          nullable: true
+
+    KycDocumentUpdateRequest:
+      type: object
+      required:
+        - account_id
+        - request_id
+        - doc_type
+        - storage_ref
+        - status
+        - verified_by_user_id
+        - verified_at
+        - rejection_reason
+        - expires_on
+      additionalProperties: false
+      properties:
+        account_id:
+          type: string
+          format: uuid
+        request_id:
+          type: string
+          format: uuid
+          nullable: true
+        doc_type:
+          type: string
+        storage_ref:
+          type: string
+        status:
+          type: string
+          maxLength: 10
+          default: "pending"
+        verified_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        verified_at:
+          type: string
+          format: date-time
+          nullable: true
+        rejection_reason:
+          type: string
+          nullable: true
+        expires_on:
+          type: string
+          format: date
+          nullable: true
+
+    KycDocumentResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - kyc_document_id
+        - account_id
+        - doc_type
+        - storage_ref
+        - status
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        kyc_document_id:
+          type: string
+          format: uuid
+          readOnly: true
+        account_id:
+          type: string
+          format: uuid
+        request_id:
+          type: string
+          format: uuid
+          nullable: true
+        doc_type:
+          type: string
+        storage_ref:
+          type: string
+        status:
+          type: string
+          maxLength: 10
+          default: "pending"
+        verified_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        verified_at:
+          type: string
+          format: date-time
+          nullable: true
+        rejection_reason:
+          type: string
+          nullable: true
+        expires_on:
+          type: string
+          format: date
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

@@ -1,0 +1,233 @@
+openapi: 3.0.0
+x-sql-table: disp_incident_category
+info:
+  title: IncidentCategoryResponse API
+  version: 1.0.0
+paths:
+  /incident_category:
+    get:
+      operationId: listIncidentCategory
+      summary: Get all incident_category
+      responses:
+        '200':
+          description: List of incident_category
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/IncidentCategoryResponse'
+    post:
+      operationId: createIncidentCategory
+      summary: Create a new incident_category
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IncidentCategoryRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IncidentCategoryResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /incident_category/{id}:
+    get:
+      operationId: getIncidentCategoryById
+      summary: Get incident_category by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: incident_category object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IncidentCategoryResponse'
+        '404':
+          description: incident_category not found
+    put:
+      operationId: updateIncidentCategory
+      summary: Update incident_category by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IncidentCategoryUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IncidentCategoryResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: incident_category not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteIncidentCategory
+      summary: Delete incident_category by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: incident_category not found
+components:
+  schemas:
+
+    IncidentCategoryRequest:
+      type: object
+      required:
+        - name
+      additionalProperties: false
+      properties:
+        incident_category_code:
+          type: string
+          nullable: true
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        severity:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 5
+          default: 1
+        sort_order:
+          type: integer
+          format: int32
+          default: 0
+        is_active:
+          type: boolean
+          default: true
+
+    IncidentCategoryUpdateRequest:
+      type: object
+      required:
+        - incident_category_code
+        - name
+        - description
+        - severity
+        - sort_order
+        - is_active
+      additionalProperties: false
+      properties:
+        incident_category_code:
+          type: string
+          nullable: true
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        severity:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 5
+          default: 1
+        sort_order:
+          type: integer
+          format: int32
+          default: 0
+        is_active:
+          type: boolean
+          default: true
+
+    IncidentCategoryResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - name
+        - severity
+        - sort_order
+        - is_active
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        incident_category_code:
+          type: string
+          nullable: true
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        severity:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 5
+          default: 1
+        sort_order:
+          type: integer
+          format: int32
+          default: 0
+        is_active:
+          type: boolean
+          default: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

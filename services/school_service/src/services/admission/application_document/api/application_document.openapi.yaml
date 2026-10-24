@@ -1,0 +1,284 @@
+openapi: 3.0.0
+x-sql-table: admis_application_document
+info:
+  title: ApplicationDocumentResponse API
+  version: 1.0.0
+paths:
+  /application_document:
+    get:
+      operationId: listApplicationDocument
+      summary: Get all application_document
+      responses:
+        '200':
+          description: List of application_document
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApplicationDocumentResponse'
+    post:
+      operationId: createApplicationDocument
+      summary: Create a new application_document
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApplicationDocumentRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationDocumentResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /application_document/{id}:
+    get:
+      operationId: getApplicationDocumentById
+      summary: Get application_document by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: application_document object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationDocumentResponse'
+        '404':
+          description: application_document not found
+    put:
+      operationId: updateApplicationDocument
+      summary: Update application_document by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApplicationDocumentUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationDocumentResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: application_document not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteApplicationDocument
+      summary: Delete application_document by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: application_document not found
+components:
+  schemas:
+
+    ApplicationDocumentRequest:
+      type: object
+      required:
+        - application_id
+        - document_type_code
+      additionalProperties: false
+      properties:
+        application_id:
+          type: string
+          format: uuid
+        document_type_code:
+          type: string
+        file_id:
+          type: string
+          format: uuid
+          nullable: true
+        is_required:
+          type: boolean
+          default: true
+        status:
+          type: string
+          default: "pending"
+          enum:
+            - "pending"
+            - "received"
+            - "verified"
+            - "rejected"
+        received_at:
+          type: string
+          format: date-time
+          nullable: true
+        verified_at:
+          type: string
+          format: date-time
+          nullable: true
+        verified_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        rejection_reason:
+          type: string
+          nullable: true
+
+    ApplicationDocumentUpdateRequest:
+      type: object
+      required:
+        - application_id
+        - document_type_code
+        - file_id
+        - is_required
+        - status
+        - received_at
+        - verified_at
+        - verified_by_user_id
+        - rejection_reason
+      additionalProperties: false
+      properties:
+        application_id:
+          type: string
+          format: uuid
+        document_type_code:
+          type: string
+        file_id:
+          type: string
+          format: uuid
+          nullable: true
+        is_required:
+          type: boolean
+          default: true
+        status:
+          type: string
+          default: "pending"
+          enum:
+            - "pending"
+            - "received"
+            - "verified"
+            - "rejected"
+        received_at:
+          type: string
+          format: date-time
+          nullable: true
+        verified_at:
+          type: string
+          format: date-time
+          nullable: true
+        verified_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        rejection_reason:
+          type: string
+          nullable: true
+
+    ApplicationDocumentResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - application_document_id
+        - application_id
+        - document_type_code
+        - is_required
+        - status
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        application_document_id:
+          type: string
+          format: uuid
+          readOnly: true
+        application_id:
+          type: string
+          format: uuid
+        document_type_code:
+          type: string
+        file_id:
+          type: string
+          format: uuid
+          nullable: true
+        is_required:
+          type: boolean
+          default: true
+        status:
+          type: string
+          default: "pending"
+          enum:
+            - "pending"
+            - "received"
+            - "verified"
+            - "rejected"
+        received_at:
+          type: string
+          format: date-time
+          nullable: true
+        verified_at:
+          type: string
+          format: date-time
+          nullable: true
+        verified_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        rejection_reason:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

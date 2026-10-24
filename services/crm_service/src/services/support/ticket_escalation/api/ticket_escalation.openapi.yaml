@@ -1,0 +1,174 @@
+openapi: 3.0.0
+x-sql-table: support_ticket_escalation
+info:
+  title: TicketEscalationResponse API
+  version: 1.0.0
+paths:
+  /ticket_escalation:
+    get:
+      operationId: listTicketEscalation
+      summary: Get all ticket_escalation
+      responses:
+        '200':
+          description: List of ticket_escalation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TicketEscalationResponse'
+    post:
+      operationId: createTicketEscalation
+      summary: Create a new ticket_escalation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TicketEscalationRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TicketEscalationResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /ticket_escalation/{id}:
+    get:
+      operationId: getTicketEscalationById
+      summary: Get ticket_escalation by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: ticket_escalation object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TicketEscalationResponse'
+        '404':
+          description: ticket_escalation not found
+    put:
+      operationId: updateTicketEscalation
+      summary: Update ticket_escalation by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TicketEscalationUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TicketEscalationResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: ticket_escalation not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteTicketEscalation
+      summary: Delete ticket_escalation by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: ticket_escalation not found
+components:
+  schemas:
+
+    TicketEscalationRequest:
+      type: object
+      required:
+        - ticket_id
+        - escalation_rule_id
+      additionalProperties: false
+      properties:
+        ticket_id:
+          type: string
+          format: uuid
+        escalation_rule_id:
+          type: string
+          format: uuid
+        escalated_at:
+          type: string
+          format: date-time
+
+    TicketEscalationUpdateRequest:
+      type: object
+      required:
+        - ticket_id
+        - escalation_rule_id
+        - escalated_at
+      additionalProperties: false
+      properties:
+        ticket_id:
+          type: string
+          format: uuid
+        escalation_rule_id:
+          type: string
+          format: uuid
+        escalated_at:
+          type: string
+          format: date-time
+
+    TicketEscalationResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - ticket_id
+        - escalation_rule_id
+        - escalated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        ticket_id:
+          type: string
+          format: uuid
+        escalation_rule_id:
+          type: string
+          format: uuid
+        escalated_at:
+          type: string
+          format: date-time
+  

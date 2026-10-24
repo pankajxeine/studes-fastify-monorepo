@@ -1,0 +1,424 @@
+openapi: 3.0.0
+x-sql-table: visitor_guest_lecture
+info:
+  title: GuestLectureResponse API
+  version: 1.0.0
+paths:
+  /guest_lecture:
+    get:
+      operationId: listGuestLecture
+      summary: Get all guest_lecture
+      responses:
+        '200':
+          description: List of guest_lecture
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GuestLectureResponse'
+    post:
+      operationId: createGuestLecture
+      summary: Create a new guest_lecture
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GuestLectureRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GuestLectureResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /guest_lecture/{id}:
+    get:
+      operationId: getGuestLectureById
+      summary: Get guest_lecture by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: guest_lecture object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GuestLectureResponse'
+        '404':
+          description: guest_lecture not found
+    put:
+      operationId: updateGuestLecture
+      summary: Update guest_lecture by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GuestLectureUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GuestLectureResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: guest_lecture not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteGuestLecture
+      summary: Delete guest_lecture by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: guest_lecture not found
+components:
+  schemas:
+
+    GuestLectureRequest:
+      type: object
+      required:
+        - guest_id
+        - campus_id
+        - coordinator_staff_id
+        - title
+        - starts_at
+        - ends_at
+      additionalProperties: false
+      properties:
+        guest_id:
+          type: string
+          format: uuid
+        campus_id:
+          type: string
+          format: uuid
+        course_offering_id:
+          type: string
+          format: uuid
+          nullable: true
+        event_id:
+          type: string
+          format: uuid
+          nullable: true
+        coordinator_staff_id:
+          type: string
+          format: uuid
+        room_id:
+          type: string
+          format: uuid
+          nullable: true
+        visit_id:
+          type: string
+          format: uuid
+          nullable: true
+        title:
+          type: string
+        abstract:
+          type: string
+          nullable: true
+        starts_at:
+          type: string
+          format: date-time
+        ends_at:
+          type: string
+          format: date-time
+        lecture_period:
+          type: string
+          nullable: true
+        status:
+          type: string
+          default: "proposed"
+          enum:
+            - "proposed"
+            - "confirmed"
+            - "completed"
+            - "cancelled"
+        expected_audience:
+          type: integer
+          format: int32
+          nullable: true
+        actual_attendance:
+          type: integer
+          format: int32
+          nullable: true
+        honorarium_amount:
+          type: string
+          default: 0
+        honorarium_status:
+          type: string
+          maxLength: 20
+          default: "not_applicable"
+        poster_file_id:
+          type: string
+          format: uuid
+          nullable: true
+        feedback_rating:
+          type: number
+          format: double
+          nullable: true
+          minimum: 1
+          maximum: 5
+        cancelled_reason:
+          type: string
+          nullable: true
+
+    GuestLectureUpdateRequest:
+      type: object
+      required:
+        - guest_id
+        - campus_id
+        - course_offering_id
+        - event_id
+        - coordinator_staff_id
+        - room_id
+        - visit_id
+        - title
+        - abstract
+        - starts_at
+        - ends_at
+        - lecture_period
+        - status
+        - expected_audience
+        - actual_attendance
+        - honorarium_amount
+        - honorarium_status
+        - poster_file_id
+        - feedback_rating
+        - cancelled_reason
+      additionalProperties: false
+      properties:
+        guest_id:
+          type: string
+          format: uuid
+        campus_id:
+          type: string
+          format: uuid
+        course_offering_id:
+          type: string
+          format: uuid
+          nullable: true
+        event_id:
+          type: string
+          format: uuid
+          nullable: true
+        coordinator_staff_id:
+          type: string
+          format: uuid
+        room_id:
+          type: string
+          format: uuid
+          nullable: true
+        visit_id:
+          type: string
+          format: uuid
+          nullable: true
+        title:
+          type: string
+        abstract:
+          type: string
+          nullable: true
+        starts_at:
+          type: string
+          format: date-time
+        ends_at:
+          type: string
+          format: date-time
+        lecture_period:
+          type: string
+          nullable: true
+        status:
+          type: string
+          default: "proposed"
+          enum:
+            - "proposed"
+            - "confirmed"
+            - "completed"
+            - "cancelled"
+        expected_audience:
+          type: integer
+          format: int32
+          nullable: true
+        actual_attendance:
+          type: integer
+          format: int32
+          nullable: true
+        honorarium_amount:
+          type: string
+          default: 0
+        honorarium_status:
+          type: string
+          maxLength: 20
+          default: "not_applicable"
+        poster_file_id:
+          type: string
+          format: uuid
+          nullable: true
+        feedback_rating:
+          type: number
+          format: double
+          nullable: true
+          minimum: 1
+          maximum: 5
+        cancelled_reason:
+          type: string
+          nullable: true
+
+    GuestLectureResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - guest_lecture_id
+        - guest_id
+        - campus_id
+        - coordinator_staff_id
+        - title
+        - starts_at
+        - ends_at
+        - status
+        - honorarium_amount
+        - honorarium_status
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        guest_lecture_id:
+          type: string
+          format: uuid
+          readOnly: true
+        guest_id:
+          type: string
+          format: uuid
+        campus_id:
+          type: string
+          format: uuid
+        course_offering_id:
+          type: string
+          format: uuid
+          nullable: true
+        event_id:
+          type: string
+          format: uuid
+          nullable: true
+        coordinator_staff_id:
+          type: string
+          format: uuid
+        room_id:
+          type: string
+          format: uuid
+          nullable: true
+        visit_id:
+          type: string
+          format: uuid
+          nullable: true
+        title:
+          type: string
+        abstract:
+          type: string
+          nullable: true
+        starts_at:
+          type: string
+          format: date-time
+        ends_at:
+          type: string
+          format: date-time
+        lecture_period:
+          type: string
+          nullable: true
+        status:
+          type: string
+          default: "proposed"
+          enum:
+            - "proposed"
+            - "confirmed"
+            - "completed"
+            - "cancelled"
+        expected_audience:
+          type: integer
+          format: int32
+          nullable: true
+        actual_attendance:
+          type: integer
+          format: int32
+          nullable: true
+        honorarium_amount:
+          type: string
+          default: 0
+        honorarium_status:
+          type: string
+          maxLength: 20
+          default: "not_applicable"
+        poster_file_id:
+          type: string
+          format: uuid
+          nullable: true
+        feedback_rating:
+          type: number
+          format: double
+          nullable: true
+          minimum: 1
+          maximum: 5
+        cancelled_reason:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

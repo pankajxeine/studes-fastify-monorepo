@@ -1,0 +1,212 @@
+openapi: 3.0.0
+x-sql-table: comms_notice_read
+info:
+  title: NoticeReadResponse API
+  version: 1.0.0
+paths:
+  /notice_read:
+    get:
+      operationId: listNoticeRead
+      summary: Get all notice_read
+      responses:
+        '200':
+          description: List of notice_read
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/NoticeReadResponse'
+    post:
+      operationId: createNoticeRead
+      summary: Create a new notice_read
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NoticeReadRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoticeReadResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /notice_read/{id}:
+    get:
+      operationId: getNoticeReadById
+      summary: Get notice_read by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: notice_read object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoticeReadResponse'
+        '404':
+          description: notice_read not found
+    put:
+      operationId: updateNoticeRead
+      summary: Update notice_read by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NoticeReadUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoticeReadResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: notice_read not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteNoticeRead
+      summary: Delete notice_read by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: notice_read not found
+components:
+  schemas:
+
+    NoticeReadRequest:
+      type: object
+      required:
+        - notice_id
+        - app_user_id
+      additionalProperties: false
+      properties:
+        notice_id:
+          type: string
+          format: uuid
+        app_user_id:
+          type: string
+          format: uuid
+        read_at:
+          type: string
+          format: date-time
+        acknowledged_at:
+          type: string
+          format: date-time
+          nullable: true
+
+    NoticeReadUpdateRequest:
+      type: object
+      required:
+        - notice_id
+        - app_user_id
+        - read_at
+        - acknowledged_at
+      additionalProperties: false
+      properties:
+        notice_id:
+          type: string
+          format: uuid
+        app_user_id:
+          type: string
+          format: uuid
+        read_at:
+          type: string
+          format: date-time
+        acknowledged_at:
+          type: string
+          format: date-time
+          nullable: true
+
+    NoticeReadResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - notice_read_id
+        - notice_id
+        - app_user_id
+        - read_at
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        notice_read_id:
+          type: string
+          format: uuid
+          readOnly: true
+        notice_id:
+          type: string
+          format: uuid
+        app_user_id:
+          type: string
+          format: uuid
+        read_at:
+          type: string
+          format: date-time
+        acknowledged_at:
+          type: string
+          format: date-time
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

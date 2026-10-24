@@ -1,0 +1,408 @@
+openapi: 3.0.0
+x-sql-table: lms_assignment
+info:
+  title: AssignmentResponse API
+  version: 1.0.0
+paths:
+  /assignment:
+    get:
+      operationId: listAssignment
+      summary: Get all assignment
+      responses:
+        '200':
+          description: List of assignment
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AssignmentResponse'
+    post:
+      operationId: createAssignment
+      summary: Create a new assignment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssignmentRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssignmentResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /assignment/{id}:
+    get:
+      operationId: getAssignmentById
+      summary: Get assignment by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: assignment object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssignmentResponse'
+        '404':
+          description: assignment not found
+    put:
+      operationId: updateAssignment
+      summary: Update assignment by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssignmentUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssignmentResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: assignment not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteAssignment
+      summary: Delete assignment by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: assignment not found
+components:
+  schemas:
+
+    AssignmentRequest:
+      type: object
+      required:
+        - course_offering_id
+        - created_by_staff_id
+        - title
+        - instructions
+        - max_marks
+        - due_at
+      additionalProperties: false
+      properties:
+        course_offering_id:
+          type: string
+          format: uuid
+        created_by_staff_id:
+          type: string
+          format: uuid
+        assessment_type_code:
+          type: string
+          default: "assignment"
+        title:
+          type: string
+        instructions:
+          type: string
+        attachment_file_id:
+          type: string
+          format: uuid
+          nullable: true
+        submission_mode:
+          type: string
+          default: "file"
+          enum:
+            - "file"
+            - "text"
+            - "file_or_text"
+            - "offline"
+        max_marks:
+          type: number
+          format: double
+        published_at:
+          type: string
+          format: date-time
+          nullable: true
+        due_at:
+          type: string
+          format: date-time
+        allow_late:
+          type: boolean
+          default: false
+        late_until:
+          type: string
+          format: date-time
+          nullable: true
+        late_penalty_pct:
+          type: string
+          default: 0
+        max_attempts:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 5
+          default: 1
+        is_group_work:
+          type: boolean
+          default: false
+        status:
+          type: string
+          default: "draft"
+          enum:
+            - "draft"
+            - "published"
+            - "closed"
+            - "cancelled"
+        closed_at:
+          type: string
+          format: date-time
+          nullable: true
+        cancelled_reason:
+          type: string
+          nullable: true
+
+    AssignmentUpdateRequest:
+      type: object
+      required:
+        - course_offering_id
+        - created_by_staff_id
+        - assessment_type_code
+        - title
+        - instructions
+        - attachment_file_id
+        - submission_mode
+        - max_marks
+        - published_at
+        - due_at
+        - allow_late
+        - late_until
+        - late_penalty_pct
+        - max_attempts
+        - is_group_work
+        - status
+        - closed_at
+        - cancelled_reason
+      additionalProperties: false
+      properties:
+        course_offering_id:
+          type: string
+          format: uuid
+        created_by_staff_id:
+          type: string
+          format: uuid
+        assessment_type_code:
+          type: string
+          default: "assignment"
+        title:
+          type: string
+        instructions:
+          type: string
+        attachment_file_id:
+          type: string
+          format: uuid
+          nullable: true
+        submission_mode:
+          type: string
+          default: "file"
+          enum:
+            - "file"
+            - "text"
+            - "file_or_text"
+            - "offline"
+        max_marks:
+          type: number
+          format: double
+        published_at:
+          type: string
+          format: date-time
+          nullable: true
+        due_at:
+          type: string
+          format: date-time
+        allow_late:
+          type: boolean
+          default: false
+        late_until:
+          type: string
+          format: date-time
+          nullable: true
+        late_penalty_pct:
+          type: string
+          default: 0
+        max_attempts:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 5
+          default: 1
+        is_group_work:
+          type: boolean
+          default: false
+        status:
+          type: string
+          default: "draft"
+          enum:
+            - "draft"
+            - "published"
+            - "closed"
+            - "cancelled"
+        closed_at:
+          type: string
+          format: date-time
+          nullable: true
+        cancelled_reason:
+          type: string
+          nullable: true
+
+    AssignmentResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - assignment_id
+        - course_offering_id
+        - created_by_staff_id
+        - assessment_type_code
+        - title
+        - instructions
+        - submission_mode
+        - max_marks
+        - due_at
+        - allow_late
+        - late_penalty_pct
+        - max_attempts
+        - is_group_work
+        - status
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        assignment_id:
+          type: string
+          format: uuid
+          readOnly: true
+        course_offering_id:
+          type: string
+          format: uuid
+        created_by_staff_id:
+          type: string
+          format: uuid
+        assessment_type_code:
+          type: string
+          default: "assignment"
+        title:
+          type: string
+        instructions:
+          type: string
+        attachment_file_id:
+          type: string
+          format: uuid
+          nullable: true
+        submission_mode:
+          type: string
+          default: "file"
+          enum:
+            - "file"
+            - "text"
+            - "file_or_text"
+            - "offline"
+        max_marks:
+          type: number
+          format: double
+        published_at:
+          type: string
+          format: date-time
+          nullable: true
+        due_at:
+          type: string
+          format: date-time
+        allow_late:
+          type: boolean
+          default: false
+        late_until:
+          type: string
+          format: date-time
+          nullable: true
+        late_penalty_pct:
+          type: string
+          default: 0
+        max_attempts:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 5
+          default: 1
+        is_group_work:
+          type: boolean
+          default: false
+        status:
+          type: string
+          default: "draft"
+          enum:
+            - "draft"
+            - "published"
+            - "closed"
+            - "cancelled"
+        closed_at:
+          type: string
+          format: date-time
+          nullable: true
+        cancelled_reason:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

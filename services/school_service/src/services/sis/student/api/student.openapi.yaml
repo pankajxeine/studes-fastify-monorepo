@@ -1,0 +1,318 @@
+openapi: 3.0.0
+x-sql-table: sis_student
+info:
+  title: StudentResponse API
+  version: 1.0.0
+paths:
+  /student:
+    get:
+      operationId: listStudent
+      summary: Get all student
+      responses:
+        '200':
+          description: List of student
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StudentResponse'
+    post:
+      operationId: createStudent
+      summary: Create a new student
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudentRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /student/{id}:
+    get:
+      operationId: getStudentById
+      summary: Get student by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: student object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentResponse'
+        '404':
+          description: student not found
+    put:
+      operationId: updateStudent
+      summary: Update student by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudentUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: student not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteStudent
+      summary: Delete student by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: student not found
+components:
+  schemas:
+
+    StudentRequest:
+      type: object
+      required:
+        - person_id
+        - campus_id
+        - admission_no
+        - admitted_on
+        - cohort_year
+      additionalProperties: false
+      properties:
+        person_id:
+          type: string
+          format: uuid
+        campus_id:
+          type: string
+          format: uuid
+        application_id:
+          type: string
+          format: uuid
+          nullable: true
+        house_id:
+          type: string
+          format: uuid
+          nullable: true
+        admission_no:
+          type: string
+          maxLength: 30
+        admitted_on:
+          type: string
+          format: date
+        cohort_year:
+          type: integer
+          format: int32
+          minimum: 1950
+          maximum: 2100
+        status:
+          type: string
+          default: "active"
+        left_on:
+          type: string
+          format: date
+          nullable: true
+        leaving_reason:
+          type: string
+          nullable: true
+        graduated_on:
+          type: string
+          format: date
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+
+    StudentUpdateRequest:
+      type: object
+      required:
+        - person_id
+        - campus_id
+        - application_id
+        - house_id
+        - admission_no
+        - admitted_on
+        - cohort_year
+        - status
+        - left_on
+        - leaving_reason
+        - graduated_on
+        - notes
+      additionalProperties: false
+      properties:
+        person_id:
+          type: string
+          format: uuid
+        campus_id:
+          type: string
+          format: uuid
+        application_id:
+          type: string
+          format: uuid
+          nullable: true
+        house_id:
+          type: string
+          format: uuid
+          nullable: true
+        admission_no:
+          type: string
+          maxLength: 30
+        admitted_on:
+          type: string
+          format: date
+        cohort_year:
+          type: integer
+          format: int32
+          minimum: 1950
+          maximum: 2100
+        status:
+          type: string
+          default: "active"
+        left_on:
+          type: string
+          format: date
+          nullable: true
+        leaving_reason:
+          type: string
+          nullable: true
+        graduated_on:
+          type: string
+          format: date
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+
+    StudentResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - student_id
+        - person_id
+        - campus_id
+        - admission_no
+        - admitted_on
+        - cohort_year
+        - status
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        student_id:
+          type: string
+          format: uuid
+          readOnly: true
+        person_id:
+          type: string
+          format: uuid
+        campus_id:
+          type: string
+          format: uuid
+        application_id:
+          type: string
+          format: uuid
+          nullable: true
+        house_id:
+          type: string
+          format: uuid
+          nullable: true
+        admission_no:
+          type: string
+          maxLength: 30
+        admitted_on:
+          type: string
+          format: date
+        cohort_year:
+          type: integer
+          format: int32
+          minimum: 1950
+          maximum: 2100
+        status:
+          type: string
+          default: "active"
+        left_on:
+          type: string
+          format: date
+          nullable: true
+        leaving_reason:
+          type: string
+          nullable: true
+        graduated_on:
+          type: string
+          format: date
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        deleted_at:
+          type: string
+          format: date-time
+          nullable: true
+          readOnly: true
+  

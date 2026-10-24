@@ -1,0 +1,318 @@
+openapi: 3.0.0
+x-sql-table: audit_activity_log
+info:
+  title: ActivityLogResponse API
+  version: 1.0.0
+paths:
+  /activity_log:
+    get:
+      operationId: listActivityLog
+      summary: Get all activity_log
+      responses:
+        '200':
+          description: List of activity_log
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ActivityLogResponse'
+    post:
+      operationId: createActivityLog
+      summary: Create a new activity_log
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ActivityLogRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActivityLogResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /activity_log/{id}:
+    get:
+      operationId: getActivityLogById
+      summary: Get activity_log by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: activity_log object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActivityLogResponse'
+        '404':
+          description: activity_log not found
+    put:
+      operationId: updateActivityLog
+      summary: Update activity_log by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ActivityLogUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActivityLogResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: activity_log not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteActivityLog
+      summary: Delete activity_log by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: activity_log not found
+components:
+  schemas:
+
+    ActivityLogRequest:
+      type: object
+      required:
+        - activity_type
+        - description
+      additionalProperties: false
+      properties:
+        occurred_at:
+          type: string
+          format: date-time
+        app_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        username:
+          type: string
+          nullable: true
+        campus_id:
+          type: string
+          format: uuid
+          nullable: true
+        activity_type:
+          type: string
+          maxLength: 40
+        outcome:
+          type: string
+          maxLength: 10
+          default: "success"
+        module:
+          type: string
+          nullable: true
+          maxLength: 30
+        object_type:
+          type: string
+          nullable: true
+        object_id:
+          type: string
+          nullable: true
+        target_app_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        description:
+          type: string
+        details:
+          default: "{}"
+        ip_address:
+          type: string
+          nullable: true
+        user_agent:
+          type: string
+          nullable: true
+        session_id:
+          type: string
+          format: uuid
+          nullable: true
+        request_id:
+          type: string
+          nullable: true
+
+    ActivityLogUpdateRequest:
+      type: object
+      required:
+        - occurred_at
+        - app_user_id
+        - username
+        - campus_id
+        - activity_type
+        - outcome
+        - module
+        - object_type
+        - object_id
+        - target_app_user_id
+        - description
+        - details
+        - ip_address
+        - user_agent
+        - session_id
+        - request_id
+      additionalProperties: false
+      properties:
+        occurred_at:
+          type: string
+          format: date-time
+        app_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        username:
+          type: string
+          nullable: true
+        campus_id:
+          type: string
+          format: uuid
+          nullable: true
+        activity_type:
+          type: string
+          maxLength: 40
+        outcome:
+          type: string
+          maxLength: 10
+          default: "success"
+        module:
+          type: string
+          nullable: true
+          maxLength: 30
+        object_type:
+          type: string
+          nullable: true
+        object_id:
+          type: string
+          nullable: true
+        target_app_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        description:
+          type: string
+        details:
+          default: "{}"
+        ip_address:
+          type: string
+          nullable: true
+        user_agent:
+          type: string
+          nullable: true
+        session_id:
+          type: string
+          format: uuid
+          nullable: true
+        request_id:
+          type: string
+          nullable: true
+
+    ActivityLogResponse:
+      type: object
+      required:
+        - public_id
+        - record_code
+        - activity_log_id
+        - occurred_at
+        - activity_type
+        - outcome
+        - description
+        - details
+      additionalProperties: false
+      properties:
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        activity_log_id:
+          type: integer
+          format: int64
+          readOnly: true
+        occurred_at:
+          type: string
+          format: date-time
+        app_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        username:
+          type: string
+          nullable: true
+        campus_id:
+          type: string
+          format: uuid
+          nullable: true
+        activity_type:
+          type: string
+          maxLength: 40
+        outcome:
+          type: string
+          maxLength: 10
+          default: "success"
+        module:
+          type: string
+          nullable: true
+          maxLength: 30
+        object_type:
+          type: string
+          nullable: true
+        object_id:
+          type: string
+          nullable: true
+        target_app_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        description:
+          type: string
+        details:
+          default: "{}"
+        ip_address:
+          type: string
+          nullable: true
+        user_agent:
+          type: string
+          nullable: true
+        session_id:
+          type: string
+          format: uuid
+          nullable: true
+        request_id:
+          type: string
+          nullable: true
+  

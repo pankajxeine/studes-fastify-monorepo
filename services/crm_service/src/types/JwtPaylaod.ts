@@ -6,7 +6,5 @@ export interface JwtPayload {
   /** Present only for a tenant-scoped principal. */
   tenantId?: string
   tenantSlug?: string
-  /** Schema is validated server-side before being embedded in any query. */
-  tenantSchema?: string
   role: string
 }

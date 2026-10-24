@@ -1,0 +1,170 @@
+openapi: 3.0.0
+x-sql-table: cntn_meal_plan_period
+info:
+  title: MealPlanPeriodResponse API
+  version: 1.0.0
+paths:
+  /meal_plan_period:
+    get:
+      operationId: listMealPlanPeriod
+      summary: Get all meal_plan_period
+      responses:
+        '200':
+          description: List of meal_plan_period
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MealPlanPeriodResponse'
+    post:
+      operationId: createMealPlanPeriod
+      summary: Create a new meal_plan_period
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MealPlanPeriodRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MealPlanPeriodResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /meal_plan_period/{id}:
+    get:
+      operationId: getMealPlanPeriodById
+      summary: Get meal_plan_period by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: meal_plan_period object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MealPlanPeriodResponse'
+        '404':
+          description: meal_plan_period not found
+    put:
+      operationId: updateMealPlanPeriod
+      summary: Update meal_plan_period by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MealPlanPeriodUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MealPlanPeriodResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: meal_plan_period not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteMealPlanPeriod
+      summary: Delete meal_plan_period by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: meal_plan_period not found
+components:
+  schemas:
+
+    MealPlanPeriodRequest:
+      type: object
+      required:
+        - meal_plan_id
+        - meal_period_code
+      additionalProperties: false
+      properties:
+        meal_plan_id:
+          type: string
+          format: uuid
+        meal_period_code:
+          type: string
+
+    MealPlanPeriodUpdateRequest:
+      type: object
+      required:
+        - meal_plan_id
+        - meal_period_code
+      additionalProperties: false
+      properties:
+        meal_plan_id:
+          type: string
+          format: uuid
+        meal_period_code:
+          type: string
+
+    MealPlanPeriodResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - meal_plan_id
+        - meal_period_code
+        - created_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        meal_plan_id:
+          type: string
+          format: uuid
+        meal_period_code:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

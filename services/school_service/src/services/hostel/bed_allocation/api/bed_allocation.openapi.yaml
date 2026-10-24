@@ -1,0 +1,310 @@
+openapi: 3.0.0
+x-sql-table: hstl_bed_allocation
+info:
+  title: BedAllocationResponse API
+  version: 1.0.0
+paths:
+  /bed_allocation:
+    get:
+      operationId: listBedAllocation
+      summary: Get all bed_allocation
+      responses:
+        '200':
+          description: List of bed_allocation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BedAllocationResponse'
+    post:
+      operationId: createBedAllocation
+      summary: Create a new bed_allocation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BedAllocationRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BedAllocationResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /bed_allocation/{id}:
+    get:
+      operationId: getBedAllocationById
+      summary: Get bed_allocation by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: bed_allocation object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BedAllocationResponse'
+        '404':
+          description: bed_allocation not found
+    put:
+      operationId: updateBedAllocation
+      summary: Update bed_allocation by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BedAllocationUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BedAllocationResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: bed_allocation not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteBedAllocation
+      summary: Delete bed_allocation by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: bed_allocation not found
+components:
+  schemas:
+
+    BedAllocationRequest:
+      type: object
+      required:
+        - bed_id
+        - student_id
+        - academic_year_id
+        - start_date
+      additionalProperties: false
+      properties:
+        bed_id:
+          type: string
+          format: uuid
+        student_id:
+          type: string
+          format: uuid
+        academic_year_id:
+          type: string
+          format: uuid
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+          nullable: true
+        stay:
+          type: string
+          nullable: true
+        status:
+          type: string
+          default: "reserved"
+          enum:
+            - "reserved"
+            - "active"
+            - "ended"
+            - "cancelled"
+        checked_in_at:
+          type: string
+          format: date-time
+          nullable: true
+        checked_out_at:
+          type: string
+          format: date-time
+          nullable: true
+        allocated_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+
+    BedAllocationUpdateRequest:
+      type: object
+      required:
+        - bed_id
+        - student_id
+        - academic_year_id
+        - start_date
+        - end_date
+        - stay
+        - status
+        - checked_in_at
+        - checked_out_at
+        - allocated_by_user_id
+        - notes
+      additionalProperties: false
+      properties:
+        bed_id:
+          type: string
+          format: uuid
+        student_id:
+          type: string
+          format: uuid
+        academic_year_id:
+          type: string
+          format: uuid
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+          nullable: true
+        stay:
+          type: string
+          nullable: true
+        status:
+          type: string
+          default: "reserved"
+          enum:
+            - "reserved"
+            - "active"
+            - "ended"
+            - "cancelled"
+        checked_in_at:
+          type: string
+          format: date-time
+          nullable: true
+        checked_out_at:
+          type: string
+          format: date-time
+          nullable: true
+        allocated_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+
+    BedAllocationResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - bed_allocation_id
+        - bed_id
+        - student_id
+        - academic_year_id
+        - start_date
+        - status
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        bed_allocation_id:
+          type: string
+          format: uuid
+          readOnly: true
+        bed_id:
+          type: string
+          format: uuid
+        student_id:
+          type: string
+          format: uuid
+        academic_year_id:
+          type: string
+          format: uuid
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+          nullable: true
+        stay:
+          type: string
+          nullable: true
+        status:
+          type: string
+          default: "reserved"
+          enum:
+            - "reserved"
+            - "active"
+            - "ended"
+            - "cancelled"
+        checked_in_at:
+          type: string
+          format: date-time
+          nullable: true
+        checked_out_at:
+          type: string
+          format: date-time
+          nullable: true
+        allocated_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

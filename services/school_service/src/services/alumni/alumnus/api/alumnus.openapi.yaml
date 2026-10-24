@@ -1,0 +1,443 @@
+openapi: 3.0.0
+x-sql-table: alumni_alumnus
+info:
+  title: AlumnusResponse API
+  version: 1.0.0
+paths:
+  /alumnus:
+    get:
+      operationId: listAlumnus
+      summary: Get all alumnus
+      responses:
+        '200':
+          description: List of alumnus
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AlumnusResponse'
+    post:
+      operationId: createAlumnus
+      summary: Create a new alumnus
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlumnusRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlumnusResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /alumnus/{id}:
+    get:
+      operationId: getAlumnusById
+      summary: Get alumnus by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: alumnus object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlumnusResponse'
+        '404':
+          description: alumnus not found
+    put:
+      operationId: updateAlumnus
+      summary: Update alumnus by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlumnusUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlumnusResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: alumnus not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteAlumnus
+      summary: Delete alumnus by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: alumnus not found
+components:
+  schemas:
+
+    AlumnusRequest:
+      type: object
+      required:
+        - person_id
+        - alumni_no
+        - graduation_year
+      additionalProperties: false
+      properties:
+        person_id:
+          type: string
+          format: uuid
+        student_id:
+          type: string
+          format: uuid
+          nullable: true
+        program_id:
+          type: string
+          format: uuid
+          nullable: true
+        campus_id:
+          type: string
+          format: uuid
+          nullable: true
+        alumni_no:
+          type: string
+          maxLength: 30
+        graduation_year:
+          type: integer
+          format: int32
+          minimum: 1950
+          maximum: 2100
+        graduated_on:
+          type: string
+          format: date
+          nullable: true
+        degree_title:
+          type: string
+          nullable: true
+        final_cgpa:
+          type: number
+          format: double
+          nullable: true
+          minimum: 0
+          maximum: 10
+        honours:
+          type: string
+          nullable: true
+        current_city:
+          type: string
+          nullable: true
+        current_country_code:
+          type: string
+          nullable: true
+          maxLength: 2
+        industry:
+          type: string
+          nullable: true
+        linkedin_url:
+          type: string
+          nullable: true
+        bio:
+          type: string
+          nullable: true
+        membership_status:
+          type: string
+          maxLength: 20
+          default: "unverified"
+        is_directory_visible:
+          type: boolean
+          default: true
+        can_contact:
+          type: boolean
+          default: true
+        is_mentor_available:
+          type: boolean
+          default: false
+        max_mentees:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 10
+          default: 2
+        verified_at:
+          type: string
+          format: date-time
+          nullable: true
+        verified_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+
+    AlumnusUpdateRequest:
+      type: object
+      required:
+        - person_id
+        - student_id
+        - program_id
+        - campus_id
+        - alumni_no
+        - graduation_year
+        - graduated_on
+        - degree_title
+        - final_cgpa
+        - honours
+        - current_city
+        - current_country_code
+        - industry
+        - linkedin_url
+        - bio
+        - membership_status
+        - is_directory_visible
+        - can_contact
+        - is_mentor_available
+        - max_mentees
+        - verified_at
+        - verified_by_user_id
+      additionalProperties: false
+      properties:
+        person_id:
+          type: string
+          format: uuid
+        student_id:
+          type: string
+          format: uuid
+          nullable: true
+        program_id:
+          type: string
+          format: uuid
+          nullable: true
+        campus_id:
+          type: string
+          format: uuid
+          nullable: true
+        alumni_no:
+          type: string
+          maxLength: 30
+        graduation_year:
+          type: integer
+          format: int32
+          minimum: 1950
+          maximum: 2100
+        graduated_on:
+          type: string
+          format: date
+          nullable: true
+        degree_title:
+          type: string
+          nullable: true
+        final_cgpa:
+          type: number
+          format: double
+          nullable: true
+          minimum: 0
+          maximum: 10
+        honours:
+          type: string
+          nullable: true
+        current_city:
+          type: string
+          nullable: true
+        current_country_code:
+          type: string
+          nullable: true
+          maxLength: 2
+        industry:
+          type: string
+          nullable: true
+        linkedin_url:
+          type: string
+          nullable: true
+        bio:
+          type: string
+          nullable: true
+        membership_status:
+          type: string
+          maxLength: 20
+          default: "unverified"
+        is_directory_visible:
+          type: boolean
+          default: true
+        can_contact:
+          type: boolean
+          default: true
+        is_mentor_available:
+          type: boolean
+          default: false
+        max_mentees:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 10
+          default: 2
+        verified_at:
+          type: string
+          format: date-time
+          nullable: true
+        verified_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+
+    AlumnusResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - alumnus_id
+        - person_id
+        - alumni_no
+        - graduation_year
+        - membership_status
+        - is_directory_visible
+        - can_contact
+        - is_mentor_available
+        - max_mentees
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        alumnus_id:
+          type: string
+          format: uuid
+          readOnly: true
+        person_id:
+          type: string
+          format: uuid
+        student_id:
+          type: string
+          format: uuid
+          nullable: true
+        program_id:
+          type: string
+          format: uuid
+          nullable: true
+        campus_id:
+          type: string
+          format: uuid
+          nullable: true
+        alumni_no:
+          type: string
+          maxLength: 30
+        graduation_year:
+          type: integer
+          format: int32
+          minimum: 1950
+          maximum: 2100
+        graduated_on:
+          type: string
+          format: date
+          nullable: true
+        degree_title:
+          type: string
+          nullable: true
+        final_cgpa:
+          type: number
+          format: double
+          nullable: true
+          minimum: 0
+          maximum: 10
+        honours:
+          type: string
+          nullable: true
+        current_city:
+          type: string
+          nullable: true
+        current_country_code:
+          type: string
+          nullable: true
+          maxLength: 2
+        industry:
+          type: string
+          nullable: true
+        linkedin_url:
+          type: string
+          nullable: true
+        bio:
+          type: string
+          nullable: true
+        membership_status:
+          type: string
+          maxLength: 20
+          default: "unverified"
+        is_directory_visible:
+          type: boolean
+          default: true
+        can_contact:
+          type: boolean
+          default: true
+        is_mentor_available:
+          type: boolean
+          default: false
+        max_mentees:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 10
+          default: 2
+        verified_at:
+          type: string
+          format: date-time
+          nullable: true
+        verified_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

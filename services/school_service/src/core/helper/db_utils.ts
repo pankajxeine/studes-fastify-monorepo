@@ -1,4 +1,4 @@
-export function verifyDbSchema(schema?: string): void {
+export function verifyDbSchema(schema?: string | null | undefined): void {
     if (!schema) throw new Error('schema missing from request context')
 }
 

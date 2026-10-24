@@ -1,0 +1,325 @@
+openapi: 3.0.0
+x-sql-table: tran_route
+info:
+  title: RouteResponse API
+  version: 1.0.0
+paths:
+  /route:
+    get:
+      operationId: listRoute
+      summary: Get all route
+      responses:
+        '200':
+          description: List of route
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RouteResponse'
+    post:
+      operationId: createRoute
+      summary: Create a new route
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RouteRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RouteResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /route/{id}:
+    get:
+      operationId: getRouteById
+      summary: Get route by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: route object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RouteResponse'
+        '404':
+          description: route not found
+    put:
+      operationId: updateRoute
+      summary: Update route by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RouteUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RouteResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: route not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteRoute
+      summary: Delete route by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: route not found
+components:
+  schemas:
+
+    RouteRequest:
+      type: object
+      required:
+        - campus_id
+        - code
+        - name
+        - start_point
+        - end_point
+      additionalProperties: false
+      properties:
+        campus_id:
+          type: string
+          format: uuid
+        code:
+          type: string
+          maxLength: 20
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        vehicle_id:
+          type: string
+          format: uuid
+          nullable: true
+        driver_staff_id:
+          type: string
+          format: uuid
+          nullable: true
+        attendant_staff_id:
+          type: string
+          format: uuid
+          nullable: true
+        start_point:
+          type: string
+        end_point:
+          type: string
+        distance_km:
+          type: number
+          format: double
+          nullable: true
+        pickup_start_time:
+          type: string
+          format: time
+          nullable: true
+        drop_start_time:
+          type: string
+          format: time
+          nullable: true
+        term_fee_amount:
+          type: string
+          default: 0
+        is_active:
+          type: boolean
+          default: true
+
+    RouteUpdateRequest:
+      type: object
+      required:
+        - campus_id
+        - code
+        - name
+        - description
+        - vehicle_id
+        - driver_staff_id
+        - attendant_staff_id
+        - start_point
+        - end_point
+        - distance_km
+        - pickup_start_time
+        - drop_start_time
+        - term_fee_amount
+        - is_active
+      additionalProperties: false
+      properties:
+        campus_id:
+          type: string
+          format: uuid
+        code:
+          type: string
+          maxLength: 20
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        vehicle_id:
+          type: string
+          format: uuid
+          nullable: true
+        driver_staff_id:
+          type: string
+          format: uuid
+          nullable: true
+        attendant_staff_id:
+          type: string
+          format: uuid
+          nullable: true
+        start_point:
+          type: string
+        end_point:
+          type: string
+        distance_km:
+          type: number
+          format: double
+          nullable: true
+        pickup_start_time:
+          type: string
+          format: time
+          nullable: true
+        drop_start_time:
+          type: string
+          format: time
+          nullable: true
+        term_fee_amount:
+          type: string
+          default: 0
+        is_active:
+          type: boolean
+          default: true
+
+    RouteResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - route_id
+        - campus_id
+        - code
+        - name
+        - start_point
+        - end_point
+        - term_fee_amount
+        - is_active
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        route_id:
+          type: string
+          format: uuid
+          readOnly: true
+        campus_id:
+          type: string
+          format: uuid
+        code:
+          type: string
+          maxLength: 20
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        vehicle_id:
+          type: string
+          format: uuid
+          nullable: true
+        driver_staff_id:
+          type: string
+          format: uuid
+          nullable: true
+        attendant_staff_id:
+          type: string
+          format: uuid
+          nullable: true
+        start_point:
+          type: string
+        end_point:
+          type: string
+        distance_km:
+          type: number
+          format: double
+          nullable: true
+        pickup_start_time:
+          type: string
+          format: time
+          nullable: true
+        drop_start_time:
+          type: string
+          format: time
+          nullable: true
+        term_fee_amount:
+          type: string
+          default: 0
+        is_active:
+          type: boolean
+          default: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

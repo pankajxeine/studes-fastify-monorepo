@@ -1,0 +1,331 @@
+openapi: 3.0.0
+x-sql-table: prtn_placement_application
+info:
+  title: PlacementApplicationResponse API
+  version: 1.0.0
+paths:
+  /placement_application:
+    get:
+      operationId: listPlacementApplication
+      summary: Get all placement_application
+      responses:
+        '200':
+          description: List of placement_application
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PlacementApplicationResponse'
+    post:
+      operationId: createPlacementApplication
+      summary: Create a new placement_application
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlacementApplicationRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlacementApplicationResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /placement_application/{id}:
+    get:
+      operationId: getPlacementApplicationById
+      summary: Get placement_application by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: placement_application object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlacementApplicationResponse'
+        '404':
+          description: placement_application not found
+    put:
+      operationId: updatePlacementApplication
+      summary: Update placement_application by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlacementApplicationUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlacementApplicationResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: placement_application not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deletePlacementApplication
+      summary: Delete placement_application by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: placement_application not found
+components:
+  schemas:
+
+    PlacementApplicationRequest:
+      type: object
+      required:
+        - placement_drive_id
+        - student_id
+        - academic_year_id
+      additionalProperties: false
+      properties:
+        placement_drive_id:
+          type: string
+          format: uuid
+        student_id:
+          type: string
+          format: uuid
+        academic_year_id:
+          type: string
+          format: uuid
+        status:
+          type: string
+          default: "applied"
+          enum:
+            - "applied"
+            - "shortlisted"
+            - "in_process"
+            - "selected"
+            - "rejected"
+            - "withdrawn"
+        applied_at:
+          type: string
+          format: date-time
+        cgpa_at_application:
+          type: number
+          format: double
+          nullable: true
+          minimum: 0
+          maximum: 4
+        cover_note:
+          type: string
+          nullable: true
+        shortlisted_at:
+          type: string
+          format: date-time
+          nullable: true
+        decided_at:
+          type: string
+          format: date-time
+          nullable: true
+        rejection_reason:
+          type: string
+          nullable: true
+        withdrawn_at:
+          type: string
+          format: date-time
+          nullable: true
+        withdrawal_reason:
+          type: string
+          nullable: true
+
+    PlacementApplicationUpdateRequest:
+      type: object
+      required:
+        - placement_drive_id
+        - student_id
+        - academic_year_id
+        - status
+        - applied_at
+        - cgpa_at_application
+        - cover_note
+        - shortlisted_at
+        - decided_at
+        - rejection_reason
+        - withdrawn_at
+        - withdrawal_reason
+      additionalProperties: false
+      properties:
+        placement_drive_id:
+          type: string
+          format: uuid
+        student_id:
+          type: string
+          format: uuid
+        academic_year_id:
+          type: string
+          format: uuid
+        status:
+          type: string
+          default: "applied"
+          enum:
+            - "applied"
+            - "shortlisted"
+            - "in_process"
+            - "selected"
+            - "rejected"
+            - "withdrawn"
+        applied_at:
+          type: string
+          format: date-time
+        cgpa_at_application:
+          type: number
+          format: double
+          nullable: true
+          minimum: 0
+          maximum: 4
+        cover_note:
+          type: string
+          nullable: true
+        shortlisted_at:
+          type: string
+          format: date-time
+          nullable: true
+        decided_at:
+          type: string
+          format: date-time
+          nullable: true
+        rejection_reason:
+          type: string
+          nullable: true
+        withdrawn_at:
+          type: string
+          format: date-time
+          nullable: true
+        withdrawal_reason:
+          type: string
+          nullable: true
+
+    PlacementApplicationResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - placement_application_id
+        - placement_drive_id
+        - student_id
+        - academic_year_id
+        - status
+        - applied_at
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        placement_application_id:
+          type: string
+          format: uuid
+          readOnly: true
+        placement_drive_id:
+          type: string
+          format: uuid
+        student_id:
+          type: string
+          format: uuid
+        academic_year_id:
+          type: string
+          format: uuid
+        status:
+          type: string
+          default: "applied"
+          enum:
+            - "applied"
+            - "shortlisted"
+            - "in_process"
+            - "selected"
+            - "rejected"
+            - "withdrawn"
+        applied_at:
+          type: string
+          format: date-time
+        cgpa_at_application:
+          type: number
+          format: double
+          nullable: true
+          minimum: 0
+          maximum: 4
+        cover_note:
+          type: string
+          nullable: true
+        shortlisted_at:
+          type: string
+          format: date-time
+          nullable: true
+        decided_at:
+          type: string
+          format: date-time
+          nullable: true
+        rejection_reason:
+          type: string
+          nullable: true
+        withdrawn_at:
+          type: string
+          format: date-time
+          nullable: true
+        withdrawal_reason:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

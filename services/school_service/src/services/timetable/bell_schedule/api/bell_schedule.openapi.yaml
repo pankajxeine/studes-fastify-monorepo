@@ -1,0 +1,262 @@
+openapi: 3.0.0
+x-sql-table: ttbl_bell_schedule
+info:
+  title: BellScheduleResponse API
+  version: 1.0.0
+paths:
+  /bell_schedule:
+    get:
+      operationId: listBellSchedule
+      summary: Get all bell_schedule
+      responses:
+        '200':
+          description: List of bell_schedule
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BellScheduleResponse'
+    post:
+      operationId: createBellSchedule
+      summary: Create a new bell_schedule
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BellScheduleRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BellScheduleResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /bell_schedule/{id}:
+    get:
+      operationId: getBellScheduleById
+      summary: Get bell_schedule by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: bell_schedule object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BellScheduleResponse'
+        '404':
+          description: bell_schedule not found
+    put:
+      operationId: updateBellSchedule
+      summary: Update bell_schedule by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BellScheduleUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BellScheduleResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: bell_schedule not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteBellSchedule
+      summary: Delete bell_schedule by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: bell_schedule not found
+components:
+  schemas:
+
+    BellScheduleRequest:
+      type: object
+      required:
+        - campus_id
+        - code
+        - name
+      additionalProperties: false
+      properties:
+        campus_id:
+          type: string
+          format: uuid
+        code:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        applies_from:
+          type: string
+          format: date
+          nullable: true
+        applies_to:
+          type: string
+          format: date
+          nullable: true
+        validity:
+          type: string
+          nullable: true
+        is_default:
+          type: boolean
+          default: false
+        is_active:
+          type: boolean
+          default: true
+
+    BellScheduleUpdateRequest:
+      type: object
+      required:
+        - campus_id
+        - code
+        - name
+        - description
+        - applies_from
+        - applies_to
+        - validity
+        - is_default
+        - is_active
+      additionalProperties: false
+      properties:
+        campus_id:
+          type: string
+          format: uuid
+        code:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        applies_from:
+          type: string
+          format: date
+          nullable: true
+        applies_to:
+          type: string
+          format: date
+          nullable: true
+        validity:
+          type: string
+          nullable: true
+        is_default:
+          type: boolean
+          default: false
+        is_active:
+          type: boolean
+          default: true
+
+    BellScheduleResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - bell_schedule_id
+        - campus_id
+        - code
+        - name
+        - is_default
+        - is_active
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        bell_schedule_id:
+          type: string
+          format: uuid
+          readOnly: true
+        campus_id:
+          type: string
+          format: uuid
+        code:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        applies_from:
+          type: string
+          format: date
+          nullable: true
+        applies_to:
+          type: string
+          format: date
+          nullable: true
+        validity:
+          type: string
+          nullable: true
+        is_default:
+          type: boolean
+          default: false
+        is_active:
+          type: boolean
+          default: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

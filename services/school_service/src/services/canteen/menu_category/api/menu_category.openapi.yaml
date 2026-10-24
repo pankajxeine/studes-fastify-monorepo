@@ -1,0 +1,213 @@
+openapi: 3.0.0
+x-sql-table: cntn_menu_category
+info:
+  title: MenuCategoryResponse API
+  version: 1.0.0
+paths:
+  /menu_category:
+    get:
+      operationId: listMenuCategory
+      summary: Get all menu_category
+      responses:
+        '200':
+          description: List of menu_category
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MenuCategoryResponse'
+    post:
+      operationId: createMenuCategory
+      summary: Create a new menu_category
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MenuCategoryRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MenuCategoryResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /menu_category/{id}:
+    get:
+      operationId: getMenuCategoryById
+      summary: Get menu_category by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: menu_category object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MenuCategoryResponse'
+        '404':
+          description: menu_category not found
+    put:
+      operationId: updateMenuCategory
+      summary: Update menu_category by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MenuCategoryUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MenuCategoryResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: menu_category not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteMenuCategory
+      summary: Delete menu_category by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: menu_category not found
+components:
+  schemas:
+
+    MenuCategoryRequest:
+      type: object
+      required:
+        - name
+      additionalProperties: false
+      properties:
+        menu_category_code:
+          type: string
+          nullable: true
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        sort_order:
+          type: integer
+          format: int32
+          default: 0
+        is_active:
+          type: boolean
+          default: true
+
+    MenuCategoryUpdateRequest:
+      type: object
+      required:
+        - menu_category_code
+        - name
+        - description
+        - sort_order
+        - is_active
+      additionalProperties: false
+      properties:
+        menu_category_code:
+          type: string
+          nullable: true
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        sort_order:
+          type: integer
+          format: int32
+          default: 0
+        is_active:
+          type: boolean
+          default: true
+
+    MenuCategoryResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - name
+        - sort_order
+        - is_active
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        menu_category_code:
+          type: string
+          nullable: true
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        sort_order:
+          type: integer
+          format: int32
+          default: 0
+        is_active:
+          type: boolean
+          default: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

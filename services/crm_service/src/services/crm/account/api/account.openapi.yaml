@@ -1,0 +1,336 @@
+openapi: 3.0.0
+x-sql-table: crm_account
+info:
+  title: AccountResponse API
+  version: 1.0.0
+paths:
+  /account:
+    get:
+      operationId: listAccount
+      summary: Get all account
+      responses:
+        '200':
+          description: List of account
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AccountResponse'
+    post:
+      operationId: createAccount
+      summary: Create a new account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /account/{id}:
+    get:
+      operationId: getAccountById
+      summary: Get account by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: account object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountResponse'
+        '404':
+          description: account not found
+    put:
+      operationId: updateAccount
+      summary: Update account by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: account not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteAccount
+      summary: Delete account by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: account not found
+components:
+  schemas:
+
+    AccountRequest:
+      type: object
+      required:
+        - legal_name
+        - display_name
+        - country_code
+      additionalProperties: false
+      properties:
+        account_number:
+          type: string
+          maxLength: 20
+        account_type:
+          type: string
+          maxLength: 20
+          default: "prospect"
+        legal_name:
+          type: string
+        display_name:
+          type: string
+        industry_code:
+          type: string
+          nullable: true
+        country_code:
+          type: string
+        tax_id:
+          type: string
+          nullable: true
+          maxLength: 40
+        website:
+          type: string
+          nullable: true
+        employee_band:
+          type: string
+          nullable: true
+        billing_address:
+          nullable: true
+        owner_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        branch_id:
+          type: string
+          format: uuid
+          nullable: true
+        territory_id:
+          type: string
+          format: uuid
+          nullable: true
+        sales_agent_id:
+          type: string
+          format: uuid
+          nullable: true
+        parent_account_id:
+          type: string
+          format: uuid
+          nullable: true
+
+    AccountUpdateRequest:
+      type: object
+      required:
+        - account_number
+        - account_type
+        - legal_name
+        - display_name
+        - industry_code
+        - country_code
+        - tax_id
+        - website
+        - employee_band
+        - billing_address
+        - owner_user_id
+        - branch_id
+        - territory_id
+        - sales_agent_id
+        - parent_account_id
+      additionalProperties: false
+      properties:
+        account_number:
+          type: string
+          maxLength: 20
+        account_type:
+          type: string
+          maxLength: 20
+          default: "prospect"
+        legal_name:
+          type: string
+        display_name:
+          type: string
+        industry_code:
+          type: string
+          nullable: true
+        country_code:
+          type: string
+        tax_id:
+          type: string
+          nullable: true
+          maxLength: 40
+        website:
+          type: string
+          nullable: true
+        employee_band:
+          type: string
+          nullable: true
+        billing_address:
+          nullable: true
+        owner_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        branch_id:
+          type: string
+          format: uuid
+          nullable: true
+        territory_id:
+          type: string
+          format: uuid
+          nullable: true
+        sales_agent_id:
+          type: string
+          format: uuid
+          nullable: true
+        parent_account_id:
+          type: string
+          format: uuid
+          nullable: true
+
+    AccountResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - account_id
+        - account_number
+        - account_type
+        - legal_name
+        - display_name
+        - country_code
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        account_id:
+          type: string
+          format: uuid
+          readOnly: true
+        account_number:
+          type: string
+          maxLength: 20
+        account_type:
+          type: string
+          maxLength: 20
+          default: "prospect"
+        legal_name:
+          type: string
+        display_name:
+          type: string
+        industry_code:
+          type: string
+          nullable: true
+        country_code:
+          type: string
+        tax_id:
+          type: string
+          nullable: true
+          maxLength: 40
+        website:
+          type: string
+          nullable: true
+        employee_band:
+          type: string
+          nullable: true
+        billing_address:
+          nullable: true
+        owner_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        branch_id:
+          type: string
+          format: uuid
+          nullable: true
+        territory_id:
+          type: string
+          format: uuid
+          nullable: true
+        sales_agent_id:
+          type: string
+          format: uuid
+          nullable: true
+        parent_account_id:
+          type: string
+          format: uuid
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        deleted_at:
+          type: string
+          format: date-time
+          nullable: true
+          readOnly: true
+  

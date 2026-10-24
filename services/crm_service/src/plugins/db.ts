@@ -22,6 +22,16 @@ export const sequelize: Sequelize = new Sequelize(ds.database, ds.username, ds.p
     min: 0,
     idle: 10000,
   },
+  hooks: {
+    // The CRM SQL modules keep their prefixed tables and functions in the
+    // configured control-plane schema. Resolve their internal unqualified
+    // references consistently on every pooled PostgreSQL connection.
+    afterConnect: async (connection: any) => {
+      const schema = process.env.DEFAULT_CPANEL_SCHEMA ?? 'demo_cpanel'
+      if (!/^[a-zA-Z0-9_]+$/.test(schema)) throw new Error('Invalid DEFAULT_CPANEL_SCHEMA')
+      await connection.query(`SET search_path TO "${schema}", public`)
+    }
+  },
 })
 
 export default fp(async (app) => {

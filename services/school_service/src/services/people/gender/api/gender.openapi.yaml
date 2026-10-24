@@ -1,0 +1,203 @@
+openapi: 3.0.0
+x-sql-table: ppl_gender
+info:
+  title: GenderResponse API
+  version: 1.0.0
+paths:
+  /gender:
+    get:
+      operationId: listGender
+      summary: Get all gender
+      responses:
+        '200':
+          description: List of gender
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GenderResponse'
+    post:
+      operationId: createGender
+      summary: Create a new gender
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenderRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenderResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /gender/{id}:
+    get:
+      operationId: getGenderById
+      summary: Get gender by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: gender object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenderResponse'
+        '404':
+          description: gender not found
+    put:
+      operationId: updateGender
+      summary: Update gender by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenderUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenderResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: gender not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteGender
+      summary: Delete gender by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: gender not found
+components:
+  schemas:
+
+    GenderRequest:
+      type: object
+      required:
+        - name
+      additionalProperties: false
+      properties:
+        gender_code:
+          type: string
+          nullable: true
+        name:
+          type: string
+        sort_order:
+          type: integer
+          format: int32
+          default: 0
+        is_active:
+          type: boolean
+          default: true
+
+    GenderUpdateRequest:
+      type: object
+      required:
+        - gender_code
+        - name
+        - sort_order
+        - is_active
+      additionalProperties: false
+      properties:
+        gender_code:
+          type: string
+          nullable: true
+        name:
+          type: string
+        sort_order:
+          type: integer
+          format: int32
+          default: 0
+        is_active:
+          type: boolean
+          default: true
+
+    GenderResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - name
+        - sort_order
+        - is_active
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        gender_code:
+          type: string
+          nullable: true
+        name:
+          type: string
+        sort_order:
+          type: integer
+          format: int32
+          default: 0
+        is_active:
+          type: boolean
+          default: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

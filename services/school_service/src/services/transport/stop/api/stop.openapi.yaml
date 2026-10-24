@@ -1,0 +1,254 @@
+openapi: 3.0.0
+x-sql-table: tran_stop
+info:
+  title: StopResponse API
+  version: 1.0.0
+paths:
+  /stop:
+    get:
+      operationId: listStop
+      summary: Get all stop
+      responses:
+        '200':
+          description: List of stop
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StopResponse'
+    post:
+      operationId: createStop
+      summary: Create a new stop
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StopRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StopResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /stop/{id}:
+    get:
+      operationId: getStopById
+      summary: Get stop by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: stop object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StopResponse'
+        '404':
+          description: stop not found
+    put:
+      operationId: updateStop
+      summary: Update stop by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StopUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StopResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: stop not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteStop
+      summary: Delete stop by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: stop not found
+components:
+  schemas:
+
+    StopRequest:
+      type: object
+      required:
+        - campus_id
+        - code
+        - name
+      additionalProperties: false
+      properties:
+        campus_id:
+          type: string
+          format: uuid
+        code:
+          type: string
+          maxLength: 20
+        name:
+          type: string
+        landmark:
+          type: string
+          nullable: true
+        address_line:
+          type: string
+          nullable: true
+        latitude:
+          type: number
+          format: double
+          nullable: true
+        longitude:
+          type: number
+          format: double
+          nullable: true
+        is_active:
+          type: boolean
+          default: true
+
+    StopUpdateRequest:
+      type: object
+      required:
+        - campus_id
+        - code
+        - name
+        - landmark
+        - address_line
+        - latitude
+        - longitude
+        - is_active
+      additionalProperties: false
+      properties:
+        campus_id:
+          type: string
+          format: uuid
+        code:
+          type: string
+          maxLength: 20
+        name:
+          type: string
+        landmark:
+          type: string
+          nullable: true
+        address_line:
+          type: string
+          nullable: true
+        latitude:
+          type: number
+          format: double
+          nullable: true
+        longitude:
+          type: number
+          format: double
+          nullable: true
+        is_active:
+          type: boolean
+          default: true
+
+    StopResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - stop_id
+        - campus_id
+        - code
+        - name
+        - is_active
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        stop_id:
+          type: string
+          format: uuid
+          readOnly: true
+        campus_id:
+          type: string
+          format: uuid
+        code:
+          type: string
+          maxLength: 20
+        name:
+          type: string
+        landmark:
+          type: string
+          nullable: true
+        address_line:
+          type: string
+          nullable: true
+        latitude:
+          type: number
+          format: double
+          nullable: true
+        longitude:
+          type: number
+          format: double
+          nullable: true
+        is_active:
+          type: boolean
+          default: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

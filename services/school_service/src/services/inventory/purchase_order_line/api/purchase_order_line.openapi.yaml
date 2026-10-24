@@ -1,0 +1,269 @@
+openapi: 3.0.0
+x-sql-table: invnt_purchase_order_line
+info:
+  title: PurchaseOrderLineResponse API
+  version: 1.0.0
+paths:
+  /purchase_order_line:
+    get:
+      operationId: listPurchaseOrderLine
+      summary: Get all purchase_order_line
+      responses:
+        '200':
+          description: List of purchase_order_line
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PurchaseOrderLineResponse'
+    post:
+      operationId: createPurchaseOrderLine
+      summary: Create a new purchase_order_line
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PurchaseOrderLineRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PurchaseOrderLineResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /purchase_order_line/{id}:
+    get:
+      operationId: getPurchaseOrderLineById
+      summary: Get purchase_order_line by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: purchase_order_line object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PurchaseOrderLineResponse'
+        '404':
+          description: purchase_order_line not found
+    put:
+      operationId: updatePurchaseOrderLine
+      summary: Update purchase_order_line by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PurchaseOrderLineUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PurchaseOrderLineResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: purchase_order_line not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deletePurchaseOrderLine
+      summary: Delete purchase_order_line by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: purchase_order_line not found
+components:
+  schemas:
+
+    PurchaseOrderLineRequest:
+      type: object
+      required:
+        - purchase_order_id
+        - line_no
+        - item_id
+        - quantity
+        - unit_price_amount
+      additionalProperties: false
+      properties:
+        purchase_order_id:
+          type: string
+          format: uuid
+        line_no:
+          type: integer
+          format: int32
+        item_id:
+          type: string
+          format: uuid
+        description:
+          type: string
+          nullable: true
+        quantity:
+          type: number
+          format: double
+        unit_price_amount:
+          type: string
+        tax_rate:
+          type: string
+          default: 0
+        line_amount:
+          type: number
+          format: double
+          nullable: true
+        received_quantity:
+          type: number
+          format: double
+          default: 0
+
+    PurchaseOrderLineUpdateRequest:
+      type: object
+      required:
+        - purchase_order_id
+        - line_no
+        - item_id
+        - description
+        - quantity
+        - unit_price_amount
+        - tax_rate
+        - line_amount
+        - received_quantity
+      additionalProperties: false
+      properties:
+        purchase_order_id:
+          type: string
+          format: uuid
+        line_no:
+          type: integer
+          format: int32
+        item_id:
+          type: string
+          format: uuid
+        description:
+          type: string
+          nullable: true
+        quantity:
+          type: number
+          format: double
+        unit_price_amount:
+          type: string
+        tax_rate:
+          type: string
+          default: 0
+        line_amount:
+          type: number
+          format: double
+          nullable: true
+        received_quantity:
+          type: number
+          format: double
+          default: 0
+
+    PurchaseOrderLineResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - purchase_order_line_id
+        - purchase_order_id
+        - line_no
+        - item_id
+        - quantity
+        - unit_price_amount
+        - tax_rate
+        - received_quantity
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        purchase_order_line_id:
+          type: string
+          format: uuid
+          readOnly: true
+        purchase_order_id:
+          type: string
+          format: uuid
+        line_no:
+          type: integer
+          format: int32
+        item_id:
+          type: string
+          format: uuid
+        description:
+          type: string
+          nullable: true
+        quantity:
+          type: number
+          format: double
+        unit_price_amount:
+          type: string
+        tax_rate:
+          type: string
+          default: 0
+        line_amount:
+          type: number
+          format: double
+          nullable: true
+        received_quantity:
+          type: number
+          format: double
+          default: 0
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

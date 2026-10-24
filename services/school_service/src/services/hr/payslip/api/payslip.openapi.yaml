@@ -1,0 +1,300 @@
+openapi: 3.0.0
+x-sql-table: hr_payslip
+info:
+  title: PayslipResponse API
+  version: 1.0.0
+paths:
+  /payslip:
+    get:
+      operationId: listPayslip
+      summary: Get all payslip
+      responses:
+        '200':
+          description: List of payslip
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PayslipResponse'
+    post:
+      operationId: createPayslip
+      summary: Create a new payslip
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PayslipRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PayslipResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /payslip/{id}:
+    get:
+      operationId: getPayslipById
+      summary: Get payslip by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: payslip object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PayslipResponse'
+        '404':
+          description: payslip not found
+    put:
+      operationId: updatePayslip
+      summary: Update payslip by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PayslipUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PayslipResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: payslip not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deletePayslip
+      summary: Delete payslip by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: payslip not found
+components:
+  schemas:
+
+    PayslipRequest:
+      type: object
+      required:
+        - payroll_run_id
+        - staff_id
+        - payslip_no
+        - paid_days
+      additionalProperties: false
+      properties:
+        payroll_run_id:
+          type: string
+          format: uuid
+        staff_id:
+          type: string
+          format: uuid
+        staff_salary_assignment_id:
+          type: string
+          format: uuid
+          nullable: true
+        payslip_no:
+          type: string
+          maxLength: 30
+        paid_days:
+          type: number
+          format: double
+        unpaid_leave_days:
+          type: number
+          format: double
+          default: 0
+        gross_amount:
+          type: string
+          default: 0
+        deduction_amount:
+          type: string
+          default: 0
+        net_amount:
+          type: number
+          format: double
+          nullable: true
+        payment_reference:
+          type: string
+          nullable: true
+          maxLength: 40
+        file_id:
+          type: string
+          format: uuid
+          nullable: true
+
+    PayslipUpdateRequest:
+      type: object
+      required:
+        - payroll_run_id
+        - staff_id
+        - staff_salary_assignment_id
+        - payslip_no
+        - paid_days
+        - unpaid_leave_days
+        - gross_amount
+        - deduction_amount
+        - net_amount
+        - payment_reference
+        - file_id
+      additionalProperties: false
+      properties:
+        payroll_run_id:
+          type: string
+          format: uuid
+        staff_id:
+          type: string
+          format: uuid
+        staff_salary_assignment_id:
+          type: string
+          format: uuid
+          nullable: true
+        payslip_no:
+          type: string
+          maxLength: 30
+        paid_days:
+          type: number
+          format: double
+        unpaid_leave_days:
+          type: number
+          format: double
+          default: 0
+        gross_amount:
+          type: string
+          default: 0
+        deduction_amount:
+          type: string
+          default: 0
+        net_amount:
+          type: number
+          format: double
+          nullable: true
+        payment_reference:
+          type: string
+          nullable: true
+          maxLength: 40
+        file_id:
+          type: string
+          format: uuid
+          nullable: true
+
+    PayslipResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - payslip_id
+        - payroll_run_id
+        - staff_id
+        - payslip_no
+        - paid_days
+        - unpaid_leave_days
+        - gross_amount
+        - deduction_amount
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        payslip_id:
+          type: string
+          format: uuid
+          readOnly: true
+        payroll_run_id:
+          type: string
+          format: uuid
+        staff_id:
+          type: string
+          format: uuid
+        staff_salary_assignment_id:
+          type: string
+          format: uuid
+          nullable: true
+        payslip_no:
+          type: string
+          maxLength: 30
+        paid_days:
+          type: number
+          format: double
+        unpaid_leave_days:
+          type: number
+          format: double
+          default: 0
+        gross_amount:
+          type: string
+          default: 0
+        deduction_amount:
+          type: string
+          default: 0
+        net_amount:
+          type: number
+          format: double
+          nullable: true
+        payment_reference:
+          type: string
+          nullable: true
+          maxLength: 40
+        file_id:
+          type: string
+          format: uuid
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

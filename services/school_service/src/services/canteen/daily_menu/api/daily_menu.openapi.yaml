@@ -1,0 +1,282 @@
+openapi: 3.0.0
+x-sql-table: cntn_daily_menu
+info:
+  title: DailyMenuResponse API
+  version: 1.0.0
+paths:
+  /daily_menu:
+    get:
+      operationId: listDailyMenu
+      summary: Get all daily_menu
+      responses:
+        '200':
+          description: List of daily_menu
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DailyMenuResponse'
+    post:
+      operationId: createDailyMenu
+      summary: Create a new daily_menu
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DailyMenuRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DailyMenuResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /daily_menu/{id}:
+    get:
+      operationId: getDailyMenuById
+      summary: Get daily_menu by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: daily_menu object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DailyMenuResponse'
+        '404':
+          description: daily_menu not found
+    put:
+      operationId: updateDailyMenu
+      summary: Update daily_menu by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DailyMenuUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DailyMenuResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: daily_menu not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteDailyMenu
+      summary: Delete daily_menu by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: daily_menu not found
+components:
+  schemas:
+
+    DailyMenuRequest:
+      type: object
+      required:
+        - canteen_outlet_id
+        - meal_period_code
+        - menu_date
+      additionalProperties: false
+      properties:
+        canteen_outlet_id:
+          type: string
+          format: uuid
+        meal_period_code:
+          type: string
+        menu_date:
+          type: string
+          format: date
+        weekly_menu_id:
+          type: string
+          format: uuid
+          nullable: true
+        status:
+          type: string
+          default: "draft"
+          enum:
+            - "draft"
+            - "published"
+            - "closed"
+        pre_order_cutoff_at:
+          type: string
+          format: date-time
+          nullable: true
+        published_at:
+          type: string
+          format: date-time
+          nullable: true
+        closed_at:
+          type: string
+          format: date-time
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+
+    DailyMenuUpdateRequest:
+      type: object
+      required:
+        - canteen_outlet_id
+        - meal_period_code
+        - menu_date
+        - weekly_menu_id
+        - status
+        - pre_order_cutoff_at
+        - published_at
+        - closed_at
+        - notes
+      additionalProperties: false
+      properties:
+        canteen_outlet_id:
+          type: string
+          format: uuid
+        meal_period_code:
+          type: string
+        menu_date:
+          type: string
+          format: date
+        weekly_menu_id:
+          type: string
+          format: uuid
+          nullable: true
+        status:
+          type: string
+          default: "draft"
+          enum:
+            - "draft"
+            - "published"
+            - "closed"
+        pre_order_cutoff_at:
+          type: string
+          format: date-time
+          nullable: true
+        published_at:
+          type: string
+          format: date-time
+          nullable: true
+        closed_at:
+          type: string
+          format: date-time
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+
+    DailyMenuResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - daily_menu_id
+        - canteen_outlet_id
+        - meal_period_code
+        - menu_date
+        - status
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        daily_menu_id:
+          type: string
+          format: uuid
+          readOnly: true
+        canteen_outlet_id:
+          type: string
+          format: uuid
+        meal_period_code:
+          type: string
+        menu_date:
+          type: string
+          format: date
+        weekly_menu_id:
+          type: string
+          format: uuid
+          nullable: true
+        status:
+          type: string
+          default: "draft"
+          enum:
+            - "draft"
+            - "published"
+            - "closed"
+        pre_order_cutoff_at:
+          type: string
+          format: date-time
+          nullable: true
+        published_at:
+          type: string
+          format: date-time
+          nullable: true
+        closed_at:
+          type: string
+          format: date-time
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

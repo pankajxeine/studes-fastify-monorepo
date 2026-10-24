@@ -1,0 +1,350 @@
+openapi: 3.0.0
+x-sql-table: commission_commission_ledger
+info:
+  title: CommissionLedgerResponse API
+  version: 1.0.0
+paths:
+  /commission_ledger:
+    get:
+      operationId: listCommissionLedger
+      summary: Get all commission_ledger
+      responses:
+        '200':
+          description: List of commission_ledger
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CommissionLedgerResponse'
+    post:
+      operationId: createCommissionLedger
+      summary: Create a new commission_ledger
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommissionLedgerRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommissionLedgerResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /commission_ledger/{id}:
+    get:
+      operationId: getCommissionLedgerById
+      summary: Get commission_ledger by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: commission_ledger object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommissionLedgerResponse'
+        '404':
+          description: commission_ledger not found
+    put:
+      operationId: updateCommissionLedger
+      summary: Update commission_ledger by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommissionLedgerUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommissionLedgerResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: commission_ledger not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteCommissionLedger
+      summary: Delete commission_ledger by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: commission_ledger not found
+components:
+  schemas:
+
+    CommissionLedgerRequest:
+      type: object
+      required:
+        - sales_agent_id
+        - entry_type
+        - amount
+        - currency_code
+      additionalProperties: false
+      properties:
+        sales_agent_id:
+          type: string
+          format: uuid
+        entry_type:
+          type: string
+          maxLength: 10
+        amount:
+          type: string
+        currency_code:
+          type: string
+        basis_amount:
+          type: string
+          nullable: true
+        rate_percent:
+          type: string
+          nullable: true
+        hierarchy_depth:
+          type: integer
+          format: int32
+          nullable: true
+        commission_rule_id:
+          type: string
+          format: uuid
+          nullable: true
+        invoice_line_id:
+          type: string
+          format: uuid
+          nullable: true
+        payment_allocation_id:
+          type: string
+          format: uuid
+          nullable: true
+        reverses_entry_id:
+          type: string
+          format: uuid
+          nullable: true
+        status:
+          type: string
+          maxLength: 10
+          default: "pending"
+        earned_at:
+          type: string
+          format: date-time
+        approved_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        approved_at:
+          type: string
+          format: date-time
+          nullable: true
+        payout_id:
+          type: string
+          format: uuid
+          nullable: true
+        note:
+          type: string
+          nullable: true
+
+    CommissionLedgerUpdateRequest:
+      type: object
+      required:
+        - sales_agent_id
+        - entry_type
+        - amount
+        - currency_code
+        - basis_amount
+        - rate_percent
+        - hierarchy_depth
+        - commission_rule_id
+        - invoice_line_id
+        - payment_allocation_id
+        - reverses_entry_id
+        - status
+        - earned_at
+        - approved_by_user_id
+        - approved_at
+        - payout_id
+        - note
+      additionalProperties: false
+      properties:
+        sales_agent_id:
+          type: string
+          format: uuid
+        entry_type:
+          type: string
+          maxLength: 10
+        amount:
+          type: string
+        currency_code:
+          type: string
+        basis_amount:
+          type: string
+          nullable: true
+        rate_percent:
+          type: string
+          nullable: true
+        hierarchy_depth:
+          type: integer
+          format: int32
+          nullable: true
+        commission_rule_id:
+          type: string
+          format: uuid
+          nullable: true
+        invoice_line_id:
+          type: string
+          format: uuid
+          nullable: true
+        payment_allocation_id:
+          type: string
+          format: uuid
+          nullable: true
+        reverses_entry_id:
+          type: string
+          format: uuid
+          nullable: true
+        status:
+          type: string
+          maxLength: 10
+          default: "pending"
+        earned_at:
+          type: string
+          format: date-time
+        approved_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        approved_at:
+          type: string
+          format: date-time
+          nullable: true
+        payout_id:
+          type: string
+          format: uuid
+          nullable: true
+        note:
+          type: string
+          nullable: true
+
+    CommissionLedgerResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - entry_id
+        - sales_agent_id
+        - entry_type
+        - amount
+        - currency_code
+        - status
+        - earned_at
+        - created_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        entry_id:
+          type: string
+          format: uuid
+          readOnly: true
+        sales_agent_id:
+          type: string
+          format: uuid
+        entry_type:
+          type: string
+          maxLength: 10
+        amount:
+          type: string
+        currency_code:
+          type: string
+        basis_amount:
+          type: string
+          nullable: true
+        rate_percent:
+          type: string
+          nullable: true
+        hierarchy_depth:
+          type: integer
+          format: int32
+          nullable: true
+        commission_rule_id:
+          type: string
+          format: uuid
+          nullable: true
+        invoice_line_id:
+          type: string
+          format: uuid
+          nullable: true
+        payment_allocation_id:
+          type: string
+          format: uuid
+          nullable: true
+        reverses_entry_id:
+          type: string
+          format: uuid
+          nullable: true
+        status:
+          type: string
+          maxLength: 10
+          default: "pending"
+        earned_at:
+          type: string
+          format: date-time
+        approved_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        approved_at:
+          type: string
+          format: date-time
+          nullable: true
+        payout_id:
+          type: string
+          format: uuid
+          nullable: true
+        note:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+  

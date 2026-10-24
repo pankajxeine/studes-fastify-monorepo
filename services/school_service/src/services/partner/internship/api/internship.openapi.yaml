@@ -1,0 +1,427 @@
+openapi: 3.0.0
+x-sql-table: prtn_internship
+info:
+  title: InternshipResponse API
+  version: 1.0.0
+paths:
+  /internship:
+    get:
+      operationId: listInternship
+      summary: Get all internship
+      responses:
+        '200':
+          description: List of internship
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/InternshipResponse'
+    post:
+      operationId: createInternship
+      summary: Create a new internship
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InternshipRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternshipResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /internship/{id}:
+    get:
+      operationId: getInternshipById
+      summary: Get internship by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: internship object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternshipResponse'
+        '404':
+          description: internship not found
+    put:
+      operationId: updateInternship
+      summary: Update internship by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InternshipUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternshipResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: internship not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteInternship
+      summary: Delete internship by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: internship not found
+components:
+  schemas:
+
+    InternshipRequest:
+      type: object
+      required:
+        - student_id
+        - partner_organization_id
+        - faculty_mentor_staff_id
+        - title
+        - start_on
+        - end_on
+      additionalProperties: false
+      properties:
+        student_id:
+          type: string
+          format: uuid
+        partner_organization_id:
+          type: string
+          format: uuid
+        supervisor_partner_contact_id:
+          type: string
+          format: uuid
+          nullable: true
+        faculty_mentor_staff_id:
+          type: string
+          format: uuid
+        job_offer_id:
+          type: string
+          format: uuid
+          nullable: true
+        title:
+          type: string
+        start_on:
+          type: string
+          format: date
+        end_on:
+          type: string
+          format: date
+        period:
+          type: string
+          nullable: true
+        work_mode:
+          type: string
+          maxLength: 10
+          default: "onsite"
+        hours_per_week:
+          type: integer
+          format: int32
+          nullable: true
+          minimum: 1
+          maximum: 60
+        stipend_amount:
+          type: string
+          nullable: true
+        is_for_credit:
+          type: boolean
+          default: false
+        credits:
+          type: number
+          format: double
+          nullable: true
+        status:
+          type: string
+          default: "planned"
+          enum:
+            - "planned"
+            - "ongoing"
+            - "completed"
+            - "terminated"
+            - "cancelled"
+        evaluation_score:
+          type: number
+          format: double
+          nullable: true
+          minimum: 0
+          maximum: 100
+        supervisor_feedback:
+          type: string
+          nullable: true
+        mentor_feedback:
+          type: string
+          nullable: true
+        terminated_on:
+          type: string
+          format: date
+          nullable: true
+        termination_reason:
+          type: string
+          nullable: true
+
+    InternshipUpdateRequest:
+      type: object
+      required:
+        - student_id
+        - partner_organization_id
+        - supervisor_partner_contact_id
+        - faculty_mentor_staff_id
+        - job_offer_id
+        - title
+        - start_on
+        - end_on
+        - period
+        - work_mode
+        - hours_per_week
+        - stipend_amount
+        - is_for_credit
+        - credits
+        - status
+        - evaluation_score
+        - supervisor_feedback
+        - mentor_feedback
+        - terminated_on
+        - termination_reason
+      additionalProperties: false
+      properties:
+        student_id:
+          type: string
+          format: uuid
+        partner_organization_id:
+          type: string
+          format: uuid
+        supervisor_partner_contact_id:
+          type: string
+          format: uuid
+          nullable: true
+        faculty_mentor_staff_id:
+          type: string
+          format: uuid
+        job_offer_id:
+          type: string
+          format: uuid
+          nullable: true
+        title:
+          type: string
+        start_on:
+          type: string
+          format: date
+        end_on:
+          type: string
+          format: date
+        period:
+          type: string
+          nullable: true
+        work_mode:
+          type: string
+          maxLength: 10
+          default: "onsite"
+        hours_per_week:
+          type: integer
+          format: int32
+          nullable: true
+          minimum: 1
+          maximum: 60
+        stipend_amount:
+          type: string
+          nullable: true
+        is_for_credit:
+          type: boolean
+          default: false
+        credits:
+          type: number
+          format: double
+          nullable: true
+        status:
+          type: string
+          default: "planned"
+          enum:
+            - "planned"
+            - "ongoing"
+            - "completed"
+            - "terminated"
+            - "cancelled"
+        evaluation_score:
+          type: number
+          format: double
+          nullable: true
+          minimum: 0
+          maximum: 100
+        supervisor_feedback:
+          type: string
+          nullable: true
+        mentor_feedback:
+          type: string
+          nullable: true
+        terminated_on:
+          type: string
+          format: date
+          nullable: true
+        termination_reason:
+          type: string
+          nullable: true
+
+    InternshipResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - internship_id
+        - student_id
+        - partner_organization_id
+        - faculty_mentor_staff_id
+        - title
+        - start_on
+        - end_on
+        - work_mode
+        - is_for_credit
+        - status
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        internship_id:
+          type: string
+          format: uuid
+          readOnly: true
+        student_id:
+          type: string
+          format: uuid
+        partner_organization_id:
+          type: string
+          format: uuid
+        supervisor_partner_contact_id:
+          type: string
+          format: uuid
+          nullable: true
+        faculty_mentor_staff_id:
+          type: string
+          format: uuid
+        job_offer_id:
+          type: string
+          format: uuid
+          nullable: true
+        title:
+          type: string
+        start_on:
+          type: string
+          format: date
+        end_on:
+          type: string
+          format: date
+        period:
+          type: string
+          nullable: true
+        work_mode:
+          type: string
+          maxLength: 10
+          default: "onsite"
+        hours_per_week:
+          type: integer
+          format: int32
+          nullable: true
+          minimum: 1
+          maximum: 60
+        stipend_amount:
+          type: string
+          nullable: true
+        is_for_credit:
+          type: boolean
+          default: false
+        credits:
+          type: number
+          format: double
+          nullable: true
+        status:
+          type: string
+          default: "planned"
+          enum:
+            - "planned"
+            - "ongoing"
+            - "completed"
+            - "terminated"
+            - "cancelled"
+        evaluation_score:
+          type: number
+          format: double
+          nullable: true
+          minimum: 0
+          maximum: 100
+        supervisor_feedback:
+          type: string
+          nullable: true
+        mentor_feedback:
+          type: string
+          nullable: true
+        terminated_on:
+          type: string
+          format: date
+          nullable: true
+        termination_reason:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

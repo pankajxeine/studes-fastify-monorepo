@@ -1,0 +1,365 @@
+openapi: 3.0.0
+x-sql-table: invnt_purchase_order
+info:
+  title: PurchaseOrderResponse API
+  version: 1.0.0
+paths:
+  /purchase_order:
+    get:
+      operationId: listPurchaseOrder
+      summary: Get all purchase_order
+      responses:
+        '200':
+          description: List of purchase_order
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PurchaseOrderResponse'
+    post:
+      operationId: createPurchaseOrder
+      summary: Create a new purchase_order
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PurchaseOrderRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PurchaseOrderResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /purchase_order/{id}:
+    get:
+      operationId: getPurchaseOrderById
+      summary: Get purchase_order by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: purchase_order object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PurchaseOrderResponse'
+        '404':
+          description: purchase_order not found
+    put:
+      operationId: updatePurchaseOrder
+      summary: Update purchase_order by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PurchaseOrderUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PurchaseOrderResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: purchase_order not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deletePurchaseOrder
+      summary: Delete purchase_order by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: purchase_order not found
+components:
+  schemas:
+
+    PurchaseOrderRequest:
+      type: object
+      required:
+        - po_no
+        - vendor_id
+        - campus_id
+      additionalProperties: false
+      properties:
+        po_no:
+          type: string
+          maxLength: 20
+        vendor_id:
+          type: string
+          format: uuid
+        campus_id:
+          type: string
+          format: uuid
+        delivery_room_id:
+          type: string
+          format: uuid
+          nullable: true
+        status:
+          type: string
+          default: "draft"
+        order_date:
+          type: string
+          format: date
+        expected_delivery_on:
+          type: string
+          format: date
+          nullable: true
+        requested_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        approved_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        approved_at:
+          type: string
+          format: date-time
+          nullable: true
+        ordered_at:
+          type: string
+          format: date-time
+          nullable: true
+        subtotal_amount:
+          type: string
+          default: 0
+        tax_amount:
+          type: string
+          default: 0
+        total_amount:
+          type: number
+          format: double
+          nullable: true
+        payment_terms:
+          type: string
+          nullable: true
+        cancelled_reason:
+          type: string
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+
+    PurchaseOrderUpdateRequest:
+      type: object
+      required:
+        - po_no
+        - vendor_id
+        - campus_id
+        - delivery_room_id
+        - status
+        - order_date
+        - expected_delivery_on
+        - requested_by_user_id
+        - approved_by_user_id
+        - approved_at
+        - ordered_at
+        - subtotal_amount
+        - tax_amount
+        - total_amount
+        - payment_terms
+        - cancelled_reason
+        - notes
+      additionalProperties: false
+      properties:
+        po_no:
+          type: string
+          maxLength: 20
+        vendor_id:
+          type: string
+          format: uuid
+        campus_id:
+          type: string
+          format: uuid
+        delivery_room_id:
+          type: string
+          format: uuid
+          nullable: true
+        status:
+          type: string
+          default: "draft"
+        order_date:
+          type: string
+          format: date
+        expected_delivery_on:
+          type: string
+          format: date
+          nullable: true
+        requested_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        approved_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        approved_at:
+          type: string
+          format: date-time
+          nullable: true
+        ordered_at:
+          type: string
+          format: date-time
+          nullable: true
+        subtotal_amount:
+          type: string
+          default: 0
+        tax_amount:
+          type: string
+          default: 0
+        total_amount:
+          type: number
+          format: double
+          nullable: true
+        payment_terms:
+          type: string
+          nullable: true
+        cancelled_reason:
+          type: string
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+
+    PurchaseOrderResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - purchase_order_id
+        - po_no
+        - vendor_id
+        - campus_id
+        - status
+        - order_date
+        - subtotal_amount
+        - tax_amount
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        purchase_order_id:
+          type: string
+          format: uuid
+          readOnly: true
+        po_no:
+          type: string
+          maxLength: 20
+        vendor_id:
+          type: string
+          format: uuid
+        campus_id:
+          type: string
+          format: uuid
+        delivery_room_id:
+          type: string
+          format: uuid
+          nullable: true
+        status:
+          type: string
+          default: "draft"
+        order_date:
+          type: string
+          format: date
+        expected_delivery_on:
+          type: string
+          format: date
+          nullable: true
+        requested_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        approved_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        approved_at:
+          type: string
+          format: date-time
+          nullable: true
+        ordered_at:
+          type: string
+          format: date-time
+          nullable: true
+        subtotal_amount:
+          type: string
+          default: 0
+        tax_amount:
+          type: string
+          default: 0
+        total_amount:
+          type: number
+          format: double
+          nullable: true
+        payment_terms:
+          type: string
+          nullable: true
+        cancelled_reason:
+          type: string
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

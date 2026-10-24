@@ -1,0 +1,475 @@
+openapi: 3.0.0
+x-sql-table: visitor_visit
+info:
+  title: VisitResponse API
+  version: 1.0.0
+paths:
+  /visit:
+    get:
+      operationId: listVisit
+      summary: Get all visit
+      responses:
+        '200':
+          description: List of visit
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/VisitResponse'
+    post:
+      operationId: createVisit
+      summary: Create a new visit
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VisitRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VisitResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /visit/{id}:
+    get:
+      operationId: getVisitById
+      summary: Get visit by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: visit object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VisitResponse'
+        '404':
+          description: visit not found
+    put:
+      operationId: updateVisit
+      summary: Update visit by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VisitUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VisitResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: visit not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteVisit
+      summary: Delete visit by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: visit not found
+components:
+  schemas:
+
+    VisitRequest:
+      type: object
+      required:
+        - visit_no
+        - guest_id
+        - campus_id
+        - purpose
+      additionalProperties: false
+      properties:
+        visit_no:
+          type: string
+          maxLength: 30
+        guest_id:
+          type: string
+          format: uuid
+        campus_id:
+          type: string
+          format: uuid
+        host_person_id:
+          type: string
+          format: uuid
+          nullable: true
+        purpose:
+          type: string
+          maxLength: 30
+        purpose_detail:
+          type: string
+          nullable: true
+        status:
+          type: string
+          default: "pre_registered"
+        check_in_method:
+          type: string
+          nullable: true
+          maxLength: 20
+        expected_at:
+          type: string
+          format: date-time
+          nullable: true
+        expected_until:
+          type: string
+          format: date-time
+          nullable: true
+        pre_registered_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        party_size:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 50
+          default: 1
+        destination_room_id:
+          type: string
+          format: uuid
+          nullable: true
+        escort_person_id:
+          type: string
+          format: uuid
+          nullable: true
+        badge_no:
+          type: string
+          nullable: true
+          maxLength: 20
+        vehicle_no:
+          type: string
+          nullable: true
+          maxLength: 20
+        items_declared:
+          type: string
+          nullable: true
+        checked_in_at:
+          type: string
+          format: date-time
+          nullable: true
+        checked_in_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        checked_out_at:
+          type: string
+          format: date-time
+          nullable: true
+        checked_out_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        watchlist_id:
+          type: string
+          format: uuid
+          nullable: true
+        denied_reason:
+          type: string
+          nullable: true
+        cancelled_reason:
+          type: string
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+
+    VisitUpdateRequest:
+      type: object
+      required:
+        - visit_no
+        - guest_id
+        - campus_id
+        - host_person_id
+        - purpose
+        - purpose_detail
+        - status
+        - check_in_method
+        - expected_at
+        - expected_until
+        - pre_registered_by_user_id
+        - party_size
+        - destination_room_id
+        - escort_person_id
+        - badge_no
+        - vehicle_no
+        - items_declared
+        - checked_in_at
+        - checked_in_by_user_id
+        - checked_out_at
+        - checked_out_by_user_id
+        - watchlist_id
+        - denied_reason
+        - cancelled_reason
+        - notes
+      additionalProperties: false
+      properties:
+        visit_no:
+          type: string
+          maxLength: 30
+        guest_id:
+          type: string
+          format: uuid
+        campus_id:
+          type: string
+          format: uuid
+        host_person_id:
+          type: string
+          format: uuid
+          nullable: true
+        purpose:
+          type: string
+          maxLength: 30
+        purpose_detail:
+          type: string
+          nullable: true
+        status:
+          type: string
+          default: "pre_registered"
+        check_in_method:
+          type: string
+          nullable: true
+          maxLength: 20
+        expected_at:
+          type: string
+          format: date-time
+          nullable: true
+        expected_until:
+          type: string
+          format: date-time
+          nullable: true
+        pre_registered_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        party_size:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 50
+          default: 1
+        destination_room_id:
+          type: string
+          format: uuid
+          nullable: true
+        escort_person_id:
+          type: string
+          format: uuid
+          nullable: true
+        badge_no:
+          type: string
+          nullable: true
+          maxLength: 20
+        vehicle_no:
+          type: string
+          nullable: true
+          maxLength: 20
+        items_declared:
+          type: string
+          nullable: true
+        checked_in_at:
+          type: string
+          format: date-time
+          nullable: true
+        checked_in_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        checked_out_at:
+          type: string
+          format: date-time
+          nullable: true
+        checked_out_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        watchlist_id:
+          type: string
+          format: uuid
+          nullable: true
+        denied_reason:
+          type: string
+          nullable: true
+        cancelled_reason:
+          type: string
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+
+    VisitResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - visit_id
+        - visit_no
+        - guest_id
+        - campus_id
+        - purpose
+        - status
+        - party_size
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        visit_id:
+          type: string
+          format: uuid
+          readOnly: true
+        visit_no:
+          type: string
+          maxLength: 30
+        guest_id:
+          type: string
+          format: uuid
+        campus_id:
+          type: string
+          format: uuid
+        host_person_id:
+          type: string
+          format: uuid
+          nullable: true
+        purpose:
+          type: string
+          maxLength: 30
+        purpose_detail:
+          type: string
+          nullable: true
+        status:
+          type: string
+          default: "pre_registered"
+        check_in_method:
+          type: string
+          nullable: true
+          maxLength: 20
+        expected_at:
+          type: string
+          format: date-time
+          nullable: true
+        expected_until:
+          type: string
+          format: date-time
+          nullable: true
+        pre_registered_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        party_size:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 50
+          default: 1
+        destination_room_id:
+          type: string
+          format: uuid
+          nullable: true
+        escort_person_id:
+          type: string
+          format: uuid
+          nullable: true
+        badge_no:
+          type: string
+          nullable: true
+          maxLength: 20
+        vehicle_no:
+          type: string
+          nullable: true
+          maxLength: 20
+        items_declared:
+          type: string
+          nullable: true
+        checked_in_at:
+          type: string
+          format: date-time
+          nullable: true
+        checked_in_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        checked_out_at:
+          type: string
+          format: date-time
+          nullable: true
+        checked_out_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        watchlist_id:
+          type: string
+          format: uuid
+          nullable: true
+        denied_reason:
+          type: string
+          nullable: true
+        cancelled_reason:
+          type: string
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

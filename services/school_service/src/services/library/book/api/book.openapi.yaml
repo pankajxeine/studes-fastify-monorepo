@@ -1,0 +1,313 @@
+openapi: 3.0.0
+x-sql-table: lib_book
+info:
+  title: BookResponse API
+  version: 1.0.0
+paths:
+  /book:
+    get:
+      operationId: listBook
+      summary: Get all book
+      responses:
+        '200':
+          description: List of book
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BookResponse'
+    post:
+      operationId: createBook
+      summary: Create a new book
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /book/{id}:
+    get:
+      operationId: getBookById
+      summary: Get book by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: book object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookResponse'
+        '404':
+          description: book not found
+    put:
+      operationId: updateBook
+      summary: Update book by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: book not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteBook
+      summary: Delete book by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: book not found
+components:
+  schemas:
+
+    BookRequest:
+      type: object
+      required:
+        - book_category_code
+        - title
+      additionalProperties: false
+      properties:
+        book_category_code:
+          type: string
+        isbn:
+          type: string
+          nullable: true
+          maxLength: 13
+        title:
+          type: string
+        subtitle:
+          type: string
+          nullable: true
+        edition:
+          type: string
+          nullable: true
+          maxLength: 30
+        publisher:
+          type: string
+          nullable: true
+        published_year:
+          type: integer
+          format: int32
+          nullable: true
+          minimum: 1450
+          maximum: 2100
+        language_code:
+          type: string
+          maxLength: 8
+          default: "en"
+        page_count:
+          type: integer
+          format: int32
+          nullable: true
+        call_no:
+          type: string
+          nullable: true
+          maxLength: 40
+        summary:
+          type: string
+          nullable: true
+        is_reference_only:
+          type: boolean
+          default: false
+
+    BookUpdateRequest:
+      type: object
+      required:
+        - book_category_code
+        - isbn
+        - title
+        - subtitle
+        - edition
+        - publisher
+        - published_year
+        - language_code
+        - page_count
+        - call_no
+        - summary
+        - is_reference_only
+      additionalProperties: false
+      properties:
+        book_category_code:
+          type: string
+        isbn:
+          type: string
+          nullable: true
+          maxLength: 13
+        title:
+          type: string
+        subtitle:
+          type: string
+          nullable: true
+        edition:
+          type: string
+          nullable: true
+          maxLength: 30
+        publisher:
+          type: string
+          nullable: true
+        published_year:
+          type: integer
+          format: int32
+          nullable: true
+          minimum: 1450
+          maximum: 2100
+        language_code:
+          type: string
+          maxLength: 8
+          default: "en"
+        page_count:
+          type: integer
+          format: int32
+          nullable: true
+        call_no:
+          type: string
+          nullable: true
+          maxLength: 40
+        summary:
+          type: string
+          nullable: true
+        is_reference_only:
+          type: boolean
+          default: false
+
+    BookResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - book_id
+        - book_category_code
+        - title
+        - language_code
+        - is_reference_only
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        book_id:
+          type: string
+          format: uuid
+          readOnly: true
+        book_category_code:
+          type: string
+        isbn:
+          type: string
+          nullable: true
+          maxLength: 13
+        title:
+          type: string
+        subtitle:
+          type: string
+          nullable: true
+        edition:
+          type: string
+          nullable: true
+          maxLength: 30
+        publisher:
+          type: string
+          nullable: true
+        published_year:
+          type: integer
+          format: int32
+          nullable: true
+          minimum: 1450
+          maximum: 2100
+        language_code:
+          type: string
+          maxLength: 8
+          default: "en"
+        page_count:
+          type: integer
+          format: int32
+          nullable: true
+        call_no:
+          type: string
+          nullable: true
+          maxLength: 40
+        summary:
+          type: string
+          nullable: true
+        is_reference_only:
+          type: boolean
+          default: false
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        deleted_at:
+          type: string
+          format: date-time
+          nullable: true
+          readOnly: true
+  

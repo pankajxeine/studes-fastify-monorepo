@@ -1,0 +1,173 @@
+openapi: 3.0.0
+x-sql-table: acad_course_prerequisite
+info:
+  title: CoursePrerequisiteResponse API
+  version: 1.0.0
+paths:
+  /course_prerequisite:
+    get:
+      operationId: listCoursePrerequisite
+      summary: Get all course_prerequisite
+      responses:
+        '200':
+          description: List of course_prerequisite
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CoursePrerequisiteResponse'
+    post:
+      operationId: createCoursePrerequisite
+      summary: Create a new course_prerequisite
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CoursePrerequisiteRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CoursePrerequisiteResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /course_prerequisite/{id}:
+    get:
+      operationId: getCoursePrerequisiteById
+      summary: Get course_prerequisite by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: course_prerequisite object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CoursePrerequisiteResponse'
+        '404':
+          description: course_prerequisite not found
+    put:
+      operationId: updateCoursePrerequisite
+      summary: Update course_prerequisite by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CoursePrerequisiteUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CoursePrerequisiteResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: course_prerequisite not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteCoursePrerequisite
+      summary: Delete course_prerequisite by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: course_prerequisite not found
+components:
+  schemas:
+
+    CoursePrerequisiteRequest:
+      type: object
+      required:
+        - course_id
+        - prerequisite_course_id
+      additionalProperties: false
+      properties:
+        course_id:
+          type: string
+          format: uuid
+        prerequisite_course_id:
+          type: string
+          format: uuid
+
+    CoursePrerequisiteUpdateRequest:
+      type: object
+      required:
+        - course_id
+        - prerequisite_course_id
+      additionalProperties: false
+      properties:
+        course_id:
+          type: string
+          format: uuid
+        prerequisite_course_id:
+          type: string
+          format: uuid
+
+    CoursePrerequisiteResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - course_id
+        - prerequisite_course_id
+        - created_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        course_id:
+          type: string
+          format: uuid
+        prerequisite_course_id:
+          type: string
+          format: uuid
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

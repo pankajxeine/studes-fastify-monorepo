@@ -1,0 +1,24 @@
+
+export type NotificationResponse = 
+{
+  id: number
+  public_id: string
+  record_code: string
+  notification_id: string
+  template_version_id: string
+  locale: string
+  channel: string
+  recipient_address: string
+  tenant_id?: (string) | null
+  related_type?: (string) | null
+  related_id?: (string) | null
+  payload: unknown
+  status: string
+  priority: number
+  idempotency_key: string
+  scheduled_at: string
+  sent_at?: (string) | null
+  delivered_at?: (string) | null
+  created_at: string
+  updated_at: string
+}

@@ -1,0 +1,354 @@
+openapi: 3.0.0
+x-sql-table: crm_opportunity
+info:
+  title: OpportunityResponse API
+  version: 1.0.0
+paths:
+  /opportunity:
+    get:
+      operationId: listOpportunity
+      summary: Get all opportunity
+      responses:
+        '200':
+          description: List of opportunity
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OpportunityResponse'
+    post:
+      operationId: createOpportunity
+      summary: Create a new opportunity
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpportunityRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpportunityResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /opportunity/{id}:
+    get:
+      operationId: getOpportunityById
+      summary: Get opportunity by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: opportunity object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpportunityResponse'
+        '404':
+          description: opportunity not found
+    put:
+      operationId: updateOpportunity
+      summary: Update opportunity by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpportunityUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpportunityResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: opportunity not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteOpportunity
+      summary: Delete opportunity by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: opportunity not found
+components:
+  schemas:
+
+    OpportunityRequest:
+      type: object
+      required:
+        - account_id
+        - name
+        - application_id
+        - currency_code
+      additionalProperties: false
+      properties:
+        opportunity_number:
+          type: string
+          maxLength: 20
+        account_id:
+          type: string
+          format: uuid
+        lead_id:
+          type: string
+          format: uuid
+          nullable: true
+        name:
+          type: string
+        application_id:
+          type: string
+          format: uuid
+        deal_type:
+          type: string
+          maxLength: 12
+          default: "new"
+        stage:
+          type: string
+          maxLength: 15
+          default: "prospecting"
+        amount:
+          type: string
+          nullable: true
+        currency_code:
+          type: string
+        probability:
+          type: string
+          default: 10
+        expected_close_date:
+          type: string
+          format: date
+          nullable: true
+        owner_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        sales_agent_id:
+          type: string
+          format: uuid
+          nullable: true
+        branch_id:
+          type: string
+          format: uuid
+          nullable: true
+        lost_reason:
+          type: string
+          nullable: true
+        closed_at:
+          type: string
+          format: date-time
+          nullable: true
+
+    OpportunityUpdateRequest:
+      type: object
+      required:
+        - opportunity_number
+        - account_id
+        - lead_id
+        - name
+        - application_id
+        - deal_type
+        - stage
+        - amount
+        - currency_code
+        - probability
+        - expected_close_date
+        - owner_user_id
+        - sales_agent_id
+        - branch_id
+        - lost_reason
+        - closed_at
+      additionalProperties: false
+      properties:
+        opportunity_number:
+          type: string
+          maxLength: 20
+        account_id:
+          type: string
+          format: uuid
+        lead_id:
+          type: string
+          format: uuid
+          nullable: true
+        name:
+          type: string
+        application_id:
+          type: string
+          format: uuid
+        deal_type:
+          type: string
+          maxLength: 12
+          default: "new"
+        stage:
+          type: string
+          maxLength: 15
+          default: "prospecting"
+        amount:
+          type: string
+          nullable: true
+        currency_code:
+          type: string
+        probability:
+          type: string
+          default: 10
+        expected_close_date:
+          type: string
+          format: date
+          nullable: true
+        owner_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        sales_agent_id:
+          type: string
+          format: uuid
+          nullable: true
+        branch_id:
+          type: string
+          format: uuid
+          nullable: true
+        lost_reason:
+          type: string
+          nullable: true
+        closed_at:
+          type: string
+          format: date-time
+          nullable: true
+
+    OpportunityResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - opportunity_id
+        - opportunity_number
+        - account_id
+        - name
+        - application_id
+        - deal_type
+        - stage
+        - currency_code
+        - probability
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        opportunity_id:
+          type: string
+          format: uuid
+          readOnly: true
+        opportunity_number:
+          type: string
+          maxLength: 20
+        account_id:
+          type: string
+          format: uuid
+        lead_id:
+          type: string
+          format: uuid
+          nullable: true
+        name:
+          type: string
+        application_id:
+          type: string
+          format: uuid
+        deal_type:
+          type: string
+          maxLength: 12
+          default: "new"
+        stage:
+          type: string
+          maxLength: 15
+          default: "prospecting"
+        amount:
+          type: string
+          nullable: true
+        currency_code:
+          type: string
+        probability:
+          type: string
+          default: 10
+        expected_close_date:
+          type: string
+          format: date
+          nullable: true
+        owner_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        sales_agent_id:
+          type: string
+          format: uuid
+          nullable: true
+        branch_id:
+          type: string
+          format: uuid
+          nullable: true
+        lost_reason:
+          type: string
+          nullable: true
+        closed_at:
+          type: string
+          format: date-time
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

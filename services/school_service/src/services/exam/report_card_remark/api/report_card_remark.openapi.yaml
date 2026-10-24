@@ -1,0 +1,244 @@
+openapi: 3.0.0
+x-sql-table: exam_report_card_remark
+info:
+  title: ReportCardRemarkResponse API
+  version: 1.0.0
+paths:
+  /report_card_remark:
+    get:
+      operationId: listReportCardRemark
+      summary: Get all report_card_remark
+      responses:
+        '200':
+          description: List of report_card_remark
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ReportCardRemarkResponse'
+    post:
+      operationId: createReportCardRemark
+      summary: Create a new report_card_remark
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReportCardRemarkRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportCardRemarkResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /report_card_remark/{id}:
+    get:
+      operationId: getReportCardRemarkById
+      summary: Get report_card_remark by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: report_card_remark object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportCardRemarkResponse'
+        '404':
+          description: report_card_remark not found
+    put:
+      operationId: updateReportCardRemark
+      summary: Update report_card_remark by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReportCardRemarkUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportCardRemarkResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: report_card_remark not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteReportCardRemark
+      summary: Delete report_card_remark by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: report_card_remark not found
+components:
+  schemas:
+
+    ReportCardRemarkRequest:
+      type: object
+      required:
+        - report_card_id
+        - remark_by_staff_id
+        - remark_kind
+        - remark
+      additionalProperties: false
+      properties:
+        report_card_id:
+          type: string
+          format: uuid
+        remark_by_staff_id:
+          type: string
+          format: uuid
+        remark_kind:
+          type: string
+          enum:
+            - "class_teacher"
+            - "subject_teacher"
+            - "principal"
+            - "counsellor"
+        course_offering_id:
+          type: string
+          format: uuid
+          nullable: true
+        remark:
+          type: string
+        areas_to_improve:
+          type: string
+          nullable: true
+
+    ReportCardRemarkUpdateRequest:
+      type: object
+      required:
+        - report_card_id
+        - remark_by_staff_id
+        - remark_kind
+        - course_offering_id
+        - remark
+        - areas_to_improve
+      additionalProperties: false
+      properties:
+        report_card_id:
+          type: string
+          format: uuid
+        remark_by_staff_id:
+          type: string
+          format: uuid
+        remark_kind:
+          type: string
+          enum:
+            - "class_teacher"
+            - "subject_teacher"
+            - "principal"
+            - "counsellor"
+        course_offering_id:
+          type: string
+          format: uuid
+          nullable: true
+        remark:
+          type: string
+        areas_to_improve:
+          type: string
+          nullable: true
+
+    ReportCardRemarkResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - report_card_remark_id
+        - report_card_id
+        - remark_by_staff_id
+        - remark_kind
+        - remark
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        report_card_remark_id:
+          type: string
+          format: uuid
+          readOnly: true
+        report_card_id:
+          type: string
+          format: uuid
+        remark_by_staff_id:
+          type: string
+          format: uuid
+        remark_kind:
+          type: string
+          enum:
+            - "class_teacher"
+            - "subject_teacher"
+            - "principal"
+            - "counsellor"
+        course_offering_id:
+          type: string
+          format: uuid
+          nullable: true
+        remark:
+          type: string
+        areas_to_improve:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

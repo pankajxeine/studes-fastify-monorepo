@@ -1,0 +1,250 @@
+openapi: 3.0.0
+x-sql-table: admis_admission_cycle_seat
+info:
+  title: AdmissionCycleSeatResponse API
+  version: 1.0.0
+paths:
+  /admission_cycle_seat:
+    get:
+      operationId: listAdmissionCycleSeat
+      summary: Get all admission_cycle_seat
+      responses:
+        '200':
+          description: List of admission_cycle_seat
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AdmissionCycleSeatResponse'
+    post:
+      operationId: createAdmissionCycleSeat
+      summary: Create a new admission_cycle_seat
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdmissionCycleSeatRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdmissionCycleSeatResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /admission_cycle_seat/{id}:
+    get:
+      operationId: getAdmissionCycleSeatById
+      summary: Get admission_cycle_seat by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: admission_cycle_seat object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdmissionCycleSeatResponse'
+        '404':
+          description: admission_cycle_seat not found
+    put:
+      operationId: updateAdmissionCycleSeat
+      summary: Update admission_cycle_seat by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdmissionCycleSeatUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdmissionCycleSeatResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: admission_cycle_seat not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteAdmissionCycleSeat
+      summary: Delete admission_cycle_seat by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: admission_cycle_seat not found
+components:
+  schemas:
+
+    AdmissionCycleSeatRequest:
+      type: object
+      required:
+        - admission_cycle_id
+        - grade_level_id
+        - seats_total
+      additionalProperties: false
+      properties:
+        admission_cycle_id:
+          type: string
+          format: uuid
+        grade_level_id:
+          type: string
+          format: uuid
+        seats_total:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 1000
+        seats_reserved:
+          type: integer
+          format: int32
+          default: 0
+        waitlist_limit:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 500
+          default: 0
+        notes:
+          type: string
+          nullable: true
+
+    AdmissionCycleSeatUpdateRequest:
+      type: object
+      required:
+        - admission_cycle_id
+        - grade_level_id
+        - seats_total
+        - seats_reserved
+        - waitlist_limit
+        - notes
+      additionalProperties: false
+      properties:
+        admission_cycle_id:
+          type: string
+          format: uuid
+        grade_level_id:
+          type: string
+          format: uuid
+        seats_total:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 1000
+        seats_reserved:
+          type: integer
+          format: int32
+          default: 0
+        waitlist_limit:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 500
+          default: 0
+        notes:
+          type: string
+          nullable: true
+
+    AdmissionCycleSeatResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - admission_cycle_seat_id
+        - admission_cycle_id
+        - grade_level_id
+        - seats_total
+        - seats_reserved
+        - waitlist_limit
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        admission_cycle_seat_id:
+          type: string
+          format: uuid
+          readOnly: true
+        admission_cycle_id:
+          type: string
+          format: uuid
+        grade_level_id:
+          type: string
+          format: uuid
+        seats_total:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 1000
+        seats_reserved:
+          type: integer
+          format: int32
+          default: 0
+        waitlist_limit:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 500
+          default: 0
+        notes:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

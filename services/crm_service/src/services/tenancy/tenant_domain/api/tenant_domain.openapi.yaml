@@ -1,0 +1,247 @@
+openapi: 3.0.0
+x-sql-table: tenancy_tenant_domain
+info:
+  title: TenantDomainResponse API
+  version: 1.0.0
+paths:
+  /tenant_domain:
+    get:
+      operationId: listTenantDomain
+      summary: Get all tenant_domain
+      responses:
+        '200':
+          description: List of tenant_domain
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TenantDomainResponse'
+    post:
+      operationId: createTenantDomain
+      summary: Create a new tenant_domain
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TenantDomainRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TenantDomainResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /tenant_domain/{id}:
+    get:
+      operationId: getTenantDomainById
+      summary: Get tenant_domain by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: tenant_domain object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TenantDomainResponse'
+        '404':
+          description: tenant_domain not found
+    put:
+      operationId: updateTenantDomain
+      summary: Update tenant_domain by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TenantDomainUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TenantDomainResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: tenant_domain not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteTenantDomain
+      summary: Delete tenant_domain by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: tenant_domain not found
+components:
+  schemas:
+
+    TenantDomainRequest:
+      type: object
+      required:
+        - tenant_application_id
+        - hostname
+      additionalProperties: false
+      properties:
+        tenant_application_id:
+          type: string
+          format: uuid
+        hostname:
+          type: string
+        kind:
+          type: string
+          maxLength: 10
+          default: "subdomain"
+        is_primary:
+          type: boolean
+          default: false
+        verification_token:
+          type: string
+          nullable: true
+        verified_at:
+          type: string
+          format: date-time
+          nullable: true
+        tls_status:
+          type: string
+          maxLength: 10
+          default: "pending"
+
+    TenantDomainUpdateRequest:
+      type: object
+      required:
+        - tenant_application_id
+        - hostname
+        - kind
+        - is_primary
+        - verification_token
+        - verified_at
+        - tls_status
+      additionalProperties: false
+      properties:
+        tenant_application_id:
+          type: string
+          format: uuid
+        hostname:
+          type: string
+        kind:
+          type: string
+          maxLength: 10
+          default: "subdomain"
+        is_primary:
+          type: boolean
+          default: false
+        verification_token:
+          type: string
+          nullable: true
+        verified_at:
+          type: string
+          format: date-time
+          nullable: true
+        tls_status:
+          type: string
+          maxLength: 10
+          default: "pending"
+
+    TenantDomainResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - tenant_domain_id
+        - tenant_application_id
+        - hostname
+        - kind
+        - is_primary
+        - tls_status
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        tenant_domain_id:
+          type: string
+          format: uuid
+          readOnly: true
+        tenant_application_id:
+          type: string
+          format: uuid
+        hostname:
+          type: string
+        kind:
+          type: string
+          maxLength: 10
+          default: "subdomain"
+        is_primary:
+          type: boolean
+          default: false
+        verification_token:
+          type: string
+          nullable: true
+        verified_at:
+          type: string
+          format: date-time
+          nullable: true
+        tls_status:
+          type: string
+          maxLength: 10
+          default: "pending"
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

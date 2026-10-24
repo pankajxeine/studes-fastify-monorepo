@@ -1,0 +1,170 @@
+openapi: 3.0.0
+x-sql-table: cntn_menu_item_allergen
+info:
+  title: MenuItemAllergenResponse API
+  version: 1.0.0
+paths:
+  /menu_item_allergen:
+    get:
+      operationId: listMenuItemAllergen
+      summary: Get all menu_item_allergen
+      responses:
+        '200':
+          description: List of menu_item_allergen
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MenuItemAllergenResponse'
+    post:
+      operationId: createMenuItemAllergen
+      summary: Create a new menu_item_allergen
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MenuItemAllergenRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MenuItemAllergenResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /menu_item_allergen/{id}:
+    get:
+      operationId: getMenuItemAllergenById
+      summary: Get menu_item_allergen by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: menu_item_allergen object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MenuItemAllergenResponse'
+        '404':
+          description: menu_item_allergen not found
+    put:
+      operationId: updateMenuItemAllergen
+      summary: Update menu_item_allergen by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MenuItemAllergenUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MenuItemAllergenResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: menu_item_allergen not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteMenuItemAllergen
+      summary: Delete menu_item_allergen by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: menu_item_allergen not found
+components:
+  schemas:
+
+    MenuItemAllergenRequest:
+      type: object
+      required:
+        - menu_item_id
+        - allergen_code
+      additionalProperties: false
+      properties:
+        menu_item_id:
+          type: string
+          format: uuid
+        allergen_code:
+          type: string
+
+    MenuItemAllergenUpdateRequest:
+      type: object
+      required:
+        - menu_item_id
+        - allergen_code
+      additionalProperties: false
+      properties:
+        menu_item_id:
+          type: string
+          format: uuid
+        allergen_code:
+          type: string
+
+    MenuItemAllergenResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - menu_item_id
+        - allergen_code
+        - created_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        menu_item_id:
+          type: string
+          format: uuid
+        allergen_code:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

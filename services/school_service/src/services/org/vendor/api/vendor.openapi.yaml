@@ -1,0 +1,427 @@
+openapi: 3.0.0
+x-sql-table: org_vendor
+info:
+  title: VendorResponse API
+  version: 1.0.0
+paths:
+  /vendor:
+    get:
+      operationId: listVendor
+      summary: Get all vendor
+      responses:
+        '200':
+          description: List of vendor
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/VendorResponse'
+    post:
+      operationId: createVendor
+      summary: Create a new vendor
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VendorRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VendorResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /vendor/{id}:
+    get:
+      operationId: getVendorById
+      summary: Get vendor by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: vendor object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VendorResponse'
+        '404':
+          description: vendor not found
+    put:
+      operationId: updateVendor
+      summary: Update vendor by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VendorUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VendorResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: vendor not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteVendor
+      summary: Delete vendor by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: vendor not found
+components:
+  schemas:
+
+    VendorRequest:
+      type: object
+      required:
+        - code
+        - name
+        - service_category
+      additionalProperties: false
+      properties:
+        code:
+          type: string
+          maxLength: 20
+        name:
+          type: string
+        legal_name:
+          type: string
+          nullable: true
+        service_category:
+          type: string
+          maxLength: 30
+        tax_id:
+          type: string
+          nullable: true
+          maxLength: 40
+        contact_name:
+          type: string
+          nullable: true
+        email:
+          type: string
+          nullable: true
+        phone:
+          type: string
+          nullable: true
+        website:
+          type: string
+          nullable: true
+        address_line1:
+          type: string
+          nullable: true
+        address_line2:
+          type: string
+          nullable: true
+        city:
+          type: string
+          nullable: true
+        state_region:
+          type: string
+          nullable: true
+        postal_code:
+          type: string
+          nullable: true
+          maxLength: 20
+        country_code:
+          type: string
+          nullable: true
+          maxLength: 2
+        payment_terms_days:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 180
+          default: 30
+        bank_account_name:
+          type: string
+          nullable: true
+        bank_account_no:
+          type: string
+          nullable: true
+          maxLength: 40
+        bank_routing_code:
+          type: string
+          nullable: true
+          maxLength: 20
+        rating:
+          type: integer
+          format: int32
+          nullable: true
+          minimum: 1
+          maximum: 5
+        is_active:
+          type: boolean
+          default: true
+        notes:
+          type: string
+          nullable: true
+
+    VendorUpdateRequest:
+      type: object
+      required:
+        - code
+        - name
+        - legal_name
+        - service_category
+        - tax_id
+        - contact_name
+        - email
+        - phone
+        - website
+        - address_line1
+        - address_line2
+        - city
+        - state_region
+        - postal_code
+        - country_code
+        - payment_terms_days
+        - bank_account_name
+        - bank_account_no
+        - bank_routing_code
+        - rating
+        - is_active
+        - notes
+      additionalProperties: false
+      properties:
+        code:
+          type: string
+          maxLength: 20
+        name:
+          type: string
+        legal_name:
+          type: string
+          nullable: true
+        service_category:
+          type: string
+          maxLength: 30
+        tax_id:
+          type: string
+          nullable: true
+          maxLength: 40
+        contact_name:
+          type: string
+          nullable: true
+        email:
+          type: string
+          nullable: true
+        phone:
+          type: string
+          nullable: true
+        website:
+          type: string
+          nullable: true
+        address_line1:
+          type: string
+          nullable: true
+        address_line2:
+          type: string
+          nullable: true
+        city:
+          type: string
+          nullable: true
+        state_region:
+          type: string
+          nullable: true
+        postal_code:
+          type: string
+          nullable: true
+          maxLength: 20
+        country_code:
+          type: string
+          nullable: true
+          maxLength: 2
+        payment_terms_days:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 180
+          default: 30
+        bank_account_name:
+          type: string
+          nullable: true
+        bank_account_no:
+          type: string
+          nullable: true
+          maxLength: 40
+        bank_routing_code:
+          type: string
+          nullable: true
+          maxLength: 20
+        rating:
+          type: integer
+          format: int32
+          nullable: true
+          minimum: 1
+          maximum: 5
+        is_active:
+          type: boolean
+          default: true
+        notes:
+          type: string
+          nullable: true
+
+    VendorResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - vendor_id
+        - code
+        - name
+        - service_category
+        - payment_terms_days
+        - is_active
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        vendor_id:
+          type: string
+          format: uuid
+          readOnly: true
+        code:
+          type: string
+          maxLength: 20
+        name:
+          type: string
+        legal_name:
+          type: string
+          nullable: true
+        service_category:
+          type: string
+          maxLength: 30
+        tax_id:
+          type: string
+          nullable: true
+          maxLength: 40
+        contact_name:
+          type: string
+          nullable: true
+        email:
+          type: string
+          nullable: true
+        phone:
+          type: string
+          nullable: true
+        website:
+          type: string
+          nullable: true
+        address_line1:
+          type: string
+          nullable: true
+        address_line2:
+          type: string
+          nullable: true
+        city:
+          type: string
+          nullable: true
+        state_region:
+          type: string
+          nullable: true
+        postal_code:
+          type: string
+          nullable: true
+          maxLength: 20
+        country_code:
+          type: string
+          nullable: true
+          maxLength: 2
+        payment_terms_days:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 180
+          default: 30
+        bank_account_name:
+          type: string
+          nullable: true
+        bank_account_no:
+          type: string
+          nullable: true
+          maxLength: 40
+        bank_routing_code:
+          type: string
+          nullable: true
+          maxLength: 20
+        rating:
+          type: integer
+          format: int32
+          nullable: true
+          minimum: 1
+          maximum: 5
+        is_active:
+          type: boolean
+          default: true
+        notes:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        deleted_at:
+          type: string
+          format: date-time
+          nullable: true
+          readOnly: true
+  

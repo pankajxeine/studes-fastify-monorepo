@@ -1,0 +1,368 @@
+openapi: 3.0.0
+x-sql-table: exam_exam
+info:
+  title: ExamResponse API
+  version: 1.0.0
+paths:
+  /exam:
+    get:
+      operationId: listExam
+      summary: Get all exam
+      responses:
+        '200':
+          description: List of exam
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ExamResponse'
+    post:
+      operationId: createExam
+      summary: Create a new exam
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExamRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExamResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /exam/{id}:
+    get:
+      operationId: getExamById
+      summary: Get exam by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: exam object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExamResponse'
+        '404':
+          description: exam not found
+    put:
+      operationId: updateExam
+      summary: Update exam by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExamUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExamResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: exam not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteExam
+      summary: Delete exam by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: exam not found
+components:
+  schemas:
+
+    ExamRequest:
+      type: object
+      required:
+        - academic_year_id
+        - term_id
+        - campus_id
+        - assessment_type_code
+        - code
+        - name
+        - start_date
+        - end_date
+      additionalProperties: false
+      properties:
+        academic_year_id:
+          type: string
+          format: uuid
+        term_id:
+          type: string
+          format: uuid
+        campus_id:
+          type: string
+          format: uuid
+        assessment_type_code:
+          type: string
+        code:
+          type: string
+          maxLength: 30
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        exam_window:
+          type: string
+          nullable: true
+        status:
+          type: string
+          default: "draft"
+          enum:
+            - "draft"
+            - "scheduled"
+            - "ongoing"
+            - "marks_entry"
+            - "published"
+            - "cancelled"
+        marks_entry_due_on:
+          type: string
+          format: date
+          nullable: true
+        results_planned_on:
+          type: string
+          format: date
+          nullable: true
+        published_at:
+          type: string
+          format: date-time
+          nullable: true
+        published_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        cancelled_reason:
+          type: string
+          nullable: true
+
+    ExamUpdateRequest:
+      type: object
+      required:
+        - academic_year_id
+        - term_id
+        - campus_id
+        - assessment_type_code
+        - code
+        - name
+        - description
+        - start_date
+        - end_date
+        - exam_window
+        - status
+        - marks_entry_due_on
+        - results_planned_on
+        - published_at
+        - published_by_user_id
+        - cancelled_reason
+      additionalProperties: false
+      properties:
+        academic_year_id:
+          type: string
+          format: uuid
+        term_id:
+          type: string
+          format: uuid
+        campus_id:
+          type: string
+          format: uuid
+        assessment_type_code:
+          type: string
+        code:
+          type: string
+          maxLength: 30
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        exam_window:
+          type: string
+          nullable: true
+        status:
+          type: string
+          default: "draft"
+          enum:
+            - "draft"
+            - "scheduled"
+            - "ongoing"
+            - "marks_entry"
+            - "published"
+            - "cancelled"
+        marks_entry_due_on:
+          type: string
+          format: date
+          nullable: true
+        results_planned_on:
+          type: string
+          format: date
+          nullable: true
+        published_at:
+          type: string
+          format: date-time
+          nullable: true
+        published_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        cancelled_reason:
+          type: string
+          nullable: true
+
+    ExamResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - exam_id
+        - academic_year_id
+        - term_id
+        - campus_id
+        - assessment_type_code
+        - code
+        - name
+        - start_date
+        - end_date
+        - status
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        exam_id:
+          type: string
+          format: uuid
+          readOnly: true
+        academic_year_id:
+          type: string
+          format: uuid
+        term_id:
+          type: string
+          format: uuid
+        campus_id:
+          type: string
+          format: uuid
+        assessment_type_code:
+          type: string
+        code:
+          type: string
+          maxLength: 30
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        exam_window:
+          type: string
+          nullable: true
+        status:
+          type: string
+          default: "draft"
+          enum:
+            - "draft"
+            - "scheduled"
+            - "ongoing"
+            - "marks_entry"
+            - "published"
+            - "cancelled"
+        marks_entry_due_on:
+          type: string
+          format: date
+          nullable: true
+        results_planned_on:
+          type: string
+          format: date
+          nullable: true
+        published_at:
+          type: string
+          format: date-time
+          nullable: true
+        published_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        cancelled_reason:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

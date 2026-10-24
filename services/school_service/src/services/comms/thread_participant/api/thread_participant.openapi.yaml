@@ -1,0 +1,236 @@
+openapi: 3.0.0
+x-sql-table: comms_thread_participant
+info:
+  title: ThreadParticipantResponse API
+  version: 1.0.0
+paths:
+  /thread_participant:
+    get:
+      operationId: listThreadParticipant
+      summary: Get all thread_participant
+      responses:
+        '200':
+          description: List of thread_participant
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ThreadParticipantResponse'
+    post:
+      operationId: createThreadParticipant
+      summary: Create a new thread_participant
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ThreadParticipantRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ThreadParticipantResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /thread_participant/{id}:
+    get:
+      operationId: getThreadParticipantById
+      summary: Get thread_participant by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: thread_participant object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ThreadParticipantResponse'
+        '404':
+          description: thread_participant not found
+    put:
+      operationId: updateThreadParticipant
+      summary: Update thread_participant by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ThreadParticipantUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ThreadParticipantResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: thread_participant not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteThreadParticipant
+      summary: Delete thread_participant by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: thread_participant not found
+components:
+  schemas:
+
+    ThreadParticipantRequest:
+      type: object
+      required:
+        - message_thread_id
+        - app_user_id
+      additionalProperties: false
+      properties:
+        message_thread_id:
+          type: string
+          format: uuid
+        app_user_id:
+          type: string
+          format: uuid
+        joined_at:
+          type: string
+          format: date-time
+        left_at:
+          type: string
+          format: date-time
+          nullable: true
+        last_read_at:
+          type: string
+          format: date-time
+          nullable: true
+        is_muted:
+          type: boolean
+          default: false
+
+    ThreadParticipantUpdateRequest:
+      type: object
+      required:
+        - message_thread_id
+        - app_user_id
+        - joined_at
+        - left_at
+        - last_read_at
+        - is_muted
+      additionalProperties: false
+      properties:
+        message_thread_id:
+          type: string
+          format: uuid
+        app_user_id:
+          type: string
+          format: uuid
+        joined_at:
+          type: string
+          format: date-time
+        left_at:
+          type: string
+          format: date-time
+          nullable: true
+        last_read_at:
+          type: string
+          format: date-time
+          nullable: true
+        is_muted:
+          type: boolean
+          default: false
+
+    ThreadParticipantResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - thread_participant_id
+        - message_thread_id
+        - app_user_id
+        - joined_at
+        - is_muted
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        thread_participant_id:
+          type: string
+          format: uuid
+          readOnly: true
+        message_thread_id:
+          type: string
+          format: uuid
+        app_user_id:
+          type: string
+          format: uuid
+        joined_at:
+          type: string
+          format: date-time
+        left_at:
+          type: string
+          format: date-time
+          nullable: true
+        last_read_at:
+          type: string
+          format: date-time
+          nullable: true
+        is_muted:
+          type: boolean
+          default: false
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

@@ -1,0 +1,288 @@
+openapi: 3.0.0
+x-sql-table: support_kb_article
+info:
+  title: KbArticleResponse API
+  version: 1.0.0
+paths:
+  /kb_article:
+    get:
+      operationId: listKbArticle
+      summary: Get all kb_article
+      responses:
+        '200':
+          description: List of kb_article
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/KbArticleResponse'
+    post:
+      operationId: createKbArticle
+      summary: Create a new kb_article
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KbArticleRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KbArticleResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /kb_article/{id}:
+    get:
+      operationId: getKbArticleById
+      summary: Get kb_article by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: kb_article object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KbArticleResponse'
+        '404':
+          description: kb_article not found
+    put:
+      operationId: updateKbArticle
+      summary: Update kb_article by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KbArticleUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KbArticleResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: kb_article not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteKbArticle
+      summary: Delete kb_article by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: kb_article not found
+components:
+  schemas:
+
+    KbArticleRequest:
+      type: object
+      required:
+        - slug
+        - title
+        - body_md
+        - author_user_id
+      additionalProperties: false
+      properties:
+        slug:
+          type: string
+          maxLength: 120
+        application_id:
+          type: string
+          format: uuid
+          nullable: true
+        module_id:
+          type: string
+          format: uuid
+          nullable: true
+        locale:
+          type: string
+          default: "en-US"
+        title:
+          type: string
+        body_md:
+          type: string
+        status:
+          type: string
+          maxLength: 10
+          default: "draft"
+        visibility:
+          type: string
+          maxLength: 8
+          default: "public"
+        version_no:
+          type: integer
+          format: int32
+          default: 1
+        author_user_id:
+          type: string
+          format: uuid
+        published_at:
+          type: string
+          format: date-time
+          nullable: true
+
+    KbArticleUpdateRequest:
+      type: object
+      required:
+        - slug
+        - application_id
+        - module_id
+        - locale
+        - title
+        - body_md
+        - status
+        - visibility
+        - version_no
+        - author_user_id
+        - published_at
+      additionalProperties: false
+      properties:
+        slug:
+          type: string
+          maxLength: 120
+        application_id:
+          type: string
+          format: uuid
+          nullable: true
+        module_id:
+          type: string
+          format: uuid
+          nullable: true
+        locale:
+          type: string
+          default: "en-US"
+        title:
+          type: string
+        body_md:
+          type: string
+        status:
+          type: string
+          maxLength: 10
+          default: "draft"
+        visibility:
+          type: string
+          maxLength: 8
+          default: "public"
+        version_no:
+          type: integer
+          format: int32
+          default: 1
+        author_user_id:
+          type: string
+          format: uuid
+        published_at:
+          type: string
+          format: date-time
+          nullable: true
+
+    KbArticleResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - kb_article_id
+        - slug
+        - locale
+        - title
+        - body_md
+        - status
+        - visibility
+        - version_no
+        - author_user_id
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        kb_article_id:
+          type: string
+          format: uuid
+          readOnly: true
+        slug:
+          type: string
+          maxLength: 120
+        application_id:
+          type: string
+          format: uuid
+          nullable: true
+        module_id:
+          type: string
+          format: uuid
+          nullable: true
+        locale:
+          type: string
+          default: "en-US"
+        title:
+          type: string
+        body_md:
+          type: string
+        status:
+          type: string
+          maxLength: 10
+          default: "draft"
+        visibility:
+          type: string
+          maxLength: 8
+          default: "public"
+        version_no:
+          type: integer
+          format: int32
+          default: 1
+        author_user_id:
+          type: string
+          format: uuid
+        published_at:
+          type: string
+          format: date-time
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+  

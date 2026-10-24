@@ -1,0 +1,379 @@
+openapi: 3.0.0
+x-sql-table: health_health_checkup
+info:
+  title: HealthCheckupResponse API
+  version: 1.0.0
+paths:
+  /health_checkup:
+    get:
+      operationId: listHealthCheckup
+      summary: Get all health_checkup
+      responses:
+        '200':
+          description: List of health_checkup
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HealthCheckupResponse'
+    post:
+      operationId: createHealthCheckup
+      summary: Create a new health_checkup
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HealthCheckupRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthCheckupResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /health_checkup/{id}:
+    get:
+      operationId: getHealthCheckupById
+      summary: Get health_checkup by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: health_checkup object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthCheckupResponse'
+        '404':
+          description: health_checkup not found
+    put:
+      operationId: updateHealthCheckup
+      summary: Update health_checkup by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HealthCheckupUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthCheckupResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: health_checkup not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteHealthCheckup
+      summary: Delete health_checkup by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: health_checkup not found
+components:
+  schemas:
+
+    HealthCheckupRequest:
+      type: object
+      required:
+        - person_id
+        - checkup_date
+      additionalProperties: false
+      properties:
+        person_id:
+          type: string
+          format: uuid
+        campus_id:
+          type: string
+          format: uuid
+          nullable: true
+        checkup_date:
+          type: string
+          format: date
+        checkup_type:
+          type: string
+          maxLength: 20
+          default: "annual"
+        height_cm:
+          type: number
+          format: double
+          nullable: true
+          minimum: 30
+          maximum: 250
+        weight_kg:
+          type: number
+          format: double
+          nullable: true
+          minimum: 1
+          maximum: 400
+        bmi:
+          type: number
+          format: double
+          nullable: true
+        vision_left:
+          type: string
+          nullable: true
+          maxLength: 10
+        vision_right:
+          type: string
+          nullable: true
+          maxLength: 10
+        hearing_notes:
+          type: string
+          nullable: true
+        dental_notes:
+          type: string
+          nullable: true
+        findings:
+          type: string
+          nullable: true
+        recommendations:
+          type: string
+          nullable: true
+        is_referral_needed:
+          type: boolean
+          default: false
+        checked_by_staff_id:
+          type: string
+          format: uuid
+          nullable: true
+        examiner_name:
+          type: string
+          nullable: true
+        file_id:
+          type: string
+          format: uuid
+          nullable: true
+
+    HealthCheckupUpdateRequest:
+      type: object
+      required:
+        - person_id
+        - campus_id
+        - checkup_date
+        - checkup_type
+        - height_cm
+        - weight_kg
+        - bmi
+        - vision_left
+        - vision_right
+        - hearing_notes
+        - dental_notes
+        - findings
+        - recommendations
+        - is_referral_needed
+        - checked_by_staff_id
+        - examiner_name
+        - file_id
+      additionalProperties: false
+      properties:
+        person_id:
+          type: string
+          format: uuid
+        campus_id:
+          type: string
+          format: uuid
+          nullable: true
+        checkup_date:
+          type: string
+          format: date
+        checkup_type:
+          type: string
+          maxLength: 20
+          default: "annual"
+        height_cm:
+          type: number
+          format: double
+          nullable: true
+          minimum: 30
+          maximum: 250
+        weight_kg:
+          type: number
+          format: double
+          nullable: true
+          minimum: 1
+          maximum: 400
+        bmi:
+          type: number
+          format: double
+          nullable: true
+        vision_left:
+          type: string
+          nullable: true
+          maxLength: 10
+        vision_right:
+          type: string
+          nullable: true
+          maxLength: 10
+        hearing_notes:
+          type: string
+          nullable: true
+        dental_notes:
+          type: string
+          nullable: true
+        findings:
+          type: string
+          nullable: true
+        recommendations:
+          type: string
+          nullable: true
+        is_referral_needed:
+          type: boolean
+          default: false
+        checked_by_staff_id:
+          type: string
+          format: uuid
+          nullable: true
+        examiner_name:
+          type: string
+          nullable: true
+        file_id:
+          type: string
+          format: uuid
+          nullable: true
+
+    HealthCheckupResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - health_checkup_id
+        - person_id
+        - checkup_date
+        - checkup_type
+        - is_referral_needed
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        health_checkup_id:
+          type: string
+          format: uuid
+          readOnly: true
+        person_id:
+          type: string
+          format: uuid
+        campus_id:
+          type: string
+          format: uuid
+          nullable: true
+        checkup_date:
+          type: string
+          format: date
+        checkup_type:
+          type: string
+          maxLength: 20
+          default: "annual"
+        height_cm:
+          type: number
+          format: double
+          nullable: true
+          minimum: 30
+          maximum: 250
+        weight_kg:
+          type: number
+          format: double
+          nullable: true
+          minimum: 1
+          maximum: 400
+        bmi:
+          type: number
+          format: double
+          nullable: true
+        vision_left:
+          type: string
+          nullable: true
+          maxLength: 10
+        vision_right:
+          type: string
+          nullable: true
+          maxLength: 10
+        hearing_notes:
+          type: string
+          nullable: true
+        dental_notes:
+          type: string
+          nullable: true
+        findings:
+          type: string
+          nullable: true
+        recommendations:
+          type: string
+          nullable: true
+        is_referral_needed:
+          type: boolean
+          default: false
+        checked_by_staff_id:
+          type: string
+          format: uuid
+          nullable: true
+        examiner_name:
+          type: string
+          nullable: true
+        file_id:
+          type: string
+          format: uuid
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

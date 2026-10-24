@@ -1,0 +1,538 @@
+openapi: 3.0.0
+x-sql-table: onboarding_onboarding_request
+info:
+  title: OnboardingRequestResponse API
+  version: 1.0.0
+paths:
+  /onboarding_request:
+    get:
+      operationId: listOnboardingRequest
+      summary: Get all onboarding_request
+      responses:
+        '200':
+          description: List of onboarding_request
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OnboardingRequestResponse'
+    post:
+      operationId: createOnboardingRequest
+      summary: Create a new onboarding_request
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OnboardingRequestRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OnboardingRequestResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /onboarding_request/{id}:
+    get:
+      operationId: getOnboardingRequestById
+      summary: Get onboarding_request by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: onboarding_request object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OnboardingRequestResponse'
+        '404':
+          description: onboarding_request not found
+    put:
+      operationId: updateOnboardingRequest
+      summary: Update onboarding_request by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OnboardingRequestUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OnboardingRequestResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: onboarding_request not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteOnboardingRequest
+      summary: Delete onboarding_request by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: onboarding_request not found
+components:
+  schemas:
+
+    OnboardingRequestRequest:
+      type: object
+      required:
+        - account_id
+        - application_id
+        - plan_version_id
+        - plan_price_id
+        - requested_tenant_code
+        - display_name
+        - region_code
+        - data_residency
+        - owner_contact_id
+      additionalProperties: false
+      properties:
+        request_number:
+          type: string
+          maxLength: 20
+        account_id:
+          type: string
+          format: uuid
+        opportunity_id:
+          type: string
+          format: uuid
+          nullable: true
+        quote_id:
+          type: string
+          format: uuid
+          nullable: true
+        application_id:
+          type: string
+          format: uuid
+        plan_version_id:
+          type: string
+          format: uuid
+        plan_price_id:
+          type: string
+          format: uuid
+        quantity:
+          type: integer
+          format: int32
+          default: 1
+        coupon_id:
+          type: string
+          format: uuid
+          nullable: true
+        requested_tenant_code:
+          type: string
+          maxLength: 40
+        display_name:
+          type: string
+        region_code:
+          type: string
+        data_residency:
+          type: string
+        timezone:
+          type: string
+          default: "UTC"
+        default_locale:
+          type: string
+          default: "en-US"
+        is_sandbox:
+          type: boolean
+          default: false
+        parent_tenant_id:
+          type: string
+          format: uuid
+          nullable: true
+        owner_contact_id:
+          type: string
+          format: uuid
+        billing_contact_id:
+          type: string
+          format: uuid
+          nullable: true
+        owning_branch_id:
+          type: string
+          format: uuid
+          nullable: true
+        sales_agent_id:
+          type: string
+          format: uuid
+          nullable: true
+        requires_kyc:
+          type: boolean
+          default: false
+        status:
+          type: string
+          maxLength: 16
+          default: "draft"
+        submitted_at:
+          type: string
+          format: date-time
+          nullable: true
+        submitted_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        approved_at:
+          type: string
+          format: date-time
+          nullable: true
+        rejected_reason:
+          type: string
+          nullable: true
+        tenant_id:
+          type: string
+          format: uuid
+          nullable: true
+        tenant_application_id:
+          type: string
+          format: uuid
+          nullable: true
+        subscription_id:
+          type: string
+          format: uuid
+          nullable: true
+        completed_at:
+          type: string
+          format: date-time
+          nullable: true
+
+    OnboardingRequestUpdateRequest:
+      type: object
+      required:
+        - request_number
+        - account_id
+        - opportunity_id
+        - quote_id
+        - application_id
+        - plan_version_id
+        - plan_price_id
+        - quantity
+        - coupon_id
+        - requested_tenant_code
+        - display_name
+        - region_code
+        - data_residency
+        - timezone
+        - default_locale
+        - is_sandbox
+        - parent_tenant_id
+        - owner_contact_id
+        - billing_contact_id
+        - owning_branch_id
+        - sales_agent_id
+        - requires_kyc
+        - status
+        - submitted_at
+        - submitted_by_user_id
+        - approved_at
+        - rejected_reason
+        - tenant_id
+        - tenant_application_id
+        - subscription_id
+        - completed_at
+      additionalProperties: false
+      properties:
+        request_number:
+          type: string
+          maxLength: 20
+        account_id:
+          type: string
+          format: uuid
+        opportunity_id:
+          type: string
+          format: uuid
+          nullable: true
+        quote_id:
+          type: string
+          format: uuid
+          nullable: true
+        application_id:
+          type: string
+          format: uuid
+        plan_version_id:
+          type: string
+          format: uuid
+        plan_price_id:
+          type: string
+          format: uuid
+        quantity:
+          type: integer
+          format: int32
+          default: 1
+        coupon_id:
+          type: string
+          format: uuid
+          nullable: true
+        requested_tenant_code:
+          type: string
+          maxLength: 40
+        display_name:
+          type: string
+        region_code:
+          type: string
+        data_residency:
+          type: string
+        timezone:
+          type: string
+          default: "UTC"
+        default_locale:
+          type: string
+          default: "en-US"
+        is_sandbox:
+          type: boolean
+          default: false
+        parent_tenant_id:
+          type: string
+          format: uuid
+          nullable: true
+        owner_contact_id:
+          type: string
+          format: uuid
+        billing_contact_id:
+          type: string
+          format: uuid
+          nullable: true
+        owning_branch_id:
+          type: string
+          format: uuid
+          nullable: true
+        sales_agent_id:
+          type: string
+          format: uuid
+          nullable: true
+        requires_kyc:
+          type: boolean
+          default: false
+        status:
+          type: string
+          maxLength: 16
+          default: "draft"
+        submitted_at:
+          type: string
+          format: date-time
+          nullable: true
+        submitted_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        approved_at:
+          type: string
+          format: date-time
+          nullable: true
+        rejected_reason:
+          type: string
+          nullable: true
+        tenant_id:
+          type: string
+          format: uuid
+          nullable: true
+        tenant_application_id:
+          type: string
+          format: uuid
+          nullable: true
+        subscription_id:
+          type: string
+          format: uuid
+          nullable: true
+        completed_at:
+          type: string
+          format: date-time
+          nullable: true
+
+    OnboardingRequestResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - request_id
+        - request_number
+        - account_id
+        - application_id
+        - plan_version_id
+        - plan_price_id
+        - quantity
+        - requested_tenant_code
+        - display_name
+        - region_code
+        - data_residency
+        - timezone
+        - default_locale
+        - is_sandbox
+        - owner_contact_id
+        - requires_kyc
+        - status
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        request_id:
+          type: string
+          format: uuid
+          readOnly: true
+        request_number:
+          type: string
+          maxLength: 20
+        account_id:
+          type: string
+          format: uuid
+        opportunity_id:
+          type: string
+          format: uuid
+          nullable: true
+        quote_id:
+          type: string
+          format: uuid
+          nullable: true
+        application_id:
+          type: string
+          format: uuid
+        plan_version_id:
+          type: string
+          format: uuid
+        plan_price_id:
+          type: string
+          format: uuid
+        quantity:
+          type: integer
+          format: int32
+          default: 1
+        coupon_id:
+          type: string
+          format: uuid
+          nullable: true
+        requested_tenant_code:
+          type: string
+          maxLength: 40
+        display_name:
+          type: string
+        region_code:
+          type: string
+        data_residency:
+          type: string
+        timezone:
+          type: string
+          default: "UTC"
+        default_locale:
+          type: string
+          default: "en-US"
+        is_sandbox:
+          type: boolean
+          default: false
+        parent_tenant_id:
+          type: string
+          format: uuid
+          nullable: true
+        owner_contact_id:
+          type: string
+          format: uuid
+        billing_contact_id:
+          type: string
+          format: uuid
+          nullable: true
+        owning_branch_id:
+          type: string
+          format: uuid
+          nullable: true
+        sales_agent_id:
+          type: string
+          format: uuid
+          nullable: true
+        requires_kyc:
+          type: boolean
+          default: false
+        status:
+          type: string
+          maxLength: 16
+          default: "draft"
+        submitted_at:
+          type: string
+          format: date-time
+          nullable: true
+        submitted_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        approved_at:
+          type: string
+          format: date-time
+          nullable: true
+        rejected_reason:
+          type: string
+          nullable: true
+        tenant_id:
+          type: string
+          format: uuid
+          nullable: true
+        tenant_application_id:
+          type: string
+          format: uuid
+          nullable: true
+        subscription_id:
+          type: string
+          format: uuid
+          nullable: true
+        completed_at:
+          type: string
+          format: date-time
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

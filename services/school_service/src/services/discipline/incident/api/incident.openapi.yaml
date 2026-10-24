@@ -1,0 +1,329 @@
+openapi: 3.0.0
+x-sql-table: disp_incident
+info:
+  title: IncidentResponse API
+  version: 1.0.0
+paths:
+  /incident:
+    get:
+      operationId: listIncident
+      summary: Get all incident
+      responses:
+        '200':
+          description: List of incident
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/IncidentResponse'
+    post:
+      operationId: createIncident
+      summary: Create a new incident
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IncidentRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IncidentResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /incident/{id}:
+    get:
+      operationId: getIncidentById
+      summary: Get incident by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: incident object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IncidentResponse'
+        '404':
+          description: incident not found
+    put:
+      operationId: updateIncident
+      summary: Update incident by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IncidentUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IncidentResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: incident not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteIncident
+      summary: Delete incident by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: incident not found
+components:
+  schemas:
+
+    IncidentRequest:
+      type: object
+      required:
+        - incident_no
+        - campus_id
+        - incident_category_code
+        - occurred_at
+        - description
+        - reported_by_user_id
+      additionalProperties: false
+      properties:
+        incident_no:
+          type: string
+          maxLength: 30
+        campus_id:
+          type: string
+          format: uuid
+        incident_category_code:
+          type: string
+        severity:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 5
+          default: 1
+        occurred_at:
+          type: string
+          format: date-time
+        location:
+          type: string
+          nullable: true
+        section_id:
+          type: string
+          format: uuid
+          nullable: true
+        description:
+          type: string
+        is_confidential:
+          type: boolean
+          default: false
+        reported_by_user_id:
+          type: string
+          format: uuid
+        reported_at:
+          type: string
+          format: date-time
+        status:
+          type: string
+          default: "open"
+        resolved_at:
+          type: string
+          format: date-time
+          nullable: true
+        resolution_summary:
+          type: string
+          nullable: true
+
+    IncidentUpdateRequest:
+      type: object
+      required:
+        - incident_no
+        - campus_id
+        - incident_category_code
+        - severity
+        - occurred_at
+        - location
+        - section_id
+        - description
+        - is_confidential
+        - reported_by_user_id
+        - reported_at
+        - status
+        - resolved_at
+        - resolution_summary
+      additionalProperties: false
+      properties:
+        incident_no:
+          type: string
+          maxLength: 30
+        campus_id:
+          type: string
+          format: uuid
+        incident_category_code:
+          type: string
+        severity:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 5
+          default: 1
+        occurred_at:
+          type: string
+          format: date-time
+        location:
+          type: string
+          nullable: true
+        section_id:
+          type: string
+          format: uuid
+          nullable: true
+        description:
+          type: string
+        is_confidential:
+          type: boolean
+          default: false
+        reported_by_user_id:
+          type: string
+          format: uuid
+        reported_at:
+          type: string
+          format: date-time
+        status:
+          type: string
+          default: "open"
+        resolved_at:
+          type: string
+          format: date-time
+          nullable: true
+        resolution_summary:
+          type: string
+          nullable: true
+
+    IncidentResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - incident_id
+        - incident_no
+        - campus_id
+        - incident_category_code
+        - severity
+        - occurred_at
+        - description
+        - is_confidential
+        - reported_by_user_id
+        - reported_at
+        - status
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        incident_id:
+          type: string
+          format: uuid
+          readOnly: true
+        incident_no:
+          type: string
+          maxLength: 30
+        campus_id:
+          type: string
+          format: uuid
+        incident_category_code:
+          type: string
+        severity:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 5
+          default: 1
+        occurred_at:
+          type: string
+          format: date-time
+        location:
+          type: string
+          nullable: true
+        section_id:
+          type: string
+          format: uuid
+          nullable: true
+        description:
+          type: string
+        is_confidential:
+          type: boolean
+          default: false
+        reported_by_user_id:
+          type: string
+          format: uuid
+        reported_at:
+          type: string
+          format: date-time
+        status:
+          type: string
+          default: "open"
+        resolved_at:
+          type: string
+          format: date-time
+          nullable: true
+        resolution_summary:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

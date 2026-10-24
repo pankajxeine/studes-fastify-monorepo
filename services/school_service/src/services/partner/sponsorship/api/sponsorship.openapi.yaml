@@ -1,0 +1,327 @@
+openapi: 3.0.0
+x-sql-table: prtn_sponsorship
+info:
+  title: SponsorshipResponse API
+  version: 1.0.0
+paths:
+  /sponsorship:
+    get:
+      operationId: listSponsorship
+      summary: Get all sponsorship
+      responses:
+        '200':
+          description: List of sponsorship
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SponsorshipResponse'
+    post:
+      operationId: createSponsorship
+      summary: Create a new sponsorship
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SponsorshipRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SponsorshipResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /sponsorship/{id}:
+    get:
+      operationId: getSponsorshipById
+      summary: Get sponsorship by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: sponsorship object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SponsorshipResponse'
+        '404':
+          description: sponsorship not found
+    put:
+      operationId: updateSponsorship
+      summary: Update sponsorship by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SponsorshipUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SponsorshipResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: sponsorship not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteSponsorship
+      summary: Delete sponsorship by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: sponsorship not found
+components:
+  schemas:
+
+    SponsorshipRequest:
+      type: object
+      required:
+        - partner_organization_id
+        - academic_year_id
+        - title
+        - sponsorship_kind
+        - committed_amount
+        - pledged_on
+      additionalProperties: false
+      properties:
+        partner_organization_id:
+          type: string
+          format: uuid
+        academic_year_id:
+          type: string
+          format: uuid
+        scholarship_id:
+          type: string
+          format: uuid
+          nullable: true
+        partner_agreement_id:
+          type: string
+          format: uuid
+          nullable: true
+        title:
+          type: string
+        sponsorship_kind:
+          type: string
+          maxLength: 20
+        committed_amount:
+          type: string
+        received_amount:
+          type: string
+          default: 0
+        beneficiary_count:
+          type: integer
+          format: int32
+          nullable: true
+        status:
+          type: string
+          maxLength: 12
+          default: "pledged"
+        pledged_on:
+          type: string
+          format: date
+        last_received_on:
+          type: string
+          format: date
+          nullable: true
+        recognition_note:
+          type: string
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+
+    SponsorshipUpdateRequest:
+      type: object
+      required:
+        - partner_organization_id
+        - academic_year_id
+        - scholarship_id
+        - partner_agreement_id
+        - title
+        - sponsorship_kind
+        - committed_amount
+        - received_amount
+        - beneficiary_count
+        - status
+        - pledged_on
+        - last_received_on
+        - recognition_note
+        - notes
+      additionalProperties: false
+      properties:
+        partner_organization_id:
+          type: string
+          format: uuid
+        academic_year_id:
+          type: string
+          format: uuid
+        scholarship_id:
+          type: string
+          format: uuid
+          nullable: true
+        partner_agreement_id:
+          type: string
+          format: uuid
+          nullable: true
+        title:
+          type: string
+        sponsorship_kind:
+          type: string
+          maxLength: 20
+        committed_amount:
+          type: string
+        received_amount:
+          type: string
+          default: 0
+        beneficiary_count:
+          type: integer
+          format: int32
+          nullable: true
+        status:
+          type: string
+          maxLength: 12
+          default: "pledged"
+        pledged_on:
+          type: string
+          format: date
+        last_received_on:
+          type: string
+          format: date
+          nullable: true
+        recognition_note:
+          type: string
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+
+    SponsorshipResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - sponsorship_id
+        - partner_organization_id
+        - academic_year_id
+        - title
+        - sponsorship_kind
+        - committed_amount
+        - received_amount
+        - status
+        - pledged_on
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        sponsorship_id:
+          type: string
+          format: uuid
+          readOnly: true
+        partner_organization_id:
+          type: string
+          format: uuid
+        academic_year_id:
+          type: string
+          format: uuid
+        scholarship_id:
+          type: string
+          format: uuid
+          nullable: true
+        partner_agreement_id:
+          type: string
+          format: uuid
+          nullable: true
+        title:
+          type: string
+        sponsorship_kind:
+          type: string
+          maxLength: 20
+        committed_amount:
+          type: string
+        received_amount:
+          type: string
+          default: 0
+        beneficiary_count:
+          type: integer
+          format: int32
+          nullable: true
+        status:
+          type: string
+          maxLength: 12
+          default: "pledged"
+        pledged_on:
+          type: string
+          format: date
+        last_received_on:
+          type: string
+          format: date
+          nullable: true
+        recognition_note:
+          type: string
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

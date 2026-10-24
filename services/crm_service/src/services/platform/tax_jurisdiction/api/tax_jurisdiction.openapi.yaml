@@ -1,0 +1,201 @@
+openapi: 3.0.0
+x-sql-table: platform_tax_jurisdiction
+info:
+  title: TaxJurisdictionResponse API
+  version: 1.0.0
+paths:
+  /tax_jurisdiction:
+    get:
+      operationId: listTaxJurisdiction
+      summary: Get all tax_jurisdiction
+      responses:
+        '200':
+          description: List of tax_jurisdiction
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TaxJurisdictionResponse'
+    post:
+      operationId: createTaxJurisdiction
+      summary: Create a new tax_jurisdiction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaxJurisdictionRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaxJurisdictionResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /tax_jurisdiction/{id}:
+    get:
+      operationId: getTaxJurisdictionById
+      summary: Get tax_jurisdiction by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: tax_jurisdiction object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaxJurisdictionResponse'
+        '404':
+          description: tax_jurisdiction not found
+    put:
+      operationId: updateTaxJurisdiction
+      summary: Update tax_jurisdiction by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaxJurisdictionUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaxJurisdictionResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: tax_jurisdiction not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteTaxJurisdiction
+      summary: Delete tax_jurisdiction by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: tax_jurisdiction not found
+components:
+  schemas:
+
+    TaxJurisdictionRequest:
+      type: object
+      required:
+        - jurisdiction_code
+        - country_code
+        - name
+        - tax_system
+      additionalProperties: false
+      properties:
+        jurisdiction_code:
+          type: string
+        country_code:
+          type: string
+        subdivision_code:
+          type: string
+          nullable: true
+          maxLength: 6
+        name:
+          type: string
+        tax_system:
+          type: string
+          maxLength: 12
+
+    TaxJurisdictionUpdateRequest:
+      type: object
+      required:
+        - jurisdiction_code
+        - country_code
+        - subdivision_code
+        - name
+        - tax_system
+      additionalProperties: false
+      properties:
+        jurisdiction_code:
+          type: string
+        country_code:
+          type: string
+        subdivision_code:
+          type: string
+          nullable: true
+          maxLength: 6
+        name:
+          type: string
+        tax_system:
+          type: string
+          maxLength: 12
+
+    TaxJurisdictionResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - jurisdiction_code
+        - country_code
+        - name
+        - tax_system
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        jurisdiction_code:
+          type: string
+        country_code:
+          type: string
+        subdivision_code:
+          type: string
+          nullable: true
+          maxLength: 6
+        name:
+          type: string
+        tax_system:
+          type: string
+          maxLength: 12
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+  

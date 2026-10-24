@@ -1,0 +1,256 @@
+openapi: 3.0.0
+x-sql-table: acad_grade_level
+info:
+  title: GradeLevelResponse API
+  version: 1.0.0
+paths:
+  /grade_level:
+    get:
+      operationId: listGradeLevel
+      summary: Get all grade_level
+      responses:
+        '200':
+          description: List of grade_level
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GradeLevelResponse'
+    post:
+      operationId: createGradeLevel
+      summary: Create a new grade_level
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GradeLevelRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GradeLevelResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /grade_level/{id}:
+    get:
+      operationId: getGradeLevelById
+      summary: Get grade_level by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: grade_level object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GradeLevelResponse'
+        '404':
+          description: grade_level not found
+    put:
+      operationId: updateGradeLevel
+      summary: Update grade_level by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GradeLevelUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GradeLevelResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: grade_level not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteGradeLevel
+      summary: Delete grade_level by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: grade_level not found
+components:
+  schemas:
+
+    GradeLevelRequest:
+      type: object
+      required:
+        - program_id
+        - code
+        - name
+        - sequence_no
+      additionalProperties: false
+      properties:
+        program_id:
+          type: string
+          format: uuid
+        code:
+          type: string
+          maxLength: 20
+        name:
+          type: string
+        sequence_no:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 20
+        min_entry_age_years:
+          type: integer
+          format: int32
+          nullable: true
+          minimum: 2
+          maximum: 60
+        is_terminal:
+          type: boolean
+          default: false
+        is_active:
+          type: boolean
+          default: true
+
+    GradeLevelUpdateRequest:
+      type: object
+      required:
+        - program_id
+        - code
+        - name
+        - sequence_no
+        - min_entry_age_years
+        - is_terminal
+        - is_active
+      additionalProperties: false
+      properties:
+        program_id:
+          type: string
+          format: uuid
+        code:
+          type: string
+          maxLength: 20
+        name:
+          type: string
+        sequence_no:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 20
+        min_entry_age_years:
+          type: integer
+          format: int32
+          nullable: true
+          minimum: 2
+          maximum: 60
+        is_terminal:
+          type: boolean
+          default: false
+        is_active:
+          type: boolean
+          default: true
+
+    GradeLevelResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - grade_level_id
+        - program_id
+        - code
+        - name
+        - sequence_no
+        - is_terminal
+        - is_active
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        grade_level_id:
+          type: string
+          format: uuid
+          readOnly: true
+        program_id:
+          type: string
+          format: uuid
+        code:
+          type: string
+          maxLength: 20
+        name:
+          type: string
+        sequence_no:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 20
+        min_entry_age_years:
+          type: integer
+          format: int32
+          nullable: true
+          minimum: 2
+          maximum: 60
+        is_terminal:
+          type: boolean
+          default: false
+        is_active:
+          type: boolean
+          default: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

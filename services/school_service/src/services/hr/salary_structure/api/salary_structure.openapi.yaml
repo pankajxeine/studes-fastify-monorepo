@@ -1,0 +1,258 @@
+openapi: 3.0.0
+x-sql-table: hr_salary_structure
+info:
+  title: SalaryStructureResponse API
+  version: 1.0.0
+paths:
+  /salary_structure:
+    get:
+      operationId: listSalaryStructure
+      summary: Get all salary_structure
+      responses:
+        '200':
+          description: List of salary_structure
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SalaryStructureResponse'
+    post:
+      operationId: createSalaryStructure
+      summary: Create a new salary_structure
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SalaryStructureRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SalaryStructureResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /salary_structure/{id}:
+    get:
+      operationId: getSalaryStructureById
+      summary: Get salary_structure by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: salary_structure object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SalaryStructureResponse'
+        '404':
+          description: salary_structure not found
+    put:
+      operationId: updateSalaryStructure
+      summary: Update salary_structure by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SalaryStructureUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SalaryStructureResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: salary_structure not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteSalaryStructure
+      summary: Delete salary_structure by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: salary_structure not found
+components:
+  schemas:
+
+    SalaryStructureRequest:
+      type: object
+      required:
+        - code
+        - name
+        - effective_from
+      additionalProperties: false
+      properties:
+        campus_id:
+          type: string
+          format: uuid
+          nullable: true
+        code:
+          type: string
+          maxLength: 20
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        pay_frequency:
+          type: string
+          maxLength: 10
+          default: "monthly"
+        effective_from:
+          type: string
+          format: date
+        effective_to:
+          type: string
+          format: date
+          nullable: true
+        is_active:
+          type: boolean
+          default: true
+
+    SalaryStructureUpdateRequest:
+      type: object
+      required:
+        - campus_id
+        - code
+        - name
+        - description
+        - pay_frequency
+        - effective_from
+        - effective_to
+        - is_active
+      additionalProperties: false
+      properties:
+        campus_id:
+          type: string
+          format: uuid
+          nullable: true
+        code:
+          type: string
+          maxLength: 20
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        pay_frequency:
+          type: string
+          maxLength: 10
+          default: "monthly"
+        effective_from:
+          type: string
+          format: date
+        effective_to:
+          type: string
+          format: date
+          nullable: true
+        is_active:
+          type: boolean
+          default: true
+
+    SalaryStructureResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - salary_structure_id
+        - code
+        - name
+        - pay_frequency
+        - effective_from
+        - is_active
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        salary_structure_id:
+          type: string
+          format: uuid
+          readOnly: true
+        campus_id:
+          type: string
+          format: uuid
+          nullable: true
+        code:
+          type: string
+          maxLength: 20
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        pay_frequency:
+          type: string
+          maxLength: 10
+          default: "monthly"
+        effective_from:
+          type: string
+          format: date
+        effective_to:
+          type: string
+          format: date
+          nullable: true
+        is_active:
+          type: boolean
+          default: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

@@ -1,0 +1,295 @@
+openapi: 3.0.0
+x-sql-table: payment_merchant_account
+info:
+  title: MerchantAccountResponse API
+  version: 1.0.0
+paths:
+  /merchant_account:
+    get:
+      operationId: listMerchantAccount
+      summary: Get all merchant_account
+      responses:
+        '200':
+          description: List of merchant_account
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MerchantAccountResponse'
+    post:
+      operationId: createMerchantAccount
+      summary: Create a new merchant_account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MerchantAccountRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MerchantAccountResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /merchant_account/{id}:
+    get:
+      operationId: getMerchantAccountById
+      summary: Get merchant_account by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: merchant_account object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MerchantAccountResponse'
+        '404':
+          description: merchant_account not found
+    put:
+      operationId: updateMerchantAccount
+      summary: Update merchant_account by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MerchantAccountUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MerchantAccountResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: merchant_account not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteMerchantAccount
+      summary: Delete merchant_account by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: merchant_account not found
+components:
+  schemas:
+
+    MerchantAccountRequest:
+      type: object
+      required:
+        - tenant_application_id
+        - name
+        - provider_code
+        - provider_merchant_ref
+        - currency_code
+        - credential_secret_ref
+        - webhook_secret_ref
+      additionalProperties: false
+      properties:
+        tenant_application_id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        provider_code:
+          type: string
+        provider_merchant_ref:
+          type: string
+        environment:
+          type: string
+          maxLength: 4
+          default: "test"
+          enum:
+            - "test"
+            - "live"
+        currency_code:
+          type: string
+        credential_secret_ref:
+          type: string
+        webhook_secret_ref:
+          type: string
+        settlement_account_ref:
+          type: string
+          nullable: true
+        status:
+          type: string
+          maxLength: 10
+          default: "draft"
+          enum:
+            - "draft"
+            - "active"
+            - "suspended"
+            - "closed"
+        verified_at:
+          type: string
+          format: date-time
+          nullable: true
+
+    MerchantAccountUpdateRequest:
+      type: object
+      required:
+        - tenant_application_id
+        - name
+        - provider_code
+        - provider_merchant_ref
+        - environment
+        - currency_code
+        - credential_secret_ref
+        - webhook_secret_ref
+        - settlement_account_ref
+        - status
+        - verified_at
+      additionalProperties: false
+      properties:
+        tenant_application_id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        provider_code:
+          type: string
+        provider_merchant_ref:
+          type: string
+        environment:
+          type: string
+          maxLength: 4
+          default: "test"
+          enum:
+            - "test"
+            - "live"
+        currency_code:
+          type: string
+        credential_secret_ref:
+          type: string
+        webhook_secret_ref:
+          type: string
+        settlement_account_ref:
+          type: string
+          nullable: true
+        status:
+          type: string
+          maxLength: 10
+          default: "draft"
+          enum:
+            - "draft"
+            - "active"
+            - "suspended"
+            - "closed"
+        verified_at:
+          type: string
+          format: date-time
+          nullable: true
+
+    MerchantAccountResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - merchant_account_id
+        - tenant_application_id
+        - name
+        - provider_code
+        - provider_merchant_ref
+        - environment
+        - currency_code
+        - credential_secret_ref
+        - webhook_secret_ref
+        - status
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        merchant_account_id:
+          type: string
+          format: uuid
+          readOnly: true
+        tenant_application_id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        provider_code:
+          type: string
+        provider_merchant_ref:
+          type: string
+        environment:
+          type: string
+          maxLength: 4
+          default: "test"
+          enum:
+            - "test"
+            - "live"
+        currency_code:
+          type: string
+        credential_secret_ref:
+          type: string
+        webhook_secret_ref:
+          type: string
+        settlement_account_ref:
+          type: string
+          nullable: true
+        status:
+          type: string
+          maxLength: 10
+          default: "draft"
+          enum:
+            - "draft"
+            - "active"
+            - "suspended"
+            - "closed"
+        verified_at:
+          type: string
+          format: date-time
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+  

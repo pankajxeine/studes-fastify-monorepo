@@ -1,0 +1,286 @@
+openapi: 3.0.0
+x-sql-table: cntn_wallet_transaction
+info:
+  title: WalletTransactionResponse API
+  version: 1.0.0
+paths:
+  /wallet_transaction:
+    get:
+      operationId: listWalletTransaction
+      summary: Get all wallet_transaction
+      responses:
+        '200':
+          description: List of wallet_transaction
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WalletTransactionResponse'
+    post:
+      operationId: createWalletTransaction
+      summary: Create a new wallet_transaction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WalletTransactionRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WalletTransactionResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /wallet_transaction/{id}:
+    get:
+      operationId: getWalletTransactionById
+      summary: Get wallet_transaction by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: wallet_transaction object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WalletTransactionResponse'
+        '404':
+          description: wallet_transaction not found
+    put:
+      operationId: updateWalletTransaction
+      summary: Update wallet_transaction by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WalletTransactionUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WalletTransactionResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: wallet_transaction not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteWalletTransaction
+      summary: Delete wallet_transaction by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: wallet_transaction not found
+components:
+  schemas:
+
+    WalletTransactionRequest:
+      type: object
+      required:
+        - wallet_id
+        - txn_type
+        - txn_amount
+      additionalProperties: false
+      properties:
+        wallet_id:
+          type: string
+          format: uuid
+        txn_type:
+          type: string
+          enum:
+            - "top_up"
+            - "purchase"
+            - "refund"
+            - "adjustment"
+        txn_amount:
+          type: number
+          format: double
+        balance_after_amount:
+          type: string
+          default: 0
+        payment_id:
+          type: string
+          format: uuid
+          nullable: true
+        canteen_order_id:
+          type: string
+          format: uuid
+          nullable: true
+        reverses_wallet_transaction_id:
+          type: string
+          format: uuid
+          nullable: true
+        txn_at:
+          type: string
+          format: date-time
+        description:
+          type: string
+          nullable: true
+        performed_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+
+    WalletTransactionUpdateRequest:
+      type: object
+      required:
+        - wallet_id
+        - txn_type
+        - txn_amount
+        - balance_after_amount
+        - payment_id
+        - canteen_order_id
+        - reverses_wallet_transaction_id
+        - txn_at
+        - description
+        - performed_by_user_id
+      additionalProperties: false
+      properties:
+        wallet_id:
+          type: string
+          format: uuid
+        txn_type:
+          type: string
+          enum:
+            - "top_up"
+            - "purchase"
+            - "refund"
+            - "adjustment"
+        txn_amount:
+          type: number
+          format: double
+        balance_after_amount:
+          type: string
+          default: 0
+        payment_id:
+          type: string
+          format: uuid
+          nullable: true
+        canteen_order_id:
+          type: string
+          format: uuid
+          nullable: true
+        reverses_wallet_transaction_id:
+          type: string
+          format: uuid
+          nullable: true
+        txn_at:
+          type: string
+          format: date-time
+        description:
+          type: string
+          nullable: true
+        performed_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+
+    WalletTransactionResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - wallet_transaction_id
+        - wallet_id
+        - txn_type
+        - txn_amount
+        - balance_after_amount
+        - txn_at
+        - created_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        wallet_transaction_id:
+          type: string
+          format: uuid
+          readOnly: true
+        wallet_id:
+          type: string
+          format: uuid
+        txn_type:
+          type: string
+          enum:
+            - "top_up"
+            - "purchase"
+            - "refund"
+            - "adjustment"
+        txn_amount:
+          type: number
+          format: double
+        balance_after_amount:
+          type: string
+          default: 0
+        payment_id:
+          type: string
+          format: uuid
+          nullable: true
+        canteen_order_id:
+          type: string
+          format: uuid
+          nullable: true
+        reverses_wallet_transaction_id:
+          type: string
+          format: uuid
+          nullable: true
+        txn_at:
+          type: string
+          format: date-time
+        description:
+          type: string
+          nullable: true
+        performed_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

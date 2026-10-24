@@ -1,0 +1,311 @@
+openapi: 3.0.0
+x-sql-table: lib_reservation
+info:
+  title: ReservationResponse API
+  version: 1.0.0
+paths:
+  /reservation:
+    get:
+      operationId: listReservation
+      summary: Get all reservation
+      responses:
+        '200':
+          description: List of reservation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ReservationResponse'
+    post:
+      operationId: createReservation
+      summary: Create a new reservation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReservationRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReservationResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /reservation/{id}:
+    get:
+      operationId: getReservationById
+      summary: Get reservation by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: reservation object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReservationResponse'
+        '404':
+          description: reservation not found
+    put:
+      operationId: updateReservation
+      summary: Update reservation by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReservationUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReservationResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: reservation not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteReservation
+      summary: Delete reservation by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: reservation not found
+components:
+  schemas:
+
+    ReservationRequest:
+      type: object
+      required:
+        - book_id
+        - library_membership_id
+      additionalProperties: false
+      properties:
+        book_id:
+          type: string
+          format: uuid
+        library_membership_id:
+          type: string
+          format: uuid
+        reserved_at:
+          type: string
+          format: date-time
+        status:
+          type: string
+          default: "active"
+        queue_position:
+          type: integer
+          format: int32
+          nullable: true
+        book_copy_id:
+          type: string
+          format: uuid
+          nullable: true
+        notified_at:
+          type: string
+          format: date-time
+          nullable: true
+        hold_until:
+          type: string
+          format: date
+          nullable: true
+        fulfilled_loan_id:
+          type: string
+          format: uuid
+          nullable: true
+        fulfilled_at:
+          type: string
+          format: date-time
+          nullable: true
+        cancelled_at:
+          type: string
+          format: date-time
+          nullable: true
+        cancellation_reason:
+          type: string
+          nullable: true
+
+    ReservationUpdateRequest:
+      type: object
+      required:
+        - book_id
+        - library_membership_id
+        - reserved_at
+        - status
+        - queue_position
+        - book_copy_id
+        - notified_at
+        - hold_until
+        - fulfilled_loan_id
+        - fulfilled_at
+        - cancelled_at
+        - cancellation_reason
+      additionalProperties: false
+      properties:
+        book_id:
+          type: string
+          format: uuid
+        library_membership_id:
+          type: string
+          format: uuid
+        reserved_at:
+          type: string
+          format: date-time
+        status:
+          type: string
+          default: "active"
+        queue_position:
+          type: integer
+          format: int32
+          nullable: true
+        book_copy_id:
+          type: string
+          format: uuid
+          nullable: true
+        notified_at:
+          type: string
+          format: date-time
+          nullable: true
+        hold_until:
+          type: string
+          format: date
+          nullable: true
+        fulfilled_loan_id:
+          type: string
+          format: uuid
+          nullable: true
+        fulfilled_at:
+          type: string
+          format: date-time
+          nullable: true
+        cancelled_at:
+          type: string
+          format: date-time
+          nullable: true
+        cancellation_reason:
+          type: string
+          nullable: true
+
+    ReservationResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - reservation_id
+        - book_id
+        - library_membership_id
+        - reserved_at
+        - status
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        reservation_id:
+          type: string
+          format: uuid
+          readOnly: true
+        book_id:
+          type: string
+          format: uuid
+        library_membership_id:
+          type: string
+          format: uuid
+        reserved_at:
+          type: string
+          format: date-time
+        status:
+          type: string
+          default: "active"
+        queue_position:
+          type: integer
+          format: int32
+          nullable: true
+        book_copy_id:
+          type: string
+          format: uuid
+          nullable: true
+        notified_at:
+          type: string
+          format: date-time
+          nullable: true
+        hold_until:
+          type: string
+          format: date
+          nullable: true
+        fulfilled_loan_id:
+          type: string
+          format: uuid
+          nullable: true
+        fulfilled_at:
+          type: string
+          format: date-time
+          nullable: true
+        cancelled_at:
+          type: string
+          format: date-time
+          nullable: true
+        cancellation_reason:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

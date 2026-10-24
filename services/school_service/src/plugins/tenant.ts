@@ -10,6 +10,7 @@ const tenantConfigSchema = z.object({
 export default fp(async (app) => {
   app.decorateRequest('tenant', null)
   app.decorateRequest('db', null)
+  app.decorateRequest('dbSchema', null)
 
   app.addHook('onRequest', async (request, reply) => {
     const config = tenantConfigSchema.parse(request.routeOptions.config ?? {})
@@ -71,6 +72,7 @@ export default fp(async (app) => {
         schema: tenant.schema_name,
         resolvedBy: from ?? 'header'
       }
+      request.dbSchema = tenant.schema_name
       request.db = client
     } catch (err) {
       client.release()
@@ -103,6 +105,7 @@ declare module 'fastify' {
       resolvedBy: 'header' | 'subdomain'
     }
     db: import('pg').PoolClient | null
+    dbSchema: string | null
   }
 
   interface FastifyContextConfig {

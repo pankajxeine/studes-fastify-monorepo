@@ -1,0 +1,220 @@
+openapi: 3.0.0
+x-sql-table: disp_incident_party
+info:
+  title: IncidentPartyResponse API
+  version: 1.0.0
+paths:
+  /incident_party:
+    get:
+      operationId: listIncidentParty
+      summary: Get all incident_party
+      responses:
+        '200':
+          description: List of incident_party
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/IncidentPartyResponse'
+    post:
+      operationId: createIncidentParty
+      summary: Create a new incident_party
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IncidentPartyRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IncidentPartyResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /incident_party/{id}:
+    get:
+      operationId: getIncidentPartyById
+      summary: Get incident_party by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: incident_party object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IncidentPartyResponse'
+        '404':
+          description: incident_party not found
+    put:
+      operationId: updateIncidentParty
+      summary: Update incident_party by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IncidentPartyUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IncidentPartyResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: incident_party not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteIncidentParty
+      summary: Delete incident_party by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: incident_party not found
+components:
+  schemas:
+
+    IncidentPartyRequest:
+      type: object
+      required:
+        - incident_id
+        - student_id
+        - party_role
+      additionalProperties: false
+      properties:
+        incident_id:
+          type: string
+          format: uuid
+        student_id:
+          type: string
+          format: uuid
+        party_role:
+          type: string
+        statement:
+          type: string
+          nullable: true
+        statement_recorded_at:
+          type: string
+          format: date-time
+          nullable: true
+
+    IncidentPartyUpdateRequest:
+      type: object
+      required:
+        - incident_id
+        - student_id
+        - party_role
+        - statement
+        - statement_recorded_at
+      additionalProperties: false
+      properties:
+        incident_id:
+          type: string
+          format: uuid
+        student_id:
+          type: string
+          format: uuid
+        party_role:
+          type: string
+        statement:
+          type: string
+          nullable: true
+        statement_recorded_at:
+          type: string
+          format: date-time
+          nullable: true
+
+    IncidentPartyResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - incident_party_id
+        - incident_id
+        - student_id
+        - party_role
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        incident_party_id:
+          type: string
+          format: uuid
+          readOnly: true
+        incident_id:
+          type: string
+          format: uuid
+        student_id:
+          type: string
+          format: uuid
+        party_role:
+          type: string
+        statement:
+          type: string
+          nullable: true
+        statement_recorded_at:
+          type: string
+          format: date-time
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

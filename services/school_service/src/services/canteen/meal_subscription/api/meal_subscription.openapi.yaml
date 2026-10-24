@@ -1,0 +1,294 @@
+openapi: 3.0.0
+x-sql-table: cntn_meal_subscription
+info:
+  title: MealSubscriptionResponse API
+  version: 1.0.0
+paths:
+  /meal_subscription:
+    get:
+      operationId: listMealSubscription
+      summary: Get all meal_subscription
+      responses:
+        '200':
+          description: List of meal_subscription
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MealSubscriptionResponse'
+    post:
+      operationId: createMealSubscription
+      summary: Create a new meal_subscription
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MealSubscriptionRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MealSubscriptionResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /meal_subscription/{id}:
+    get:
+      operationId: getMealSubscriptionById
+      summary: Get meal_subscription by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: meal_subscription object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MealSubscriptionResponse'
+        '404':
+          description: meal_subscription not found
+    put:
+      operationId: updateMealSubscription
+      summary: Update meal_subscription by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MealSubscriptionUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MealSubscriptionResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: meal_subscription not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteMealSubscription
+      summary: Delete meal_subscription by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: meal_subscription not found
+components:
+  schemas:
+
+    MealSubscriptionRequest:
+      type: object
+      required:
+        - meal_plan_id
+        - person_id
+        - start_date
+        - end_date
+      additionalProperties: false
+      properties:
+        meal_plan_id:
+          type: string
+          format: uuid
+        person_id:
+          type: string
+          format: uuid
+        invoice_id:
+          type: string
+          format: uuid
+          nullable: true
+        status:
+          type: string
+          default: "active"
+          enum:
+            - "active"
+            - "suspended"
+            - "cancelled"
+            - "expired"
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        validity:
+          type: string
+          nullable: true
+        cancelled_at:
+          type: string
+          format: date-time
+          nullable: true
+        cancel_reason:
+          type: string
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+
+    MealSubscriptionUpdateRequest:
+      type: object
+      required:
+        - meal_plan_id
+        - person_id
+        - invoice_id
+        - status
+        - start_date
+        - end_date
+        - validity
+        - cancelled_at
+        - cancel_reason
+        - notes
+      additionalProperties: false
+      properties:
+        meal_plan_id:
+          type: string
+          format: uuid
+        person_id:
+          type: string
+          format: uuid
+        invoice_id:
+          type: string
+          format: uuid
+          nullable: true
+        status:
+          type: string
+          default: "active"
+          enum:
+            - "active"
+            - "suspended"
+            - "cancelled"
+            - "expired"
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        validity:
+          type: string
+          nullable: true
+        cancelled_at:
+          type: string
+          format: date-time
+          nullable: true
+        cancel_reason:
+          type: string
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+
+    MealSubscriptionResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - meal_subscription_id
+        - meal_plan_id
+        - person_id
+        - status
+        - start_date
+        - end_date
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        meal_subscription_id:
+          type: string
+          format: uuid
+          readOnly: true
+        meal_plan_id:
+          type: string
+          format: uuid
+        person_id:
+          type: string
+          format: uuid
+        invoice_id:
+          type: string
+          format: uuid
+          nullable: true
+        status:
+          type: string
+          default: "active"
+          enum:
+            - "active"
+            - "suspended"
+            - "cancelled"
+            - "expired"
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        validity:
+          type: string
+          nullable: true
+        cancelled_at:
+          type: string
+          format: date-time
+          nullable: true
+        cancel_reason:
+          type: string
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

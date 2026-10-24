@@ -1,0 +1,376 @@
+openapi: 3.0.0
+x-sql-table: crm_lead
+info:
+  title: LeadResponse API
+  version: 1.0.0
+paths:
+  /lead:
+    get:
+      operationId: listLead
+      summary: Get all lead
+      responses:
+        '200':
+          description: List of lead
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LeadResponse'
+    post:
+      operationId: createLead
+      summary: Create a new lead
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LeadRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LeadResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /lead/{id}:
+    get:
+      operationId: getLeadById
+      summary: Get lead by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: lead object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LeadResponse'
+        '404':
+          description: lead not found
+    put:
+      operationId: updateLead
+      summary: Update lead by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LeadUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LeadResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: lead not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteLead
+      summary: Delete lead by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: lead not found
+components:
+  schemas:
+
+    LeadRequest:
+      type: object
+      required:
+        - source
+        - company_name
+        - contact_name
+        - email
+      additionalProperties: false
+      properties:
+        lead_number:
+          type: string
+          maxLength: 20
+        source:
+          type: string
+        campaign_id:
+          type: string
+          format: uuid
+          nullable: true
+        company_name:
+          type: string
+        contact_name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+          nullable: true
+        country_code:
+          type: string
+          nullable: true
+        industry_code:
+          type: string
+          nullable: true
+        interested_application_id:
+          type: string
+          format: uuid
+          nullable: true
+        status:
+          type: string
+          maxLength: 12
+          default: "new"
+        score:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 100
+          default: 0
+        owner_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        sales_agent_id:
+          type: string
+          format: uuid
+          nullable: true
+        branch_id:
+          type: string
+          format: uuid
+          nullable: true
+        converted_account_id:
+          type: string
+          format: uuid
+          nullable: true
+        converted_at:
+          type: string
+          format: date-time
+          nullable: true
+        disqualify_reason:
+          type: string
+          nullable: true
+
+    LeadUpdateRequest:
+      type: object
+      required:
+        - lead_number
+        - source
+        - campaign_id
+        - company_name
+        - contact_name
+        - email
+        - phone
+        - country_code
+        - industry_code
+        - interested_application_id
+        - status
+        - score
+        - owner_user_id
+        - sales_agent_id
+        - branch_id
+        - converted_account_id
+        - converted_at
+        - disqualify_reason
+      additionalProperties: false
+      properties:
+        lead_number:
+          type: string
+          maxLength: 20
+        source:
+          type: string
+        campaign_id:
+          type: string
+          format: uuid
+          nullable: true
+        company_name:
+          type: string
+        contact_name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+          nullable: true
+        country_code:
+          type: string
+          nullable: true
+        industry_code:
+          type: string
+          nullable: true
+        interested_application_id:
+          type: string
+          format: uuid
+          nullable: true
+        status:
+          type: string
+          maxLength: 12
+          default: "new"
+        score:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 100
+          default: 0
+        owner_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        sales_agent_id:
+          type: string
+          format: uuid
+          nullable: true
+        branch_id:
+          type: string
+          format: uuid
+          nullable: true
+        converted_account_id:
+          type: string
+          format: uuid
+          nullable: true
+        converted_at:
+          type: string
+          format: date-time
+          nullable: true
+        disqualify_reason:
+          type: string
+          nullable: true
+
+    LeadResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - lead_id
+        - lead_number
+        - source
+        - company_name
+        - contact_name
+        - email
+        - status
+        - score
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        lead_id:
+          type: string
+          format: uuid
+          readOnly: true
+        lead_number:
+          type: string
+          maxLength: 20
+        source:
+          type: string
+        campaign_id:
+          type: string
+          format: uuid
+          nullable: true
+        company_name:
+          type: string
+        contact_name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+          nullable: true
+        country_code:
+          type: string
+          nullable: true
+        industry_code:
+          type: string
+          nullable: true
+        interested_application_id:
+          type: string
+          format: uuid
+          nullable: true
+        status:
+          type: string
+          maxLength: 12
+          default: "new"
+        score:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 100
+          default: 0
+        owner_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        sales_agent_id:
+          type: string
+          format: uuid
+          nullable: true
+        branch_id:
+          type: string
+          format: uuid
+          nullable: true
+        converted_account_id:
+          type: string
+          format: uuid
+          nullable: true
+        converted_at:
+          type: string
+          format: date-time
+          nullable: true
+        disqualify_reason:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

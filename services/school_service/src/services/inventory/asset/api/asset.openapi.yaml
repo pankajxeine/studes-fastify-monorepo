@@ -1,0 +1,403 @@
+openapi: 3.0.0
+x-sql-table: invnt_asset
+info:
+  title: AssetResponse API
+  version: 1.0.0
+paths:
+  /asset:
+    get:
+      operationId: listAsset
+      summary: Get all asset
+      responses:
+        '200':
+          description: List of asset
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AssetResponse'
+    post:
+      operationId: createAsset
+      summary: Create a new asset
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssetRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssetResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /asset/{id}:
+    get:
+      operationId: getAssetById
+      summary: Get asset by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: asset object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssetResponse'
+        '404':
+          description: asset not found
+    put:
+      operationId: updateAsset
+      summary: Update asset by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssetUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssetResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: asset not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteAsset
+      summary: Delete asset by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: asset not found
+components:
+  schemas:
+
+    AssetRequest:
+      type: object
+      required:
+        - asset_tag
+        - item_id
+        - campus_id
+        - acquired_on
+        - acquisition_cost_amount
+      additionalProperties: false
+      properties:
+        asset_tag:
+          type: string
+          maxLength: 30
+        item_id:
+          type: string
+          format: uuid
+        campus_id:
+          type: string
+          format: uuid
+        room_id:
+          type: string
+          format: uuid
+          nullable: true
+        purchase_order_line_id:
+          type: string
+          format: uuid
+          nullable: true
+        assigned_to_person_id:
+          type: string
+          format: uuid
+          nullable: true
+        assigned_on:
+          type: string
+          format: date
+          nullable: true
+        serial_no:
+          type: string
+          nullable: true
+          maxLength: 60
+        model:
+          type: string
+          nullable: true
+        status:
+          type: string
+          default: "in_store"
+        condition:
+          type: string
+          maxLength: 20
+          default: "good"
+        acquired_on:
+          type: string
+          format: date
+        acquisition_cost_amount:
+          type: string
+        useful_life_years:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 50
+          default: 5
+        salvage_value_amount:
+          type: string
+          default: 0
+        warranty_expiry_on:
+          type: string
+          format: date
+          nullable: true
+        disposed_on:
+          type: string
+          format: date
+          nullable: true
+        disposal_reason:
+          type: string
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+
+    AssetUpdateRequest:
+      type: object
+      required:
+        - asset_tag
+        - item_id
+        - campus_id
+        - room_id
+        - purchase_order_line_id
+        - assigned_to_person_id
+        - assigned_on
+        - serial_no
+        - model
+        - status
+        - condition
+        - acquired_on
+        - acquisition_cost_amount
+        - useful_life_years
+        - salvage_value_amount
+        - warranty_expiry_on
+        - disposed_on
+        - disposal_reason
+        - notes
+      additionalProperties: false
+      properties:
+        asset_tag:
+          type: string
+          maxLength: 30
+        item_id:
+          type: string
+          format: uuid
+        campus_id:
+          type: string
+          format: uuid
+        room_id:
+          type: string
+          format: uuid
+          nullable: true
+        purchase_order_line_id:
+          type: string
+          format: uuid
+          nullable: true
+        assigned_to_person_id:
+          type: string
+          format: uuid
+          nullable: true
+        assigned_on:
+          type: string
+          format: date
+          nullable: true
+        serial_no:
+          type: string
+          nullable: true
+          maxLength: 60
+        model:
+          type: string
+          nullable: true
+        status:
+          type: string
+          default: "in_store"
+        condition:
+          type: string
+          maxLength: 20
+          default: "good"
+        acquired_on:
+          type: string
+          format: date
+        acquisition_cost_amount:
+          type: string
+        useful_life_years:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 50
+          default: 5
+        salvage_value_amount:
+          type: string
+          default: 0
+        warranty_expiry_on:
+          type: string
+          format: date
+          nullable: true
+        disposed_on:
+          type: string
+          format: date
+          nullable: true
+        disposal_reason:
+          type: string
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+
+    AssetResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - asset_id
+        - asset_tag
+        - item_id
+        - campus_id
+        - status
+        - condition
+        - acquired_on
+        - acquisition_cost_amount
+        - useful_life_years
+        - salvage_value_amount
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        asset_id:
+          type: string
+          format: uuid
+          readOnly: true
+        asset_tag:
+          type: string
+          maxLength: 30
+        item_id:
+          type: string
+          format: uuid
+        campus_id:
+          type: string
+          format: uuid
+        room_id:
+          type: string
+          format: uuid
+          nullable: true
+        purchase_order_line_id:
+          type: string
+          format: uuid
+          nullable: true
+        assigned_to_person_id:
+          type: string
+          format: uuid
+          nullable: true
+        assigned_on:
+          type: string
+          format: date
+          nullable: true
+        serial_no:
+          type: string
+          nullable: true
+          maxLength: 60
+        model:
+          type: string
+          nullable: true
+        status:
+          type: string
+          default: "in_store"
+        condition:
+          type: string
+          maxLength: 20
+          default: "good"
+        acquired_on:
+          type: string
+          format: date
+        acquisition_cost_amount:
+          type: string
+        useful_life_years:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 50
+          default: 5
+        salvage_value_amount:
+          type: string
+          default: 0
+        warranty_expiry_on:
+          type: string
+          format: date
+          nullable: true
+        disposed_on:
+          type: string
+          format: date
+          nullable: true
+        disposal_reason:
+          type: string
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        deleted_at:
+          type: string
+          format: date-time
+          nullable: true
+          readOnly: true
+  

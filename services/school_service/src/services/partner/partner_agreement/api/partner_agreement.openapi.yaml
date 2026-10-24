@@ -1,0 +1,398 @@
+openapi: 3.0.0
+x-sql-table: prtn_partner_agreement
+info:
+  title: PartnerAgreementResponse API
+  version: 1.0.0
+paths:
+  /partner_agreement:
+    get:
+      operationId: listPartnerAgreement
+      summary: Get all partner_agreement
+      responses:
+        '200':
+          description: List of partner_agreement
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PartnerAgreementResponse'
+    post:
+      operationId: createPartnerAgreement
+      summary: Create a new partner_agreement
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PartnerAgreementRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PartnerAgreementResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /partner_agreement/{id}:
+    get:
+      operationId: getPartnerAgreementById
+      summary: Get partner_agreement by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: partner_agreement object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PartnerAgreementResponse'
+        '404':
+          description: partner_agreement not found
+    put:
+      operationId: updatePartnerAgreement
+      summary: Update partner_agreement by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PartnerAgreementUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PartnerAgreementResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: partner_agreement not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deletePartnerAgreement
+      summary: Delete partner_agreement by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: partner_agreement not found
+components:
+  schemas:
+
+    PartnerAgreementRequest:
+      type: object
+      required:
+        - partner_organization_id
+        - agreement_type
+        - reference_no
+        - title
+        - valid_from
+      additionalProperties: false
+      properties:
+        partner_organization_id:
+          type: string
+          format: uuid
+        campus_id:
+          type: string
+          format: uuid
+          nullable: true
+        agreement_type:
+          type: string
+          maxLength: 20
+        reference_no:
+          type: string
+          maxLength: 40
+        title:
+          type: string
+        status:
+          type: string
+          default: "draft"
+          enum:
+            - "draft"
+            - "under_review"
+            - "active"
+            - "expired"
+            - "terminated"
+        valid_from:
+          type: string
+          format: date
+        valid_to:
+          type: string
+          format: date
+          nullable: true
+        validity:
+          type: string
+          nullable: true
+        is_auto_renew:
+          type: boolean
+          default: false
+        renewal_notice_days:
+          type: integer
+          format: int32
+          nullable: true
+          minimum: 0
+          maximum: 365
+        signed_on:
+          type: string
+          format: date
+          nullable: true
+        signed_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        partner_signatory_name:
+          type: string
+          nullable: true
+        agreement_file_id:
+          type: string
+          format: uuid
+          nullable: true
+        terms_summary:
+          type: string
+          nullable: true
+        terminated_on:
+          type: string
+          format: date
+          nullable: true
+        termination_reason:
+          type: string
+          nullable: true
+
+    PartnerAgreementUpdateRequest:
+      type: object
+      required:
+        - partner_organization_id
+        - campus_id
+        - agreement_type
+        - reference_no
+        - title
+        - status
+        - valid_from
+        - valid_to
+        - validity
+        - is_auto_renew
+        - renewal_notice_days
+        - signed_on
+        - signed_by_user_id
+        - partner_signatory_name
+        - agreement_file_id
+        - terms_summary
+        - terminated_on
+        - termination_reason
+      additionalProperties: false
+      properties:
+        partner_organization_id:
+          type: string
+          format: uuid
+        campus_id:
+          type: string
+          format: uuid
+          nullable: true
+        agreement_type:
+          type: string
+          maxLength: 20
+        reference_no:
+          type: string
+          maxLength: 40
+        title:
+          type: string
+        status:
+          type: string
+          default: "draft"
+          enum:
+            - "draft"
+            - "under_review"
+            - "active"
+            - "expired"
+            - "terminated"
+        valid_from:
+          type: string
+          format: date
+        valid_to:
+          type: string
+          format: date
+          nullable: true
+        validity:
+          type: string
+          nullable: true
+        is_auto_renew:
+          type: boolean
+          default: false
+        renewal_notice_days:
+          type: integer
+          format: int32
+          nullable: true
+          minimum: 0
+          maximum: 365
+        signed_on:
+          type: string
+          format: date
+          nullable: true
+        signed_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        partner_signatory_name:
+          type: string
+          nullable: true
+        agreement_file_id:
+          type: string
+          format: uuid
+          nullable: true
+        terms_summary:
+          type: string
+          nullable: true
+        terminated_on:
+          type: string
+          format: date
+          nullable: true
+        termination_reason:
+          type: string
+          nullable: true
+
+    PartnerAgreementResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - partner_agreement_id
+        - partner_organization_id
+        - agreement_type
+        - reference_no
+        - title
+        - status
+        - valid_from
+        - is_auto_renew
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        partner_agreement_id:
+          type: string
+          format: uuid
+          readOnly: true
+        partner_organization_id:
+          type: string
+          format: uuid
+        campus_id:
+          type: string
+          format: uuid
+          nullable: true
+        agreement_type:
+          type: string
+          maxLength: 20
+        reference_no:
+          type: string
+          maxLength: 40
+        title:
+          type: string
+        status:
+          type: string
+          default: "draft"
+          enum:
+            - "draft"
+            - "under_review"
+            - "active"
+            - "expired"
+            - "terminated"
+        valid_from:
+          type: string
+          format: date
+        valid_to:
+          type: string
+          format: date
+          nullable: true
+        validity:
+          type: string
+          nullable: true
+        is_auto_renew:
+          type: boolean
+          default: false
+        renewal_notice_days:
+          type: integer
+          format: int32
+          nullable: true
+          minimum: 0
+          maximum: 365
+        signed_on:
+          type: string
+          format: date
+          nullable: true
+        signed_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        partner_signatory_name:
+          type: string
+          nullable: true
+        agreement_file_id:
+          type: string
+          format: uuid
+          nullable: true
+        terms_summary:
+          type: string
+          nullable: true
+        terminated_on:
+          type: string
+          format: date
+          nullable: true
+        termination_reason:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

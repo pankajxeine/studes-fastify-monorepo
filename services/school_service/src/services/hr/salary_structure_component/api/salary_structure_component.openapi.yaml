@@ -1,0 +1,231 @@
+openapi: 3.0.0
+x-sql-table: hr_salary_structure_component
+info:
+  title: SalaryStructureComponentResponse API
+  version: 1.0.0
+paths:
+  /salary_structure_component:
+    get:
+      operationId: listSalaryStructureComponent
+      summary: Get all salary_structure_component
+      responses:
+        '200':
+          description: List of salary_structure_component
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SalaryStructureComponentResponse'
+    post:
+      operationId: createSalaryStructureComponent
+      summary: Create a new salary_structure_component
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SalaryStructureComponentRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SalaryStructureComponentResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /salary_structure_component/{id}:
+    get:
+      operationId: getSalaryStructureComponentById
+      summary: Get salary_structure_component by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: salary_structure_component object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SalaryStructureComponentResponse'
+        '404':
+          description: salary_structure_component not found
+    put:
+      operationId: updateSalaryStructureComponent
+      summary: Update salary_structure_component by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SalaryStructureComponentUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SalaryStructureComponentResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: salary_structure_component not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteSalaryStructureComponent
+      summary: Delete salary_structure_component by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: salary_structure_component not found
+components:
+  schemas:
+
+    SalaryStructureComponentRequest:
+      type: object
+      required:
+        - salary_structure_id
+        - salary_component_code
+        - calculation_type
+      additionalProperties: false
+      properties:
+        salary_structure_id:
+          type: string
+          format: uuid
+        salary_component_code:
+          type: string
+        calculation_type:
+          type: string
+          maxLength: 20
+        fixed_amount:
+          type: string
+          nullable: true
+        percentage:
+          type: string
+          nullable: true
+        sort_order:
+          type: integer
+          format: int32
+          default: 0
+
+    SalaryStructureComponentUpdateRequest:
+      type: object
+      required:
+        - salary_structure_id
+        - salary_component_code
+        - calculation_type
+        - fixed_amount
+        - percentage
+        - sort_order
+      additionalProperties: false
+      properties:
+        salary_structure_id:
+          type: string
+          format: uuid
+        salary_component_code:
+          type: string
+        calculation_type:
+          type: string
+          maxLength: 20
+        fixed_amount:
+          type: string
+          nullable: true
+        percentage:
+          type: string
+          nullable: true
+        sort_order:
+          type: integer
+          format: int32
+          default: 0
+
+    SalaryStructureComponentResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - salary_structure_component_id
+        - salary_structure_id
+        - salary_component_code
+        - calculation_type
+        - sort_order
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        salary_structure_component_id:
+          type: string
+          format: uuid
+          readOnly: true
+        salary_structure_id:
+          type: string
+          format: uuid
+        salary_component_code:
+          type: string
+        calculation_type:
+          type: string
+          maxLength: 20
+        fixed_amount:
+          type: string
+          nullable: true
+        percentage:
+          type: string
+          nullable: true
+        sort_order:
+          type: integer
+          format: int32
+          default: 0
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

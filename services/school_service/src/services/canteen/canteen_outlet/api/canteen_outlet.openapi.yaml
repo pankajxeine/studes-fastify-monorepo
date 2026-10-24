@@ -1,0 +1,380 @@
+openapi: 3.0.0
+x-sql-table: cntn_canteen_outlet
+info:
+  title: CanteenOutletResponse API
+  version: 1.0.0
+paths:
+  /canteen_outlet:
+    get:
+      operationId: listCanteenOutlet
+      summary: Get all canteen_outlet
+      responses:
+        '200':
+          description: List of canteen_outlet
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CanteenOutletResponse'
+    post:
+      operationId: createCanteenOutlet
+      summary: Create a new canteen_outlet
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CanteenOutletRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CanteenOutletResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /canteen_outlet/{id}:
+    get:
+      operationId: getCanteenOutletById
+      summary: Get canteen_outlet by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: canteen_outlet object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CanteenOutletResponse'
+        '404':
+          description: canteen_outlet not found
+    put:
+      operationId: updateCanteenOutlet
+      summary: Update canteen_outlet by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CanteenOutletUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CanteenOutletResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: canteen_outlet not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteCanteenOutlet
+      summary: Delete canteen_outlet by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: canteen_outlet not found
+components:
+  schemas:
+
+    CanteenOutletRequest:
+      type: object
+      required:
+        - campus_id
+        - room_id
+        - code
+        - name
+        - opening_time
+        - closing_time
+      additionalProperties: false
+      properties:
+        campus_id:
+          type: string
+          format: uuid
+        room_id:
+          type: string
+          format: uuid
+        code:
+          type: string
+          maxLength: 20
+        name:
+          type: string
+        outlet_type:
+          type: string
+          maxLength: 20
+          default: "cafeteria"
+        manager_staff_id:
+          type: string
+          format: uuid
+          nullable: true
+        operator_vendor_id:
+          type: string
+          format: uuid
+          nullable: true
+        opening_time:
+          type: string
+          format: time
+        closing_time:
+          type: string
+          format: time
+        pre_order_cutoff_time:
+          type: string
+          format: time
+          nullable: true
+        seating_capacity:
+          type: integer
+          format: int32
+          nullable: true
+          minimum: 0
+          maximum: 2000
+        contact_phone:
+          type: string
+          nullable: true
+        is_cash_accepted:
+          type: boolean
+          default: true
+        is_card_accepted:
+          type: boolean
+          default: true
+        is_wallet_accepted:
+          type: boolean
+          default: true
+        is_pre_order_enabled:
+          type: boolean
+          default: false
+        is_active:
+          type: boolean
+          default: true
+        notes:
+          type: string
+          nullable: true
+
+    CanteenOutletUpdateRequest:
+      type: object
+      required:
+        - campus_id
+        - room_id
+        - code
+        - name
+        - outlet_type
+        - manager_staff_id
+        - operator_vendor_id
+        - opening_time
+        - closing_time
+        - pre_order_cutoff_time
+        - seating_capacity
+        - contact_phone
+        - is_cash_accepted
+        - is_card_accepted
+        - is_wallet_accepted
+        - is_pre_order_enabled
+        - is_active
+        - notes
+      additionalProperties: false
+      properties:
+        campus_id:
+          type: string
+          format: uuid
+        room_id:
+          type: string
+          format: uuid
+        code:
+          type: string
+          maxLength: 20
+        name:
+          type: string
+        outlet_type:
+          type: string
+          maxLength: 20
+          default: "cafeteria"
+        manager_staff_id:
+          type: string
+          format: uuid
+          nullable: true
+        operator_vendor_id:
+          type: string
+          format: uuid
+          nullable: true
+        opening_time:
+          type: string
+          format: time
+        closing_time:
+          type: string
+          format: time
+        pre_order_cutoff_time:
+          type: string
+          format: time
+          nullable: true
+        seating_capacity:
+          type: integer
+          format: int32
+          nullable: true
+          minimum: 0
+          maximum: 2000
+        contact_phone:
+          type: string
+          nullable: true
+        is_cash_accepted:
+          type: boolean
+          default: true
+        is_card_accepted:
+          type: boolean
+          default: true
+        is_wallet_accepted:
+          type: boolean
+          default: true
+        is_pre_order_enabled:
+          type: boolean
+          default: false
+        is_active:
+          type: boolean
+          default: true
+        notes:
+          type: string
+          nullable: true
+
+    CanteenOutletResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - canteen_outlet_id
+        - campus_id
+        - room_id
+        - code
+        - name
+        - outlet_type
+        - opening_time
+        - closing_time
+        - is_cash_accepted
+        - is_card_accepted
+        - is_wallet_accepted
+        - is_pre_order_enabled
+        - is_active
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        canteen_outlet_id:
+          type: string
+          format: uuid
+          readOnly: true
+        campus_id:
+          type: string
+          format: uuid
+        room_id:
+          type: string
+          format: uuid
+        code:
+          type: string
+          maxLength: 20
+        name:
+          type: string
+        outlet_type:
+          type: string
+          maxLength: 20
+          default: "cafeteria"
+        manager_staff_id:
+          type: string
+          format: uuid
+          nullable: true
+        operator_vendor_id:
+          type: string
+          format: uuid
+          nullable: true
+        opening_time:
+          type: string
+          format: time
+        closing_time:
+          type: string
+          format: time
+        pre_order_cutoff_time:
+          type: string
+          format: time
+          nullable: true
+        seating_capacity:
+          type: integer
+          format: int32
+          nullable: true
+          minimum: 0
+          maximum: 2000
+        contact_phone:
+          type: string
+          nullable: true
+        is_cash_accepted:
+          type: boolean
+          default: true
+        is_card_accepted:
+          type: boolean
+          default: true
+        is_wallet_accepted:
+          type: boolean
+          default: true
+        is_pre_order_enabled:
+          type: boolean
+          default: false
+        is_active:
+          type: boolean
+          default: true
+        notes:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

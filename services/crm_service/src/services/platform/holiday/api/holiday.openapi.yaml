@@ -1,0 +1,172 @@
+openapi: 3.0.0
+x-sql-table: platform_holiday
+info:
+  title: HolidayResponse API
+  version: 1.0.0
+paths:
+  /holiday:
+    get:
+      operationId: listHoliday
+      summary: Get all holiday
+      responses:
+        '200':
+          description: List of holiday
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HolidayResponse'
+    post:
+      operationId: createHoliday
+      summary: Create a new holiday
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HolidayRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HolidayResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /holiday/{id}:
+    get:
+      operationId: getHolidayById
+      summary: Get holiday by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: holiday object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HolidayResponse'
+        '404':
+          description: holiday not found
+    put:
+      operationId: updateHoliday
+      summary: Update holiday by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HolidayUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HolidayResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: holiday not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteHoliday
+      summary: Delete holiday by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: holiday not found
+components:
+  schemas:
+
+    HolidayRequest:
+      type: object
+      required:
+        - calendar_id
+        - holiday_date
+        - name
+      additionalProperties: false
+      properties:
+        calendar_id:
+          type: string
+          format: uuid
+        holiday_date:
+          type: string
+          format: date
+        name:
+          type: string
+
+    HolidayUpdateRequest:
+      type: object
+      required:
+        - calendar_id
+        - holiday_date
+        - name
+      additionalProperties: false
+      properties:
+        calendar_id:
+          type: string
+          format: uuid
+        holiday_date:
+          type: string
+          format: date
+        name:
+          type: string
+
+    HolidayResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - calendar_id
+        - holiday_date
+        - name
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        calendar_id:
+          type: string
+          format: uuid
+        holiday_date:
+          type: string
+          format: date
+        name:
+          type: string
+  

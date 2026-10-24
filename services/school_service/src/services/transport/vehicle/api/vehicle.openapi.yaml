@@ -1,0 +1,467 @@
+openapi: 3.0.0
+x-sql-table: tran_vehicle
+info:
+  title: VehicleResponse API
+  version: 1.0.0
+paths:
+  /vehicle:
+    get:
+      operationId: listVehicle
+      summary: Get all vehicle
+      responses:
+        '200':
+          description: List of vehicle
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/VehicleResponse'
+    post:
+      operationId: createVehicle
+      summary: Create a new vehicle
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VehicleRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VehicleResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /vehicle/{id}:
+    get:
+      operationId: getVehicleById
+      summary: Get vehicle by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: vehicle object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VehicleResponse'
+        '404':
+          description: vehicle not found
+    put:
+      operationId: updateVehicle
+      summary: Update vehicle by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VehicleUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VehicleResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: vehicle not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteVehicle
+      summary: Delete vehicle by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: vehicle not found
+components:
+  schemas:
+
+    VehicleRequest:
+      type: object
+      required:
+        - campus_id
+        - registration_no
+        - fleet_no
+        - make
+        - model
+        - manufacture_year
+        - seating_capacity
+        - insurance_expiry_on
+        - fitness_expiry_on
+      additionalProperties: false
+      properties:
+        campus_id:
+          type: string
+          format: uuid
+        registration_no:
+          type: string
+          maxLength: 20
+        fleet_no:
+          type: string
+          maxLength: 20
+        vehicle_type:
+          type: string
+          maxLength: 20
+          default: "bus"
+        make:
+          type: string
+        model:
+          type: string
+        manufacture_year:
+          type: integer
+          format: int32
+          minimum: 1990
+          maximum: 2100
+        seating_capacity:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 120
+        fuel_type:
+          type: string
+          maxLength: 20
+          default: "diesel"
+        odometer_km:
+          type: integer
+          format: int32
+          default: 0
+        gps_device_id:
+          type: string
+          nullable: true
+          maxLength: 40
+        has_cctv:
+          type: boolean
+          default: false
+        has_speed_governor:
+          type: boolean
+          default: false
+        insurance_provider:
+          type: string
+          nullable: true
+        insurance_policy_no:
+          type: string
+          nullable: true
+          maxLength: 40
+        insurance_expiry_on:
+          type: string
+          format: date
+        fitness_certificate_no:
+          type: string
+          nullable: true
+          maxLength: 40
+        fitness_expiry_on:
+          type: string
+          format: date
+        permit_no:
+          type: string
+          nullable: true
+          maxLength: 40
+        permit_expiry_on:
+          type: string
+          format: date
+          nullable: true
+        emission_certificate_no:
+          type: string
+          nullable: true
+          maxLength: 40
+        emission_expiry_on:
+          type: string
+          format: date
+          nullable: true
+        status:
+          type: string
+          maxLength: 20
+          default: "active"
+        notes:
+          type: string
+          nullable: true
+
+    VehicleUpdateRequest:
+      type: object
+      required:
+        - campus_id
+        - registration_no
+        - fleet_no
+        - vehicle_type
+        - make
+        - model
+        - manufacture_year
+        - seating_capacity
+        - fuel_type
+        - odometer_km
+        - gps_device_id
+        - has_cctv
+        - has_speed_governor
+        - insurance_provider
+        - insurance_policy_no
+        - insurance_expiry_on
+        - fitness_certificate_no
+        - fitness_expiry_on
+        - permit_no
+        - permit_expiry_on
+        - emission_certificate_no
+        - emission_expiry_on
+        - status
+        - notes
+      additionalProperties: false
+      properties:
+        campus_id:
+          type: string
+          format: uuid
+        registration_no:
+          type: string
+          maxLength: 20
+        fleet_no:
+          type: string
+          maxLength: 20
+        vehicle_type:
+          type: string
+          maxLength: 20
+          default: "bus"
+        make:
+          type: string
+        model:
+          type: string
+        manufacture_year:
+          type: integer
+          format: int32
+          minimum: 1990
+          maximum: 2100
+        seating_capacity:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 120
+        fuel_type:
+          type: string
+          maxLength: 20
+          default: "diesel"
+        odometer_km:
+          type: integer
+          format: int32
+          default: 0
+        gps_device_id:
+          type: string
+          nullable: true
+          maxLength: 40
+        has_cctv:
+          type: boolean
+          default: false
+        has_speed_governor:
+          type: boolean
+          default: false
+        insurance_provider:
+          type: string
+          nullable: true
+        insurance_policy_no:
+          type: string
+          nullable: true
+          maxLength: 40
+        insurance_expiry_on:
+          type: string
+          format: date
+        fitness_certificate_no:
+          type: string
+          nullable: true
+          maxLength: 40
+        fitness_expiry_on:
+          type: string
+          format: date
+        permit_no:
+          type: string
+          nullable: true
+          maxLength: 40
+        permit_expiry_on:
+          type: string
+          format: date
+          nullable: true
+        emission_certificate_no:
+          type: string
+          nullable: true
+          maxLength: 40
+        emission_expiry_on:
+          type: string
+          format: date
+          nullable: true
+        status:
+          type: string
+          maxLength: 20
+          default: "active"
+        notes:
+          type: string
+          nullable: true
+
+    VehicleResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - vehicle_id
+        - campus_id
+        - registration_no
+        - fleet_no
+        - vehicle_type
+        - make
+        - model
+        - manufacture_year
+        - seating_capacity
+        - fuel_type
+        - odometer_km
+        - has_cctv
+        - has_speed_governor
+        - insurance_expiry_on
+        - fitness_expiry_on
+        - status
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        vehicle_id:
+          type: string
+          format: uuid
+          readOnly: true
+        campus_id:
+          type: string
+          format: uuid
+        registration_no:
+          type: string
+          maxLength: 20
+        fleet_no:
+          type: string
+          maxLength: 20
+        vehicle_type:
+          type: string
+          maxLength: 20
+          default: "bus"
+        make:
+          type: string
+        model:
+          type: string
+        manufacture_year:
+          type: integer
+          format: int32
+          minimum: 1990
+          maximum: 2100
+        seating_capacity:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 120
+        fuel_type:
+          type: string
+          maxLength: 20
+          default: "diesel"
+        odometer_km:
+          type: integer
+          format: int32
+          default: 0
+        gps_device_id:
+          type: string
+          nullable: true
+          maxLength: 40
+        has_cctv:
+          type: boolean
+          default: false
+        has_speed_governor:
+          type: boolean
+          default: false
+        insurance_provider:
+          type: string
+          nullable: true
+        insurance_policy_no:
+          type: string
+          nullable: true
+          maxLength: 40
+        insurance_expiry_on:
+          type: string
+          format: date
+        fitness_certificate_no:
+          type: string
+          nullable: true
+          maxLength: 40
+        fitness_expiry_on:
+          type: string
+          format: date
+        permit_no:
+          type: string
+          nullable: true
+          maxLength: 40
+        permit_expiry_on:
+          type: string
+          format: date
+          nullable: true
+        emission_certificate_no:
+          type: string
+          nullable: true
+          maxLength: 40
+        emission_expiry_on:
+          type: string
+          format: date
+          nullable: true
+        status:
+          type: string
+          maxLength: 20
+          default: "active"
+        notes:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

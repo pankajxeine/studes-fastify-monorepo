@@ -1,0 +1,345 @@
+openapi: 3.0.0
+x-sql-table: sis_previous_education
+info:
+  title: PreviousEducationResponse API
+  version: 1.0.0
+paths:
+  /previous_education:
+    get:
+      operationId: listPreviousEducation
+      summary: Get all previous_education
+      responses:
+        '200':
+          description: List of previous_education
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PreviousEducationResponse'
+    post:
+      operationId: createPreviousEducation
+      summary: Create a new previous_education
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PreviousEducationRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PreviousEducationResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /previous_education/{id}:
+    get:
+      operationId: getPreviousEducationById
+      summary: Get previous_education by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: previous_education object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PreviousEducationResponse'
+        '404':
+          description: previous_education not found
+    put:
+      operationId: updatePreviousEducation
+      summary: Update previous_education by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PreviousEducationUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PreviousEducationResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: previous_education not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deletePreviousEducation
+      summary: Delete previous_education by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: previous_education not found
+components:
+  schemas:
+
+    PreviousEducationRequest:
+      type: object
+      required:
+        - student_id
+        - institution_name
+        - qualification
+      additionalProperties: false
+      properties:
+        student_id:
+          type: string
+          format: uuid
+        institution_name:
+          type: string
+        institution_city:
+          type: string
+          nullable: true
+        country_code:
+          type: string
+          nullable: true
+          maxLength: 2
+        board_or_university:
+          type: string
+          nullable: true
+        qualification:
+          type: string
+        start_year:
+          type: integer
+          format: int32
+          nullable: true
+        end_year:
+          type: integer
+          format: int32
+          nullable: true
+        score_text:
+          type: string
+          nullable: true
+          maxLength: 40
+        percentage:
+          type: string
+          nullable: true
+          minimum: 0
+          maximum: 100
+        medium_of_instruction:
+          type: string
+          nullable: true
+          maxLength: 40
+        file_id:
+          type: string
+          format: uuid
+          nullable: true
+        is_verified:
+          type: boolean
+          default: false
+        verified_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        verified_at:
+          type: string
+          format: date-time
+          nullable: true
+
+    PreviousEducationUpdateRequest:
+      type: object
+      required:
+        - student_id
+        - institution_name
+        - institution_city
+        - country_code
+        - board_or_university
+        - qualification
+        - start_year
+        - end_year
+        - score_text
+        - percentage
+        - medium_of_instruction
+        - file_id
+        - is_verified
+        - verified_by_user_id
+        - verified_at
+      additionalProperties: false
+      properties:
+        student_id:
+          type: string
+          format: uuid
+        institution_name:
+          type: string
+        institution_city:
+          type: string
+          nullable: true
+        country_code:
+          type: string
+          nullable: true
+          maxLength: 2
+        board_or_university:
+          type: string
+          nullable: true
+        qualification:
+          type: string
+        start_year:
+          type: integer
+          format: int32
+          nullable: true
+        end_year:
+          type: integer
+          format: int32
+          nullable: true
+        score_text:
+          type: string
+          nullable: true
+          maxLength: 40
+        percentage:
+          type: string
+          nullable: true
+          minimum: 0
+          maximum: 100
+        medium_of_instruction:
+          type: string
+          nullable: true
+          maxLength: 40
+        file_id:
+          type: string
+          format: uuid
+          nullable: true
+        is_verified:
+          type: boolean
+          default: false
+        verified_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        verified_at:
+          type: string
+          format: date-time
+          nullable: true
+
+    PreviousEducationResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - previous_education_id
+        - student_id
+        - institution_name
+        - qualification
+        - is_verified
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        previous_education_id:
+          type: string
+          format: uuid
+          readOnly: true
+        student_id:
+          type: string
+          format: uuid
+        institution_name:
+          type: string
+        institution_city:
+          type: string
+          nullable: true
+        country_code:
+          type: string
+          nullable: true
+          maxLength: 2
+        board_or_university:
+          type: string
+          nullable: true
+        qualification:
+          type: string
+        start_year:
+          type: integer
+          format: int32
+          nullable: true
+        end_year:
+          type: integer
+          format: int32
+          nullable: true
+        score_text:
+          type: string
+          nullable: true
+          maxLength: 40
+        percentage:
+          type: string
+          nullable: true
+          minimum: 0
+          maximum: 100
+        medium_of_instruction:
+          type: string
+          nullable: true
+          maxLength: 40
+        file_id:
+          type: string
+          format: uuid
+          nullable: true
+        is_verified:
+          type: boolean
+          default: false
+        verified_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        verified_at:
+          type: string
+          format: date-time
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

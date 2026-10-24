@@ -1,0 +1,344 @@
+openapi: 3.0.0
+x-sql-table: alumni_mentorship
+info:
+  title: MentorshipResponse API
+  version: 1.0.0
+paths:
+  /mentorship:
+    get:
+      operationId: listMentorship
+      summary: Get all mentorship
+      responses:
+        '200':
+          description: List of mentorship
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MentorshipResponse'
+    post:
+      operationId: createMentorship
+      summary: Create a new mentorship
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MentorshipRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MentorshipResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /mentorship/{id}:
+    get:
+      operationId: getMentorshipById
+      summary: Get mentorship by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: mentorship object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MentorshipResponse'
+        '404':
+          description: mentorship not found
+    put:
+      operationId: updateMentorship
+      summary: Update mentorship by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MentorshipUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MentorshipResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: mentorship not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteMentorship
+      summary: Delete mentorship by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: mentorship not found
+components:
+  schemas:
+
+    MentorshipRequest:
+      type: object
+      required:
+        - mentor_alumnus_id
+        - mentee_student_id
+        - focus_area
+      additionalProperties: false
+      properties:
+        mentor_alumnus_id:
+          type: string
+          format: uuid
+        mentee_student_id:
+          type: string
+          format: uuid
+        status:
+          type: string
+          default: "requested"
+        focus_area:
+          type: string
+        goals:
+          type: string
+          nullable: true
+        meeting_frequency:
+          type: string
+          maxLength: 20
+          default: "monthly"
+        requested_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        requested_at:
+          type: string
+          format: date-time
+        responded_at:
+          type: string
+          format: date-time
+          nullable: true
+        started_on:
+          type: string
+          format: date
+          nullable: true
+        ended_on:
+          type: string
+          format: date
+          nullable: true
+        decline_reason:
+          type: string
+          nullable: true
+        mentee_rating:
+          type: integer
+          format: int32
+          nullable: true
+          minimum: 1
+          maximum: 5
+        mentee_feedback:
+          type: string
+          nullable: true
+        mentor_notes:
+          type: string
+          nullable: true
+
+    MentorshipUpdateRequest:
+      type: object
+      required:
+        - mentor_alumnus_id
+        - mentee_student_id
+        - status
+        - focus_area
+        - goals
+        - meeting_frequency
+        - requested_by_user_id
+        - requested_at
+        - responded_at
+        - started_on
+        - ended_on
+        - decline_reason
+        - mentee_rating
+        - mentee_feedback
+        - mentor_notes
+      additionalProperties: false
+      properties:
+        mentor_alumnus_id:
+          type: string
+          format: uuid
+        mentee_student_id:
+          type: string
+          format: uuid
+        status:
+          type: string
+          default: "requested"
+        focus_area:
+          type: string
+        goals:
+          type: string
+          nullable: true
+        meeting_frequency:
+          type: string
+          maxLength: 20
+          default: "monthly"
+        requested_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        requested_at:
+          type: string
+          format: date-time
+        responded_at:
+          type: string
+          format: date-time
+          nullable: true
+        started_on:
+          type: string
+          format: date
+          nullable: true
+        ended_on:
+          type: string
+          format: date
+          nullable: true
+        decline_reason:
+          type: string
+          nullable: true
+        mentee_rating:
+          type: integer
+          format: int32
+          nullable: true
+          minimum: 1
+          maximum: 5
+        mentee_feedback:
+          type: string
+          nullable: true
+        mentor_notes:
+          type: string
+          nullable: true
+
+    MentorshipResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - mentorship_id
+        - mentor_alumnus_id
+        - mentee_student_id
+        - status
+        - focus_area
+        - meeting_frequency
+        - requested_at
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        mentorship_id:
+          type: string
+          format: uuid
+          readOnly: true
+        mentor_alumnus_id:
+          type: string
+          format: uuid
+        mentee_student_id:
+          type: string
+          format: uuid
+        status:
+          type: string
+          default: "requested"
+        focus_area:
+          type: string
+        goals:
+          type: string
+          nullable: true
+        meeting_frequency:
+          type: string
+          maxLength: 20
+          default: "monthly"
+        requested_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        requested_at:
+          type: string
+          format: date-time
+        responded_at:
+          type: string
+          format: date-time
+          nullable: true
+        started_on:
+          type: string
+          format: date
+          nullable: true
+        ended_on:
+          type: string
+          format: date
+          nullable: true
+        decline_reason:
+          type: string
+          nullable: true
+        mentee_rating:
+          type: integer
+          format: int32
+          nullable: true
+          minimum: 1
+          maximum: 5
+        mentee_feedback:
+          type: string
+          nullable: true
+        mentor_notes:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

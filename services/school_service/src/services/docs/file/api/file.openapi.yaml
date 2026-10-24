@@ -1,0 +1,326 @@
+openapi: 3.0.0
+x-sql-table: docs_file
+info:
+  title: FileResponse API
+  version: 1.0.0
+paths:
+  /file:
+    get:
+      operationId: listFile
+      summary: Get all file
+      responses:
+        '200':
+          description: List of file
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FileResponse'
+    post:
+      operationId: createFile
+      summary: Create a new file
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FileRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /file/{id}:
+    get:
+      operationId: getFileById
+      summary: Get file by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: file object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileResponse'
+        '404':
+          description: file not found
+    put:
+      operationId: updateFile
+      summary: Update file by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FileUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: file not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteFile
+      summary: Delete file by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: file not found
+components:
+  schemas:
+
+    FileRequest:
+      type: object
+      required:
+        - file_name
+        - mime_type
+        - size_bytes
+        - storage_key
+        - owner_module
+      additionalProperties: false
+      properties:
+        file_name:
+          type: string
+        mime_type:
+          type: string
+          maxLength: 100
+        size_bytes:
+          type: integer
+          format: int64
+          minimum: 0
+          maximum: 524288000
+        storage_provider:
+          type: string
+          maxLength: 20
+          default: "s3"
+        storage_key:
+          type: string
+        checksum_sha256:
+          type: string
+          nullable: true
+          maxLength: 64
+        owner_module:
+          type: string
+          maxLength: 30
+        visibility:
+          type: string
+          maxLength: 10
+          default: "private"
+        scan_status:
+          type: string
+          maxLength: 10
+          default: "pending"
+        description:
+          type: string
+          nullable: true
+        uploaded_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        uploaded_at:
+          type: string
+          format: date-time
+        retention_until:
+          type: string
+          format: date
+          nullable: true
+
+    FileUpdateRequest:
+      type: object
+      required:
+        - file_name
+        - mime_type
+        - size_bytes
+        - storage_provider
+        - storage_key
+        - checksum_sha256
+        - owner_module
+        - visibility
+        - scan_status
+        - description
+        - uploaded_by_user_id
+        - uploaded_at
+        - retention_until
+      additionalProperties: false
+      properties:
+        file_name:
+          type: string
+        mime_type:
+          type: string
+          maxLength: 100
+        size_bytes:
+          type: integer
+          format: int64
+          minimum: 0
+          maximum: 524288000
+        storage_provider:
+          type: string
+          maxLength: 20
+          default: "s3"
+        storage_key:
+          type: string
+        checksum_sha256:
+          type: string
+          nullable: true
+          maxLength: 64
+        owner_module:
+          type: string
+          maxLength: 30
+        visibility:
+          type: string
+          maxLength: 10
+          default: "private"
+        scan_status:
+          type: string
+          maxLength: 10
+          default: "pending"
+        description:
+          type: string
+          nullable: true
+        uploaded_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        uploaded_at:
+          type: string
+          format: date-time
+        retention_until:
+          type: string
+          format: date
+          nullable: true
+
+    FileResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - file_id
+        - file_name
+        - mime_type
+        - size_bytes
+        - storage_provider
+        - storage_key
+        - owner_module
+        - visibility
+        - scan_status
+        - uploaded_at
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        file_id:
+          type: string
+          format: uuid
+          readOnly: true
+        file_name:
+          type: string
+        mime_type:
+          type: string
+          maxLength: 100
+        size_bytes:
+          type: integer
+          format: int64
+          minimum: 0
+          maximum: 524288000
+        storage_provider:
+          type: string
+          maxLength: 20
+          default: "s3"
+        storage_key:
+          type: string
+        checksum_sha256:
+          type: string
+          nullable: true
+          maxLength: 64
+        owner_module:
+          type: string
+          maxLength: 30
+        visibility:
+          type: string
+          maxLength: 10
+          default: "private"
+        scan_status:
+          type: string
+          maxLength: 10
+          default: "pending"
+        description:
+          type: string
+          nullable: true
+        uploaded_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        uploaded_at:
+          type: string
+          format: date-time
+        retention_until:
+          type: string
+          format: date
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

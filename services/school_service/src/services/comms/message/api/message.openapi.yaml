@@ -1,0 +1,239 @@
+openapi: 3.0.0
+x-sql-table: comms_message
+info:
+  title: MessageResponse API
+  version: 1.0.0
+paths:
+  /message:
+    get:
+      operationId: listMessage
+      summary: Get all message
+      responses:
+        '200':
+          description: List of message
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MessageResponse'
+    post:
+      operationId: createMessage
+      summary: Create a new message
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MessageRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /message/{id}:
+    get:
+      operationId: getMessageById
+      summary: Get message by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: message object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '404':
+          description: message not found
+    put:
+      operationId: updateMessage
+      summary: Update message by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MessageUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: message not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteMessage
+      summary: Delete message by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: message not found
+components:
+  schemas:
+
+    MessageRequest:
+      type: object
+      required:
+        - message_thread_id
+        - sender_user_id
+        - body
+      additionalProperties: false
+      properties:
+        message_thread_id:
+          type: string
+          format: uuid
+        sender_user_id:
+          type: string
+          format: uuid
+        body:
+          type: string
+        file_id:
+          type: string
+          format: uuid
+          nullable: true
+        sent_at:
+          type: string
+          format: date-time
+        edited_at:
+          type: string
+          format: date-time
+          nullable: true
+
+    MessageUpdateRequest:
+      type: object
+      required:
+        - message_thread_id
+        - sender_user_id
+        - body
+        - file_id
+        - sent_at
+        - edited_at
+      additionalProperties: false
+      properties:
+        message_thread_id:
+          type: string
+          format: uuid
+        sender_user_id:
+          type: string
+          format: uuid
+        body:
+          type: string
+        file_id:
+          type: string
+          format: uuid
+          nullable: true
+        sent_at:
+          type: string
+          format: date-time
+        edited_at:
+          type: string
+          format: date-time
+          nullable: true
+
+    MessageResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - message_id
+        - message_thread_id
+        - sender_user_id
+        - body
+        - sent_at
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        message_id:
+          type: string
+          format: uuid
+          readOnly: true
+        message_thread_id:
+          type: string
+          format: uuid
+        sender_user_id:
+          type: string
+          format: uuid
+        body:
+          type: string
+        file_id:
+          type: string
+          format: uuid
+          nullable: true
+        sent_at:
+          type: string
+          format: date-time
+        edited_at:
+          type: string
+          format: date-time
+          nullable: true
+        deleted_at:
+          type: string
+          format: date-time
+          nullable: true
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

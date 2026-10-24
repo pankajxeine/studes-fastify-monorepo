@@ -1,0 +1,29 @@
+import type { FastifyPluginAsync } from 'fastify'
+import { SettingService } from '../../services/platform/setting/SettingService'
+
+const SettingRoutes: FastifyPluginAsync = async (app) => {
+  const controller = new SettingService()
+
+  app.get('/setting', async (request, reply) => {
+    const result = await controller.listSetting(app, request)
+    return reply.send(result)
+  })
+  app.post('/setting', async (request, reply) => {
+    const result = await controller.createSetting(app, request.body as any, request)
+    return reply.send(result)
+  })
+  app.get('/setting/:id', async (request, reply) => {
+    const result = await controller.getSettingById(app, request)
+    return reply.send(result)
+  })
+  app.put('/setting/:id', async (request, reply) => {
+    const result = await controller.updateSetting(app, request.body as any, request)
+    return reply.send(result)
+  })
+  app.delete('/setting/:id', async (request, reply) => {
+    const result = await controller.deleteSetting(app, request)
+    return reply.send(result)
+  })
+}
+
+export default SettingRoutes

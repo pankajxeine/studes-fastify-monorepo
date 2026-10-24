@@ -1,0 +1,386 @@
+openapi: 3.0.0
+x-sql-table: exam_exam_schedule
+info:
+  title: ExamScheduleResponse API
+  version: 1.0.0
+paths:
+  /exam_schedule:
+    get:
+      operationId: listExamSchedule
+      summary: Get all exam_schedule
+      responses:
+        '200':
+          description: List of exam_schedule
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ExamScheduleResponse'
+    post:
+      operationId: createExamSchedule
+      summary: Create a new exam_schedule
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExamScheduleRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExamScheduleResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /exam_schedule/{id}:
+    get:
+      operationId: getExamScheduleById
+      summary: Get exam_schedule by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: exam_schedule object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExamScheduleResponse'
+        '404':
+          description: exam_schedule not found
+    put:
+      operationId: updateExamSchedule
+      summary: Update exam_schedule by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExamScheduleUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExamScheduleResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: exam_schedule not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteExamSchedule
+      summary: Delete exam_schedule by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: exam_schedule not found
+components:
+  schemas:
+
+    ExamScheduleRequest:
+      type: object
+      required:
+        - exam_id
+        - course_offering_id
+        - exam_date
+        - start_time
+        - end_time
+        - max_marks
+      additionalProperties: false
+      properties:
+        exam_id:
+          type: string
+          format: uuid
+        course_offering_id:
+          type: string
+          format: uuid
+        room_id:
+          type: string
+          format: uuid
+          nullable: true
+        exam_date:
+          type: string
+          format: date
+        start_time:
+          type: string
+          format: time
+        end_time:
+          type: string
+          format: time
+        sitting:
+          type: string
+          nullable: true
+        max_marks:
+          type: number
+          format: double
+        pass_marks:
+          type: number
+          format: double
+          nullable: true
+        invigilator_staff_id:
+          type: string
+          format: uuid
+          nullable: true
+        status:
+          type: string
+          default: "scheduled"
+          enum:
+            - "scheduled"
+            - "held"
+            - "postponed"
+            - "cancelled"
+        marks_status:
+          type: string
+          default: "not_started"
+          enum:
+            - "not_started"
+            - "in_progress"
+            - "submitted"
+            - "verified"
+        marks_submitted_at:
+          type: string
+          format: date-time
+          nullable: true
+        marks_verified_at:
+          type: string
+          format: date-time
+          nullable: true
+        marks_verified_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        instructions:
+          type: string
+          nullable: true
+
+    ExamScheduleUpdateRequest:
+      type: object
+      required:
+        - exam_id
+        - course_offering_id
+        - room_id
+        - exam_date
+        - start_time
+        - end_time
+        - sitting
+        - max_marks
+        - pass_marks
+        - invigilator_staff_id
+        - status
+        - marks_status
+        - marks_submitted_at
+        - marks_verified_at
+        - marks_verified_by_user_id
+        - instructions
+      additionalProperties: false
+      properties:
+        exam_id:
+          type: string
+          format: uuid
+        course_offering_id:
+          type: string
+          format: uuid
+        room_id:
+          type: string
+          format: uuid
+          nullable: true
+        exam_date:
+          type: string
+          format: date
+        start_time:
+          type: string
+          format: time
+        end_time:
+          type: string
+          format: time
+        sitting:
+          type: string
+          nullable: true
+        max_marks:
+          type: number
+          format: double
+        pass_marks:
+          type: number
+          format: double
+          nullable: true
+        invigilator_staff_id:
+          type: string
+          format: uuid
+          nullable: true
+        status:
+          type: string
+          default: "scheduled"
+          enum:
+            - "scheduled"
+            - "held"
+            - "postponed"
+            - "cancelled"
+        marks_status:
+          type: string
+          default: "not_started"
+          enum:
+            - "not_started"
+            - "in_progress"
+            - "submitted"
+            - "verified"
+        marks_submitted_at:
+          type: string
+          format: date-time
+          nullable: true
+        marks_verified_at:
+          type: string
+          format: date-time
+          nullable: true
+        marks_verified_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        instructions:
+          type: string
+          nullable: true
+
+    ExamScheduleResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - exam_schedule_id
+        - exam_id
+        - course_offering_id
+        - exam_date
+        - start_time
+        - end_time
+        - max_marks
+        - status
+        - marks_status
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        exam_schedule_id:
+          type: string
+          format: uuid
+          readOnly: true
+        exam_id:
+          type: string
+          format: uuid
+        course_offering_id:
+          type: string
+          format: uuid
+        room_id:
+          type: string
+          format: uuid
+          nullable: true
+        exam_date:
+          type: string
+          format: date
+        start_time:
+          type: string
+          format: time
+        end_time:
+          type: string
+          format: time
+        sitting:
+          type: string
+          nullable: true
+        max_marks:
+          type: number
+          format: double
+        pass_marks:
+          type: number
+          format: double
+          nullable: true
+        invigilator_staff_id:
+          type: string
+          format: uuid
+          nullable: true
+        status:
+          type: string
+          default: "scheduled"
+          enum:
+            - "scheduled"
+            - "held"
+            - "postponed"
+            - "cancelled"
+        marks_status:
+          type: string
+          default: "not_started"
+          enum:
+            - "not_started"
+            - "in_progress"
+            - "submitted"
+            - "verified"
+        marks_submitted_at:
+          type: string
+          format: date-time
+          nullable: true
+        marks_verified_at:
+          type: string
+          format: date-time
+          nullable: true
+        marks_verified_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        instructions:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

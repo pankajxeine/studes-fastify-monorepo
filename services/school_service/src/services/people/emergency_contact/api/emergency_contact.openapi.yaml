@@ -1,0 +1,267 @@
+openapi: 3.0.0
+x-sql-table: ppl_emergency_contact
+info:
+  title: EmergencyContactResponse API
+  version: 1.0.0
+paths:
+  /emergency_contact:
+    get:
+      operationId: listEmergencyContact
+      summary: Get all emergency_contact
+      responses:
+        '200':
+          description: List of emergency_contact
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EmergencyContactResponse'
+    post:
+      operationId: createEmergencyContact
+      summary: Create a new emergency_contact
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmergencyContactRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmergencyContactResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /emergency_contact/{id}:
+    get:
+      operationId: getEmergencyContactById
+      summary: Get emergency_contact by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: emergency_contact object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmergencyContactResponse'
+        '404':
+          description: emergency_contact not found
+    put:
+      operationId: updateEmergencyContact
+      summary: Update emergency_contact by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmergencyContactUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmergencyContactResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: emergency_contact not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteEmergencyContact
+      summary: Delete emergency_contact by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: emergency_contact not found
+components:
+  schemas:
+
+    EmergencyContactRequest:
+      type: object
+      required:
+        - person_id
+        - relationship_type_code
+        - phone
+      additionalProperties: false
+      properties:
+        person_id:
+          type: string
+          format: uuid
+        contact_person_id:
+          type: string
+          format: uuid
+          nullable: true
+        contact_name:
+          type: string
+          nullable: true
+        relationship_type_code:
+          type: string
+        phone:
+          type: string
+        alt_phone:
+          type: string
+          nullable: true
+        email:
+          type: string
+          nullable: true
+        priority:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 9
+          default: 1
+        notes:
+          type: string
+          nullable: true
+
+    EmergencyContactUpdateRequest:
+      type: object
+      required:
+        - person_id
+        - contact_person_id
+        - contact_name
+        - relationship_type_code
+        - phone
+        - alt_phone
+        - email
+        - priority
+        - notes
+      additionalProperties: false
+      properties:
+        person_id:
+          type: string
+          format: uuid
+        contact_person_id:
+          type: string
+          format: uuid
+          nullable: true
+        contact_name:
+          type: string
+          nullable: true
+        relationship_type_code:
+          type: string
+        phone:
+          type: string
+        alt_phone:
+          type: string
+          nullable: true
+        email:
+          type: string
+          nullable: true
+        priority:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 9
+          default: 1
+        notes:
+          type: string
+          nullable: true
+
+    EmergencyContactResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - emergency_contact_id
+        - person_id
+        - relationship_type_code
+        - phone
+        - priority
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        emergency_contact_id:
+          type: string
+          format: uuid
+          readOnly: true
+        person_id:
+          type: string
+          format: uuid
+        contact_person_id:
+          type: string
+          format: uuid
+          nullable: true
+        contact_name:
+          type: string
+          nullable: true
+        relationship_type_code:
+          type: string
+        phone:
+          type: string
+        alt_phone:
+          type: string
+          nullable: true
+        email:
+          type: string
+          nullable: true
+        priority:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 9
+          default: 1
+        notes:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

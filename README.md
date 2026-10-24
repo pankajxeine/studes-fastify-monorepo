@@ -12,6 +12,8 @@ Services:
 3. Bootstrap public tables: `npm run db:init`.
 4. Create a tenant: `npm run db:create-tenant -- acme "Acme Inc"`.
 
+Generator command examples and options are documented in [GENERATOR_CLI.md](GENERATOR_CLI.md).
+
 ## Run locally
 
 - Auth: `npm run dev:auth`

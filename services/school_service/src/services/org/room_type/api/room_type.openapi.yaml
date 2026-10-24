@@ -1,0 +1,214 @@
+openapi: 3.0.0
+x-sql-table: org_room_type
+info:
+  title: RoomTypeResponse API
+  version: 1.0.0
+paths:
+  /room_type:
+    get:
+      operationId: listRoomType
+      summary: Get all room_type
+      responses:
+        '200':
+          description: List of room_type
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RoomTypeResponse'
+    post:
+      operationId: createRoomType
+      summary: Create a new room_type
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoomTypeRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoomTypeResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /room_type/{id}:
+    get:
+      operationId: getRoomTypeById
+      summary: Get room_type by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: room_type object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoomTypeResponse'
+        '404':
+          description: room_type not found
+    put:
+      operationId: updateRoomType
+      summary: Update room_type by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoomTypeUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoomTypeResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: room_type not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteRoomType
+      summary: Delete room_type by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: room_type not found
+components:
+  schemas:
+
+    RoomTypeRequest:
+      type: object
+      required:
+        - name
+      additionalProperties: false
+      properties:
+        room_type_code:
+          type: string
+          nullable: true
+        name:
+          type: string
+        is_teaching_space:
+          type: boolean
+          default: false
+        sort_order:
+          type: integer
+          format: int32
+          default: 0
+        is_active:
+          type: boolean
+          default: true
+
+    RoomTypeUpdateRequest:
+      type: object
+      required:
+        - room_type_code
+        - name
+        - is_teaching_space
+        - sort_order
+        - is_active
+      additionalProperties: false
+      properties:
+        room_type_code:
+          type: string
+          nullable: true
+        name:
+          type: string
+        is_teaching_space:
+          type: boolean
+          default: false
+        sort_order:
+          type: integer
+          format: int32
+          default: 0
+        is_active:
+          type: boolean
+          default: true
+
+    RoomTypeResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - name
+        - is_teaching_space
+        - sort_order
+        - is_active
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        room_type_code:
+          type: string
+          nullable: true
+        name:
+          type: string
+        is_teaching_space:
+          type: boolean
+          default: false
+        sort_order:
+          type: integer
+          format: int32
+          default: 0
+        is_active:
+          type: boolean
+          default: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

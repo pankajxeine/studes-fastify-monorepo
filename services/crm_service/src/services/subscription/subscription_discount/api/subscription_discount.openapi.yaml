@@ -1,0 +1,197 @@
+openapi: 3.0.0
+x-sql-table: subscription_subscription_discount
+info:
+  title: SubscriptionDiscountResponse API
+  version: 1.0.0
+paths:
+  /subscription_discount:
+    get:
+      operationId: listSubscriptionDiscount
+      summary: Get all subscription_discount
+      responses:
+        '200':
+          description: List of subscription_discount
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SubscriptionDiscountResponse'
+    post:
+      operationId: createSubscriptionDiscount
+      summary: Create a new subscription_discount
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubscriptionDiscountRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionDiscountResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /subscription_discount/{id}:
+    get:
+      operationId: getSubscriptionDiscountById
+      summary: Get subscription_discount by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: subscription_discount object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionDiscountResponse'
+        '404':
+          description: subscription_discount not found
+    put:
+      operationId: updateSubscriptionDiscount
+      summary: Update subscription_discount by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubscriptionDiscountUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionDiscountResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: subscription_discount not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteSubscriptionDiscount
+      summary: Delete subscription_discount by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: subscription_discount not found
+components:
+  schemas:
+
+    SubscriptionDiscountRequest:
+      type: object
+      required:
+        - subscription_id
+        - coupon_id
+      additionalProperties: false
+      properties:
+        subscription_id:
+          type: string
+          format: uuid
+        coupon_id:
+          type: string
+          format: uuid
+        applied_at:
+          type: string
+          format: date-time
+        ends_at:
+          type: string
+          format: date-time
+          nullable: true
+
+    SubscriptionDiscountUpdateRequest:
+      type: object
+      required:
+        - subscription_id
+        - coupon_id
+        - applied_at
+        - ends_at
+      additionalProperties: false
+      properties:
+        subscription_id:
+          type: string
+          format: uuid
+        coupon_id:
+          type: string
+          format: uuid
+        applied_at:
+          type: string
+          format: date-time
+        ends_at:
+          type: string
+          format: date-time
+          nullable: true
+
+    SubscriptionDiscountResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - subscription_discount_id
+        - subscription_id
+        - coupon_id
+        - applied_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        subscription_discount_id:
+          type: string
+          format: uuid
+          readOnly: true
+        subscription_id:
+          type: string
+          format: uuid
+        coupon_id:
+          type: string
+          format: uuid
+        applied_at:
+          type: string
+          format: date-time
+        ends_at:
+          type: string
+          format: date-time
+          nullable: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

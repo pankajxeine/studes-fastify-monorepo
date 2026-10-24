@@ -1,0 +1,184 @@
+openapi: 3.0.0
+x-sql-table: support_sla_target
+info:
+  title: SlaTargetResponse API
+  version: 1.0.0
+paths:
+  /sla_target:
+    get:
+      operationId: listSlaTarget
+      summary: Get all sla_target
+      responses:
+        '200':
+          description: List of sla_target
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SlaTargetResponse'
+    post:
+      operationId: createSlaTarget
+      summary: Create a new sla_target
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SlaTargetRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SlaTargetResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /sla_target/{id}:
+    get:
+      operationId: getSlaTargetById
+      summary: Get sla_target by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: sla_target object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SlaTargetResponse'
+        '404':
+          description: sla_target not found
+    put:
+      operationId: updateSlaTarget
+      summary: Update sla_target by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SlaTargetUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SlaTargetResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: sla_target not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteSlaTarget
+      summary: Delete sla_target by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: sla_target not found
+components:
+  schemas:
+
+    SlaTargetRequest:
+      type: object
+      required:
+        - sla_policy_id
+        - priority
+        - first_response_minutes
+        - resolution_minutes
+      additionalProperties: false
+      properties:
+        sla_policy_id:
+          type: string
+          format: uuid
+        priority:
+          type: string
+        first_response_minutes:
+          type: integer
+          format: int32
+        resolution_minutes:
+          type: integer
+          format: int32
+
+    SlaTargetUpdateRequest:
+      type: object
+      required:
+        - sla_policy_id
+        - priority
+        - first_response_minutes
+        - resolution_minutes
+      additionalProperties: false
+      properties:
+        sla_policy_id:
+          type: string
+          format: uuid
+        priority:
+          type: string
+        first_response_minutes:
+          type: integer
+          format: int32
+        resolution_minutes:
+          type: integer
+          format: int32
+
+    SlaTargetResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - sla_policy_id
+        - priority
+        - first_response_minutes
+        - resolution_minutes
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        sla_policy_id:
+          type: string
+          format: uuid
+        priority:
+          type: string
+        first_response_minutes:
+          type: integer
+          format: int32
+        resolution_minutes:
+          type: integer
+          format: int32
+  

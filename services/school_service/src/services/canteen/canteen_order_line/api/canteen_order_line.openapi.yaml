@@ -1,0 +1,298 @@
+openapi: 3.0.0
+x-sql-table: cntn_canteen_order_line
+info:
+  title: CanteenOrderLineResponse API
+  version: 1.0.0
+paths:
+  /canteen_order_line:
+    get:
+      operationId: listCanteenOrderLine
+      summary: Get all canteen_order_line
+      responses:
+        '200':
+          description: List of canteen_order_line
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CanteenOrderLineResponse'
+    post:
+      operationId: createCanteenOrderLine
+      summary: Create a new canteen_order_line
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CanteenOrderLineRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CanteenOrderLineResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /canteen_order_line/{id}:
+    get:
+      operationId: getCanteenOrderLineById
+      summary: Get canteen_order_line by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: canteen_order_line object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CanteenOrderLineResponse'
+        '404':
+          description: canteen_order_line not found
+    put:
+      operationId: updateCanteenOrderLine
+      summary: Update canteen_order_line by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CanteenOrderLineUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CanteenOrderLineResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: canteen_order_line not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteCanteenOrderLine
+      summary: Delete canteen_order_line by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: canteen_order_line not found
+components:
+  schemas:
+
+    CanteenOrderLineRequest:
+      type: object
+      required:
+        - canteen_order_id
+        - line_no
+        - menu_item_id
+        - unit_price_amount
+      additionalProperties: false
+      properties:
+        canteen_order_id:
+          type: string
+          format: uuid
+        line_no:
+          type: integer
+          format: int32
+        menu_item_id:
+          type: string
+          format: uuid
+        quantity:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 20
+          default: 1
+        unit_price_amount:
+          type: string
+        line_amount:
+          type: number
+          format: double
+          nullable: true
+        special_instructions:
+          type: string
+          nullable: true
+        allergen_warning:
+          type: string
+          nullable: true
+        allergen_override_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        allergen_override_reason:
+          type: string
+          nullable: true
+        allergen_override_at:
+          type: string
+          format: date-time
+          nullable: true
+
+    CanteenOrderLineUpdateRequest:
+      type: object
+      required:
+        - canteen_order_id
+        - line_no
+        - menu_item_id
+        - quantity
+        - unit_price_amount
+        - line_amount
+        - special_instructions
+        - allergen_warning
+        - allergen_override_by_user_id
+        - allergen_override_reason
+        - allergen_override_at
+      additionalProperties: false
+      properties:
+        canteen_order_id:
+          type: string
+          format: uuid
+        line_no:
+          type: integer
+          format: int32
+        menu_item_id:
+          type: string
+          format: uuid
+        quantity:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 20
+          default: 1
+        unit_price_amount:
+          type: string
+        line_amount:
+          type: number
+          format: double
+          nullable: true
+        special_instructions:
+          type: string
+          nullable: true
+        allergen_warning:
+          type: string
+          nullable: true
+        allergen_override_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        allergen_override_reason:
+          type: string
+          nullable: true
+        allergen_override_at:
+          type: string
+          format: date-time
+          nullable: true
+
+    CanteenOrderLineResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - canteen_order_line_id
+        - canteen_order_id
+        - line_no
+        - menu_item_id
+        - quantity
+        - unit_price_amount
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        canteen_order_line_id:
+          type: string
+          format: uuid
+          readOnly: true
+        canteen_order_id:
+          type: string
+          format: uuid
+        line_no:
+          type: integer
+          format: int32
+        menu_item_id:
+          type: string
+          format: uuid
+        quantity:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 20
+          default: 1
+        unit_price_amount:
+          type: string
+        line_amount:
+          type: number
+          format: double
+          nullable: true
+        special_instructions:
+          type: string
+          nullable: true
+        allergen_warning:
+          type: string
+          nullable: true
+        allergen_override_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        allergen_override_reason:
+          type: string
+          nullable: true
+        allergen_override_at:
+          type: string
+          format: date-time
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

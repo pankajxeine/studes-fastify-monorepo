@@ -1,0 +1,278 @@
+openapi: 3.0.0
+x-sql-table: acad_section
+info:
+  title: SectionResponse API
+  version: 1.0.0
+paths:
+  /section:
+    get:
+      operationId: listSection
+      summary: Get all section
+      responses:
+        '200':
+          description: List of section
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SectionResponse'
+    post:
+      operationId: createSection
+      summary: Create a new section
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SectionRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SectionResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /section/{id}:
+    get:
+      operationId: getSectionById
+      summary: Get section by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: section object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SectionResponse'
+        '404':
+          description: section not found
+    put:
+      operationId: updateSection
+      summary: Update section by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SectionUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SectionResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: section not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteSection
+      summary: Delete section by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: section not found
+components:
+  schemas:
+
+    SectionRequest:
+      type: object
+      required:
+        - campus_id
+        - academic_year_id
+        - grade_level_id
+        - code
+        - name
+      additionalProperties: false
+      properties:
+        campus_id:
+          type: string
+          format: uuid
+        academic_year_id:
+          type: string
+          format: uuid
+        grade_level_id:
+          type: string
+          format: uuid
+        code:
+          type: string
+          maxLength: 20
+        name:
+          type: string
+        class_teacher_staff_id:
+          type: string
+          format: uuid
+          nullable: true
+        room_id:
+          type: string
+          format: uuid
+          nullable: true
+        capacity:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 500
+          default: 30
+        is_active:
+          type: boolean
+          default: true
+
+    SectionUpdateRequest:
+      type: object
+      required:
+        - campus_id
+        - academic_year_id
+        - grade_level_id
+        - code
+        - name
+        - class_teacher_staff_id
+        - room_id
+        - capacity
+        - is_active
+      additionalProperties: false
+      properties:
+        campus_id:
+          type: string
+          format: uuid
+        academic_year_id:
+          type: string
+          format: uuid
+        grade_level_id:
+          type: string
+          format: uuid
+        code:
+          type: string
+          maxLength: 20
+        name:
+          type: string
+        class_teacher_staff_id:
+          type: string
+          format: uuid
+          nullable: true
+        room_id:
+          type: string
+          format: uuid
+          nullable: true
+        capacity:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 500
+          default: 30
+        is_active:
+          type: boolean
+          default: true
+
+    SectionResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - section_id
+        - campus_id
+        - academic_year_id
+        - grade_level_id
+        - code
+        - name
+        - capacity
+        - is_active
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        section_id:
+          type: string
+          format: uuid
+          readOnly: true
+        campus_id:
+          type: string
+          format: uuid
+        academic_year_id:
+          type: string
+          format: uuid
+        grade_level_id:
+          type: string
+          format: uuid
+        code:
+          type: string
+          maxLength: 20
+        name:
+          type: string
+        class_teacher_staff_id:
+          type: string
+          format: uuid
+          nullable: true
+        room_id:
+          type: string
+          format: uuid
+          nullable: true
+        capacity:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 500
+          default: 30
+        is_active:
+          type: boolean
+          default: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

@@ -1,0 +1,252 @@
+openapi: 3.0.0
+x-sql-table: support_escalation_rule
+info:
+  title: EscalationRuleResponse API
+  version: 1.0.0
+paths:
+  /escalation_rule:
+    get:
+      operationId: listEscalationRule
+      summary: Get all escalation_rule
+      responses:
+        '200':
+          description: List of escalation_rule
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EscalationRuleResponse'
+    post:
+      operationId: createEscalationRule
+      summary: Create a new escalation_rule
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EscalationRuleRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EscalationRuleResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /escalation_rule/{id}:
+    get:
+      operationId: getEscalationRuleById
+      summary: Get escalation_rule by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: escalation_rule object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EscalationRuleResponse'
+        '404':
+          description: escalation_rule not found
+    put:
+      operationId: updateEscalationRule
+      summary: Update escalation_rule by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EscalationRuleUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EscalationRuleResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: escalation_rule not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteEscalationRule
+      summary: Delete escalation_rule by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: escalation_rule not found
+components:
+  schemas:
+
+    EscalationRuleRequest:
+      type: object
+      required:
+        - metric
+        - action
+      additionalProperties: false
+      properties:
+        queue_id:
+          type: string
+          format: uuid
+          nullable: true
+        priority:
+          type: string
+          nullable: true
+        metric:
+          type: string
+          maxLength: 14
+        minutes_before_breach:
+          type: integer
+          format: int32
+          default: 0
+        action:
+          type: string
+          maxLength: 14
+        target_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        target_queue_id:
+          type: string
+          format: uuid
+          nullable: true
+        is_active:
+          type: boolean
+          default: true
+
+    EscalationRuleUpdateRequest:
+      type: object
+      required:
+        - queue_id
+        - priority
+        - metric
+        - minutes_before_breach
+        - action
+        - target_user_id
+        - target_queue_id
+        - is_active
+      additionalProperties: false
+      properties:
+        queue_id:
+          type: string
+          format: uuid
+          nullable: true
+        priority:
+          type: string
+          nullable: true
+        metric:
+          type: string
+          maxLength: 14
+        minutes_before_breach:
+          type: integer
+          format: int32
+          default: 0
+        action:
+          type: string
+          maxLength: 14
+        target_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        target_queue_id:
+          type: string
+          format: uuid
+          nullable: true
+        is_active:
+          type: boolean
+          default: true
+
+    EscalationRuleResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - escalation_rule_id
+        - metric
+        - minutes_before_breach
+        - action
+        - is_active
+        - created_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        escalation_rule_id:
+          type: string
+          format: uuid
+          readOnly: true
+        queue_id:
+          type: string
+          format: uuid
+          nullable: true
+        priority:
+          type: string
+          nullable: true
+        metric:
+          type: string
+          maxLength: 14
+        minutes_before_breach:
+          type: integer
+          format: int32
+          default: 0
+        action:
+          type: string
+          maxLength: 14
+        target_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        target_queue_id:
+          type: string
+          format: uuid
+          nullable: true
+        is_active:
+          type: boolean
+          default: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

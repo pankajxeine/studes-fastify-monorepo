@@ -1,0 +1,241 @@
+openapi: 3.0.0
+x-sql-table: sis_house
+info:
+  title: HouseResponse API
+  version: 1.0.0
+paths:
+  /house:
+    get:
+      operationId: listHouse
+      summary: Get all house
+      responses:
+        '200':
+          description: List of house
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HouseResponse'
+    post:
+      operationId: createHouse
+      summary: Create a new house
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HouseRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HouseResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /house/{id}:
+    get:
+      operationId: getHouseById
+      summary: Get house by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: house object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HouseResponse'
+        '404':
+          description: house not found
+    put:
+      operationId: updateHouse
+      summary: Update house by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HouseUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HouseResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: house not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteHouse
+      summary: Delete house by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: house not found
+components:
+  schemas:
+
+    HouseRequest:
+      type: object
+      required:
+        - campus_id
+        - code
+        - name
+      additionalProperties: false
+      properties:
+        campus_id:
+          type: string
+          format: uuid
+        code:
+          type: string
+        name:
+          type: string
+        color_hex:
+          type: string
+          nullable: true
+          maxLength: 7
+        motto:
+          type: string
+          nullable: true
+        house_master_staff_id:
+          type: string
+          format: uuid
+          nullable: true
+        is_active:
+          type: boolean
+          default: true
+
+    HouseUpdateRequest:
+      type: object
+      required:
+        - campus_id
+        - code
+        - name
+        - color_hex
+        - motto
+        - house_master_staff_id
+        - is_active
+      additionalProperties: false
+      properties:
+        campus_id:
+          type: string
+          format: uuid
+        code:
+          type: string
+        name:
+          type: string
+        color_hex:
+          type: string
+          nullable: true
+          maxLength: 7
+        motto:
+          type: string
+          nullable: true
+        house_master_staff_id:
+          type: string
+          format: uuid
+          nullable: true
+        is_active:
+          type: boolean
+          default: true
+
+    HouseResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - house_id
+        - campus_id
+        - code
+        - name
+        - is_active
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        house_id:
+          type: string
+          format: uuid
+          readOnly: true
+        campus_id:
+          type: string
+          format: uuid
+        code:
+          type: string
+        name:
+          type: string
+        color_hex:
+          type: string
+          nullable: true
+          maxLength: 7
+        motto:
+          type: string
+          nullable: true
+        house_master_staff_id:
+          type: string
+          format: uuid
+          nullable: true
+        is_active:
+          type: boolean
+          default: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

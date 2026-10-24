@@ -1,0 +1,436 @@
+openapi: 3.0.0
+x-sql-table: hstl_outpass
+info:
+  title: OutpassResponse API
+  version: 1.0.0
+paths:
+  /outpass:
+    get:
+      operationId: listOutpass
+      summary: Get all outpass
+      responses:
+        '200':
+          description: List of outpass
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OutpassResponse'
+    post:
+      operationId: createOutpass
+      summary: Create a new outpass
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OutpassRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OutpassResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /outpass/{id}:
+    get:
+      operationId: getOutpassById
+      summary: Get outpass by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: outpass object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OutpassResponse'
+        '404':
+          description: outpass not found
+    put:
+      operationId: updateOutpass
+      summary: Update outpass by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OutpassUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OutpassResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: outpass not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteOutpass
+      summary: Delete outpass by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: outpass not found
+components:
+  schemas:
+
+    OutpassRequest:
+      type: object
+      required:
+        - outpass_no
+        - student_id
+        - hostel_id
+        - outpass_type
+        - reason
+        - destination
+        - planned_out_at
+        - expected_return_at
+      additionalProperties: false
+      properties:
+        outpass_no:
+          type: string
+          maxLength: 20
+        student_id:
+          type: string
+          format: uuid
+        hostel_id:
+          type: string
+          format: uuid
+        outpass_type:
+          type: string
+          maxLength: 20
+        reason:
+          type: string
+        destination:
+          type: string
+        escort_name:
+          type: string
+          nullable: true
+        escort_phone:
+          type: string
+          nullable: true
+        planned_out_at:
+          type: string
+          format: date-time
+        expected_return_at:
+          type: string
+          format: date-time
+        period:
+          type: string
+          nullable: true
+        status:
+          type: string
+          default: "requested"
+          enum:
+            - "requested"
+            - "approved"
+            - "rejected"
+            - "cancelled"
+            - "checked_out"
+            - "returned"
+        requested_at:
+          type: string
+          format: date-time
+        requested_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        has_guardian_consent:
+          type: boolean
+          default: false
+        approved_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        approved_at:
+          type: string
+          format: date-time
+          nullable: true
+        rejection_reason:
+          type: string
+          nullable: true
+        checked_out_at:
+          type: string
+          format: date-time
+          nullable: true
+        checked_out_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        returned_at:
+          type: string
+          format: date-time
+          nullable: true
+        is_late_return:
+          type: boolean
+          nullable: true
+
+    OutpassUpdateRequest:
+      type: object
+      required:
+        - outpass_no
+        - student_id
+        - hostel_id
+        - outpass_type
+        - reason
+        - destination
+        - escort_name
+        - escort_phone
+        - planned_out_at
+        - expected_return_at
+        - period
+        - status
+        - requested_at
+        - requested_by_user_id
+        - has_guardian_consent
+        - approved_by_user_id
+        - approved_at
+        - rejection_reason
+        - checked_out_at
+        - checked_out_by_user_id
+        - returned_at
+        - is_late_return
+      additionalProperties: false
+      properties:
+        outpass_no:
+          type: string
+          maxLength: 20
+        student_id:
+          type: string
+          format: uuid
+        hostel_id:
+          type: string
+          format: uuid
+        outpass_type:
+          type: string
+          maxLength: 20
+        reason:
+          type: string
+        destination:
+          type: string
+        escort_name:
+          type: string
+          nullable: true
+        escort_phone:
+          type: string
+          nullable: true
+        planned_out_at:
+          type: string
+          format: date-time
+        expected_return_at:
+          type: string
+          format: date-time
+        period:
+          type: string
+          nullable: true
+        status:
+          type: string
+          default: "requested"
+          enum:
+            - "requested"
+            - "approved"
+            - "rejected"
+            - "cancelled"
+            - "checked_out"
+            - "returned"
+        requested_at:
+          type: string
+          format: date-time
+        requested_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        has_guardian_consent:
+          type: boolean
+          default: false
+        approved_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        approved_at:
+          type: string
+          format: date-time
+          nullable: true
+        rejection_reason:
+          type: string
+          nullable: true
+        checked_out_at:
+          type: string
+          format: date-time
+          nullable: true
+        checked_out_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        returned_at:
+          type: string
+          format: date-time
+          nullable: true
+        is_late_return:
+          type: boolean
+          nullable: true
+
+    OutpassResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - outpass_id
+        - outpass_no
+        - student_id
+        - hostel_id
+        - outpass_type
+        - reason
+        - destination
+        - planned_out_at
+        - expected_return_at
+        - status
+        - requested_at
+        - has_guardian_consent
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        outpass_id:
+          type: string
+          format: uuid
+          readOnly: true
+        outpass_no:
+          type: string
+          maxLength: 20
+        student_id:
+          type: string
+          format: uuid
+        hostel_id:
+          type: string
+          format: uuid
+        outpass_type:
+          type: string
+          maxLength: 20
+        reason:
+          type: string
+        destination:
+          type: string
+        escort_name:
+          type: string
+          nullable: true
+        escort_phone:
+          type: string
+          nullable: true
+        planned_out_at:
+          type: string
+          format: date-time
+        expected_return_at:
+          type: string
+          format: date-time
+        period:
+          type: string
+          nullable: true
+        status:
+          type: string
+          default: "requested"
+          enum:
+            - "requested"
+            - "approved"
+            - "rejected"
+            - "cancelled"
+            - "checked_out"
+            - "returned"
+        requested_at:
+          type: string
+          format: date-time
+        requested_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        has_guardian_consent:
+          type: boolean
+          default: false
+        approved_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        approved_at:
+          type: string
+          format: date-time
+          nullable: true
+        rejection_reason:
+          type: string
+          nullable: true
+        checked_out_at:
+          type: string
+          format: date-time
+          nullable: true
+        checked_out_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        returned_at:
+          type: string
+          format: date-time
+          nullable: true
+        is_late_return:
+          type: boolean
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

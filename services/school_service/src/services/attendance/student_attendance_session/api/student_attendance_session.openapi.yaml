@@ -1,0 +1,405 @@
+openapi: 3.0.0
+x-sql-table: atnd_student_attendance_session
+info:
+  title: StudentAttendanceSessionResponse API
+  version: 1.0.0
+paths:
+  /student_attendance_session:
+    get:
+      operationId: listStudentAttendanceSession
+      summary: Get all student_attendance_session
+      responses:
+        '200':
+          description: List of student_attendance_session
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StudentAttendanceSessionResponse'
+    post:
+      operationId: createStudentAttendanceSession
+      summary: Create a new student_attendance_session
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudentAttendanceSessionRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentAttendanceSessionResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /student_attendance_session/{id}:
+    get:
+      operationId: getStudentAttendanceSessionById
+      summary: Get student_attendance_session by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: student_attendance_session object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentAttendanceSessionResponse'
+        '404':
+          description: student_attendance_session not found
+    put:
+      operationId: updateStudentAttendanceSession
+      summary: Update student_attendance_session by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudentAttendanceSessionUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentAttendanceSessionResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: student_attendance_session not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteStudentAttendanceSession
+      summary: Delete student_attendance_session by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: student_attendance_session not found
+components:
+  schemas:
+
+    StudentAttendanceSessionRequest:
+      type: object
+      required:
+        - campus_id
+        - session_date
+        - taken_by_staff_id
+      additionalProperties: false
+      properties:
+        campus_id:
+          type: string
+          format: uuid
+        section_id:
+          type: string
+          format: uuid
+          nullable: true
+        course_offering_id:
+          type: string
+          format: uuid
+          nullable: true
+        session_date:
+          type: string
+          format: date
+        period_id:
+          type: string
+          format: uuid
+          nullable: true
+        timetable_entry_id:
+          type: string
+          format: uuid
+          nullable: true
+        taken_by_staff_id:
+          type: string
+          format: uuid
+        status:
+          type: string
+          default: "open"
+          enum:
+            - "open"
+            - "submitted"
+            - "locked"
+        opened_at:
+          type: string
+          format: date-time
+        submitted_at:
+          type: string
+          format: date-time
+          nullable: true
+        locked_at:
+          type: string
+          format: date-time
+          nullable: true
+        locked_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        marked_count:
+          type: integer
+          format: int32
+          default: 0
+        present_count:
+          type: integer
+          format: int32
+          default: 0
+        absent_count:
+          type: integer
+          format: int32
+          default: 0
+        late_count:
+          type: integer
+          format: int32
+          default: 0
+        excused_count:
+          type: integer
+          format: int32
+          default: 0
+        remarks:
+          type: string
+          nullable: true
+
+    StudentAttendanceSessionUpdateRequest:
+      type: object
+      required:
+        - campus_id
+        - section_id
+        - course_offering_id
+        - session_date
+        - period_id
+        - timetable_entry_id
+        - taken_by_staff_id
+        - status
+        - opened_at
+        - submitted_at
+        - locked_at
+        - locked_by_user_id
+        - marked_count
+        - present_count
+        - absent_count
+        - late_count
+        - excused_count
+        - remarks
+      additionalProperties: false
+      properties:
+        campus_id:
+          type: string
+          format: uuid
+        section_id:
+          type: string
+          format: uuid
+          nullable: true
+        course_offering_id:
+          type: string
+          format: uuid
+          nullable: true
+        session_date:
+          type: string
+          format: date
+        period_id:
+          type: string
+          format: uuid
+          nullable: true
+        timetable_entry_id:
+          type: string
+          format: uuid
+          nullable: true
+        taken_by_staff_id:
+          type: string
+          format: uuid
+        status:
+          type: string
+          default: "open"
+          enum:
+            - "open"
+            - "submitted"
+            - "locked"
+        opened_at:
+          type: string
+          format: date-time
+        submitted_at:
+          type: string
+          format: date-time
+          nullable: true
+        locked_at:
+          type: string
+          format: date-time
+          nullable: true
+        locked_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        marked_count:
+          type: integer
+          format: int32
+          default: 0
+        present_count:
+          type: integer
+          format: int32
+          default: 0
+        absent_count:
+          type: integer
+          format: int32
+          default: 0
+        late_count:
+          type: integer
+          format: int32
+          default: 0
+        excused_count:
+          type: integer
+          format: int32
+          default: 0
+        remarks:
+          type: string
+          nullable: true
+
+    StudentAttendanceSessionResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - student_attendance_session_id
+        - campus_id
+        - session_date
+        - taken_by_staff_id
+        - status
+        - opened_at
+        - marked_count
+        - present_count
+        - absent_count
+        - late_count
+        - excused_count
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        student_attendance_session_id:
+          type: string
+          format: uuid
+          readOnly: true
+        campus_id:
+          type: string
+          format: uuid
+        section_id:
+          type: string
+          format: uuid
+          nullable: true
+        course_offering_id:
+          type: string
+          format: uuid
+          nullable: true
+        session_date:
+          type: string
+          format: date
+        period_id:
+          type: string
+          format: uuid
+          nullable: true
+        timetable_entry_id:
+          type: string
+          format: uuid
+          nullable: true
+        taken_by_staff_id:
+          type: string
+          format: uuid
+        status:
+          type: string
+          default: "open"
+          enum:
+            - "open"
+            - "submitted"
+            - "locked"
+        opened_at:
+          type: string
+          format: date-time
+        submitted_at:
+          type: string
+          format: date-time
+          nullable: true
+        locked_at:
+          type: string
+          format: date-time
+          nullable: true
+        locked_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        marked_count:
+          type: integer
+          format: int32
+          default: 0
+        present_count:
+          type: integer
+          format: int32
+          default: 0
+        absent_count:
+          type: integer
+          format: int32
+          default: 0
+        late_count:
+          type: integer
+          format: int32
+          default: 0
+        excused_count:
+          type: integer
+          format: int32
+          default: 0
+        remarks:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

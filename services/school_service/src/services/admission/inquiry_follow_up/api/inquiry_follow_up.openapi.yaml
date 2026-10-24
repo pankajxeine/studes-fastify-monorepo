@@ -1,0 +1,248 @@
+openapi: 3.0.0
+x-sql-table: admis_inquiry_follow_up
+info:
+  title: InquiryFollowUpResponse API
+  version: 1.0.0
+paths:
+  /inquiry_follow_up:
+    get:
+      operationId: listInquiryFollowUp
+      summary: Get all inquiry_follow_up
+      responses:
+        '200':
+          description: List of inquiry_follow_up
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/InquiryFollowUpResponse'
+    post:
+      operationId: createInquiryFollowUp
+      summary: Create a new inquiry_follow_up
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InquiryFollowUpRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InquiryFollowUpResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /inquiry_follow_up/{id}:
+    get:
+      operationId: getInquiryFollowUpById
+      summary: Get inquiry_follow_up by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: inquiry_follow_up object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InquiryFollowUpResponse'
+        '404':
+          description: inquiry_follow_up not found
+    put:
+      operationId: updateInquiryFollowUp
+      summary: Update inquiry_follow_up by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InquiryFollowUpUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InquiryFollowUpResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: inquiry_follow_up not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteInquiryFollowUp
+      summary: Delete inquiry_follow_up by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: inquiry_follow_up not found
+components:
+  schemas:
+
+    InquiryFollowUpRequest:
+      type: object
+      required:
+        - inquiry_id
+        - channel
+        - summary
+      additionalProperties: false
+      properties:
+        inquiry_id:
+          type: string
+          format: uuid
+        followed_up_by_staff_id:
+          type: string
+          format: uuid
+          nullable: true
+        channel:
+          type: string
+          maxLength: 20
+        followed_up_at:
+          type: string
+          format: date-time
+        summary:
+          type: string
+        outcome:
+          type: string
+          maxLength: 20
+          default: "reached"
+        next_follow_up_on:
+          type: string
+          format: date
+          nullable: true
+
+    InquiryFollowUpUpdateRequest:
+      type: object
+      required:
+        - inquiry_id
+        - followed_up_by_staff_id
+        - channel
+        - followed_up_at
+        - summary
+        - outcome
+        - next_follow_up_on
+      additionalProperties: false
+      properties:
+        inquiry_id:
+          type: string
+          format: uuid
+        followed_up_by_staff_id:
+          type: string
+          format: uuid
+          nullable: true
+        channel:
+          type: string
+          maxLength: 20
+        followed_up_at:
+          type: string
+          format: date-time
+        summary:
+          type: string
+        outcome:
+          type: string
+          maxLength: 20
+          default: "reached"
+        next_follow_up_on:
+          type: string
+          format: date
+          nullable: true
+
+    InquiryFollowUpResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - inquiry_follow_up_id
+        - inquiry_id
+        - channel
+        - followed_up_at
+        - summary
+        - outcome
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        inquiry_follow_up_id:
+          type: string
+          format: uuid
+          readOnly: true
+        inquiry_id:
+          type: string
+          format: uuid
+        followed_up_by_staff_id:
+          type: string
+          format: uuid
+          nullable: true
+        channel:
+          type: string
+          maxLength: 20
+        followed_up_at:
+          type: string
+          format: date-time
+        summary:
+          type: string
+        outcome:
+          type: string
+          maxLength: 20
+          default: "reached"
+        next_follow_up_on:
+          type: string
+          format: date
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

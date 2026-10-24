@@ -1,0 +1,396 @@
+openapi: 3.0.0
+x-sql-table: fin_payment
+info:
+  title: PaymentResponse API
+  version: 1.0.0
+paths:
+  /payment:
+    get:
+      operationId: listPayment
+      summary: Get all payment
+      responses:
+        '200':
+          description: List of payment
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PaymentResponse'
+    post:
+      operationId: createPayment
+      summary: Create a new payment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /payment/{id}:
+    get:
+      operationId: getPaymentById
+      summary: Get payment by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: payment object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentResponse'
+        '404':
+          description: payment not found
+    put:
+      operationId: updatePayment
+      summary: Update payment by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: payment not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deletePayment
+      summary: Delete payment by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: payment not found
+components:
+  schemas:
+
+    PaymentRequest:
+      type: object
+      required:
+        - receipt_no
+        - campus_id
+        - payer_person_id
+        - payment_method
+        - amount
+      additionalProperties: false
+      properties:
+        receipt_no:
+          type: string
+          maxLength: 30
+        campus_id:
+          type: string
+          format: uuid
+        payer_person_id:
+          type: string
+          format: uuid
+        student_id:
+          type: string
+          format: uuid
+          nullable: true
+        purpose:
+          type: string
+          default: "fees"
+        payment_method:
+          type: string
+        status:
+          type: string
+          default: "pending"
+        amount:
+          type: string
+        allocated_amount:
+          type: string
+          default: 0
+        refunded_amount:
+          type: string
+          default: 0
+        unallocated_amount:
+          type: number
+          format: double
+          nullable: true
+        paid_at:
+          type: string
+          format: date-time
+          nullable: true
+        reference_no:
+          type: string
+          nullable: true
+          maxLength: 80
+        bank_name:
+          type: string
+          nullable: true
+        gateway_name:
+          type: string
+          nullable: true
+          maxLength: 40
+        received_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        receipt_file_id:
+          type: string
+          format: uuid
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+        reversed_at:
+          type: string
+          format: date-time
+          nullable: true
+        reversal_reason:
+          type: string
+          nullable: true
+
+    PaymentUpdateRequest:
+      type: object
+      required:
+        - receipt_no
+        - campus_id
+        - payer_person_id
+        - student_id
+        - purpose
+        - payment_method
+        - status
+        - amount
+        - allocated_amount
+        - refunded_amount
+        - unallocated_amount
+        - paid_at
+        - reference_no
+        - bank_name
+        - gateway_name
+        - received_by_user_id
+        - receipt_file_id
+        - notes
+        - reversed_at
+        - reversal_reason
+      additionalProperties: false
+      properties:
+        receipt_no:
+          type: string
+          maxLength: 30
+        campus_id:
+          type: string
+          format: uuid
+        payer_person_id:
+          type: string
+          format: uuid
+        student_id:
+          type: string
+          format: uuid
+          nullable: true
+        purpose:
+          type: string
+          default: "fees"
+        payment_method:
+          type: string
+        status:
+          type: string
+          default: "pending"
+        amount:
+          type: string
+        allocated_amount:
+          type: string
+          default: 0
+        refunded_amount:
+          type: string
+          default: 0
+        unallocated_amount:
+          type: number
+          format: double
+          nullable: true
+        paid_at:
+          type: string
+          format: date-time
+          nullable: true
+        reference_no:
+          type: string
+          nullable: true
+          maxLength: 80
+        bank_name:
+          type: string
+          nullable: true
+        gateway_name:
+          type: string
+          nullable: true
+          maxLength: 40
+        received_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        receipt_file_id:
+          type: string
+          format: uuid
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+        reversed_at:
+          type: string
+          format: date-time
+          nullable: true
+        reversal_reason:
+          type: string
+          nullable: true
+
+    PaymentResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - payment_id
+        - receipt_no
+        - campus_id
+        - payer_person_id
+        - purpose
+        - payment_method
+        - status
+        - amount
+        - allocated_amount
+        - refunded_amount
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        payment_id:
+          type: string
+          format: uuid
+          readOnly: true
+        receipt_no:
+          type: string
+          maxLength: 30
+        campus_id:
+          type: string
+          format: uuid
+        payer_person_id:
+          type: string
+          format: uuid
+        student_id:
+          type: string
+          format: uuid
+          nullable: true
+        purpose:
+          type: string
+          default: "fees"
+        payment_method:
+          type: string
+        status:
+          type: string
+          default: "pending"
+        amount:
+          type: string
+        allocated_amount:
+          type: string
+          default: 0
+        refunded_amount:
+          type: string
+          default: 0
+        unallocated_amount:
+          type: number
+          format: double
+          nullable: true
+        paid_at:
+          type: string
+          format: date-time
+          nullable: true
+        reference_no:
+          type: string
+          nullable: true
+          maxLength: 80
+        bank_name:
+          type: string
+          nullable: true
+        gateway_name:
+          type: string
+          nullable: true
+          maxLength: 40
+        received_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        receipt_file_id:
+          type: string
+          format: uuid
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+        reversed_at:
+          type: string
+          format: date-time
+          nullable: true
+        reversal_reason:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

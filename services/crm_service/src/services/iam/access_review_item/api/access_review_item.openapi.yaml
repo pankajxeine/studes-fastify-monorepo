@@ -1,0 +1,216 @@
+openapi: 3.0.0
+x-sql-table: iam_access_review_item
+info:
+  title: AccessReviewItemResponse API
+  version: 1.0.0
+paths:
+  /access_review_item:
+    get:
+      operationId: listAccessReviewItem
+      summary: Get all access_review_item
+      responses:
+        '200':
+          description: List of access_review_item
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AccessReviewItemResponse'
+    post:
+      operationId: createAccessReviewItem
+      summary: Create a new access_review_item
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccessReviewItemRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessReviewItemResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /access_review_item/{id}:
+    get:
+      operationId: getAccessReviewItemById
+      summary: Get access_review_item by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: access_review_item object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessReviewItemResponse'
+        '404':
+          description: access_review_item not found
+    put:
+      operationId: updateAccessReviewItem
+      summary: Update access_review_item by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccessReviewItemUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessReviewItemResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: access_review_item not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteAccessReviewItem
+      summary: Delete access_review_item by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: access_review_item not found
+components:
+  schemas:
+
+    AccessReviewItemRequest:
+      type: object
+      required:
+        - access_review_id
+        - user_role_id
+        - reviewer_user_id
+      additionalProperties: false
+      properties:
+        access_review_id:
+          type: string
+          format: uuid
+        user_role_id:
+          type: string
+          format: uuid
+        reviewer_user_id:
+          type: string
+          format: uuid
+        decision:
+          type: string
+          nullable: true
+          maxLength: 10
+        decided_at:
+          type: string
+          format: date-time
+          nullable: true
+        comment:
+          type: string
+          nullable: true
+
+    AccessReviewItemUpdateRequest:
+      type: object
+      required:
+        - access_review_id
+        - user_role_id
+        - reviewer_user_id
+        - decision
+        - decided_at
+        - comment
+      additionalProperties: false
+      properties:
+        access_review_id:
+          type: string
+          format: uuid
+        user_role_id:
+          type: string
+          format: uuid
+        reviewer_user_id:
+          type: string
+          format: uuid
+        decision:
+          type: string
+          nullable: true
+          maxLength: 10
+        decided_at:
+          type: string
+          format: date-time
+          nullable: true
+        comment:
+          type: string
+          nullable: true
+
+    AccessReviewItemResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - access_review_item_id
+        - access_review_id
+        - user_role_id
+        - reviewer_user_id
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        access_review_item_id:
+          type: string
+          format: uuid
+          readOnly: true
+        access_review_id:
+          type: string
+          format: uuid
+        user_role_id:
+          type: string
+          format: uuid
+        reviewer_user_id:
+          type: string
+          format: uuid
+        decision:
+          type: string
+          nullable: true
+          maxLength: 10
+        decided_at:
+          type: string
+          format: date-time
+          nullable: true
+        comment:
+          type: string
+          nullable: true
+  

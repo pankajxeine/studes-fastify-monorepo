@@ -1,0 +1,250 @@
+openapi: 3.0.0
+x-sql-table: tran_route_stop
+info:
+  title: RouteStopResponse API
+  version: 1.0.0
+paths:
+  /route_stop:
+    get:
+      operationId: listRouteStop
+      summary: Get all route_stop
+      responses:
+        '200':
+          description: List of route_stop
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RouteStopResponse'
+    post:
+      operationId: createRouteStop
+      summary: Create a new route_stop
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RouteStopRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RouteStopResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /route_stop/{id}:
+    get:
+      operationId: getRouteStopById
+      summary: Get route_stop by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: route_stop object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RouteStopResponse'
+        '404':
+          description: route_stop not found
+    put:
+      operationId: updateRouteStop
+      summary: Update route_stop by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RouteStopUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RouteStopResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: route_stop not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteRouteStop
+      summary: Delete route_stop by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: route_stop not found
+components:
+  schemas:
+
+    RouteStopRequest:
+      type: object
+      required:
+        - route_id
+        - stop_id
+        - stop_sequence
+      additionalProperties: false
+      properties:
+        route_id:
+          type: string
+          format: uuid
+        stop_id:
+          type: string
+          format: uuid
+        stop_sequence:
+          type: integer
+          format: int32
+        pickup_time:
+          type: string
+          format: time
+          nullable: true
+        drop_time:
+          type: string
+          format: time
+          nullable: true
+        distance_from_campus_km:
+          type: number
+          format: double
+          nullable: true
+        is_active:
+          type: boolean
+          default: true
+
+    RouteStopUpdateRequest:
+      type: object
+      required:
+        - route_id
+        - stop_id
+        - stop_sequence
+        - pickup_time
+        - drop_time
+        - distance_from_campus_km
+        - is_active
+      additionalProperties: false
+      properties:
+        route_id:
+          type: string
+          format: uuid
+        stop_id:
+          type: string
+          format: uuid
+        stop_sequence:
+          type: integer
+          format: int32
+        pickup_time:
+          type: string
+          format: time
+          nullable: true
+        drop_time:
+          type: string
+          format: time
+          nullable: true
+        distance_from_campus_km:
+          type: number
+          format: double
+          nullable: true
+        is_active:
+          type: boolean
+          default: true
+
+    RouteStopResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - route_stop_id
+        - route_id
+        - stop_id
+        - stop_sequence
+        - is_active
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        route_stop_id:
+          type: string
+          format: uuid
+          readOnly: true
+        route_id:
+          type: string
+          format: uuid
+        stop_id:
+          type: string
+          format: uuid
+        stop_sequence:
+          type: integer
+          format: int32
+        pickup_time:
+          type: string
+          format: time
+          nullable: true
+        drop_time:
+          type: string
+          format: time
+          nullable: true
+        distance_from_campus_km:
+          type: number
+          format: double
+          nullable: true
+        is_active:
+          type: boolean
+          default: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

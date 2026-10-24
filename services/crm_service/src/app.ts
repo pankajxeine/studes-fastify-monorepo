@@ -39,7 +39,8 @@ export async function buildApp(): Promise<FastifyInstance> {
   await fastify.register(requestLoggerPlugin)
   await fastify.register((await import('@fastify/helmet')).default)
   await fastify.register((await import('@fastify/cors')).default, {
-    origin: corsOrigin
+    origin: corsOrigin,
+    credentials: corsOrigin !== '*'
   })
 
   await fastify.register(dbPlugin)

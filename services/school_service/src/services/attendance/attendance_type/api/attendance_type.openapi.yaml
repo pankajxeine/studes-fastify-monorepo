@@ -1,0 +1,290 @@
+openapi: 3.0.0
+x-sql-table: atnd_attendance_type
+info:
+  title: AttendanceTypeResponse API
+  version: 1.0.0
+paths:
+  /attendance_type:
+    get:
+      operationId: listAttendanceType
+      summary: Get all attendance_type
+      responses:
+        '200':
+          description: List of attendance_type
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AttendanceTypeResponse'
+    post:
+      operationId: createAttendanceType
+      summary: Create a new attendance_type
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AttendanceTypeRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AttendanceTypeResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /attendance_type/{id}:
+    get:
+      operationId: getAttendanceTypeById
+      summary: Get attendance_type by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: attendance_type object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AttendanceTypeResponse'
+        '404':
+          description: attendance_type not found
+    put:
+      operationId: updateAttendanceType
+      summary: Update attendance_type by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AttendanceTypeUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AttendanceTypeResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: attendance_type not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteAttendanceType
+      summary: Delete attendance_type by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: attendance_type not found
+components:
+  schemas:
+
+    AttendanceTypeRequest:
+      type: object
+      required:
+        - name
+      additionalProperties: false
+      properties:
+        attendance_type_code:
+          type: string
+          nullable: true
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        present_weight:
+          type: number
+          format: double
+          minimum: 0
+          maximum: 1
+          default: 1
+        counts_toward_total:
+          type: boolean
+          default: true
+        is_excused:
+          type: boolean
+          default: false
+        applies_to_students:
+          type: boolean
+          default: true
+        applies_to_staff:
+          type: boolean
+          default: true
+        color_hex:
+          type: string
+          nullable: true
+          maxLength: 7
+        sort_order:
+          type: integer
+          format: int32
+          default: 0
+        is_active:
+          type: boolean
+          default: true
+
+    AttendanceTypeUpdateRequest:
+      type: object
+      required:
+        - attendance_type_code
+        - name
+        - description
+        - present_weight
+        - counts_toward_total
+        - is_excused
+        - applies_to_students
+        - applies_to_staff
+        - color_hex
+        - sort_order
+        - is_active
+      additionalProperties: false
+      properties:
+        attendance_type_code:
+          type: string
+          nullable: true
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        present_weight:
+          type: number
+          format: double
+          minimum: 0
+          maximum: 1
+          default: 1
+        counts_toward_total:
+          type: boolean
+          default: true
+        is_excused:
+          type: boolean
+          default: false
+        applies_to_students:
+          type: boolean
+          default: true
+        applies_to_staff:
+          type: boolean
+          default: true
+        color_hex:
+          type: string
+          nullable: true
+          maxLength: 7
+        sort_order:
+          type: integer
+          format: int32
+          default: 0
+        is_active:
+          type: boolean
+          default: true
+
+    AttendanceTypeResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - name
+        - present_weight
+        - counts_toward_total
+        - is_excused
+        - applies_to_students
+        - applies_to_staff
+        - sort_order
+        - is_active
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        attendance_type_code:
+          type: string
+          nullable: true
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        present_weight:
+          type: number
+          format: double
+          minimum: 0
+          maximum: 1
+          default: 1
+        counts_toward_total:
+          type: boolean
+          default: true
+        is_excused:
+          type: boolean
+          default: false
+        applies_to_students:
+          type: boolean
+          default: true
+        applies_to_staff:
+          type: boolean
+          default: true
+        color_hex:
+          type: string
+          nullable: true
+          maxLength: 7
+        sort_order:
+          type: integer
+          format: int32
+          default: 0
+        is_active:
+          type: boolean
+          default: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

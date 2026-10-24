@@ -1,0 +1,275 @@
+openapi: 3.0.0
+x-sql-table: prtn_partner_contact
+info:
+  title: PartnerContactResponse API
+  version: 1.0.0
+paths:
+  /partner_contact:
+    get:
+      operationId: listPartnerContact
+      summary: Get all partner_contact
+      responses:
+        '200':
+          description: List of partner_contact
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PartnerContactResponse'
+    post:
+      operationId: createPartnerContact
+      summary: Create a new partner_contact
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PartnerContactRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PartnerContactResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /partner_contact/{id}:
+    get:
+      operationId: getPartnerContactById
+      summary: Get partner_contact by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: partner_contact object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PartnerContactResponse'
+        '404':
+          description: partner_contact not found
+    put:
+      operationId: updatePartnerContact
+      summary: Update partner_contact by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PartnerContactUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PartnerContactResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: partner_contact not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deletePartnerContact
+      summary: Delete partner_contact by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: partner_contact not found
+components:
+  schemas:
+
+    PartnerContactRequest:
+      type: object
+      required:
+        - partner_organization_id
+        - person_id
+      additionalProperties: false
+      properties:
+        partner_organization_id:
+          type: string
+          format: uuid
+        person_id:
+          type: string
+          format: uuid
+        job_title:
+          type: string
+          nullable: true
+        department:
+          type: string
+          nullable: true
+        is_primary:
+          type: boolean
+          default: false
+        can_post_drives:
+          type: boolean
+          default: false
+        start_on:
+          type: string
+          format: date
+        end_on:
+          type: string
+          format: date
+          nullable: true
+        is_active:
+          type: boolean
+          default: true
+        notes:
+          type: string
+          nullable: true
+
+    PartnerContactUpdateRequest:
+      type: object
+      required:
+        - partner_organization_id
+        - person_id
+        - job_title
+        - department
+        - is_primary
+        - can_post_drives
+        - start_on
+        - end_on
+        - is_active
+        - notes
+      additionalProperties: false
+      properties:
+        partner_organization_id:
+          type: string
+          format: uuid
+        person_id:
+          type: string
+          format: uuid
+        job_title:
+          type: string
+          nullable: true
+        department:
+          type: string
+          nullable: true
+        is_primary:
+          type: boolean
+          default: false
+        can_post_drives:
+          type: boolean
+          default: false
+        start_on:
+          type: string
+          format: date
+        end_on:
+          type: string
+          format: date
+          nullable: true
+        is_active:
+          type: boolean
+          default: true
+        notes:
+          type: string
+          nullable: true
+
+    PartnerContactResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - partner_contact_id
+        - partner_organization_id
+        - person_id
+        - is_primary
+        - can_post_drives
+        - start_on
+        - is_active
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        partner_contact_id:
+          type: string
+          format: uuid
+          readOnly: true
+        partner_organization_id:
+          type: string
+          format: uuid
+        person_id:
+          type: string
+          format: uuid
+        job_title:
+          type: string
+          nullable: true
+        department:
+          type: string
+          nullable: true
+        is_primary:
+          type: boolean
+          default: false
+        can_post_drives:
+          type: boolean
+          default: false
+        start_on:
+          type: string
+          format: date
+        end_on:
+          type: string
+          format: date
+          nullable: true
+        is_active:
+          type: boolean
+          default: true
+        notes:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

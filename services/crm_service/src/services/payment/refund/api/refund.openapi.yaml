@@ -1,0 +1,272 @@
+openapi: 3.0.0
+x-sql-table: payment_refund
+info:
+  title: RefundResponse API
+  version: 1.0.0
+paths:
+  /refund:
+    get:
+      operationId: listRefund
+      summary: Get all refund
+      responses:
+        '200':
+          description: List of refund
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RefundResponse'
+    post:
+      operationId: createRefund
+      summary: Create a new refund
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefundRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefundResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /refund/{id}:
+    get:
+      operationId: getRefundById
+      summary: Get refund by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: refund object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefundResponse'
+        '404':
+          description: refund not found
+    put:
+      operationId: updateRefund
+      summary: Update refund by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefundUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefundResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: refund not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteRefund
+      summary: Delete refund by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: refund not found
+components:
+  schemas:
+
+    RefundRequest:
+      type: object
+      required:
+        - payment_id
+        - amount
+        - reason
+        - requested_by_user_id
+      additionalProperties: false
+      properties:
+        payment_id:
+          type: string
+          format: uuid
+        amount:
+          type: string
+        reason:
+          type: string
+        status:
+          type: string
+          maxLength: 10
+          default: "requested"
+        requested_by_user_id:
+          type: string
+          format: uuid
+        approved_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        approved_at:
+          type: string
+          format: date-time
+          nullable: true
+        gateway_refund_ref:
+          type: string
+          nullable: true
+          maxLength: 100
+        processed_at:
+          type: string
+          format: date-time
+          nullable: true
+        failure_message:
+          type: string
+          nullable: true
+
+    RefundUpdateRequest:
+      type: object
+      required:
+        - payment_id
+        - amount
+        - reason
+        - status
+        - requested_by_user_id
+        - approved_by_user_id
+        - approved_at
+        - gateway_refund_ref
+        - processed_at
+        - failure_message
+      additionalProperties: false
+      properties:
+        payment_id:
+          type: string
+          format: uuid
+        amount:
+          type: string
+        reason:
+          type: string
+        status:
+          type: string
+          maxLength: 10
+          default: "requested"
+        requested_by_user_id:
+          type: string
+          format: uuid
+        approved_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        approved_at:
+          type: string
+          format: date-time
+          nullable: true
+        gateway_refund_ref:
+          type: string
+          nullable: true
+          maxLength: 100
+        processed_at:
+          type: string
+          format: date-time
+          nullable: true
+        failure_message:
+          type: string
+          nullable: true
+
+    RefundResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - refund_id
+        - payment_id
+        - amount
+        - reason
+        - status
+        - requested_by_user_id
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        refund_id:
+          type: string
+          format: uuid
+          readOnly: true
+        payment_id:
+          type: string
+          format: uuid
+        amount:
+          type: string
+        reason:
+          type: string
+        status:
+          type: string
+          maxLength: 10
+          default: "requested"
+        requested_by_user_id:
+          type: string
+          format: uuid
+        approved_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        approved_at:
+          type: string
+          format: date-time
+          nullable: true
+        gateway_refund_ref:
+          type: string
+          nullable: true
+          maxLength: 100
+        processed_at:
+          type: string
+          format: date-time
+          nullable: true
+        failure_message:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+  

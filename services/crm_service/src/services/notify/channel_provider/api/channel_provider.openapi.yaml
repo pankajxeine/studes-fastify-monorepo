@@ -1,0 +1,213 @@
+openapi: 3.0.0
+x-sql-table: notify_channel_provider
+info:
+  title: ChannelProviderResponse API
+  version: 1.0.0
+paths:
+  /channel_provider:
+    get:
+      operationId: listChannelProvider
+      summary: Get all channel_provider
+      responses:
+        '200':
+          description: List of channel_provider
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ChannelProviderResponse'
+    post:
+      operationId: createChannelProvider
+      summary: Create a new channel_provider
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChannelProviderRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChannelProviderResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /channel_provider/{id}:
+    get:
+      operationId: getChannelProviderById
+      summary: Get channel_provider by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: channel_provider object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChannelProviderResponse'
+        '404':
+          description: channel_provider not found
+    put:
+      operationId: updateChannelProvider
+      summary: Update channel_provider by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChannelProviderUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChannelProviderResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: channel_provider not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteChannelProvider
+      summary: Delete channel_provider by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: channel_provider not found
+components:
+  schemas:
+
+    ChannelProviderRequest:
+      type: object
+      required:
+        - provider_code
+        - channel
+      additionalProperties: false
+      properties:
+        provider_code:
+          type: string
+        channel:
+          type: string
+          maxLength: 8
+        config:
+          default: "{}"
+        secret_ref:
+          type: string
+          nullable: true
+        priority:
+          type: integer
+          format: int32
+          default: 1
+        is_active:
+          type: boolean
+          default: true
+
+    ChannelProviderUpdateRequest:
+      type: object
+      required:
+        - provider_code
+        - channel
+        - config
+        - secret_ref
+        - priority
+        - is_active
+      additionalProperties: false
+      properties:
+        provider_code:
+          type: string
+        channel:
+          type: string
+          maxLength: 8
+        config:
+          default: "{}"
+        secret_ref:
+          type: string
+          nullable: true
+        priority:
+          type: integer
+          format: int32
+          default: 1
+        is_active:
+          type: boolean
+          default: true
+
+    ChannelProviderResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - provider_code
+        - channel
+        - config
+        - priority
+        - is_active
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        provider_code:
+          type: string
+        channel:
+          type: string
+          maxLength: 8
+        config:
+          default: "{}"
+        secret_ref:
+          type: string
+          nullable: true
+        priority:
+          type: integer
+          format: int32
+          default: 1
+        is_active:
+          type: boolean
+          default: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+  

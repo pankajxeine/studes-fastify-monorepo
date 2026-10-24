@@ -1,0 +1,304 @@
+openapi: 3.0.0
+x-sql-table: evnt_room_booking
+info:
+  title: RoomBookingResponse API
+  version: 1.0.0
+paths:
+  /room_booking:
+    get:
+      operationId: listRoomBooking
+      summary: Get all room_booking
+      responses:
+        '200':
+          description: List of room_booking
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RoomBookingResponse'
+    post:
+      operationId: createRoomBooking
+      summary: Create a new room_booking
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoomBookingRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoomBookingResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /room_booking/{id}:
+    get:
+      operationId: getRoomBookingById
+      summary: Get room_booking by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: room_booking object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoomBookingResponse'
+        '404':
+          description: room_booking not found
+    put:
+      operationId: updateRoomBooking
+      summary: Update room_booking by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoomBookingUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoomBookingResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: room_booking not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteRoomBooking
+      summary: Delete room_booking by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: room_booking not found
+components:
+  schemas:
+
+    RoomBookingRequest:
+      type: object
+      required:
+        - room_id
+        - purpose
+        - starts_at
+        - ends_at
+        - booked_by_user_id
+      additionalProperties: false
+      properties:
+        room_id:
+          type: string
+          format: uuid
+        event_id:
+          type: string
+          format: uuid
+          nullable: true
+        purpose:
+          type: string
+        starts_at:
+          type: string
+          format: date-time
+        ends_at:
+          type: string
+          format: date-time
+        booking:
+          type: string
+          nullable: true
+        expected_attendees:
+          type: integer
+          format: int32
+          nullable: true
+        booked_by_user_id:
+          type: string
+          format: uuid
+        status:
+          type: string
+          default: "pending"
+        decided_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        decided_at:
+          type: string
+          format: date-time
+          nullable: true
+        decision_note:
+          type: string
+          nullable: true
+
+    RoomBookingUpdateRequest:
+      type: object
+      required:
+        - room_id
+        - event_id
+        - purpose
+        - starts_at
+        - ends_at
+        - booking
+        - expected_attendees
+        - booked_by_user_id
+        - status
+        - decided_by_user_id
+        - decided_at
+        - decision_note
+      additionalProperties: false
+      properties:
+        room_id:
+          type: string
+          format: uuid
+        event_id:
+          type: string
+          format: uuid
+          nullable: true
+        purpose:
+          type: string
+        starts_at:
+          type: string
+          format: date-time
+        ends_at:
+          type: string
+          format: date-time
+        booking:
+          type: string
+          nullable: true
+        expected_attendees:
+          type: integer
+          format: int32
+          nullable: true
+        booked_by_user_id:
+          type: string
+          format: uuid
+        status:
+          type: string
+          default: "pending"
+        decided_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        decided_at:
+          type: string
+          format: date-time
+          nullable: true
+        decision_note:
+          type: string
+          nullable: true
+
+    RoomBookingResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - room_booking_id
+        - room_id
+        - purpose
+        - starts_at
+        - ends_at
+        - booked_by_user_id
+        - status
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        room_booking_id:
+          type: string
+          format: uuid
+          readOnly: true
+        room_id:
+          type: string
+          format: uuid
+        event_id:
+          type: string
+          format: uuid
+          nullable: true
+        purpose:
+          type: string
+        starts_at:
+          type: string
+          format: date-time
+        ends_at:
+          type: string
+          format: date-time
+        booking:
+          type: string
+          nullable: true
+        expected_attendees:
+          type: integer
+          format: int32
+          nullable: true
+        booked_by_user_id:
+          type: string
+          format: uuid
+        status:
+          type: string
+          default: "pending"
+        decided_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        decided_at:
+          type: string
+          format: date-time
+          nullable: true
+        decision_note:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

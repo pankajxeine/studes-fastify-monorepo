@@ -1,0 +1,175 @@
+openapi: 3.0.0
+x-sql-table: partner_agent_hierarchy
+info:
+  title: AgentHierarchyResponse API
+  version: 1.0.0
+paths:
+  /agent_hierarchy:
+    get:
+      operationId: listAgentHierarchy
+      summary: Get all agent_hierarchy
+      responses:
+        '200':
+          description: List of agent_hierarchy
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AgentHierarchyResponse'
+    post:
+      operationId: createAgentHierarchy
+      summary: Create a new agent_hierarchy
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentHierarchyRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentHierarchyResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /agent_hierarchy/{id}:
+    get:
+      operationId: getAgentHierarchyById
+      summary: Get agent_hierarchy by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: agent_hierarchy object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentHierarchyResponse'
+        '404':
+          description: agent_hierarchy not found
+    put:
+      operationId: updateAgentHierarchy
+      summary: Update agent_hierarchy by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentHierarchyUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentHierarchyResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: agent_hierarchy not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteAgentHierarchy
+      summary: Delete agent_hierarchy by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: agent_hierarchy not found
+components:
+  schemas:
+
+    AgentHierarchyRequest:
+      type: object
+      required:
+        - ancestor_id
+        - descendant_id
+        - depth
+      additionalProperties: false
+      properties:
+        ancestor_id:
+          type: string
+          format: uuid
+        descendant_id:
+          type: string
+          format: uuid
+        depth:
+          type: integer
+          format: int32
+
+    AgentHierarchyUpdateRequest:
+      type: object
+      required:
+        - ancestor_id
+        - descendant_id
+        - depth
+      additionalProperties: false
+      properties:
+        ancestor_id:
+          type: string
+          format: uuid
+        descendant_id:
+          type: string
+          format: uuid
+        depth:
+          type: integer
+          format: int32
+
+    AgentHierarchyResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - ancestor_id
+        - descendant_id
+        - depth
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        ancestor_id:
+          type: string
+          format: uuid
+        descendant_id:
+          type: string
+          format: uuid
+        depth:
+          type: integer
+          format: int32
+  

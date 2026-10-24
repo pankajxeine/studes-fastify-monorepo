@@ -1,0 +1,208 @@
+openapi: 3.0.0
+x-sql-table: integration_idempotency_key
+info:
+  title: IdempotencyKeyResponse API
+  version: 1.0.0
+paths:
+  /idempotency_key:
+    get:
+      operationId: listIdempotencyKey
+      summary: Get all idempotency_key
+      responses:
+        '200':
+          description: List of idempotency_key
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/IdempotencyKeyResponse'
+    post:
+      operationId: createIdempotencyKey
+      summary: Create a new idempotency_key
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IdempotencyKeyRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdempotencyKeyResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /idempotency_key/{id}:
+    get:
+      operationId: getIdempotencyKeyById
+      summary: Get idempotency_key by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: idempotency_key object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdempotencyKeyResponse'
+        '404':
+          description: idempotency_key not found
+    put:
+      operationId: updateIdempotencyKey
+      summary: Update idempotency_key by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IdempotencyKeyUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdempotencyKeyResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: idempotency_key not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteIdempotencyKey
+      summary: Delete idempotency_key by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: idempotency_key not found
+components:
+  schemas:
+
+    IdempotencyKeyRequest:
+      type: object
+      required:
+        - scope
+        - key
+        - request_hash
+      additionalProperties: false
+      properties:
+        scope:
+          type: string
+          maxLength: 60
+        key:
+          type: string
+          maxLength: 120
+        request_hash:
+          type: string
+        response_code:
+          type: integer
+          format: int32
+          nullable: true
+        response_body:
+          nullable: true
+        expires_at:
+          type: string
+          format: date-time
+
+    IdempotencyKeyUpdateRequest:
+      type: object
+      required:
+        - scope
+        - key
+        - request_hash
+        - response_code
+        - response_body
+        - expires_at
+      additionalProperties: false
+      properties:
+        scope:
+          type: string
+          maxLength: 60
+        key:
+          type: string
+          maxLength: 120
+        request_hash:
+          type: string
+        response_code:
+          type: integer
+          format: int32
+          nullable: true
+        response_body:
+          nullable: true
+        expires_at:
+          type: string
+          format: date-time
+
+    IdempotencyKeyResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - scope
+        - key
+        - request_hash
+        - created_at
+        - expires_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        scope:
+          type: string
+          maxLength: 60
+        key:
+          type: string
+          maxLength: 120
+        request_hash:
+          type: string
+        response_code:
+          type: integer
+          format: int32
+          nullable: true
+        response_body:
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        expires_at:
+          type: string
+          format: date-time
+  

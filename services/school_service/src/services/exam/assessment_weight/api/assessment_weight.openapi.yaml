@@ -1,0 +1,234 @@
+openapi: 3.0.0
+x-sql-table: exam_assessment_weight
+info:
+  title: AssessmentWeightResponse API
+  version: 1.0.0
+paths:
+  /assessment_weight:
+    get:
+      operationId: listAssessmentWeight
+      summary: Get all assessment_weight
+      responses:
+        '200':
+          description: List of assessment_weight
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AssessmentWeightResponse'
+    post:
+      operationId: createAssessmentWeight
+      summary: Create a new assessment_weight
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssessmentWeightRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssessmentWeightResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /assessment_weight/{id}:
+    get:
+      operationId: getAssessmentWeightById
+      summary: Get assessment_weight by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: assessment_weight object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssessmentWeightResponse'
+        '404':
+          description: assessment_weight not found
+    put:
+      operationId: updateAssessmentWeight
+      summary: Update assessment_weight by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssessmentWeightUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssessmentWeightResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: assessment_weight not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteAssessmentWeight
+      summary: Delete assessment_weight by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: assessment_weight not found
+components:
+  schemas:
+
+    AssessmentWeightRequest:
+      type: object
+      required:
+        - course_offering_id
+        - assessment_type_code
+        - weight_pct
+      additionalProperties: false
+      properties:
+        course_offering_id:
+          type: string
+          format: uuid
+        assessment_type_code:
+          type: string
+        weight_pct:
+          type: string
+        best_of_count:
+          type: integer
+          format: int32
+          nullable: true
+          minimum: 1
+          maximum: 20
+        is_mandatory:
+          type: boolean
+          default: true
+        remarks:
+          type: string
+          nullable: true
+
+    AssessmentWeightUpdateRequest:
+      type: object
+      required:
+        - course_offering_id
+        - assessment_type_code
+        - weight_pct
+        - best_of_count
+        - is_mandatory
+        - remarks
+      additionalProperties: false
+      properties:
+        course_offering_id:
+          type: string
+          format: uuid
+        assessment_type_code:
+          type: string
+        weight_pct:
+          type: string
+        best_of_count:
+          type: integer
+          format: int32
+          nullable: true
+          minimum: 1
+          maximum: 20
+        is_mandatory:
+          type: boolean
+          default: true
+        remarks:
+          type: string
+          nullable: true
+
+    AssessmentWeightResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - assessment_weight_id
+        - course_offering_id
+        - assessment_type_code
+        - weight_pct
+        - is_mandatory
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        assessment_weight_id:
+          type: string
+          format: uuid
+          readOnly: true
+        course_offering_id:
+          type: string
+          format: uuid
+        assessment_type_code:
+          type: string
+        weight_pct:
+          type: string
+        best_of_count:
+          type: integer
+          format: int32
+          nullable: true
+          minimum: 1
+          maximum: 20
+        is_mandatory:
+          type: boolean
+          default: true
+        remarks:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

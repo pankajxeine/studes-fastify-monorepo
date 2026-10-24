@@ -1,0 +1,305 @@
+openapi: 3.0.0
+x-sql-table: sis_course_registration
+info:
+  title: CourseRegistrationResponse API
+  version: 1.0.0
+paths:
+  /course_registration:
+    get:
+      operationId: listCourseRegistration
+      summary: Get all course_registration
+      responses:
+        '200':
+          description: List of course_registration
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CourseRegistrationResponse'
+    post:
+      operationId: createCourseRegistration
+      summary: Create a new course_registration
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CourseRegistrationRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CourseRegistrationResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /course_registration/{id}:
+    get:
+      operationId: getCourseRegistrationById
+      summary: Get course_registration by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: course_registration object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CourseRegistrationResponse'
+        '404':
+          description: course_registration not found
+    put:
+      operationId: updateCourseRegistration
+      summary: Update course_registration by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CourseRegistrationUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CourseRegistrationResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: course_registration not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteCourseRegistration
+      summary: Delete course_registration by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: course_registration not found
+components:
+  schemas:
+
+    CourseRegistrationRequest:
+      type: object
+      required:
+        - student_enrollment_id
+        - student_id
+        - course_offering_id
+      additionalProperties: false
+      properties:
+        student_enrollment_id:
+          type: string
+          format: uuid
+        student_id:
+          type: string
+          format: uuid
+        course_offering_id:
+          type: string
+          format: uuid
+        status:
+          type: string
+          default: "registered"
+        registered_at:
+          type: string
+          format: date-time
+        credits_attempted:
+          type: number
+          format: double
+          nullable: true
+        is_audit:
+          type: boolean
+          default: false
+        dropped_at:
+          type: string
+          format: date-time
+          nullable: true
+        drop_reason:
+          type: string
+          nullable: true
+        completed_on:
+          type: string
+          format: date
+          nullable: true
+        approved_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        remarks:
+          type: string
+          nullable: true
+
+    CourseRegistrationUpdateRequest:
+      type: object
+      required:
+        - student_enrollment_id
+        - student_id
+        - course_offering_id
+        - status
+        - registered_at
+        - credits_attempted
+        - is_audit
+        - dropped_at
+        - drop_reason
+        - completed_on
+        - approved_by_user_id
+        - remarks
+      additionalProperties: false
+      properties:
+        student_enrollment_id:
+          type: string
+          format: uuid
+        student_id:
+          type: string
+          format: uuid
+        course_offering_id:
+          type: string
+          format: uuid
+        status:
+          type: string
+          default: "registered"
+        registered_at:
+          type: string
+          format: date-time
+        credits_attempted:
+          type: number
+          format: double
+          nullable: true
+        is_audit:
+          type: boolean
+          default: false
+        dropped_at:
+          type: string
+          format: date-time
+          nullable: true
+        drop_reason:
+          type: string
+          nullable: true
+        completed_on:
+          type: string
+          format: date
+          nullable: true
+        approved_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        remarks:
+          type: string
+          nullable: true
+
+    CourseRegistrationResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - course_registration_id
+        - student_enrollment_id
+        - student_id
+        - course_offering_id
+        - status
+        - registered_at
+        - is_audit
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        course_registration_id:
+          type: string
+          format: uuid
+          readOnly: true
+        student_enrollment_id:
+          type: string
+          format: uuid
+        student_id:
+          type: string
+          format: uuid
+        course_offering_id:
+          type: string
+          format: uuid
+        status:
+          type: string
+          default: "registered"
+        registered_at:
+          type: string
+          format: date-time
+        credits_attempted:
+          type: number
+          format: double
+          nullable: true
+        is_audit:
+          type: boolean
+          default: false
+        dropped_at:
+          type: string
+          format: date-time
+          nullable: true
+        drop_reason:
+          type: string
+          nullable: true
+        completed_on:
+          type: string
+          format: date
+          nullable: true
+        approved_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        remarks:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

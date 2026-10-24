@@ -1,0 +1,251 @@
+openapi: 3.0.0
+x-sql-table: cntn_weekly_menu_item
+info:
+  title: WeeklyMenuItemResponse API
+  version: 1.0.0
+paths:
+  /weekly_menu_item:
+    get:
+      operationId: listWeeklyMenuItem
+      summary: Get all weekly_menu_item
+      responses:
+        '200':
+          description: List of weekly_menu_item
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WeeklyMenuItemResponse'
+    post:
+      operationId: createWeeklyMenuItem
+      summary: Create a new weekly_menu_item
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WeeklyMenuItemRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WeeklyMenuItemResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /weekly_menu_item/{id}:
+    get:
+      operationId: getWeeklyMenuItemById
+      summary: Get weekly_menu_item by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: weekly_menu_item object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WeeklyMenuItemResponse'
+        '404':
+          description: weekly_menu_item not found
+    put:
+      operationId: updateWeeklyMenuItem
+      summary: Update weekly_menu_item by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WeeklyMenuItemUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WeeklyMenuItemResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: weekly_menu_item not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteWeeklyMenuItem
+      summary: Delete weekly_menu_item by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: weekly_menu_item not found
+components:
+  schemas:
+
+    WeeklyMenuItemRequest:
+      type: object
+      required:
+        - weekly_menu_id
+        - canteen_outlet_id
+        - menu_item_id
+        - meal_period_code
+        - day_of_week
+      additionalProperties: false
+      properties:
+        weekly_menu_id:
+          type: string
+          format: uuid
+        canteen_outlet_id:
+          type: string
+          format: uuid
+        menu_item_id:
+          type: string
+          format: uuid
+        meal_period_code:
+          type: string
+        day_of_week:
+          type: string
+        planned_qty:
+          type: integer
+          format: int32
+          nullable: true
+          minimum: 1
+          maximum: 5000
+        sort_order:
+          type: integer
+          format: int32
+          default: 0
+
+    WeeklyMenuItemUpdateRequest:
+      type: object
+      required:
+        - weekly_menu_id
+        - canteen_outlet_id
+        - menu_item_id
+        - meal_period_code
+        - day_of_week
+        - planned_qty
+        - sort_order
+      additionalProperties: false
+      properties:
+        weekly_menu_id:
+          type: string
+          format: uuid
+        canteen_outlet_id:
+          type: string
+          format: uuid
+        menu_item_id:
+          type: string
+          format: uuid
+        meal_period_code:
+          type: string
+        day_of_week:
+          type: string
+        planned_qty:
+          type: integer
+          format: int32
+          nullable: true
+          minimum: 1
+          maximum: 5000
+        sort_order:
+          type: integer
+          format: int32
+          default: 0
+
+    WeeklyMenuItemResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - weekly_menu_item_id
+        - weekly_menu_id
+        - canteen_outlet_id
+        - menu_item_id
+        - meal_period_code
+        - day_of_week
+        - sort_order
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        weekly_menu_item_id:
+          type: string
+          format: uuid
+          readOnly: true
+        weekly_menu_id:
+          type: string
+          format: uuid
+        canteen_outlet_id:
+          type: string
+          format: uuid
+        menu_item_id:
+          type: string
+          format: uuid
+        meal_period_code:
+          type: string
+        day_of_week:
+          type: string
+        planned_qty:
+          type: integer
+          format: int32
+          nullable: true
+          minimum: 1
+          maximum: 5000
+        sort_order:
+          type: integer
+          format: int32
+          default: 0
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

@@ -1,0 +1,201 @@
+openapi: 3.0.0
+x-sql-table: billing_dunning_run
+info:
+  title: DunningRunResponse API
+  version: 1.0.0
+paths:
+  /dunning_run:
+    get:
+      operationId: listDunningRun
+      summary: Get all dunning_run
+      responses:
+        '200':
+          description: List of dunning_run
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DunningRunResponse'
+    post:
+      operationId: createDunningRun
+      summary: Create a new dunning_run
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DunningRunRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DunningRunResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /dunning_run/{id}:
+    get:
+      operationId: getDunningRunById
+      summary: Get dunning_run by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: dunning_run object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DunningRunResponse'
+        '404':
+          description: dunning_run not found
+    put:
+      operationId: updateDunningRun
+      summary: Update dunning_run by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DunningRunUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DunningRunResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: dunning_run not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteDunningRun
+      summary: Delete dunning_run by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: dunning_run not found
+components:
+  schemas:
+
+    DunningRunRequest:
+      type: object
+      required:
+        - invoice_id
+        - step_no
+        - action
+      additionalProperties: false
+      properties:
+        invoice_id:
+          type: string
+          format: uuid
+        step_no:
+          type: integer
+          format: int32
+        action:
+          type: string
+          maxLength: 14
+        executed_at:
+          type: string
+          format: date-time
+        result:
+          type: string
+          nullable: true
+
+    DunningRunUpdateRequest:
+      type: object
+      required:
+        - invoice_id
+        - step_no
+        - action
+        - executed_at
+        - result
+      additionalProperties: false
+      properties:
+        invoice_id:
+          type: string
+          format: uuid
+        step_no:
+          type: integer
+          format: int32
+        action:
+          type: string
+          maxLength: 14
+        executed_at:
+          type: string
+          format: date-time
+        result:
+          type: string
+          nullable: true
+
+    DunningRunResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - dunning_run_id
+        - invoice_id
+        - step_no
+        - action
+        - executed_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        dunning_run_id:
+          type: string
+          format: uuid
+          readOnly: true
+        invoice_id:
+          type: string
+          format: uuid
+        step_no:
+          type: integer
+          format: int32
+        action:
+          type: string
+          maxLength: 14
+        executed_at:
+          type: string
+          format: date-time
+        result:
+          type: string
+          nullable: true
+  

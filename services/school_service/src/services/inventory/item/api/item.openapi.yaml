@@ -1,0 +1,322 @@
+openapi: 3.0.0
+x-sql-table: invnt_item
+info:
+  title: ItemResponse API
+  version: 1.0.0
+paths:
+  /item:
+    get:
+      operationId: listItem
+      summary: Get all item
+      responses:
+        '200':
+          description: List of item
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ItemResponse'
+    post:
+      operationId: createItem
+      summary: Create a new item
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ItemRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /item/{id}:
+    get:
+      operationId: getItemById
+      summary: Get item by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: item object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemResponse'
+        '404':
+          description: item not found
+    put:
+      operationId: updateItem
+      summary: Update item by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ItemUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: item not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteItem
+      summary: Delete item by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: item not found
+components:
+  schemas:
+
+    ItemRequest:
+      type: object
+      required:
+        - item_category_code
+        - sku
+        - name
+      additionalProperties: false
+      properties:
+        item_category_code:
+          type: string
+        sku:
+          type: string
+          maxLength: 30
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        unit_of_measure:
+          type: string
+          maxLength: 20
+          default: "each"
+        is_consumable:
+          type: boolean
+          default: true
+        is_asset:
+          type: boolean
+          default: false
+        reorder_level:
+          type: number
+          format: double
+          default: 0
+        reorder_quantity:
+          type: number
+          format: double
+          default: 0
+        standard_cost_amount:
+          type: string
+          default: 0
+        preferred_vendor_id:
+          type: string
+          format: uuid
+          nullable: true
+        quantity_on_hand:
+          type: number
+          format: double
+          default: 0
+        is_active:
+          type: boolean
+          default: true
+
+    ItemUpdateRequest:
+      type: object
+      required:
+        - item_category_code
+        - sku
+        - name
+        - description
+        - unit_of_measure
+        - is_consumable
+        - is_asset
+        - reorder_level
+        - reorder_quantity
+        - standard_cost_amount
+        - preferred_vendor_id
+        - quantity_on_hand
+        - is_active
+      additionalProperties: false
+      properties:
+        item_category_code:
+          type: string
+        sku:
+          type: string
+          maxLength: 30
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        unit_of_measure:
+          type: string
+          maxLength: 20
+          default: "each"
+        is_consumable:
+          type: boolean
+          default: true
+        is_asset:
+          type: boolean
+          default: false
+        reorder_level:
+          type: number
+          format: double
+          default: 0
+        reorder_quantity:
+          type: number
+          format: double
+          default: 0
+        standard_cost_amount:
+          type: string
+          default: 0
+        preferred_vendor_id:
+          type: string
+          format: uuid
+          nullable: true
+        quantity_on_hand:
+          type: number
+          format: double
+          default: 0
+        is_active:
+          type: boolean
+          default: true
+
+    ItemResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - item_id
+        - item_category_code
+        - sku
+        - name
+        - unit_of_measure
+        - is_consumable
+        - is_asset
+        - reorder_level
+        - reorder_quantity
+        - standard_cost_amount
+        - quantity_on_hand
+        - is_active
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        item_id:
+          type: string
+          format: uuid
+          readOnly: true
+        item_category_code:
+          type: string
+        sku:
+          type: string
+          maxLength: 30
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        unit_of_measure:
+          type: string
+          maxLength: 20
+          default: "each"
+        is_consumable:
+          type: boolean
+          default: true
+        is_asset:
+          type: boolean
+          default: false
+        reorder_level:
+          type: number
+          format: double
+          default: 0
+        reorder_quantity:
+          type: number
+          format: double
+          default: 0
+        standard_cost_amount:
+          type: string
+          default: 0
+        preferred_vendor_id:
+          type: string
+          format: uuid
+          nullable: true
+        quantity_on_hand:
+          type: number
+          format: double
+          default: 0
+        is_active:
+          type: boolean
+          default: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        deleted_at:
+          type: string
+          format: date-time
+          nullable: true
+          readOnly: true
+  

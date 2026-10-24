@@ -50,6 +50,11 @@ function resolveRef(ref: string): string {
 }
 
 function tsTypeFromSchema(schema: any): string {
+  const type = tsTypeFromSchemaInner(schema)
+  return schema?.nullable && !type.includes('null') ? `(${type}) | null` : type
+}
+
+function tsTypeFromSchemaInner(schema: any): string {
   if (!schema) return 'unknown'
   if (schema.$ref) return resolveRef(schema.$ref)
   if (schema.oneOf || schema.anyOf) {
@@ -281,6 +286,14 @@ function getSpecOutputDir(baseDir: string, specPath: string, moduleName: string)
   return path.join(srcServicesDir, moduleName)
 }
 
+function getRouteGroup(baseDir: string, moduleDir: string): string | null {
+  const srcServicesDir = path.join(baseDir, 'src', 'services')
+  if (!isInsideDir(srcServicesDir, moduleDir)) return null
+  const relative = path.relative(srcServicesDir, moduleDir).replace(/\\/g, '/')
+  const [parentModule] = relative.split('/')
+  return parentModule || null
+}
+
 function discoverServiceDirs(): string[] {
   if (!fs.existsSync(servicesDir)) return []
 
@@ -326,7 +339,8 @@ function generateController(
   modulePascal: string,
   schemas: Record<string, any>,
   methods: Array<{ methodSignature: string }>,
-  parentDir: string
+  parentDir: string,
+  sharedTypesImportPath: string
 ) {
   const controllerTemplate = loadTemplate('controller')
   const controllerName = `${modulePascal}Controller`
@@ -336,6 +350,8 @@ function generateController(
     ControllerName: controllerName,
     imports: schemaNames.length > 0 ? schemaNames : false,
     methods: methods.length > 0 ? methods : false,
+    hasList: methods.some(method => method.methodSignature.includes('PaginatedResponse<')),
+    sharedTypesImportPath,
   }
 
   const output = Mustache.render(controllerTemplate, data)
@@ -346,7 +362,8 @@ function generateService(
   modulePascal: string,
   schemas: Record<string, any>,
   methods: Array<any>,
-  parentDir: string
+  parentDir: string,
+  sharedTypesImportPath: string
 ) {
   const serviceTemplate = loadTemplate('service')
   const serviceName = `${modulePascal}Service`
@@ -359,10 +376,24 @@ function generateService(
     imports: schemaNames.length > 0 ? schemaNames : false,
     methods: methods.length > 0 ? methods : false,
     hasForeignKeys: methods.some((method) => method.hasForeignKeys),
+    hasList: methods.some((method) => method.isList),
+    hasCrud: methods.some((method) => method.hasModel && method.isCrud),
+    hasWrites: methods.some((method) => method.hasModel && method.isCrud && (method.isCreate || method.isUpdate)),
+    hasHttpErrors: methods.some((method) => method.hasModel && method.isCrud && (method.isRead || method.isUpdate || method.isDelete)),
+    sharedTypesImportPath,
   }
 
   const output = Mustache.render(serviceTemplate, data)
   fs.writeFileSync(path.join(parentDir, serviceName + '.ts'), output, 'utf8')
+}
+
+function ensurePaginatedResponseType(baseDir: string, parentDir: string): string {
+  const typePath = path.join(baseDir, 'src', 'types', 'PaginatedResponse.ts')
+  fs.mkdirSync(path.dirname(typePath), { recursive: true })
+  if (!fs.existsSync(typePath)) {
+    fs.writeFileSync(typePath, `export type ListItem<T> = T extends (infer Item)[] ? Item : T\n\nexport interface PaginatedResponse<T> {\n  data: T[]\n  pagination: {\n    page: number\n    limit: number\n    total: number\n    totalPages: number\n  }\n}\n`, 'utf8')
+  }
+  return toImportPath(parentDir, typePath.replace(/\.ts$/, ''))
 }
 
 function generateRouter(
@@ -375,6 +406,7 @@ function generateRouter(
   const routerTemplate = loadTemplate('router')
   const serviceName = `${modulePascal}Service`
   const routesFileName = `${moduleName}.router.ts`
+  fs.mkdirSync(routesDir, { recursive: true })
 
   const data = {
     ModuleName: modulePascal,
@@ -388,8 +420,41 @@ function generateRouter(
   fs.writeFileSync(path.join(routesDir, routesFileName), output, 'utf8')
 }
 
-function writeGeneratorFiles(outDir?: string, module?: string) {
+function discoverRouterFiles(routesDir: string): string[] {
+  const files: string[] = []
+  if (!fs.existsSync(routesDir)) return files
+
+  function walk(dir: string) {
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      const fullPath = path.join(dir, entry.name)
+      if (entry.isDirectory()) walk(fullPath)
+      else if (entry.isFile() && entry.name.endsWith('.router.ts')) files.push(fullPath)
+    }
+  }
+
+  walk(routesDir)
+
+  // Prefer grouped routers over legacy flat files with the same module name,
+  // while allowing same-named modules under different parent groups.
+  const groupedFiles = files.filter(file => path.dirname(file) !== routesDir)
+  const groupedModuleNames = new Set(groupedFiles.map(file => path.basename(file, '.router.ts')))
+  const flatFiles = files.filter(file => path.dirname(file) === routesDir)
+    .filter(file => !groupedModuleNames.has(path.basename(file, '.router.ts')))
+  return [...groupedFiles, ...flatFiles].sort((a, b) => a.localeCompare(b))
+}
+
+function writeGeneratorFiles(
+  outDir?: string,
+  moduleFilter?: string,
+  specDir?: string,
+  skipService = false,
+  dryRun = false,
+  routesOnly = false
+) {
   if (!outDir) {
+    if (moduleFilter || specDir) {
+      throw new Error('--module and --spec-dir require --out <service-directory>')
+    }
     const serviceDirs = discoverServiceDirs()
     if (serviceDirs.length === 0) {
       console.warn(`No OpenAPI specs found under ${servicesDir}`)
@@ -397,17 +462,34 @@ function writeGeneratorFiles(outDir?: string, module?: string) {
     }
 
     for (const serviceDir of serviceDirs) {
-      writeGeneratorFiles(serviceDir, module)
+      writeGeneratorFiles(serviceDir, undefined, undefined, skipService, dryRun, routesOnly)
     }
     return
   }
 
   const baseDir = path.join(outDir)
   const specRoots = getSpecRoots(baseDir)
-  const specs = specRoots.flatMap(listSpecFiles)
+  const allSpecs = specDir
+    ? listSpecFiles(path.resolve(process.cwd(), specDir))
+    : specRoots.flatMap(listSpecFiles)
+  const specs = moduleFilter
+    ? allSpecs.filter(specPath => {
+        const doc: any = yaml.load(fs.readFileSync(specPath, 'utf8'))
+        const target = normalizeModuleName(moduleFilter)
+        const pathMatch = path.relative(baseDir, specPath).split(path.sep)
+          .some(part => normalizeModuleName(part) === target)
+        return pathMatch || moduleNameFromDoc(specPath, doc) === target
+      })
+    : allSpecs
 
   if (specs.length === 0) {
-    console.warn(`No OpenAPI specs found in ${baseDir}/openapi or ${baseDir}/api`)
+    const scope = specDir ? path.resolve(process.cwd(), specDir) : moduleFilter ? `module "${moduleFilter}"` : `${baseDir}/openapi or ${baseDir}/api`
+    throw new Error(`No OpenAPI specs found for ${scope}`)
+  }
+
+  if (dryRun) {
+    console.log(`Would generate from ${specs.length} OpenAPI spec${specs.length === 1 ? '' : 's'} in ${baseDir}:`)
+    for (const specPath of specs) console.log(`- ${path.relative(baseDir, specPath)}`)
     return
   }
 
@@ -417,8 +499,6 @@ function writeGeneratorFiles(outDir?: string, module?: string) {
     fs.mkdirSync(routesOutDir, { recursive: true })
   }
 
-  const allRoutes: string[] = [];
-  const registerLines: string[] = [];
   const processedModules = new Set<string>();
 
   for (const specPath of specs) {
@@ -427,6 +507,7 @@ function writeGeneratorFiles(outDir?: string, module?: string) {
     const schemas = (doc.components && doc.components.schemas) || {}
 
     const moduleName = moduleNameFromDoc(specPath, doc)
+    const sqlTableName = typeof doc['x-sql-table'] === 'string' ? doc['x-sql-table'] : moduleName
     const parentDir = getSpecOutputDir(baseDir, specPath, moduleName);
     const moduleKey = `${moduleName}:${path.relative(baseDir, parentDir).replace(/\\/g, '/')}`
 
@@ -437,14 +518,14 @@ function writeGeneratorFiles(outDir?: string, module?: string) {
     processedModules.add(moduleKey)
 
     const modulePascal = toPascalCase(moduleName)
-    const typesDir = path.join(parentDir, 'types');
     const modelDecoratorName = getModelDecoratorName(baseDir, parentDir)
 
-    fs.mkdirSync(typesDir, { recursive: true })
-    fs.mkdirSync(parentDir, { recursive: true })
-
-    // Generate types
-    generateTypes(schemas, typesDir)
+    if (!routesOnly) {
+      const typesDir = path.join(parentDir, 'types')
+      fs.mkdirSync(typesDir, { recursive: true })
+      fs.mkdirSync(parentDir, { recursive: true })
+      generateTypes(schemas, typesDir)
+    }
 
     // Collect method info
     const methodSignatures: Array<{ methodSignature: string }> = []
@@ -498,9 +579,9 @@ function writeGeneratorFiles(outDir?: string, module?: string) {
         methodSignatures.push({ methodSignature })
         methodImpls.push(methodImpl)
         methodImpl.modelDecoratorName = modelDecoratorName
-        methodImpl.modelKey = moduleName
+        methodImpl.modelKey = sqlTableName
         methodImpl.hasModel = Boolean(modelDecoratorName)
-        methodImpl.hasForeignKeys = modelDecoratorName === 'cpanelModels' && foreignKeyTables.has(moduleName.toLowerCase())
+        methodImpl.hasForeignKeys = modelDecoratorName === 'cpanelModels' && foreignKeyTables.has(sqlTableName.toLowerCase())
         methodImpl.isList = crudAction === 'list'
         methodImpl.isCreate = crudAction === 'create'
         methodImpl.isRead = crudAction === 'read'
@@ -519,21 +600,22 @@ function writeGeneratorFiles(outDir?: string, module?: string) {
       }
     }
 
-    // Generate controller
-    generateController(modulePascal, schemas, methodSignatures, parentDir)
+    if (!routesOnly) {
+      const sharedTypesImportPath = methodImpls.some(method => method.isList)
+        ? ensurePaginatedResponseType(baseDir, parentDir)
+        : ''
+      generateController(modulePascal, schemas, methodSignatures, parentDir, sharedTypesImportPath)
 
-    // Generate service
-    const shouldGenerateService = !process.argv.includes('--skip-service')
-    if (shouldGenerateService) {
-      generateService(modulePascal, schemas, methodImpls, parentDir)
+      if (!skipService) {
+        generateService(modulePascal, schemas, methodImpls, parentDir, sharedTypesImportPath)
+      }
     }
 
     // Generate router
-    const serviceImportPath = toImportPath(routesOutDir, path.join(parentDir, `${modulePascal}Service`))
-    generateRouter(moduleName, modulePascal, routeDefs, routesOutDir, serviceImportPath)
-
-    allRoutes.push(`import ${modulePascal}Routes from './${moduleName}.router'`);
-    registerLines.push(`  await app.register(${modulePascal}Routes)`);
+    const parentModule = getRouteGroup(baseDir, parentDir)
+    const moduleRoutesDir = parentModule ? path.join(routesOutDir, parentModule) : routesOutDir
+    const serviceImportPath = toImportPath(moduleRoutesDir, path.join(parentDir, `${modulePascal}Service`))
+    generateRouter(moduleName, modulePascal, routeDefs, moduleRoutesDir, serviceImportPath)
   }
 
   //   const indexTemplate =
@@ -558,28 +640,84 @@ function writeGeneratorFiles(outDir?: string, module?: string) {
   //   registers: registerLines.map(line => line.trim()),
   // }
 
+  const routeImports: string[] = []
+  const registerLines: string[] = []
+  const routerFiles = discoverRouterFiles(routesOutDir)
+  const routeModuleCounts = new Map<string, number>()
+  for (const file of routerFiles) {
+    const name = path.basename(file, '.router.ts')
+    routeModuleCounts.set(name, (routeModuleCounts.get(name) ?? 0) + 1)
+  }
+  for (const routerFile of routerFiles) {
+    const routeModule = path.basename(routerFile, '.router.ts')
+    const routeGroup = path.relative(routesOutDir, path.dirname(routerFile)).replace(/\\/g, '/')
+    const importName = routeModuleCounts.get(routeModule)! > 1
+      ? `${routeGroup.replace(/\//g, '_')}_${routeModule}`
+      : routeModule
+    const routePascal = toPascalCase(importName)
+    const importPath = toImportPath(routesOutDir, routerFile.replace(/\.ts$/, ''))
+    routeImports.push(`import ${routePascal}Routes from '${importPath}'`)
+    registerLines.push(`  await app.register(${routePascal}Routes)`)
+  }
+
   const indexOut =
-    `${allRoutes.join('\n')}\n\n` +
+    `${routeImports.join('\n')}\n\n` +
     `import type { FastifyInstance } from 'fastify'\n\n` +
     `export default async function registerRoutes(app: FastifyInstance) {\n` +
     `${registerLines.join('\n')}\n` +
     `}\n`;
 
   fs.writeFileSync(path.join(routesOutDir, 'index.ts'), indexOut, 'utf8');
-  console.log('✅ OpenAPI types, controllers, services, and routes generated successfully')
+  const generatedParts = routesOnly
+    ? 'routes'
+    : skipService ? 'types, controllers, and routes' : 'types, controllers, services, and routes'
+  console.log(`OpenAPI ${generatedParts} generated successfully`)
 }
 
 const args = process.argv.slice(2);
 let outDir: string | undefined;
-let module: string | undefined;
+let moduleFilter: string | undefined;
+let specDir: string | undefined;
+let skipService = false;
+let dryRun = false;
+let routesOnly = false;
 
 for (let i = 0; i < args.length; i++) {
-  if (args[i] === '--module') module = args[i + 1];
-  if (args[i] === '--out') outDir = args[i + 1];
+  const arg = args[i]
+  if (arg === '--module') moduleFilter = args[++i]
+  else if (arg === '--spec-dir') specDir = args[++i]
+  else if (arg === '--out') outDir = args[++i]
+  else if (arg === '--skip-service') skipService = true
+  else if (arg === '--dry-run') dryRun = true
+  else if (arg === '--routes-only') routesOnly = true
+  else if (arg === '--help' || arg === '-h') {
+    console.log(`Usage:
+  npm run openapi:gen
+  npm run openapi:gen -- --out services/school_service
+  npm run openapi:gen -- --out services/school_service --module org_building
+  npm run openapi:gen -- --out services/school_service --spec-dir services/school_service/src/services/org/org_building/api
+  npm run openapi:gen -- --out services/school_service --routes-only
+
+Options:
+  --out <dir>       Generate in one service directory (default: discover all services)
+  --module <name>   Generate one module by spec filename/module name
+  --spec-dir <dir>  Discover specs only inside this folder
+  --skip-service    Skip service implementation generation
+  --routes-only     Generate routers and the root route index only
+  --dry-run         List matched specs without writing files
+`)
+    process.exit(0)
+  } else {
+    console.error(`Unknown option: ${arg}`)
+    process.exit(1)
+  }
 }
 
-if (!outDir && !module) {
-  console.log('No --out provided; scanning services/* for OpenAPI specs')
+if (moduleFilter && specDir) {
+  console.error('Use either --module or --spec-dir, not both')
+  process.exit(1)
 }
 
-writeGeneratorFiles(outDir, module);
+if (!outDir) console.log('No --out provided; scanning services/* for OpenAPI specs')
+
+writeGeneratorFiles(outDir, moduleFilter, specDir, skipService, dryRun, routesOnly)

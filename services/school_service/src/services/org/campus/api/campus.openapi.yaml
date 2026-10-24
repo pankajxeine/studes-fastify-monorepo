@@ -1,0 +1,380 @@
+openapi: 3.0.0
+x-sql-table: org_campus
+info:
+  title: CampusResponse API
+  version: 1.0.0
+paths:
+  /campus:
+    get:
+      operationId: listCampus
+      summary: Get all campus
+      responses:
+        '200':
+          description: List of campus
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CampusResponse'
+    post:
+      operationId: createCampus
+      summary: Create a new campus
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CampusRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CampusResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /campus/{id}:
+    get:
+      operationId: getCampusById
+      summary: Get campus by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: campus object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CampusResponse'
+        '404':
+          description: campus not found
+    put:
+      operationId: updateCampus
+      summary: Update campus by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CampusUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CampusResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: campus not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteCampus
+      summary: Delete campus by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: campus not found
+components:
+  schemas:
+
+    CampusRequest:
+      type: object
+      required:
+        - organization_id
+        - code
+        - name
+        - campus_type
+      additionalProperties: false
+      properties:
+        organization_id:
+          type: string
+          format: uuid
+        code:
+          type: string
+          maxLength: 20
+        name:
+          type: string
+        campus_type:
+          type: string
+          maxLength: 20
+        address_line1:
+          type: string
+          nullable: true
+        address_line2:
+          type: string
+          nullable: true
+        city:
+          type: string
+          nullable: true
+        state_region:
+          type: string
+          nullable: true
+        postal_code:
+          type: string
+          nullable: true
+          maxLength: 20
+        country_code:
+          type: string
+          nullable: true
+          maxLength: 2
+        phone:
+          type: string
+          nullable: true
+        email:
+          type: string
+          nullable: true
+        timezone:
+          type: string
+          nullable: true
+        latitude:
+          type: number
+          format: double
+          nullable: true
+          minimum: -90
+          maximum: 90
+        longitude:
+          type: number
+          format: double
+          nullable: true
+          minimum: -180
+          maximum: 180
+        established_on:
+          type: string
+          format: date
+          nullable: true
+        principal_staff_id:
+          type: string
+          format: uuid
+          nullable: true
+        is_active:
+          type: boolean
+          default: true
+
+    CampusUpdateRequest:
+      type: object
+      required:
+        - organization_id
+        - code
+        - name
+        - campus_type
+        - address_line1
+        - address_line2
+        - city
+        - state_region
+        - postal_code
+        - country_code
+        - phone
+        - email
+        - timezone
+        - latitude
+        - longitude
+        - established_on
+        - principal_staff_id
+        - is_active
+      additionalProperties: false
+      properties:
+        organization_id:
+          type: string
+          format: uuid
+        code:
+          type: string
+          maxLength: 20
+        name:
+          type: string
+        campus_type:
+          type: string
+          maxLength: 20
+        address_line1:
+          type: string
+          nullable: true
+        address_line2:
+          type: string
+          nullable: true
+        city:
+          type: string
+          nullable: true
+        state_region:
+          type: string
+          nullable: true
+        postal_code:
+          type: string
+          nullable: true
+          maxLength: 20
+        country_code:
+          type: string
+          nullable: true
+          maxLength: 2
+        phone:
+          type: string
+          nullable: true
+        email:
+          type: string
+          nullable: true
+        timezone:
+          type: string
+          nullable: true
+        latitude:
+          type: number
+          format: double
+          nullable: true
+          minimum: -90
+          maximum: 90
+        longitude:
+          type: number
+          format: double
+          nullable: true
+          minimum: -180
+          maximum: 180
+        established_on:
+          type: string
+          format: date
+          nullable: true
+        principal_staff_id:
+          type: string
+          format: uuid
+          nullable: true
+        is_active:
+          type: boolean
+          default: true
+
+    CampusResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - campus_id
+        - organization_id
+        - code
+        - name
+        - campus_type
+        - is_active
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        campus_id:
+          type: string
+          format: uuid
+          readOnly: true
+        organization_id:
+          type: string
+          format: uuid
+        code:
+          type: string
+          maxLength: 20
+        name:
+          type: string
+        campus_type:
+          type: string
+          maxLength: 20
+        address_line1:
+          type: string
+          nullable: true
+        address_line2:
+          type: string
+          nullable: true
+        city:
+          type: string
+          nullable: true
+        state_region:
+          type: string
+          nullable: true
+        postal_code:
+          type: string
+          nullable: true
+          maxLength: 20
+        country_code:
+          type: string
+          nullable: true
+          maxLength: 2
+        phone:
+          type: string
+          nullable: true
+        email:
+          type: string
+          nullable: true
+        timezone:
+          type: string
+          nullable: true
+        latitude:
+          type: number
+          format: double
+          nullable: true
+          minimum: -90
+          maximum: 90
+        longitude:
+          type: number
+          format: double
+          nullable: true
+          minimum: -180
+          maximum: 180
+        established_on:
+          type: string
+          format: date
+          nullable: true
+        principal_staff_id:
+          type: string
+          format: uuid
+          nullable: true
+        is_active:
+          type: boolean
+          default: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

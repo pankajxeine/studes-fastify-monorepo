@@ -1,0 +1,222 @@
+openapi: 3.0.0
+x-sql-table: onboarding_approval
+info:
+  title: ApprovalResponse API
+  version: 1.0.0
+paths:
+  /approval:
+    get:
+      operationId: listApproval
+      summary: Get all approval
+      responses:
+        '200':
+          description: List of approval
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApprovalResponse'
+    post:
+      operationId: createApproval
+      summary: Create a new approval
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApprovalRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApprovalResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /approval/{id}:
+    get:
+      operationId: getApprovalById
+      summary: Get approval by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: approval object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApprovalResponse'
+        '404':
+          description: approval not found
+    put:
+      operationId: updateApproval
+      summary: Update approval by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApprovalUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApprovalResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: approval not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteApproval
+      summary: Delete approval by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: approval not found
+components:
+  schemas:
+
+    ApprovalRequest:
+      type: object
+      required:
+        - request_id
+        - step_no
+        - approver_role_code
+      additionalProperties: false
+      properties:
+        request_id:
+          type: string
+          format: uuid
+        step_no:
+          type: integer
+          format: int32
+        approver_role_code:
+          type: string
+        decision:
+          type: string
+          maxLength: 10
+          default: "pending"
+        decided_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        decided_at:
+          type: string
+          format: date-time
+          nullable: true
+        comment:
+          type: string
+          nullable: true
+
+    ApprovalUpdateRequest:
+      type: object
+      required:
+        - request_id
+        - step_no
+        - approver_role_code
+        - decision
+        - decided_by_user_id
+        - decided_at
+        - comment
+      additionalProperties: false
+      properties:
+        request_id:
+          type: string
+          format: uuid
+        step_no:
+          type: integer
+          format: int32
+        approver_role_code:
+          type: string
+        decision:
+          type: string
+          maxLength: 10
+          default: "pending"
+        decided_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        decided_at:
+          type: string
+          format: date-time
+          nullable: true
+        comment:
+          type: string
+          nullable: true
+
+    ApprovalResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - request_id
+        - step_no
+        - approver_role_code
+        - decision
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        request_id:
+          type: string
+          format: uuid
+        step_no:
+          type: integer
+          format: int32
+        approver_role_code:
+          type: string
+        decision:
+          type: string
+          maxLength: 10
+          default: "pending"
+        decided_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        decided_at:
+          type: string
+          format: date-time
+          nullable: true
+        comment:
+          type: string
+          nullable: true
+  

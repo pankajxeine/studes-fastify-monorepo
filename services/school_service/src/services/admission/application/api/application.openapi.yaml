@@ -1,0 +1,380 @@
+openapi: 3.0.0
+x-sql-table: admis_application
+info:
+  title: ApplicationResponse API
+  version: 1.0.0
+paths:
+  /application:
+    get:
+      operationId: listApplication
+      summary: Get all application
+      responses:
+        '200':
+          description: List of application
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApplicationResponse'
+    post:
+      operationId: createApplication
+      summary: Create a new application
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApplicationRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /application/{id}:
+    get:
+      operationId: getApplicationById
+      summary: Get application by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: application object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationResponse'
+        '404':
+          description: application not found
+    put:
+      operationId: updateApplication
+      summary: Update application by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApplicationUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: application not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteApplication
+      summary: Delete application by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: application not found
+components:
+  schemas:
+
+    ApplicationRequest:
+      type: object
+      required:
+        - admission_cycle_id
+        - applicant_person_id
+        - grade_level_id
+        - application_no
+      additionalProperties: false
+      properties:
+        admission_cycle_id:
+          type: string
+          format: uuid
+        applicant_person_id:
+          type: string
+          format: uuid
+        grade_level_id:
+          type: string
+          format: uuid
+        inquiry_id:
+          type: string
+          format: uuid
+          nullable: true
+        application_no:
+          type: string
+          maxLength: 30
+        status:
+          type: string
+          default: "draft"
+        submitted_at:
+          type: string
+          format: date-time
+          nullable: true
+        decided_at:
+          type: string
+          format: date-time
+          nullable: true
+        decided_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        decision_remarks:
+          type: string
+          nullable: true
+        offer_expires_on:
+          type: string
+          format: date
+          nullable: true
+        offer_responded_at:
+          type: string
+          format: date-time
+          nullable: true
+        waitlist_rank:
+          type: integer
+          format: int32
+          nullable: true
+        previous_school_name:
+          type: string
+          nullable: true
+        previous_grade_completed:
+          type: string
+          nullable: true
+          maxLength: 30
+        has_sibling_in_school:
+          type: boolean
+          default: false
+        application_fee_amount:
+          type: string
+          default: 0
+        is_fee_waived:
+          type: boolean
+          default: false
+
+    ApplicationUpdateRequest:
+      type: object
+      required:
+        - admission_cycle_id
+        - applicant_person_id
+        - grade_level_id
+        - inquiry_id
+        - application_no
+        - status
+        - submitted_at
+        - decided_at
+        - decided_by_user_id
+        - decision_remarks
+        - offer_expires_on
+        - offer_responded_at
+        - waitlist_rank
+        - previous_school_name
+        - previous_grade_completed
+        - has_sibling_in_school
+        - application_fee_amount
+        - is_fee_waived
+      additionalProperties: false
+      properties:
+        admission_cycle_id:
+          type: string
+          format: uuid
+        applicant_person_id:
+          type: string
+          format: uuid
+        grade_level_id:
+          type: string
+          format: uuid
+        inquiry_id:
+          type: string
+          format: uuid
+          nullable: true
+        application_no:
+          type: string
+          maxLength: 30
+        status:
+          type: string
+          default: "draft"
+        submitted_at:
+          type: string
+          format: date-time
+          nullable: true
+        decided_at:
+          type: string
+          format: date-time
+          nullable: true
+        decided_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        decision_remarks:
+          type: string
+          nullable: true
+        offer_expires_on:
+          type: string
+          format: date
+          nullable: true
+        offer_responded_at:
+          type: string
+          format: date-time
+          nullable: true
+        waitlist_rank:
+          type: integer
+          format: int32
+          nullable: true
+        previous_school_name:
+          type: string
+          nullable: true
+        previous_grade_completed:
+          type: string
+          nullable: true
+          maxLength: 30
+        has_sibling_in_school:
+          type: boolean
+          default: false
+        application_fee_amount:
+          type: string
+          default: 0
+        is_fee_waived:
+          type: boolean
+          default: false
+
+    ApplicationResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - application_id
+        - admission_cycle_id
+        - applicant_person_id
+        - grade_level_id
+        - application_no
+        - status
+        - has_sibling_in_school
+        - application_fee_amount
+        - is_fee_waived
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        application_id:
+          type: string
+          format: uuid
+          readOnly: true
+        admission_cycle_id:
+          type: string
+          format: uuid
+        applicant_person_id:
+          type: string
+          format: uuid
+        grade_level_id:
+          type: string
+          format: uuid
+        inquiry_id:
+          type: string
+          format: uuid
+          nullable: true
+        application_no:
+          type: string
+          maxLength: 30
+        status:
+          type: string
+          default: "draft"
+        submitted_at:
+          type: string
+          format: date-time
+          nullable: true
+        decided_at:
+          type: string
+          format: date-time
+          nullable: true
+        decided_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        decision_remarks:
+          type: string
+          nullable: true
+        offer_expires_on:
+          type: string
+          format: date
+          nullable: true
+        offer_responded_at:
+          type: string
+          format: date-time
+          nullable: true
+        waitlist_rank:
+          type: integer
+          format: int32
+          nullable: true
+        previous_school_name:
+          type: string
+          nullable: true
+        previous_grade_completed:
+          type: string
+          nullable: true
+          maxLength: 30
+        has_sibling_in_school:
+          type: boolean
+          default: false
+        application_fee_amount:
+          type: string
+          default: 0
+        is_fee_waived:
+          type: boolean
+          default: false
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

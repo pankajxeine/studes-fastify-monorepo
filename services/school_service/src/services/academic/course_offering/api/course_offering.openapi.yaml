@@ -1,0 +1,326 @@
+openapi: 3.0.0
+x-sql-table: acad_course_offering
+info:
+  title: CourseOfferingResponse API
+  version: 1.0.0
+paths:
+  /course_offering:
+    get:
+      operationId: listCourseOffering
+      summary: Get all course_offering
+      responses:
+        '200':
+          description: List of course_offering
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CourseOfferingResponse'
+    post:
+      operationId: createCourseOffering
+      summary: Create a new course_offering
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CourseOfferingRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CourseOfferingResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /course_offering/{id}:
+    get:
+      operationId: getCourseOfferingById
+      summary: Get course_offering by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: course_offering object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CourseOfferingResponse'
+        '404':
+          description: course_offering not found
+    put:
+      operationId: updateCourseOffering
+      summary: Update course_offering by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CourseOfferingUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CourseOfferingResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: course_offering not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteCourseOffering
+      summary: Delete course_offering by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: course_offering not found
+components:
+  schemas:
+
+    CourseOfferingRequest:
+      type: object
+      required:
+        - course_id
+        - academic_year_id
+        - campus_id
+        - offering_code
+      additionalProperties: false
+      properties:
+        course_id:
+          type: string
+          format: uuid
+        academic_year_id:
+          type: string
+          format: uuid
+        term_id:
+          type: string
+          format: uuid
+          nullable: true
+        campus_id:
+          type: string
+          format: uuid
+        section_id:
+          type: string
+          format: uuid
+          nullable: true
+        grading_scheme_id:
+          type: string
+          format: uuid
+          nullable: true
+        room_id:
+          type: string
+          format: uuid
+          nullable: true
+        offering_code:
+          type: string
+          maxLength: 30
+        capacity:
+          type: integer
+          format: int32
+          nullable: true
+          minimum: 1
+          maximum: 1000
+        delivery_mode:
+          type: string
+          maxLength: 12
+          default: "in_person"
+        status:
+          type: string
+          default: "planned"
+          enum:
+            - "planned"
+            - "open"
+            - "closed"
+            - "completed"
+            - "cancelled"
+
+    CourseOfferingUpdateRequest:
+      type: object
+      required:
+        - course_id
+        - academic_year_id
+        - term_id
+        - campus_id
+        - section_id
+        - grading_scheme_id
+        - room_id
+        - offering_code
+        - capacity
+        - delivery_mode
+        - status
+      additionalProperties: false
+      properties:
+        course_id:
+          type: string
+          format: uuid
+        academic_year_id:
+          type: string
+          format: uuid
+        term_id:
+          type: string
+          format: uuid
+          nullable: true
+        campus_id:
+          type: string
+          format: uuid
+        section_id:
+          type: string
+          format: uuid
+          nullable: true
+        grading_scheme_id:
+          type: string
+          format: uuid
+          nullable: true
+        room_id:
+          type: string
+          format: uuid
+          nullable: true
+        offering_code:
+          type: string
+          maxLength: 30
+        capacity:
+          type: integer
+          format: int32
+          nullable: true
+          minimum: 1
+          maximum: 1000
+        delivery_mode:
+          type: string
+          maxLength: 12
+          default: "in_person"
+        status:
+          type: string
+          default: "planned"
+          enum:
+            - "planned"
+            - "open"
+            - "closed"
+            - "completed"
+            - "cancelled"
+
+    CourseOfferingResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - course_offering_id
+        - course_id
+        - academic_year_id
+        - campus_id
+        - offering_code
+        - delivery_mode
+        - status
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        course_offering_id:
+          type: string
+          format: uuid
+          readOnly: true
+        course_id:
+          type: string
+          format: uuid
+        academic_year_id:
+          type: string
+          format: uuid
+        term_id:
+          type: string
+          format: uuid
+          nullable: true
+        campus_id:
+          type: string
+          format: uuid
+        section_id:
+          type: string
+          format: uuid
+          nullable: true
+        grading_scheme_id:
+          type: string
+          format: uuid
+          nullable: true
+        room_id:
+          type: string
+          format: uuid
+          nullable: true
+        offering_code:
+          type: string
+          maxLength: 30
+        capacity:
+          type: integer
+          format: int32
+          nullable: true
+          minimum: 1
+          maximum: 1000
+        delivery_mode:
+          type: string
+          maxLength: 12
+          default: "in_person"
+        status:
+          type: string
+          default: "planned"
+          enum:
+            - "planned"
+            - "open"
+            - "closed"
+            - "completed"
+            - "cancelled"
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

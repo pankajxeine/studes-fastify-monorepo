@@ -1,0 +1,284 @@
+openapi: 3.0.0
+x-sql-table: fin_fee_structure
+info:
+  title: FeeStructureResponse API
+  version: 1.0.0
+paths:
+  /fee_structure:
+    get:
+      operationId: listFeeStructure
+      summary: Get all fee_structure
+      responses:
+        '200':
+          description: List of fee_structure
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FeeStructureResponse'
+    post:
+      operationId: createFeeStructure
+      summary: Create a new fee_structure
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FeeStructureRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeeStructureResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /fee_structure/{id}:
+    get:
+      operationId: getFeeStructureById
+      summary: Get fee_structure by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: fee_structure object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeeStructureResponse'
+        '404':
+          description: fee_structure not found
+    put:
+      operationId: updateFeeStructure
+      summary: Update fee_structure by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FeeStructureUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeeStructureResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: fee_structure not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteFeeStructure
+      summary: Delete fee_structure by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: fee_structure not found
+components:
+  schemas:
+
+    FeeStructureRequest:
+      type: object
+      required:
+        - academic_year_id
+        - campus_id
+        - program_id
+        - code
+        - name
+      additionalProperties: false
+      properties:
+        academic_year_id:
+          type: string
+          format: uuid
+        campus_id:
+          type: string
+          format: uuid
+        program_id:
+          type: string
+          format: uuid
+        grade_level_id:
+          type: string
+          format: uuid
+          nullable: true
+        code:
+          type: string
+          maxLength: 30
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        status:
+          type: string
+          maxLength: 12
+          default: "draft"
+        published_at:
+          type: string
+          format: date-time
+          nullable: true
+        published_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+
+    FeeStructureUpdateRequest:
+      type: object
+      required:
+        - academic_year_id
+        - campus_id
+        - program_id
+        - grade_level_id
+        - code
+        - name
+        - description
+        - status
+        - published_at
+        - published_by_user_id
+      additionalProperties: false
+      properties:
+        academic_year_id:
+          type: string
+          format: uuid
+        campus_id:
+          type: string
+          format: uuid
+        program_id:
+          type: string
+          format: uuid
+        grade_level_id:
+          type: string
+          format: uuid
+          nullable: true
+        code:
+          type: string
+          maxLength: 30
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        status:
+          type: string
+          maxLength: 12
+          default: "draft"
+        published_at:
+          type: string
+          format: date-time
+          nullable: true
+        published_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+
+    FeeStructureResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - fee_structure_id
+        - academic_year_id
+        - campus_id
+        - program_id
+        - code
+        - name
+        - status
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        fee_structure_id:
+          type: string
+          format: uuid
+          readOnly: true
+        academic_year_id:
+          type: string
+          format: uuid
+        campus_id:
+          type: string
+          format: uuid
+        program_id:
+          type: string
+          format: uuid
+        grade_level_id:
+          type: string
+          format: uuid
+          nullable: true
+        code:
+          type: string
+          maxLength: 30
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        status:
+          type: string
+          maxLength: 12
+          default: "draft"
+        published_at:
+          type: string
+          format: date-time
+          nullable: true
+        published_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

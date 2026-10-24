@@ -1,0 +1,261 @@
+openapi: 3.0.0
+x-sql-table: comms_message_thread
+info:
+  title: MessageThreadResponse API
+  version: 1.0.0
+paths:
+  /message_thread:
+    get:
+      operationId: listMessageThread
+      summary: Get all message_thread
+      responses:
+        '200':
+          description: List of message_thread
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MessageThreadResponse'
+    post:
+      operationId: createMessageThread
+      summary: Create a new message_thread
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MessageThreadRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageThreadResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /message_thread/{id}:
+    get:
+      operationId: getMessageThreadById
+      summary: Get message_thread by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: message_thread object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageThreadResponse'
+        '404':
+          description: message_thread not found
+    put:
+      operationId: updateMessageThread
+      summary: Update message_thread by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MessageThreadUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageThreadResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: message_thread not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteMessageThread
+      summary: Delete message_thread by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: message_thread not found
+components:
+  schemas:
+
+    MessageThreadRequest:
+      type: object
+      required:
+        - subject
+        - created_by_user_id
+      additionalProperties: false
+      properties:
+        subject:
+          type: string
+        context_type:
+          type: string
+          nullable: true
+          maxLength: 30
+        context_id:
+          type: string
+          format: uuid
+          nullable: true
+        campus_id:
+          type: string
+          format: uuid
+          nullable: true
+        created_by_user_id:
+          type: string
+          format: uuid
+        is_closed:
+          type: boolean
+          default: false
+        closed_at:
+          type: string
+          format: date-time
+          nullable: true
+        last_message_at:
+          type: string
+          format: date-time
+          nullable: true
+
+    MessageThreadUpdateRequest:
+      type: object
+      required:
+        - subject
+        - context_type
+        - context_id
+        - campus_id
+        - created_by_user_id
+        - is_closed
+        - closed_at
+        - last_message_at
+      additionalProperties: false
+      properties:
+        subject:
+          type: string
+        context_type:
+          type: string
+          nullable: true
+          maxLength: 30
+        context_id:
+          type: string
+          format: uuid
+          nullable: true
+        campus_id:
+          type: string
+          format: uuid
+          nullable: true
+        created_by_user_id:
+          type: string
+          format: uuid
+        is_closed:
+          type: boolean
+          default: false
+        closed_at:
+          type: string
+          format: date-time
+          nullable: true
+        last_message_at:
+          type: string
+          format: date-time
+          nullable: true
+
+    MessageThreadResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - message_thread_id
+        - subject
+        - created_by_user_id
+        - is_closed
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        message_thread_id:
+          type: string
+          format: uuid
+          readOnly: true
+        subject:
+          type: string
+        context_type:
+          type: string
+          nullable: true
+          maxLength: 30
+        context_id:
+          type: string
+          format: uuid
+          nullable: true
+        campus_id:
+          type: string
+          format: uuid
+          nullable: true
+        created_by_user_id:
+          type: string
+          format: uuid
+        is_closed:
+          type: boolean
+          default: false
+        closed_at:
+          type: string
+          format: date-time
+          nullable: true
+        last_message_at:
+          type: string
+          format: date-time
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

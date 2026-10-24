@@ -1,0 +1,311 @@
+openapi: 3.0.0
+x-sql-table: lib_library_membership
+info:
+  title: LibraryMembershipResponse API
+  version: 1.0.0
+paths:
+  /library_membership:
+    get:
+      operationId: listLibraryMembership
+      summary: Get all library_membership
+      responses:
+        '200':
+          description: List of library_membership
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LibraryMembershipResponse'
+    post:
+      operationId: createLibraryMembership
+      summary: Create a new library_membership
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LibraryMembershipRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LibraryMembershipResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /library_membership/{id}:
+    get:
+      operationId: getLibraryMembershipById
+      summary: Get library_membership by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: library_membership object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LibraryMembershipResponse'
+        '404':
+          description: library_membership not found
+    put:
+      operationId: updateLibraryMembership
+      summary: Update library_membership by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LibraryMembershipUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LibraryMembershipResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: library_membership not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteLibraryMembership
+      summary: Delete library_membership by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: library_membership not found
+components:
+  schemas:
+
+    LibraryMembershipRequest:
+      type: object
+      required:
+        - person_id
+        - campus_id
+        - membership_no
+        - member_type
+        - valid_from
+      additionalProperties: false
+      properties:
+        person_id:
+          type: string
+          format: uuid
+        campus_id:
+          type: string
+          format: uuid
+        membership_no:
+          type: string
+          maxLength: 30
+        member_type:
+          type: string
+          maxLength: 10
+        max_loans:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 20
+          default: 3
+        loan_period_days:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 120
+          default: 14
+        valid_from:
+          type: string
+          format: date
+        valid_to:
+          type: string
+          format: date
+          nullable: true
+        validity:
+          type: string
+          nullable: true
+        status:
+          type: string
+          maxLength: 10
+          default: "active"
+        notes:
+          type: string
+          nullable: true
+
+    LibraryMembershipUpdateRequest:
+      type: object
+      required:
+        - person_id
+        - campus_id
+        - membership_no
+        - member_type
+        - max_loans
+        - loan_period_days
+        - valid_from
+        - valid_to
+        - validity
+        - status
+        - notes
+      additionalProperties: false
+      properties:
+        person_id:
+          type: string
+          format: uuid
+        campus_id:
+          type: string
+          format: uuid
+        membership_no:
+          type: string
+          maxLength: 30
+        member_type:
+          type: string
+          maxLength: 10
+        max_loans:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 20
+          default: 3
+        loan_period_days:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 120
+          default: 14
+        valid_from:
+          type: string
+          format: date
+        valid_to:
+          type: string
+          format: date
+          nullable: true
+        validity:
+          type: string
+          nullable: true
+        status:
+          type: string
+          maxLength: 10
+          default: "active"
+        notes:
+          type: string
+          nullable: true
+
+    LibraryMembershipResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - library_membership_id
+        - person_id
+        - campus_id
+        - membership_no
+        - member_type
+        - max_loans
+        - loan_period_days
+        - valid_from
+        - status
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        library_membership_id:
+          type: string
+          format: uuid
+          readOnly: true
+        person_id:
+          type: string
+          format: uuid
+        campus_id:
+          type: string
+          format: uuid
+        membership_no:
+          type: string
+          maxLength: 30
+        member_type:
+          type: string
+          maxLength: 10
+        max_loans:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 20
+          default: 3
+        loan_period_days:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 120
+          default: 14
+        valid_from:
+          type: string
+          format: date
+        valid_to:
+          type: string
+          format: date
+          nullable: true
+        validity:
+          type: string
+          nullable: true
+        status:
+          type: string
+          maxLength: 10
+          default: "active"
+        notes:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

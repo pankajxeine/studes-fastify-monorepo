@@ -1,0 +1,281 @@
+openapi: 3.0.0
+x-sql-table: hstl_hostel_room
+info:
+  title: HostelRoomResponse API
+  version: 1.0.0
+paths:
+  /hostel_room:
+    get:
+      operationId: listHostelRoom
+      summary: Get all hostel_room
+      responses:
+        '200':
+          description: List of hostel_room
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HostelRoomResponse'
+    post:
+      operationId: createHostelRoom
+      summary: Create a new hostel_room
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HostelRoomRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HostelRoomResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /hostel_room/{id}:
+    get:
+      operationId: getHostelRoomById
+      summary: Get hostel_room by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: hostel_room object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HostelRoomResponse'
+        '404':
+          description: hostel_room not found
+    put:
+      operationId: updateHostelRoom
+      summary: Update hostel_room by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HostelRoomUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HostelRoomResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: hostel_room not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteHostelRoom
+      summary: Delete hostel_room by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: hostel_room not found
+components:
+  schemas:
+
+    HostelRoomRequest:
+      type: object
+      required:
+        - hostel_id
+        - room_no
+        - room_type
+        - bed_count
+      additionalProperties: false
+      properties:
+        hostel_id:
+          type: string
+          format: uuid
+        room_no:
+          type: string
+          maxLength: 20
+        floor_no:
+          type: integer
+          format: int32
+          minimum: -2
+          maximum: 50
+          default: 0
+        room_type:
+          type: string
+          maxLength: 20
+        bed_count:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 24
+        has_attached_bath:
+          type: boolean
+          default: false
+        has_air_conditioning:
+          type: boolean
+          default: false
+        is_active:
+          type: boolean
+          default: true
+        notes:
+          type: string
+          nullable: true
+
+    HostelRoomUpdateRequest:
+      type: object
+      required:
+        - hostel_id
+        - room_no
+        - floor_no
+        - room_type
+        - bed_count
+        - has_attached_bath
+        - has_air_conditioning
+        - is_active
+        - notes
+      additionalProperties: false
+      properties:
+        hostel_id:
+          type: string
+          format: uuid
+        room_no:
+          type: string
+          maxLength: 20
+        floor_no:
+          type: integer
+          format: int32
+          minimum: -2
+          maximum: 50
+          default: 0
+        room_type:
+          type: string
+          maxLength: 20
+        bed_count:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 24
+        has_attached_bath:
+          type: boolean
+          default: false
+        has_air_conditioning:
+          type: boolean
+          default: false
+        is_active:
+          type: boolean
+          default: true
+        notes:
+          type: string
+          nullable: true
+
+    HostelRoomResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - hostel_room_id
+        - hostel_id
+        - room_no
+        - floor_no
+        - room_type
+        - bed_count
+        - has_attached_bath
+        - has_air_conditioning
+        - is_active
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        hostel_room_id:
+          type: string
+          format: uuid
+          readOnly: true
+        hostel_id:
+          type: string
+          format: uuid
+        room_no:
+          type: string
+          maxLength: 20
+        floor_no:
+          type: integer
+          format: int32
+          minimum: -2
+          maximum: 50
+          default: 0
+        room_type:
+          type: string
+          maxLength: 20
+        bed_count:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 24
+        has_attached_bath:
+          type: boolean
+          default: false
+        has_air_conditioning:
+          type: boolean
+          default: false
+        is_active:
+          type: boolean
+          default: true
+        notes:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  

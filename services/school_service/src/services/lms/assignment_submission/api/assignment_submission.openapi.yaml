@@ -1,0 +1,373 @@
+openapi: 3.0.0
+x-sql-table: lms_assignment_submission
+info:
+  title: AssignmentSubmissionResponse API
+  version: 1.0.0
+paths:
+  /assignment_submission:
+    get:
+      operationId: listAssignmentSubmission
+      summary: Get all assignment_submission
+      responses:
+        '200':
+          description: List of assignment_submission
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AssignmentSubmissionResponse'
+    post:
+      operationId: createAssignmentSubmission
+      summary: Create a new assignment_submission
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssignmentSubmissionRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssignmentSubmissionResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Unique constraint conflict
+
+  /assignment_submission/{id}:
+    get:
+      operationId: getAssignmentSubmissionById
+      summary: Get assignment_submission by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: assignment_submission object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssignmentSubmissionResponse'
+        '404':
+          description: assignment_submission not found
+    put:
+      operationId: updateAssignmentSubmission
+      summary: Update assignment_submission by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssignmentSubmissionUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssignmentSubmissionResponse'
+        '400':
+          description: Invalid request
+        '404':
+          description: assignment_submission not found
+        '409':
+          description: Unique constraint conflict
+    delete:
+      operationId: deleteAssignmentSubmission
+      summary: Delete assignment_submission by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: assignment_submission not found
+components:
+  schemas:
+
+    AssignmentSubmissionRequest:
+      type: object
+      required:
+        - assignment_id
+        - student_id
+      additionalProperties: false
+      properties:
+        assignment_id:
+          type: string
+          format: uuid
+        student_id:
+          type: string
+          format: uuid
+        attempt_no:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 5
+          default: 1
+        submitted_at:
+          type: string
+          format: date-time
+        submission_text:
+          type: string
+          nullable: true
+        file_id:
+          type: string
+          format: uuid
+          nullable: true
+        is_late:
+          type: boolean
+          default: false
+        status:
+          type: string
+          default: "submitted"
+        marks_awarded:
+          type: number
+          format: double
+          nullable: true
+        penalty_marks:
+          type: number
+          format: double
+          default: 0
+        final_marks:
+          type: number
+          format: double
+          nullable: true
+        feedback:
+          type: string
+          nullable: true
+        graded_by_staff_id:
+          type: string
+          format: uuid
+          nullable: true
+        graded_at:
+          type: string
+          format: date-time
+          nullable: true
+        returned_at:
+          type: string
+          format: date-time
+          nullable: true
+        resubmit_reason:
+          type: string
+          nullable: true
+        similarity_pct:
+          type: string
+          nullable: true
+
+    AssignmentSubmissionUpdateRequest:
+      type: object
+      required:
+        - assignment_id
+        - student_id
+        - attempt_no
+        - submitted_at
+        - submission_text
+        - file_id
+        - is_late
+        - status
+        - marks_awarded
+        - penalty_marks
+        - final_marks
+        - feedback
+        - graded_by_staff_id
+        - graded_at
+        - returned_at
+        - resubmit_reason
+        - similarity_pct
+      additionalProperties: false
+      properties:
+        assignment_id:
+          type: string
+          format: uuid
+        student_id:
+          type: string
+          format: uuid
+        attempt_no:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 5
+          default: 1
+        submitted_at:
+          type: string
+          format: date-time
+        submission_text:
+          type: string
+          nullable: true
+        file_id:
+          type: string
+          format: uuid
+          nullable: true
+        is_late:
+          type: boolean
+          default: false
+        status:
+          type: string
+          default: "submitted"
+        marks_awarded:
+          type: number
+          format: double
+          nullable: true
+        penalty_marks:
+          type: number
+          format: double
+          default: 0
+        final_marks:
+          type: number
+          format: double
+          nullable: true
+        feedback:
+          type: string
+          nullable: true
+        graded_by_staff_id:
+          type: string
+          format: uuid
+          nullable: true
+        graded_at:
+          type: string
+          format: date-time
+          nullable: true
+        returned_at:
+          type: string
+          format: date-time
+          nullable: true
+        resubmit_reason:
+          type: string
+          nullable: true
+        similarity_pct:
+          type: string
+          nullable: true
+
+    AssignmentSubmissionResponse:
+      type: object
+      required:
+        - id
+        - public_id
+        - record_code
+        - assignment_submission_id
+        - assignment_id
+        - student_id
+        - attempt_no
+        - submitted_at
+        - is_late
+        - status
+        - penalty_marks
+        - created_at
+        - updated_at
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        public_id:
+          type: string
+          format: uuid
+          readOnly: true
+        record_code:
+          type: string
+          readOnly: true
+        assignment_submission_id:
+          type: string
+          format: uuid
+          readOnly: true
+        assignment_id:
+          type: string
+          format: uuid
+        student_id:
+          type: string
+          format: uuid
+        attempt_no:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 5
+          default: 1
+        submitted_at:
+          type: string
+          format: date-time
+        submission_text:
+          type: string
+          nullable: true
+        file_id:
+          type: string
+          format: uuid
+          nullable: true
+        is_late:
+          type: boolean
+          default: false
+        status:
+          type: string
+          default: "submitted"
+        marks_awarded:
+          type: number
+          format: double
+          nullable: true
+        penalty_marks:
+          type: number
+          format: double
+          default: 0
+        final_marks:
+          type: number
+          format: double
+          nullable: true
+        feedback:
+          type: string
+          nullable: true
+        graded_by_staff_id:
+          type: string
+          format: uuid
+          nullable: true
+        graded_at:
+          type: string
+          format: date-time
+          nullable: true
+        returned_at:
+          type: string
+          format: date-time
+          nullable: true
+        resubmit_reason:
+          type: string
+          nullable: true
+        similarity_pct:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+          readOnly: true
+  
