@@ -1,51 +1,40 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type CatalogModuleDependencyAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
+  moduleDependencyId: string | null
   moduleId: string
   requiresModuleId: string
-  UNIQUE?: string | null
 }
 
-export type CatalogModuleDependencyCreationAttributes = Optional<CatalogModuleDependencyAttributes, "id" | "publicId" | "recordCode" | "UNIQUE">
+export type CatalogModuleDependencyCreationAttributes = Optional<CatalogModuleDependencyAttributes, "recordCode">
 
 export class CatalogModuleDependencyEntity
   extends Model<CatalogModuleDependencyAttributes, CatalogModuleDependencyCreationAttributes>
   implements CatalogModuleDependencyAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
+  declare moduleDependencyId: string | null
   declare moduleId: string
   declare requiresModuleId: string
-  declare UNIQUE: string | null
 }
 
 export function initCatalogModuleDependencyEntity(sequelize: Sequelize): typeof CatalogModuleDependencyEntity {
   CatalogModuleDependencyEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
         allowNull: false,
         unique: true,
         defaultValue: Sequelize.literal("core.fn_next_record_code_for_table ('catalog_module_dependency')"),
+      },
+      moduleDependencyId: {
+        type: DataTypes.TEXT,
+        field: 'module_dependency_id',
+        allowNull: true,
+        primaryKey: true,
+        defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       moduleId: {
         type: DataTypes.TEXT,
@@ -59,11 +48,6 @@ export function initCatalogModuleDependencyEntity(sequelize: Sequelize): typeof 
         field: 'requires_module_id',
         allowNull: false,
         references: { model: 'catalog_module', key: 'module_id' },
-      },
-      UNIQUE: {
-        type: DataTypes.TEXT,
-        field: 'UNIQUE',
-        allowNull: true,
       }
     },
     {
@@ -71,7 +55,10 @@ export function initCatalogModuleDependencyEntity(sequelize: Sequelize): typeof 
       tableName: 'catalog_module_dependency',
       timestamps: false,
       underscored: true,
-      freezeTableName: true
+      freezeTableName: true,
+      indexes: [
+      { unique: true, fields: ['module_id', 'requires_module_id'] }
+      ]
     }
   )
   return CatalogModuleDependencyEntity

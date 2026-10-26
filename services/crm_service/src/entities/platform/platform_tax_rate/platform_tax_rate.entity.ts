@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type PlatformTaxRateAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  taxRateId?: string
+  taxRateId: string | null
   jurisdictionCode: string
   taxCode?: string
   name: string
@@ -15,16 +13,14 @@ export type PlatformTaxRateAttributes = {
   createdBy?: string | null
 }
 
-export type PlatformTaxRateCreationAttributes = Optional<PlatformTaxRateAttributes, "id" | "publicId" | "recordCode" | "taxRateId" | "taxCode" | "validTo" | "createdAt" | "createdBy">
+export type PlatformTaxRateCreationAttributes = Optional<PlatformTaxRateAttributes, "recordCode" | "taxCode" | "validTo" | "createdAt" | "createdBy">
 
 export class PlatformTaxRateEntity
   extends Model<PlatformTaxRateAttributes, PlatformTaxRateCreationAttributes>
   implements PlatformTaxRateAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare taxRateId: string
+  declare taxRateId: string | null
   declare jurisdictionCode: string
   declare taxCode: string
   declare name: string
@@ -38,20 +34,6 @@ export class PlatformTaxRateEntity
 export function initPlatformTaxRateEntity(sequelize: Sequelize): typeof PlatformTaxRateEntity {
   PlatformTaxRateEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -62,8 +44,8 @@ export function initPlatformTaxRateEntity(sequelize: Sequelize): typeof Platform
       taxRateId: {
         type: DataTypes.TEXT,
         field: 'tax_rate_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       jurisdictionCode: {

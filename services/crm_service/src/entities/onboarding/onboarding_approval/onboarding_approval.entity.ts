@@ -1,9 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type OnboardingApprovalAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
+  approvalId: string | null
   requestId: string
   stepNo: number
   approverRoleCode: string
@@ -11,18 +10,16 @@ export type OnboardingApprovalAttributes = {
   decidedByUserId?: string | null
   decidedAt?: Date | null
   comment?: string | null
-  UNIQUE?: string | null
 }
 
-export type OnboardingApprovalCreationAttributes = Optional<OnboardingApprovalAttributes, "id" | "publicId" | "recordCode" | "decision" | "decidedByUserId" | "decidedAt" | "comment" | "UNIQUE">
+export type OnboardingApprovalCreationAttributes = Optional<OnboardingApprovalAttributes, "recordCode" | "decision" | "decidedByUserId" | "decidedAt" | "comment">
 
 export class OnboardingApprovalEntity
   extends Model<OnboardingApprovalAttributes, OnboardingApprovalCreationAttributes>
   implements OnboardingApprovalAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
+  declare approvalId: string | null
   declare requestId: string
   declare stepNo: number
   declare approverRoleCode: string
@@ -30,32 +27,24 @@ export class OnboardingApprovalEntity
   declare decidedByUserId: string | null
   declare decidedAt: Date | null
   declare comment: string | null
-  declare UNIQUE: string | null
 }
 
 export function initOnboardingApprovalEntity(sequelize: Sequelize): typeof OnboardingApprovalEntity {
   OnboardingApprovalEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
         allowNull: false,
         unique: true,
         defaultValue: Sequelize.literal("core.fn_next_record_code_for_table ('onboarding_approval')"),
+      },
+      approvalId: {
+        type: DataTypes.TEXT,
+        field: 'approval_id',
+        allowNull: true,
+        primaryKey: true,
+        defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       requestId: {
         type: DataTypes.TEXT,
@@ -97,11 +86,6 @@ export function initOnboardingApprovalEntity(sequelize: Sequelize): typeof Onboa
         type: DataTypes.TEXT,
         field: 'comment',
         allowNull: true,
-      },
-      UNIQUE: {
-        type: DataTypes.TEXT,
-        field: 'UNIQUE',
-        allowNull: true,
       }
     },
     {
@@ -109,7 +93,10 @@ export function initOnboardingApprovalEntity(sequelize: Sequelize): typeof Onboa
       tableName: 'onboarding_approval',
       timestamps: false,
       underscored: true,
-      freezeTableName: true
+      freezeTableName: true,
+      indexes: [
+      { unique: true, fields: ['request_id', 'step_no'] }
+      ]
     }
   )
   return OnboardingApprovalEntity

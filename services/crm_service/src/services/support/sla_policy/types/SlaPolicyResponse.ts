@@ -1,8 +1,6 @@
 
 export type SlaPolicyResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   sla_policy_id: string
   policy_code: string

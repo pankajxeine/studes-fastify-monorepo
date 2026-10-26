@@ -1,8 +1,6 @@
 
 export type ApiTokenResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   api_token_id: string
   app_user_id: string

@@ -1,9 +1,8 @@
 
 export type CountryResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
+  country_id: string
   country_code: string
   iso3: string
   name: string

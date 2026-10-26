@@ -1,9 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type PlatformSettingAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
+  settingId: string | null
   settingKey: string
   value: unknown
   description?: string | null
@@ -13,15 +12,14 @@ export type PlatformSettingAttributes = {
   updatedBy?: string | null
 }
 
-export type PlatformSettingCreationAttributes = Optional<PlatformSettingAttributes, "id" | "publicId" | "recordCode" | "description" | "isSensitive" | "createdAt" | "updatedAt" | "updatedBy">
+export type PlatformSettingCreationAttributes = Optional<PlatformSettingAttributes, "recordCode" | "description" | "isSensitive" | "createdAt" | "updatedAt" | "updatedBy">
 
 export class PlatformSettingEntity
   extends Model<PlatformSettingAttributes, PlatformSettingCreationAttributes>
   implements PlatformSettingAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
+  declare settingId: string | null
   declare settingKey: string
   declare value: unknown
   declare description: string | null
@@ -34,26 +32,19 @@ export class PlatformSettingEntity
 export function initPlatformSettingEntity(sequelize: Sequelize): typeof PlatformSettingEntity {
   PlatformSettingEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
         allowNull: false,
         unique: true,
         defaultValue: Sequelize.literal("core.fn_next_record_code_for_table ('platform_setting')"),
+      },
+      settingId: {
+        type: DataTypes.TEXT,
+        field: 'setting_id',
+        allowNull: true,
+        primaryKey: true,
+        defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       settingKey: {
         type: DataTypes.TEXT,

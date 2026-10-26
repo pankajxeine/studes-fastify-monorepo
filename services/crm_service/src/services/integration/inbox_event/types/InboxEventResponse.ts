@@ -1,9 +1,8 @@
 
 export type InboxEventResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
+  inbox_event_id: string
   source: string
   message_id: string
   event_type?: (string) | null

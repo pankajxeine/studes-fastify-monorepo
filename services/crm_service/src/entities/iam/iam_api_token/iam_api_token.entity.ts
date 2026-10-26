@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type IamApiTokenAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  apiTokenId?: string
+  apiTokenId: string | null
   appUserId: string
   name: string
   tokenPrefix: string
@@ -20,16 +18,14 @@ export type IamApiTokenAttributes = {
   createdBy?: string | null
 }
 
-export type IamApiTokenCreationAttributes = Optional<IamApiTokenAttributes, "id" | "publicId" | "recordCode" | "apiTokenId" | "ipAllowlist" | "lastUsedAt" | "lastUsedIp" | "revokedAt" | "revokedByUserId" | "createdAt" | "createdBy">
+export type IamApiTokenCreationAttributes = Optional<IamApiTokenAttributes, "recordCode" | "ipAllowlist" | "lastUsedAt" | "lastUsedIp" | "revokedAt" | "revokedByUserId" | "createdAt" | "createdBy">
 
 export class IamApiTokenEntity
   extends Model<IamApiTokenAttributes, IamApiTokenCreationAttributes>
   implements IamApiTokenAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare apiTokenId: string
+  declare apiTokenId: string | null
   declare appUserId: string
   declare name: string
   declare tokenPrefix: string
@@ -48,20 +44,6 @@ export class IamApiTokenEntity
 export function initIamApiTokenEntity(sequelize: Sequelize): typeof IamApiTokenEntity {
   IamApiTokenEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -72,8 +54,8 @@ export function initIamApiTokenEntity(sequelize: Sequelize): typeof IamApiTokenE
       apiTokenId: {
         type: DataTypes.TEXT,
         field: 'api_token_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       appUserId: {

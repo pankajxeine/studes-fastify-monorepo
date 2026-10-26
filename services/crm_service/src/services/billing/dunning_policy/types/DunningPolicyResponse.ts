@@ -1,8 +1,6 @@
 
 export type DunningPolicyResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   dunning_policy_id: string
   policy_code: string

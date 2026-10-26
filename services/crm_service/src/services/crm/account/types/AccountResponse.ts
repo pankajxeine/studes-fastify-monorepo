@@ -1,8 +1,6 @@
 
 export type AccountResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   account_id: string
   account_number: string

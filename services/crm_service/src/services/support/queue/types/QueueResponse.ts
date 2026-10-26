@@ -1,8 +1,6 @@
 
 export type QueueResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   queue_id: string
   queue_code: string

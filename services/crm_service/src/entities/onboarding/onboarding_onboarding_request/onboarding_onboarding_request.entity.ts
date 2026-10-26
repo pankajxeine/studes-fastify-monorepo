@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type OnboardingOnboardingRequestAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  requestId?: string
+  requestId: string | null
   requestNumber?: string
   accountId: string
   opportunityId?: string | null
@@ -42,16 +40,14 @@ export type OnboardingOnboardingRequestAttributes = {
   updatedBy?: string | null
 }
 
-export type OnboardingOnboardingRequestCreationAttributes = Optional<OnboardingOnboardingRequestAttributes, "id" | "publicId" | "recordCode" | "requestId" | "requestNumber" | "opportunityId" | "quoteId" | "quantity" | "couponId" | "timezone" | "defaultLocale" | "isSandbox" | "parentTenantId" | "billingContactId" | "owningBranchId" | "salesAgentId" | "requiresKyc" | "status" | "submittedAt" | "submittedByUserId" | "approvedAt" | "rejectedReason" | "tenantId" | "tenantApplicationId" | "subscriptionId" | "completedAt" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
+export type OnboardingOnboardingRequestCreationAttributes = Optional<OnboardingOnboardingRequestAttributes, "recordCode" | "requestNumber" | "opportunityId" | "quoteId" | "quantity" | "couponId" | "timezone" | "defaultLocale" | "isSandbox" | "parentTenantId" | "billingContactId" | "owningBranchId" | "salesAgentId" | "requiresKyc" | "status" | "submittedAt" | "submittedByUserId" | "approvedAt" | "rejectedReason" | "tenantId" | "tenantApplicationId" | "subscriptionId" | "completedAt" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
 
 export class OnboardingOnboardingRequestEntity
   extends Model<OnboardingOnboardingRequestAttributes, OnboardingOnboardingRequestCreationAttributes>
   implements OnboardingOnboardingRequestAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare requestId: string
+  declare requestId: string | null
   declare requestNumber: string
   declare accountId: string
   declare opportunityId: string | null
@@ -92,32 +88,18 @@ export class OnboardingOnboardingRequestEntity
 export function initOnboardingOnboardingRequestEntity(sequelize: Sequelize): typeof OnboardingOnboardingRequestEntity {
   OnboardingOnboardingRequestEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
         allowNull: false,
         unique: true,
-        defaultValue: Sequelize.literal("core.fn_next_record_code_for_table ('onboarding_onboarding_request')"),
+        defaultValue: Sequelize.literal("core.fn_next_record_code_for_table (\r\n        'onboarding_onboarding_request'\r\n    )"),
       },
       requestId: {
         type: DataTypes.TEXT,
         field: 'request_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       requestNumber: {

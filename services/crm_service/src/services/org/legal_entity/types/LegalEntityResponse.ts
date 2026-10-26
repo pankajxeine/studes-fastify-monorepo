@@ -1,8 +1,6 @@
 
 export type LegalEntityResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   legal_entity_id: string
   legal_entity_code: string

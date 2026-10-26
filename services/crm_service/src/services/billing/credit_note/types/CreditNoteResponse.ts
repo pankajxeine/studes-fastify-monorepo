@@ -1,8 +1,6 @@
 
 export type CreditNoteResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   credit_note_id: string
   credit_note_number?: (string) | null

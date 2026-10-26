@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type BillingInvoiceLineAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  invoiceLineId?: string
+  invoiceLineId: string | null
   invoiceId: string
   lineNo: number
   lineType: string
@@ -25,16 +23,14 @@ export type BillingInvoiceLineAttributes = {
   netAmount?: string | null
 }
 
-export type BillingInvoiceLineCreationAttributes = Optional<BillingInvoiceLineAttributes, "id" | "publicId" | "recordCode" | "invoiceLineId" | "planPriceId" | "addonPriceId" | "subscriptionItemId" | "featureId" | "couponId" | "periodStart" | "periodEnd" | "quantity" | "discountAmount" | "taxRateId" | "taxRate" | "taxAmount" | "netAmount">
+export type BillingInvoiceLineCreationAttributes = Optional<BillingInvoiceLineAttributes, "recordCode" | "planPriceId" | "addonPriceId" | "subscriptionItemId" | "featureId" | "couponId" | "periodStart" | "periodEnd" | "quantity" | "discountAmount" | "taxRateId" | "taxRate" | "taxAmount" | "netAmount">
 
 export class BillingInvoiceLineEntity
   extends Model<BillingInvoiceLineAttributes, BillingInvoiceLineCreationAttributes>
   implements BillingInvoiceLineAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare invoiceLineId: string
+  declare invoiceLineId: string | null
   declare invoiceId: string
   declare lineNo: number
   declare lineType: string
@@ -58,20 +54,6 @@ export class BillingInvoiceLineEntity
 export function initBillingInvoiceLineEntity(sequelize: Sequelize): typeof BillingInvoiceLineEntity {
   BillingInvoiceLineEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -82,8 +64,8 @@ export function initBillingInvoiceLineEntity(sequelize: Sequelize): typeof Billi
       invoiceLineId: {
         type: DataTypes.TEXT,
         field: 'invoice_line_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       invoiceId: {

@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type BillingDunningRunAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  dunningRunId?: string
+  dunningRunId: string | null
   invoiceId: string
   stepNo: number
   action: string
@@ -12,16 +10,14 @@ export type BillingDunningRunAttributes = {
   result?: string | null
 }
 
-export type BillingDunningRunCreationAttributes = Optional<BillingDunningRunAttributes, "id" | "publicId" | "recordCode" | "dunningRunId" | "executedAt" | "result">
+export type BillingDunningRunCreationAttributes = Optional<BillingDunningRunAttributes, "recordCode" | "executedAt" | "result">
 
 export class BillingDunningRunEntity
   extends Model<BillingDunningRunAttributes, BillingDunningRunCreationAttributes>
   implements BillingDunningRunAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare dunningRunId: string
+  declare dunningRunId: string | null
   declare invoiceId: string
   declare stepNo: number
   declare action: string
@@ -32,20 +28,6 @@ export class BillingDunningRunEntity
 export function initBillingDunningRunEntity(sequelize: Sequelize): typeof BillingDunningRunEntity {
   BillingDunningRunEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -56,8 +38,8 @@ export function initBillingDunningRunEntity(sequelize: Sequelize): typeof Billin
       dunningRunId: {
         type: DataTypes.TEXT,
         field: 'dunning_run_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       invoiceId: {

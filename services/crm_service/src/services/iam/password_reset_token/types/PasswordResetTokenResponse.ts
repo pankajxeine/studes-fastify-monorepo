@@ -1,8 +1,6 @@
 
 export type PasswordResetTokenResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   password_reset_token_id: string
   app_user_id: string

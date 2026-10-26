@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type EntitlementEntitlementOverrideAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  overrideId?: string
+  overrideId: string | null
   tenantApplicationId: string
   moduleId: string
   featureId?: string | null
@@ -22,16 +20,14 @@ export type EntitlementEntitlementOverrideAttributes = {
   updatedAt?: Date
 }
 
-export type EntitlementEntitlementOverrideCreationAttributes = Optional<EntitlementEntitlementOverrideAttributes, "id" | "publicId" | "recordCode" | "overrideId" | "featureId" | "ticketRef" | "status" | "approvedByUserId" | "approvedAt" | "validFrom" | "revokedAt" | "createdAt" | "updatedAt">
+export type EntitlementEntitlementOverrideCreationAttributes = Optional<EntitlementEntitlementOverrideAttributes, "recordCode" | "featureId" | "ticketRef" | "status" | "approvedByUserId" | "approvedAt" | "validFrom" | "revokedAt" | "createdAt" | "updatedAt">
 
 export class EntitlementEntitlementOverrideEntity
   extends Model<EntitlementEntitlementOverrideAttributes, EntitlementEntitlementOverrideCreationAttributes>
   implements EntitlementEntitlementOverrideAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare overrideId: string
+  declare overrideId: string | null
   declare tenantApplicationId: string
   declare moduleId: string
   declare featureId: string | null
@@ -52,20 +48,6 @@ export class EntitlementEntitlementOverrideEntity
 export function initEntitlementEntitlementOverrideEntity(sequelize: Sequelize): typeof EntitlementEntitlementOverrideEntity {
   EntitlementEntitlementOverrideEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -76,8 +58,8 @@ export function initEntitlementEntitlementOverrideEntity(sequelize: Sequelize): 
       overrideId: {
         type: DataTypes.TEXT,
         field: 'override_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       tenantApplicationId: {

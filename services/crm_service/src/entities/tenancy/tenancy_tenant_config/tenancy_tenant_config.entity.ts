@@ -1,9 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type TenancyTenantConfigAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
+  tenantConfigId: string | null
   tenantApplicationId: string
   configKey: string
   value: unknown
@@ -11,18 +10,16 @@ export type TenancyTenantConfigAttributes = {
   createdBy?: string | null
   updatedAt?: Date
   updatedBy?: string | null
-  UNIQUE?: string | null
 }
 
-export type TenancyTenantConfigCreationAttributes = Optional<TenancyTenantConfigAttributes, "id" | "publicId" | "recordCode" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy" | "UNIQUE">
+export type TenancyTenantConfigCreationAttributes = Optional<TenancyTenantConfigAttributes, "recordCode" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
 
 export class TenancyTenantConfigEntity
   extends Model<TenancyTenantConfigAttributes, TenancyTenantConfigCreationAttributes>
   implements TenancyTenantConfigAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
+  declare tenantConfigId: string | null
   declare tenantApplicationId: string
   declare configKey: string
   declare value: unknown
@@ -30,32 +27,24 @@ export class TenancyTenantConfigEntity
   declare createdBy: string | null
   declare updatedAt: Date
   declare updatedBy: string | null
-  declare UNIQUE: string | null
 }
 
 export function initTenancyTenantConfigEntity(sequelize: Sequelize): typeof TenancyTenantConfigEntity {
   TenancyTenantConfigEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
         allowNull: false,
         unique: true,
         defaultValue: Sequelize.literal("core.fn_next_record_code_for_table ('tenancy_tenant_config')"),
+      },
+      tenantConfigId: {
+        type: DataTypes.TEXT,
+        field: 'tenant_config_id',
+        allowNull: true,
+        primaryKey: true,
+        defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       tenantApplicationId: {
         type: DataTypes.TEXT,
@@ -96,11 +85,6 @@ export function initTenancyTenantConfigEntity(sequelize: Sequelize): typeof Tena
         type: DataTypes.UUID,
         field: 'updated_by',
         allowNull: true,
-      },
-      UNIQUE: {
-        type: DataTypes.TEXT,
-        field: 'UNIQUE',
-        allowNull: true,
       }
     },
     {
@@ -108,7 +92,10 @@ export function initTenancyTenantConfigEntity(sequelize: Sequelize): typeof Tena
       tableName: 'tenancy_tenant_config',
       timestamps: true,
       underscored: true,
-      freezeTableName: true
+      freezeTableName: true,
+      indexes: [
+      { unique: true, fields: ['tenant_application_id', 'config_key'] }
+      ]
     }
   )
   return TenancyTenantConfigEntity

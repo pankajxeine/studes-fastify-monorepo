@@ -1,8 +1,6 @@
 
 export type InvoiceLineResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   invoice_line_id: string
   invoice_id: string

@@ -8,7 +8,6 @@ import type { ListItem, PaginatedResponse } from '../../types/PaginatedResponse'
 
 
 
-
 export class HealthService implements HealthController {
       public async authHealth(app: FastifyInstance, request?: FastifyRequest): Promise<PaginatedResponse<ListItem<HealthResponse>>> {
     try {

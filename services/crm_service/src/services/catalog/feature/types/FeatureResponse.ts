@@ -1,8 +1,6 @@
 
 export type FeatureResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   feature_id: string
   module_id: string

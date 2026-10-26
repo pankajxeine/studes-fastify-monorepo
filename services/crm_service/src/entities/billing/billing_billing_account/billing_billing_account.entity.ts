@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type BillingBillingAccountAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  billingAccountId?: string
+  billingAccountId: string | null
   accountId: string
   legalEntityId: string
   currencyCode: string
@@ -24,16 +22,14 @@ export type BillingBillingAccountAttributes = {
   updatedBy?: string | null
 }
 
-export type BillingBillingAccountCreationAttributes = Optional<BillingBillingAccountAttributes, "id" | "publicId" | "recordCode" | "billingAccountId" | "taxJurisdictionCode" | "taxId" | "isTaxExempt" | "billToContactId" | "invoiceEmail" | "billingAddress" | "paymentTermsDays" | "autoCollect" | "dunningPolicyId" | "status" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
+export type BillingBillingAccountCreationAttributes = Optional<BillingBillingAccountAttributes, "recordCode" | "taxJurisdictionCode" | "taxId" | "isTaxExempt" | "billToContactId" | "invoiceEmail" | "billingAddress" | "paymentTermsDays" | "autoCollect" | "dunningPolicyId" | "status" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
 
 export class BillingBillingAccountEntity
   extends Model<BillingBillingAccountAttributes, BillingBillingAccountCreationAttributes>
   implements BillingBillingAccountAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare billingAccountId: string
+  declare billingAccountId: string | null
   declare accountId: string
   declare legalEntityId: string
   declare currencyCode: string
@@ -56,20 +52,6 @@ export class BillingBillingAccountEntity
 export function initBillingBillingAccountEntity(sequelize: Sequelize): typeof BillingBillingAccountEntity {
   BillingBillingAccountEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -80,8 +62,8 @@ export function initBillingBillingAccountEntity(sequelize: Sequelize): typeof Bi
       billingAccountId: {
         type: DataTypes.TEXT,
         field: 'billing_account_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       accountId: {

@@ -1,8 +1,6 @@
 
 export type ModuleResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   module_id: string
   application_id: string

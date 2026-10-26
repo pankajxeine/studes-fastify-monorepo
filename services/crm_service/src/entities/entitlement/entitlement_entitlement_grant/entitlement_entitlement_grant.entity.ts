@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type EntitlementEntitlementGrantAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  entitlementGrantId?: string
+  entitlementGrantId: string | null
   tenantApplicationId: string
   moduleId: string
   featureId?: string | null
@@ -15,16 +13,14 @@ export type EntitlementEntitlementGrantAttributes = {
   validTo?: Date | null
 }
 
-export type EntitlementEntitlementGrantCreationAttributes = Optional<EntitlementEntitlementGrantAttributes, "id" | "publicId" | "recordCode" | "entitlementGrantId" | "featureId" | "value" | "validTo">
+export type EntitlementEntitlementGrantCreationAttributes = Optional<EntitlementEntitlementGrantAttributes, "recordCode" | "featureId" | "value" | "validTo">
 
 export class EntitlementEntitlementGrantEntity
   extends Model<EntitlementEntitlementGrantAttributes, EntitlementEntitlementGrantCreationAttributes>
   implements EntitlementEntitlementGrantAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare entitlementGrantId: string
+  declare entitlementGrantId: string | null
   declare tenantApplicationId: string
   declare moduleId: string
   declare featureId: string | null
@@ -38,20 +34,6 @@ export class EntitlementEntitlementGrantEntity
 export function initEntitlementEntitlementGrantEntity(sequelize: Sequelize): typeof EntitlementEntitlementGrantEntity {
   EntitlementEntitlementGrantEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -62,8 +44,8 @@ export function initEntitlementEntitlementGrantEntity(sequelize: Sequelize): typ
       entitlementGrantId: {
         type: DataTypes.TEXT,
         field: 'entitlement_grant_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       tenantApplicationId: {

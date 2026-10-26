@@ -1,8 +1,6 @@
 
 export type ReconciliationBatchResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   reconciliation_batch_id: string
   gateway: string

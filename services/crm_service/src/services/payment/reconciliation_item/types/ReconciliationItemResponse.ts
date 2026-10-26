@@ -1,9 +1,8 @@
 
 export type ReconciliationItemResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
+  reconciliation_item_id: string
   reconciliation_batch_id: string
   gateway_payment_ref: string
   payment_id?: (string) | null

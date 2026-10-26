@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type IamAccessReviewAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  accessReviewId?: string
+  accessReviewId: string | null
   name: string
   periodLabel: string
   status?: string
@@ -14,16 +12,14 @@ export type IamAccessReviewAttributes = {
   createdBy?: string | null
 }
 
-export type IamAccessReviewCreationAttributes = Optional<IamAccessReviewAttributes, "id" | "publicId" | "recordCode" | "accessReviewId" | "status" | "closedAt" | "createdAt" | "createdBy">
+export type IamAccessReviewCreationAttributes = Optional<IamAccessReviewAttributes, "recordCode" | "status" | "closedAt" | "createdAt" | "createdBy">
 
 export class IamAccessReviewEntity
   extends Model<IamAccessReviewAttributes, IamAccessReviewCreationAttributes>
   implements IamAccessReviewAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare accessReviewId: string
+  declare accessReviewId: string | null
   declare name: string
   declare periodLabel: string
   declare status: string
@@ -36,20 +32,6 @@ export class IamAccessReviewEntity
 export function initIamAccessReviewEntity(sequelize: Sequelize): typeof IamAccessReviewEntity {
   IamAccessReviewEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -60,8 +42,8 @@ export function initIamAccessReviewEntity(sequelize: Sequelize): typeof IamAcces
       accessReviewId: {
         type: DataTypes.TEXT,
         field: 'access_review_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       name: {

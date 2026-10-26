@@ -1,8 +1,6 @@
 
 export type LeadResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   lead_id: string
   lead_number: string

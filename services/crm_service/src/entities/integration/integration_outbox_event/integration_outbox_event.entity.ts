@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type IntegrationOutboxEventAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  eventId?: string
+  eventId: string | null
   aggregateType: string
   aggregateId: string
   eventType: string
@@ -18,16 +16,14 @@ export type IntegrationOutboxEventAttributes = {
   lastError?: string | null
 }
 
-export type IntegrationOutboxEventCreationAttributes = Optional<IntegrationOutboxEventAttributes, "id" | "publicId" | "recordCode" | "eventId" | "eventVersion" | "tenantId" | "headers" | "occurredAt" | "publishedAt" | "attempts" | "lastError">
+export type IntegrationOutboxEventCreationAttributes = Optional<IntegrationOutboxEventAttributes, "recordCode" | "eventVersion" | "tenantId" | "headers" | "occurredAt" | "publishedAt" | "attempts" | "lastError">
 
 export class IntegrationOutboxEventEntity
   extends Model<IntegrationOutboxEventAttributes, IntegrationOutboxEventCreationAttributes>
   implements IntegrationOutboxEventAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare eventId: string
+  declare eventId: string | null
   declare aggregateType: string
   declare aggregateId: string
   declare eventType: string
@@ -44,20 +40,6 @@ export class IntegrationOutboxEventEntity
 export function initIntegrationOutboxEventEntity(sequelize: Sequelize): typeof IntegrationOutboxEventEntity {
   IntegrationOutboxEventEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -68,8 +50,8 @@ export function initIntegrationOutboxEventEntity(sequelize: Sequelize): typeof I
       eventId: {
         type: DataTypes.TEXT,
         field: 'event_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       aggregateType: {

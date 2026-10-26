@@ -6,24 +6,9 @@ import type { ModuleDependencyController } from './ModuleDependencyController'
 import type { ListItem, PaginatedResponse } from '../../../types/PaginatedResponse'
 
 import { verifyDbSchema, verifyDbModel } from '../../../core/helper/db_utils'
+import {toApiAttributes } from '../../../core/helper/api_helper';
 
-function toModelAttributes(input: object): Record<string, unknown> {
-  return Object.fromEntries(
-    Object.entries(input).map(([key, value]) => [
-      key.replace(/_([a-z])/g, (_match, character: string) => character.toUpperCase()),
-      value,
-    ])
-  )
-}
-
-function toApiAttributes<T>(attributes: Record<string, unknown>): T {
-  return Object.fromEntries(
-    Object.entries(attributes).map(([key, value]) => [
-      key.replace(/[A-Z]/g, (character) => `_${character.toLowerCase()}`),
-      value,
-    ])
-  ) as T
-}
+import { toModelAttributes } from '../../../core/helper/api_helper';
 
 function httpError(statusCode: number, message: string): Error & { statusCode: number } {
   return Object.assign(new Error(message), { statusCode })
@@ -92,9 +77,9 @@ export class ModuleDependencyService implements ModuleDependencyController {
       const models = app.models;
       verifyDbModel(models);
       const model = models.catalog_module_dependency.schema(schema!);
-      const { id } = (request?.params ?? {}) as { id?: string | number }
-      if (id === undefined || id === '') throw httpError(400, 'id is required')
-      const row = await model.findByPk(id)
+      const { module_dependency_id } = (request?.params ?? {}) as { module_dependency_id?: string | number }
+      if (module_dependency_id === undefined || module_dependency_id === '') throw httpError(400, 'module_dependency_id is required')
+      const row = await model.findByPk(module_dependency_id)
       if (!row) {
         throw httpError(404, 'catalog_module_dependency not found')
       }
@@ -114,9 +99,9 @@ export class ModuleDependencyService implements ModuleDependencyController {
       const models = app.models;
       verifyDbModel(models);
       const model = models.catalog_module_dependency.schema(schema!);
-      const { id } = (request?.params ?? {}) as { id?: string | number }
-      if (id === undefined || id === '') throw httpError(400, 'id is required')
-      const row = await model.findByPk(id)
+      const { module_dependency_id } = (request?.params ?? {}) as { module_dependency_id?: string | number }
+      if (module_dependency_id === undefined || module_dependency_id === '') throw httpError(400, 'module_dependency_id is required')
+      const row = await model.findByPk(module_dependency_id)
       if (!row) {
         throw httpError(404, 'catalog_module_dependency not found')
       }
@@ -137,9 +122,9 @@ export class ModuleDependencyService implements ModuleDependencyController {
       const models = app.models;
       verifyDbModel(models);
       const model = models.catalog_module_dependency.schema(schema!);
-      const { id } = (request?.params ?? {}) as { id?: string | number }
-      if (id === undefined || id === '') throw httpError(400, 'id is required')
-      const deletedCount = await model.destroy({ where: { id } })
+      const { module_dependency_id } = (request?.params ?? {}) as { module_dependency_id?: string | number }
+      if (module_dependency_id === undefined || module_dependency_id === '') throw httpError(400, 'module_dependency_id is required')
+      const deletedCount = await model.destroy({ where: { moduleDependencyId: module_dependency_id } })
       if (deletedCount === 0) throw httpError(404, 'catalog_module_dependency not found')
       return
     } catch (err) {

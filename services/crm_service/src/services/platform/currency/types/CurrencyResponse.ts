@@ -1,9 +1,8 @@
 
 export type CurrencyResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
+  currency_id: string
   currency_code: string
   name: string
   symbol?: (string) | null

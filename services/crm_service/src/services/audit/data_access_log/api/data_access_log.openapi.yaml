@@ -38,17 +38,17 @@ paths:
         '409':
           description: Unique constraint conflict
 
-  /data_access_log/{id}:
+  /data_access_log/{data_access_log_id}:
     get:
       operationId: getDataAccessLogById
-      summary: Get data_access_log by ID
+      summary: Get data_access_log by data_access_log_id
       parameters:
         - in: path
-          name: id
+          name: data_access_log_id
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       responses:
         '200':
           description: data_access_log object
@@ -60,14 +60,14 @@ paths:
           description: data_access_log not found
     put:
       operationId: updateDataAccessLog
-      summary: Update data_access_log by ID
+      summary: Update data_access_log by data_access_log_id
       parameters:
         - in: path
-          name: id
+          name: data_access_log_id
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       requestBody:
         required: true
         content:
@@ -89,14 +89,14 @@ paths:
           description: Unique constraint conflict
     delete:
       operationId: deleteDataAccessLog
-      summary: Delete data_access_log by ID
+      summary: Delete data_access_log by data_access_log_id
       parameters:
         - in: path
-          name: id
+          name: data_access_log_id
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       responses:
         '204':
           description: Deleted
@@ -175,8 +175,6 @@ components:
     DataAccessLogResponse:
       type: object
       required:
-        - id
-        - public_id
         - record_code
         - data_access_log_id
         - resource
@@ -184,14 +182,6 @@ components:
         - accessed_at
       additionalProperties: false
       properties:
-        id:
-          type: integer
-          format: int64
-          readOnly: true
-        public_id:
-          type: string
-          format: uuid
-          readOnly: true
         record_code:
           type: string
           readOnly: true

@@ -1,8 +1,6 @@
 
 export type AddonVersionResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   addon_version_id: string
   addon_id: string

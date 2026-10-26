@@ -1,8 +1,6 @@
 
 export type EntitlementGrantResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   entitlement_grant_id: string
   tenant_application_id: string

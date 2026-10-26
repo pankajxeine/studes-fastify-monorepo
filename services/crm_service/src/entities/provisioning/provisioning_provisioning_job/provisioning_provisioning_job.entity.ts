@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type ProvisioningProvisioningJobAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  jobId?: string
+  jobId: string | null
   tenantApplicationId: string
   jobType: string
   status?: string
@@ -24,16 +22,14 @@ export type ProvisioningProvisioningJobAttributes = {
   updatedAt?: Date
 }
 
-export type ProvisioningProvisioningJobCreationAttributes = Optional<ProvisioningProvisioningJobAttributes, "id" | "publicId" | "recordCode" | "jobId" | "status" | "payload" | "result" | "attempts" | "maxAttempts" | "runAfter" | "lockedBy" | "lockedUntil" | "startedAt" | "finishedAt" | "lastError" | "requestedByUserId" | "createdAt" | "updatedAt">
+export type ProvisioningProvisioningJobCreationAttributes = Optional<ProvisioningProvisioningJobAttributes, "recordCode" | "status" | "payload" | "result" | "attempts" | "maxAttempts" | "runAfter" | "lockedBy" | "lockedUntil" | "startedAt" | "finishedAt" | "lastError" | "requestedByUserId" | "createdAt" | "updatedAt">
 
 export class ProvisioningProvisioningJobEntity
   extends Model<ProvisioningProvisioningJobAttributes, ProvisioningProvisioningJobCreationAttributes>
   implements ProvisioningProvisioningJobAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare jobId: string
+  declare jobId: string | null
   declare tenantApplicationId: string
   declare jobType: string
   declare status: string
@@ -56,20 +52,6 @@ export class ProvisioningProvisioningJobEntity
 export function initProvisioningProvisioningJobEntity(sequelize: Sequelize): typeof ProvisioningProvisioningJobEntity {
   ProvisioningProvisioningJobEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -80,8 +62,8 @@ export function initProvisioningProvisioningJobEntity(sequelize: Sequelize): typ
       jobId: {
         type: DataTypes.TEXT,
         field: 'job_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       tenantApplicationId: {

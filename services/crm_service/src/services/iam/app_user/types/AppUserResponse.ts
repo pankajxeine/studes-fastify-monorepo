@@ -1,8 +1,6 @@
 
 export type AppUserResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   app_user_id: string
   user_type: string

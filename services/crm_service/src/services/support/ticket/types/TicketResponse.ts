@@ -1,8 +1,6 @@
 
 export type TicketResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   ticket_id: string
   ticket_number: string

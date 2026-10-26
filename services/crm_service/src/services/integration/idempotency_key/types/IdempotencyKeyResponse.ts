@@ -1,9 +1,8 @@
 
 export type IdempotencyKeyResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
+  idempotency_key_id: string
   scope: string
   key: string
   request_hash: string

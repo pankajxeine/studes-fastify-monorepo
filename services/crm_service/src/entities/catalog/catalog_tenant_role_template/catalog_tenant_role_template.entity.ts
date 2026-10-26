@@ -1,9 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type CatalogTenantRoleTemplateAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
+  tenantRoleTemplateId: string | null
   applicationId: string
   roleCode: string
   name: string
@@ -13,18 +12,16 @@ export type CatalogTenantRoleTemplateAttributes = {
   sortOrder?: number
   createdAt?: Date
   updatedAt?: Date
-  UNIQUE?: string | null
 }
 
-export type CatalogTenantRoleTemplateCreationAttributes = Optional<CatalogTenantRoleTemplateAttributes, "id" | "publicId" | "recordCode" | "description" | "permissionCodes" | "isTenantAdmin" | "sortOrder" | "createdAt" | "updatedAt" | "UNIQUE">
+export type CatalogTenantRoleTemplateCreationAttributes = Optional<CatalogTenantRoleTemplateAttributes, "recordCode" | "description" | "permissionCodes" | "isTenantAdmin" | "sortOrder" | "createdAt" | "updatedAt">
 
 export class CatalogTenantRoleTemplateEntity
   extends Model<CatalogTenantRoleTemplateAttributes, CatalogTenantRoleTemplateCreationAttributes>
   implements CatalogTenantRoleTemplateAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
+  declare tenantRoleTemplateId: string | null
   declare applicationId: string
   declare roleCode: string
   declare name: string
@@ -34,32 +31,24 @@ export class CatalogTenantRoleTemplateEntity
   declare sortOrder: number
   declare createdAt: Date
   declare updatedAt: Date
-  declare UNIQUE: string | null
 }
 
 export function initCatalogTenantRoleTemplateEntity(sequelize: Sequelize): typeof CatalogTenantRoleTemplateEntity {
   CatalogTenantRoleTemplateEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
         allowNull: false,
         unique: true,
-        defaultValue: Sequelize.literal("core.fn_next_record_code_for_table ('catalog_tenant_role_template')"),
+        defaultValue: Sequelize.literal("core.fn_next_record_code_for_table (\r\n        'catalog_tenant_role_template'\r\n    )"),
+      },
+      tenantRoleTemplateId: {
+        type: DataTypes.TEXT,
+        field: 'tenant_role_template_id',
+        allowNull: true,
+        primaryKey: true,
+        defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       applicationId: {
         type: DataTypes.TEXT,
@@ -112,11 +101,6 @@ export function initCatalogTenantRoleTemplateEntity(sequelize: Sequelize): typeo
         field: 'updated_at',
         allowNull: false,
         defaultValue: DataTypes.NOW,
-      },
-      UNIQUE: {
-        type: DataTypes.TEXT,
-        field: 'UNIQUE',
-        allowNull: true,
       }
     },
     {
@@ -124,7 +108,10 @@ export function initCatalogTenantRoleTemplateEntity(sequelize: Sequelize): typeo
       tableName: 'catalog_tenant_role_template',
       timestamps: true,
       underscored: true,
-      freezeTableName: true
+      freezeTableName: true,
+      indexes: [
+      { unique: true, fields: ['application_id', 'role_code'] }
+      ]
     }
   )
   return CatalogTenantRoleTemplateEntity

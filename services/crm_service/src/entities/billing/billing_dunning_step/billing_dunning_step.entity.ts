@@ -1,59 +1,48 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type BillingDunningStepAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
+  dunningStepId: string | null
   dunningPolicyId: string
   stepNo: number
   daysAfterDue: number
   action: string
   templateCode?: string | null
   graceDays?: number | null
-  UNIQUE?: string | null
 }
 
-export type BillingDunningStepCreationAttributes = Optional<BillingDunningStepAttributes, "id" | "publicId" | "recordCode" | "templateCode" | "graceDays" | "UNIQUE">
+export type BillingDunningStepCreationAttributes = Optional<BillingDunningStepAttributes, "recordCode" | "templateCode" | "graceDays">
 
 export class BillingDunningStepEntity
   extends Model<BillingDunningStepAttributes, BillingDunningStepCreationAttributes>
   implements BillingDunningStepAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
+  declare dunningStepId: string | null
   declare dunningPolicyId: string
   declare stepNo: number
   declare daysAfterDue: number
   declare action: string
   declare templateCode: string | null
   declare graceDays: number | null
-  declare UNIQUE: string | null
 }
 
 export function initBillingDunningStepEntity(sequelize: Sequelize): typeof BillingDunningStepEntity {
   BillingDunningStepEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
         allowNull: false,
         unique: true,
         defaultValue: Sequelize.literal("core.fn_next_record_code_for_table ('billing_dunning_step')"),
+      },
+      dunningStepId: {
+        type: DataTypes.TEXT,
+        field: 'dunning_step_id',
+        allowNull: true,
+        primaryKey: true,
+        defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       dunningPolicyId: {
         type: DataTypes.TEXT,
@@ -86,11 +75,6 @@ export function initBillingDunningStepEntity(sequelize: Sequelize): typeof Billi
         type: DataTypes.SMALLINT,
         field: 'grace_days',
         allowNull: true,
-      },
-      UNIQUE: {
-        type: DataTypes.TEXT,
-        field: 'UNIQUE',
-        allowNull: true,
       }
     },
     {
@@ -98,7 +82,10 @@ export function initBillingDunningStepEntity(sequelize: Sequelize): typeof Billi
       tableName: 'billing_dunning_step',
       timestamps: false,
       underscored: true,
-      freezeTableName: true
+      freezeTableName: true,
+      indexes: [
+      { unique: true, fields: ['dunning_policy_id', 'step_no'] }
+      ]
     }
   )
   return BillingDunningStepEntity

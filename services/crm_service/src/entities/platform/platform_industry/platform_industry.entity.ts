@@ -1,9 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type PlatformIndustryAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
+  industryId: string | null
   industryCode: string
   name: string
   parentIndustryCode?: string | null
@@ -14,15 +13,14 @@ export type PlatformIndustryAttributes = {
   updatedAt?: Date
 }
 
-export type PlatformIndustryCreationAttributes = Optional<PlatformIndustryAttributes, "id" | "publicId" | "recordCode" | "parentIndustryCode" | "requiresKyc" | "isActive" | "sortOrder" | "createdAt" | "updatedAt">
+export type PlatformIndustryCreationAttributes = Optional<PlatformIndustryAttributes, "recordCode" | "parentIndustryCode" | "requiresKyc" | "isActive" | "sortOrder" | "createdAt" | "updatedAt">
 
 export class PlatformIndustryEntity
   extends Model<PlatformIndustryAttributes, PlatformIndustryCreationAttributes>
   implements PlatformIndustryAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
+  declare industryId: string | null
   declare industryCode: string
   declare name: string
   declare parentIndustryCode: string | null
@@ -36,26 +34,19 @@ export class PlatformIndustryEntity
 export function initPlatformIndustryEntity(sequelize: Sequelize): typeof PlatformIndustryEntity {
   PlatformIndustryEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
         allowNull: false,
         unique: true,
         defaultValue: Sequelize.literal("core.fn_next_record_code_for_table ('platform_industry')"),
+      },
+      industryId: {
+        type: DataTypes.TEXT,
+        field: 'industry_id',
+        allowNull: true,
+        primaryKey: true,
+        defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       industryCode: {
         type: DataTypes.TEXT,

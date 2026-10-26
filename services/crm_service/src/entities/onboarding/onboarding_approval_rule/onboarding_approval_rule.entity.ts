@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type OnboardingApprovalRuleAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  approvalRuleId?: string
+  approvalRuleId: string | null
   stepNo: number
   approverRoleCode: string
   appliesIf: string
@@ -14,16 +12,14 @@ export type OnboardingApprovalRuleAttributes = {
   createdBy?: string | null
 }
 
-export type OnboardingApprovalRuleCreationAttributes = Optional<OnboardingApprovalRuleAttributes, "id" | "publicId" | "recordCode" | "approvalRuleId" | "threshold" | "isActive" | "createdAt" | "createdBy">
+export type OnboardingApprovalRuleCreationAttributes = Optional<OnboardingApprovalRuleAttributes, "recordCode" | "threshold" | "isActive" | "createdAt" | "createdBy">
 
 export class OnboardingApprovalRuleEntity
   extends Model<OnboardingApprovalRuleAttributes, OnboardingApprovalRuleCreationAttributes>
   implements OnboardingApprovalRuleAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare approvalRuleId: string
+  declare approvalRuleId: string | null
   declare stepNo: number
   declare approverRoleCode: string
   declare appliesIf: string
@@ -36,20 +32,6 @@ export class OnboardingApprovalRuleEntity
 export function initOnboardingApprovalRuleEntity(sequelize: Sequelize): typeof OnboardingApprovalRuleEntity {
   OnboardingApprovalRuleEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -60,8 +42,8 @@ export function initOnboardingApprovalRuleEntity(sequelize: Sequelize): typeof O
       approvalRuleId: {
         type: DataTypes.TEXT,
         field: 'approval_rule_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       stepNo: {

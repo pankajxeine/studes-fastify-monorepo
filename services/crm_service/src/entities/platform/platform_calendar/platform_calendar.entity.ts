@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type PlatformCalendarAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  calendarId?: string
+  calendarId: string | null
   calendarCode: string
   name: string
   timezone: string
@@ -14,16 +12,14 @@ export type PlatformCalendarAttributes = {
   updatedAt?: Date
 }
 
-export type PlatformCalendarCreationAttributes = Optional<PlatformCalendarAttributes, "id" | "publicId" | "recordCode" | "calendarId" | "is_24x7" | "businessHours" | "createdAt" | "updatedAt">
+export type PlatformCalendarCreationAttributes = Optional<PlatformCalendarAttributes, "recordCode" | "is_24x7" | "businessHours" | "createdAt" | "updatedAt">
 
 export class PlatformCalendarEntity
   extends Model<PlatformCalendarAttributes, PlatformCalendarCreationAttributes>
   implements PlatformCalendarAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare calendarId: string
+  declare calendarId: string | null
   declare calendarCode: string
   declare name: string
   declare timezone: string
@@ -36,20 +32,6 @@ export class PlatformCalendarEntity
 export function initPlatformCalendarEntity(sequelize: Sequelize): typeof PlatformCalendarEntity {
   PlatformCalendarEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -60,8 +42,8 @@ export function initPlatformCalendarEntity(sequelize: Sequelize): typeof Platfor
       calendarId: {
         type: DataTypes.TEXT,
         field: 'calendar_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       calendarCode: {

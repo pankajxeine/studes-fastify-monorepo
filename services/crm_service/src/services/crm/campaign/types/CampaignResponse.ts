@@ -1,8 +1,6 @@
 
 export type CampaignResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   campaign_id: string
   campaign_code: string

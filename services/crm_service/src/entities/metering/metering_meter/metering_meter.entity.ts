@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type MeteringMeterAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  meterId?: string
+  meterId: string | null
   featureId: string
   meterCode: string
   aggregation: string
@@ -16,16 +14,14 @@ export type MeteringMeterAttributes = {
   updatedBy?: string | null
 }
 
-export type MeteringMeterCreationAttributes = Optional<MeteringMeterAttributes, "id" | "publicId" | "recordCode" | "meterId" | "description" | "isActive" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
+export type MeteringMeterCreationAttributes = Optional<MeteringMeterAttributes, "recordCode" | "description" | "isActive" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
 
 export class MeteringMeterEntity
   extends Model<MeteringMeterAttributes, MeteringMeterCreationAttributes>
   implements MeteringMeterAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare meterId: string
+  declare meterId: string | null
   declare featureId: string
   declare meterCode: string
   declare aggregation: string
@@ -40,20 +36,6 @@ export class MeteringMeterEntity
 export function initMeteringMeterEntity(sequelize: Sequelize): typeof MeteringMeterEntity {
   MeteringMeterEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -64,8 +46,8 @@ export function initMeteringMeterEntity(sequelize: Sequelize): typeof MeteringMe
       meterId: {
         type: DataTypes.TEXT,
         field: 'meter_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       featureId: {

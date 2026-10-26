@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type NotifyTemplateAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  templateId?: string
+  templateId: string | null
   templateCode: string
   applicationId?: string | null
   category: string
@@ -19,16 +17,14 @@ export type NotifyTemplateAttributes = {
   updatedBy?: string | null
 }
 
-export type NotifyTemplateCreationAttributes = Optional<NotifyTemplateAttributes, "id" | "publicId" | "recordCode" | "templateId" | "applicationId" | "description" | "variablesSchema" | "isSystem" | "isActive" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
+export type NotifyTemplateCreationAttributes = Optional<NotifyTemplateAttributes, "recordCode" | "applicationId" | "description" | "variablesSchema" | "isSystem" | "isActive" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
 
 export class NotifyTemplateEntity
   extends Model<NotifyTemplateAttributes, NotifyTemplateCreationAttributes>
   implements NotifyTemplateAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare templateId: string
+  declare templateId: string | null
   declare templateCode: string
   declare applicationId: string | null
   declare category: string
@@ -46,20 +42,6 @@ export class NotifyTemplateEntity
 export function initNotifyTemplateEntity(sequelize: Sequelize): typeof NotifyTemplateEntity {
   NotifyTemplateEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -70,8 +52,8 @@ export function initNotifyTemplateEntity(sequelize: Sequelize): typeof NotifyTem
       templateId: {
         type: DataTypes.TEXT,
         field: 'template_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       templateCode: {

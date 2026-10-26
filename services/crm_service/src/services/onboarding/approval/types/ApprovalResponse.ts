@@ -1,9 +1,8 @@
 
 export type ApprovalResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
+  approval_id: string
   request_id: string
   step_no: number
   approver_role_code: string

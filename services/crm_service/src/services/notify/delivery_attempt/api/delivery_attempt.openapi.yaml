@@ -38,17 +38,17 @@ paths:
         '409':
           description: Unique constraint conflict
 
-  /delivery_attempt/{id}:
+  /delivery_attempt/{delivery_attempt_id}:
     get:
       operationId: getDeliveryAttemptById
-      summary: Get delivery_attempt by ID
+      summary: Get delivery_attempt by delivery_attempt_id
       parameters:
         - in: path
-          name: id
+          name: delivery_attempt_id
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       responses:
         '200':
           description: delivery_attempt object
@@ -60,14 +60,14 @@ paths:
           description: delivery_attempt not found
     put:
       operationId: updateDeliveryAttempt
-      summary: Update delivery_attempt by ID
+      summary: Update delivery_attempt by delivery_attempt_id
       parameters:
         - in: path
-          name: id
+          name: delivery_attempt_id
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       requestBody:
         required: true
         content:
@@ -89,14 +89,14 @@ paths:
           description: Unique constraint conflict
     delete:
       operationId: deleteDeliveryAttempt
-      summary: Delete delivery_attempt by ID
+      summary: Delete delivery_attempt by delivery_attempt_id
       parameters:
         - in: path
-          name: id
+          name: delivery_attempt_id
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       responses:
         '204':
           description: Deleted
@@ -173,9 +173,8 @@ components:
     DeliveryAttemptResponse:
       type: object
       required:
-        - id
-        - public_id
         - record_code
+        - delivery_attempt_id
         - notification_id
         - attempt_no
         - provider_code
@@ -183,16 +182,12 @@ components:
         - attempted_at
       additionalProperties: false
       properties:
-        id:
-          type: integer
-          format: int64
-          readOnly: true
-        public_id:
-          type: string
-          format: uuid
-          readOnly: true
         record_code:
           type: string
+          readOnly: true
+        delivery_attempt_id:
+          type: string
+          format: uuid
           readOnly: true
         notification_id:
           type: string

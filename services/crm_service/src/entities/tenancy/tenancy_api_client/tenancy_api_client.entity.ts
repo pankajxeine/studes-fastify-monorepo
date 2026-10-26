@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type TenancyApiClientAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  apiClientId?: string
+  apiClientId: string | null
   name: string
   tenantApplicationId?: string | null
   applicationId?: string | null
@@ -19,16 +17,14 @@ export type TenancyApiClientAttributes = {
   createdBy?: string | null
 }
 
-export type TenancyApiClientCreationAttributes = Optional<TenancyApiClientAttributes, "id" | "publicId" | "recordCode" | "apiClientId" | "tenantApplicationId" | "applicationId" | "scopes" | "ipAllowlist" | "expiresAt" | "lastUsedAt" | "revokedAt" | "createdAt" | "createdBy">
+export type TenancyApiClientCreationAttributes = Optional<TenancyApiClientAttributes, "recordCode" | "tenantApplicationId" | "applicationId" | "scopes" | "ipAllowlist" | "expiresAt" | "lastUsedAt" | "revokedAt" | "createdAt" | "createdBy">
 
 export class TenancyApiClientEntity
   extends Model<TenancyApiClientAttributes, TenancyApiClientCreationAttributes>
   implements TenancyApiClientAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare apiClientId: string
+  declare apiClientId: string | null
   declare name: string
   declare tenantApplicationId: string | null
   declare applicationId: string | null
@@ -46,20 +42,6 @@ export class TenancyApiClientEntity
 export function initTenancyApiClientEntity(sequelize: Sequelize): typeof TenancyApiClientEntity {
   TenancyApiClientEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -70,8 +52,8 @@ export function initTenancyApiClientEntity(sequelize: Sequelize): typeof Tenancy
       apiClientId: {
         type: DataTypes.TEXT,
         field: 'api_client_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       name: {

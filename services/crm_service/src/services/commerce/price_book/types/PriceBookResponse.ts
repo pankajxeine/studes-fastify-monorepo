@@ -1,8 +1,6 @@
 
 export type PriceBookResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   price_book_id: string
   price_book_code: string

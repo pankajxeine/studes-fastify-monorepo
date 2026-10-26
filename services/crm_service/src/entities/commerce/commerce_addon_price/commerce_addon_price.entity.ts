@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type CommerceAddonPriceAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  addonPriceId?: string
+  addonPriceId: string | null
   addonVersionId: string
   priceBookId: string
   billingPeriod: string
@@ -14,16 +12,14 @@ export type CommerceAddonPriceAttributes = {
   createdBy?: string | null
 }
 
-export type CommerceAddonPriceCreationAttributes = Optional<CommerceAddonPriceAttributes, "id" | "publicId" | "recordCode" | "addonPriceId" | "isActive" | "createdAt" | "createdBy">
+export type CommerceAddonPriceCreationAttributes = Optional<CommerceAddonPriceAttributes, "recordCode" | "isActive" | "createdAt" | "createdBy">
 
 export class CommerceAddonPriceEntity
   extends Model<CommerceAddonPriceAttributes, CommerceAddonPriceCreationAttributes>
   implements CommerceAddonPriceAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare addonPriceId: string
+  declare addonPriceId: string | null
   declare addonVersionId: string
   declare priceBookId: string
   declare billingPeriod: string
@@ -36,20 +32,6 @@ export class CommerceAddonPriceEntity
 export function initCommerceAddonPriceEntity(sequelize: Sequelize): typeof CommerceAddonPriceEntity {
   CommerceAddonPriceEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -60,8 +42,8 @@ export function initCommerceAddonPriceEntity(sequelize: Sequelize): typeof Comme
       addonPriceId: {
         type: DataTypes.TEXT,
         field: 'addon_price_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       addonVersionId: {

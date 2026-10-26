@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type CommercePriceBookAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  priceBookId?: string
+  priceBookId: string | null
   priceBookCode: string
   name: string
   currencyCode: string
@@ -19,16 +17,14 @@ export type CommercePriceBookAttributes = {
   updatedBy?: string | null
 }
 
-export type CommercePriceBookCreationAttributes = Optional<CommercePriceBookAttributes, "id" | "publicId" | "recordCode" | "priceBookId" | "legalEntityId" | "isDefault" | "validFrom" | "validTo" | "isActive" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
+export type CommercePriceBookCreationAttributes = Optional<CommercePriceBookAttributes, "recordCode" | "legalEntityId" | "isDefault" | "validFrom" | "validTo" | "isActive" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
 
 export class CommercePriceBookEntity
   extends Model<CommercePriceBookAttributes, CommercePriceBookCreationAttributes>
   implements CommercePriceBookAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare priceBookId: string
+  declare priceBookId: string | null
   declare priceBookCode: string
   declare name: string
   declare currencyCode: string
@@ -46,20 +42,6 @@ export class CommercePriceBookEntity
 export function initCommercePriceBookEntity(sequelize: Sequelize): typeof CommercePriceBookEntity {
   CommercePriceBookEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -70,8 +52,8 @@ export function initCommercePriceBookEntity(sequelize: Sequelize): typeof Commer
       priceBookId: {
         type: DataTypes.TEXT,
         field: 'price_book_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       priceBookCode: {

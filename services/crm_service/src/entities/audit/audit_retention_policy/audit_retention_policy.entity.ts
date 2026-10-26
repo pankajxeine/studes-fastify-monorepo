@@ -1,9 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type AuditRetentionPolicyAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
+  retentionPolicyId: string | null
   entityCode: string
   description: string
   retentionDays: number
@@ -13,15 +12,14 @@ export type AuditRetentionPolicyAttributes = {
   updatedBy?: string | null
 }
 
-export type AuditRetentionPolicyCreationAttributes = Optional<AuditRetentionPolicyAttributes, "id" | "publicId" | "recordCode" | "updatedAt" | "updatedBy">
+export type AuditRetentionPolicyCreationAttributes = Optional<AuditRetentionPolicyAttributes, "recordCode" | "updatedAt" | "updatedBy">
 
 export class AuditRetentionPolicyEntity
   extends Model<AuditRetentionPolicyAttributes, AuditRetentionPolicyCreationAttributes>
   implements AuditRetentionPolicyAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
+  declare retentionPolicyId: string | null
   declare entityCode: string
   declare description: string
   declare retentionDays: number
@@ -34,26 +32,19 @@ export class AuditRetentionPolicyEntity
 export function initAuditRetentionPolicyEntity(sequelize: Sequelize): typeof AuditRetentionPolicyEntity {
   AuditRetentionPolicyEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
         allowNull: false,
         unique: true,
         defaultValue: Sequelize.literal("core.fn_next_record_code_for_table ('audit_retention_policy')"),
+      },
+      retentionPolicyId: {
+        type: DataTypes.TEXT,
+        field: 'retention_policy_id',
+        allowNull: true,
+        primaryKey: true,
+        defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       entityCode: {
         type: DataTypes.TEXT,

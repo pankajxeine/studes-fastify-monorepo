@@ -1,8 +1,6 @@
 
 export type WebhookDeliveryResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   webhook_delivery_id: string
   webhook_subscription_id: string

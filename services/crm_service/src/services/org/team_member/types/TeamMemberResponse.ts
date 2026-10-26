@@ -1,9 +1,8 @@
 
 export type TeamMemberResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
+  team_member_id: string
   team_id: string
   app_user_id: string
   member_role: string

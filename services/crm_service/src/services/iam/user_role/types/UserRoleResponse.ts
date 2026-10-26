@@ -1,8 +1,6 @@
 
 export type UserRoleResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   user_role_id: string
   app_user_id: string

@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type CommerceAddonVersionAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  addonVersionId?: string
+  addonVersionId: string | null
   addonId: string
   versionNo: number
   status?: string
@@ -16,16 +14,14 @@ export type CommerceAddonVersionAttributes = {
   updatedBy?: string | null
 }
 
-export type CommerceAddonVersionCreationAttributes = Optional<CommerceAddonVersionAttributes, "id" | "publicId" | "recordCode" | "addonVersionId" | "status" | "publishedAt" | "retiredAt" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
+export type CommerceAddonVersionCreationAttributes = Optional<CommerceAddonVersionAttributes, "recordCode" | "status" | "publishedAt" | "retiredAt" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
 
 export class CommerceAddonVersionEntity
   extends Model<CommerceAddonVersionAttributes, CommerceAddonVersionCreationAttributes>
   implements CommerceAddonVersionAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare addonVersionId: string
+  declare addonVersionId: string | null
   declare addonId: string
   declare versionNo: number
   declare status: string
@@ -40,20 +36,6 @@ export class CommerceAddonVersionEntity
 export function initCommerceAddonVersionEntity(sequelize: Sequelize): typeof CommerceAddonVersionEntity {
   CommerceAddonVersionEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -64,8 +46,8 @@ export function initCommerceAddonVersionEntity(sequelize: Sequelize): typeof Com
       addonVersionId: {
         type: DataTypes.TEXT,
         field: 'addon_version_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       addonId: {

@@ -38,17 +38,17 @@ paths:
         '409':
           description: Unique constraint conflict
 
-  /subscription/{id}:
+  /subscription/{subscription_id}:
     get:
       operationId: getSubscriptionById
-      summary: Get subscription by ID
+      summary: Get subscription by subscription_id
       parameters:
         - in: path
-          name: id
+          name: subscription_id
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       responses:
         '200':
           description: subscription object
@@ -60,14 +60,14 @@ paths:
           description: subscription not found
     put:
       operationId: updateSubscription
-      summary: Update subscription by ID
+      summary: Update subscription by subscription_id
       parameters:
         - in: path
-          name: id
+          name: subscription_id
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       requestBody:
         required: true
         content:
@@ -89,14 +89,14 @@ paths:
           description: Unique constraint conflict
     delete:
       operationId: deleteSubscription
-      summary: Delete subscription by ID
+      summary: Delete subscription by subscription_id
       parameters:
         - in: path
-          name: id
+          name: subscription_id
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       responses:
         '204':
           description: Deleted
@@ -281,8 +281,6 @@ components:
     SubscriptionResponse:
       type: object
       required:
-        - id
-        - public_id
         - record_code
         - subscription_id
         - subscription_number
@@ -301,14 +299,6 @@ components:
         - updated_at
       additionalProperties: false
       properties:
-        id:
-          type: integer
-          format: int64
-          readOnly: true
-        public_id:
-          type: string
-          format: uuid
-          readOnly: true
         record_code:
           type: string
           readOnly: true

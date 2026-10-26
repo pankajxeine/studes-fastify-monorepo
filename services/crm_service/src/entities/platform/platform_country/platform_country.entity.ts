@@ -1,9 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type PlatformCountryAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
+  countryId: string | null
   countryCode: string
   iso3: string
   name: string
@@ -14,15 +13,14 @@ export type PlatformCountryAttributes = {
   updatedAt?: Date
 }
 
-export type PlatformCountryCreationAttributes = Optional<PlatformCountryAttributes, "id" | "publicId" | "recordCode" | "phonePrefix" | "defaultCurrencyCode" | "isActive" | "createdAt" | "updatedAt">
+export type PlatformCountryCreationAttributes = Optional<PlatformCountryAttributes, "recordCode" | "phonePrefix" | "defaultCurrencyCode" | "isActive" | "createdAt" | "updatedAt">
 
 export class PlatformCountryEntity
   extends Model<PlatformCountryAttributes, PlatformCountryCreationAttributes>
   implements PlatformCountryAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
+  declare countryId: string | null
   declare countryCode: string
   declare iso3: string
   declare name: string
@@ -36,26 +34,19 @@ export class PlatformCountryEntity
 export function initPlatformCountryEntity(sequelize: Sequelize): typeof PlatformCountryEntity {
   PlatformCountryEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
         allowNull: false,
         unique: true,
         defaultValue: Sequelize.literal("core.fn_next_record_code_for_table ('platform_country')"),
+      },
+      countryId: {
+        type: DataTypes.TEXT,
+        field: 'country_id',
+        allowNull: true,
+        primaryKey: true,
+        defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       countryCode: {
         type: DataTypes.TEXT,

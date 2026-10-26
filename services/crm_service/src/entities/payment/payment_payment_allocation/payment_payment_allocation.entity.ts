@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type PaymentPaymentAllocationAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  paymentAllocationId?: string
+  paymentAllocationId: string | null
   paymentId: string
   invoiceId: string
   amount: string
@@ -13,16 +11,14 @@ export type PaymentPaymentAllocationAttributes = {
   allocatedBy?: string | null
 }
 
-export type PaymentPaymentAllocationCreationAttributes = Optional<PaymentPaymentAllocationAttributes, "id" | "publicId" | "recordCode" | "paymentAllocationId" | "reversalOfId" | "allocatedAt" | "allocatedBy">
+export type PaymentPaymentAllocationCreationAttributes = Optional<PaymentPaymentAllocationAttributes, "recordCode" | "reversalOfId" | "allocatedAt" | "allocatedBy">
 
 export class PaymentPaymentAllocationEntity
   extends Model<PaymentPaymentAllocationAttributes, PaymentPaymentAllocationCreationAttributes>
   implements PaymentPaymentAllocationAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare paymentAllocationId: string
+  declare paymentAllocationId: string | null
   declare paymentId: string
   declare invoiceId: string
   declare amount: string
@@ -34,20 +30,6 @@ export class PaymentPaymentAllocationEntity
 export function initPaymentPaymentAllocationEntity(sequelize: Sequelize): typeof PaymentPaymentAllocationEntity {
   PaymentPaymentAllocationEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -58,8 +40,8 @@ export function initPaymentPaymentAllocationEntity(sequelize: Sequelize): typeof
       paymentAllocationId: {
         type: DataTypes.TEXT,
         field: 'payment_allocation_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       paymentId: {

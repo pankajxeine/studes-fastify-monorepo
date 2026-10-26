@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type MeteringUsageEventAttributes = {
-  id?: string | number
-  publicId?: string
   recordCode?: string
-  usageEventId?: string
+  usageEventId: string
   tenantApplicationId: string
   meterId: string
   quantity: number
@@ -13,17 +11,14 @@ export type MeteringUsageEventAttributes = {
   idempotencyKey: string
   source?: string | null
   attributes?: unknown | null
-  UNIQUE?: string | null
 }
 
-export type MeteringUsageEventCreationAttributes = Optional<MeteringUsageEventAttributes, "id" | "publicId" | "recordCode" | "usageEventId" | "receivedAt" | "source" | "attributes" | "UNIQUE">
+export type MeteringUsageEventCreationAttributes = Optional<MeteringUsageEventAttributes, "recordCode" | "receivedAt" | "source" | "attributes">
 
 export class MeteringUsageEventEntity
   extends Model<MeteringUsageEventAttributes, MeteringUsageEventCreationAttributes>
   implements MeteringUsageEventAttributes
 {
-  declare id: string | number
-  declare publicId: string
   declare recordCode: string
   declare usageEventId: string
   declare tenantApplicationId: string
@@ -34,25 +29,11 @@ export class MeteringUsageEventEntity
   declare idempotencyKey: string
   declare source: string | null
   declare attributes: unknown | null
-  declare UNIQUE: string | null
 }
 
 export function initMeteringUsageEventEntity(sequelize: Sequelize): typeof MeteringUsageEventEntity {
   MeteringUsageEventEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: false,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -63,6 +44,7 @@ export function initMeteringUsageEventEntity(sequelize: Sequelize): typeof Meter
         type: DataTypes.TEXT,
         field: 'usage_event_id',
         allowNull: false,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       tenantApplicationId: {
@@ -108,11 +90,6 @@ export function initMeteringUsageEventEntity(sequelize: Sequelize): typeof Meter
         type: DataTypes.JSONB,
         field: 'attributes',
         allowNull: true,
-      },
-      UNIQUE: {
-        type: DataTypes.TEXT,
-        field: 'UNIQUE',
-        allowNull: true,
       }
     },
     {
@@ -122,7 +99,9 @@ export function initMeteringUsageEventEntity(sequelize: Sequelize): typeof Meter
       underscored: true,
       freezeTableName: true,
       indexes: [
-      { unique: true, fields: ['id', 'occurred_at'] }
+      { unique: true, fields: ['usage_event_id', 'occurred_at'] },
+      { unique: true, fields: ['usage_event_id', 'occurred_at'] },
+      { unique: true, fields: ['record_code', 'occurred_at'] }
       ]
     }
   )

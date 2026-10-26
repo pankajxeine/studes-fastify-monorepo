@@ -1,8 +1,6 @@
 
 export type RefundResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   refund_id: string
   payment_id: string

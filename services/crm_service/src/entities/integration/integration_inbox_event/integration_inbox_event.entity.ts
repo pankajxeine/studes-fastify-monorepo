@@ -1,57 +1,46 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type IntegrationInboxEventAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
+  inboxEventId: string | null
   source: string
   messageId: string
   eventType?: string | null
   receivedAt?: Date
   processedAt?: Date | null
-  UNIQUE?: string | null
 }
 
-export type IntegrationInboxEventCreationAttributes = Optional<IntegrationInboxEventAttributes, "id" | "publicId" | "recordCode" | "eventType" | "receivedAt" | "processedAt" | "UNIQUE">
+export type IntegrationInboxEventCreationAttributes = Optional<IntegrationInboxEventAttributes, "recordCode" | "eventType" | "receivedAt" | "processedAt">
 
 export class IntegrationInboxEventEntity
   extends Model<IntegrationInboxEventAttributes, IntegrationInboxEventCreationAttributes>
   implements IntegrationInboxEventAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
+  declare inboxEventId: string | null
   declare source: string
   declare messageId: string
   declare eventType: string | null
   declare receivedAt: Date
   declare processedAt: Date | null
-  declare UNIQUE: string | null
 }
 
 export function initIntegrationInboxEventEntity(sequelize: Sequelize): typeof IntegrationInboxEventEntity {
   IntegrationInboxEventEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
         allowNull: false,
         unique: true,
         defaultValue: Sequelize.literal("core.fn_next_record_code_for_table ('integration_inbox_event')"),
+      },
+      inboxEventId: {
+        type: DataTypes.TEXT,
+        field: 'inbox_event_id',
+        allowNull: true,
+        primaryKey: true,
+        defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       source: {
         type: DataTypes.STRING(40),
@@ -78,11 +67,6 @@ export function initIntegrationInboxEventEntity(sequelize: Sequelize): typeof In
         type: DataTypes.DATE,
         field: 'processed_at',
         allowNull: true,
-      },
-      UNIQUE: {
-        type: DataTypes.TEXT,
-        field: 'UNIQUE',
-        allowNull: true,
       }
     },
     {
@@ -90,7 +74,10 @@ export function initIntegrationInboxEventEntity(sequelize: Sequelize): typeof In
       tableName: 'integration_inbox_event',
       timestamps: false,
       underscored: true,
-      freezeTableName: true
+      freezeTableName: true,
+      indexes: [
+      { unique: true, fields: ['source', 'message_id'] }
+      ]
     }
   )
   return IntegrationInboxEventEntity

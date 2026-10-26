@@ -4,23 +4,23 @@ import { SlaTargetService } from '../../services/support/sla_target/SlaTargetSer
 const SlaTargetRoutes: FastifyPluginAsync = async (app) => {
   const controller = new SlaTargetService()
 
-  app.get('/sla_target', async (request, reply) => {
+  app.get('/sla_target', { config: {"adminPermission":"support.sla_target.read"} }, async (request, reply) => {
     const result = await controller.listSlaTarget(app, request)
     return reply.send(result)
   })
-  app.post('/sla_target', async (request, reply) => {
+  app.post('/sla_target', { config: {"adminPermission":"support.sla_target.create"} }, async (request, reply) => {
     const result = await controller.createSlaTarget(app, request.body as any, request)
     return reply.send(result)
   })
-  app.get('/sla_target/:id', async (request, reply) => {
+  app.get('/sla_target/:sla_target_id', { config: {"adminPermission":"support.sla_target.read"} }, async (request, reply) => {
     const result = await controller.getSlaTargetById(app, request)
     return reply.send(result)
   })
-  app.put('/sla_target/:id', async (request, reply) => {
+  app.put('/sla_target/:sla_target_id', { config: {"adminPermission":"support.sla_target.update"} }, async (request, reply) => {
     const result = await controller.updateSlaTarget(app, request.body as any, request)
     return reply.send(result)
   })
-  app.delete('/sla_target/:id', async (request, reply) => {
+  app.delete('/sla_target/:sla_target_id', { config: {"adminPermission":"support.sla_target.delete"} }, async (request, reply) => {
     const result = await controller.deleteSlaTarget(app, request)
     return reply.send(result)
   })

@@ -1,9 +1,8 @@
 
 export type RegionResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
+  region_id: string
   region_code: string
   name: string
   cloud_provider: string

@@ -38,17 +38,17 @@ paths:
         '409':
           description: Unique constraint conflict
 
-  /fx_rate/{id}:
+  /fx_rate/{fx_rate_id}:
     get:
       operationId: getFxRateById
-      summary: Get fx_rate by ID
+      summary: Get fx_rate by fx_rate_id
       parameters:
         - in: path
-          name: id
+          name: fx_rate_id
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       responses:
         '200':
           description: fx_rate object
@@ -60,14 +60,14 @@ paths:
           description: fx_rate not found
     put:
       operationId: updateFxRate
-      summary: Update fx_rate by ID
+      summary: Update fx_rate by fx_rate_id
       parameters:
         - in: path
-          name: id
+          name: fx_rate_id
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       requestBody:
         required: true
         content:
@@ -89,14 +89,14 @@ paths:
           description: Unique constraint conflict
     delete:
       operationId: deleteFxRate
-      summary: Delete fx_rate by ID
+      summary: Delete fx_rate by fx_rate_id
       parameters:
         - in: path
-          name: id
+          name: fx_rate_id
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       responses:
         '204':
           description: Deleted
@@ -157,9 +157,8 @@ components:
     FxRateResponse:
       type: object
       required:
-        - id
-        - public_id
         - record_code
+        - fx_rate_id
         - base_currency_code
         - quote_currency_code
         - rate_date
@@ -168,16 +167,12 @@ components:
         - created_at
       additionalProperties: false
       properties:
-        id:
-          type: integer
-          format: int64
-          readOnly: true
-        public_id:
-          type: string
-          format: uuid
-          readOnly: true
         record_code:
           type: string
+          readOnly: true
+        fx_rate_id:
+          type: string
+          format: uuid
           readOnly: true
         base_currency_code:
           type: string

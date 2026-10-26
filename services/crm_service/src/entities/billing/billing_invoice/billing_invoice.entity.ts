@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type BillingInvoiceAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  invoiceId?: string
+  invoiceId: string | null
   invoiceNumber?: string | null
   billingAccountId: string
   legalEntityId: string
@@ -37,16 +35,14 @@ export type BillingInvoiceAttributes = {
   updatedBy?: string | null
 }
 
-export type BillingInvoiceCreationAttributes = Optional<BillingInvoiceAttributes, "id" | "publicId" | "recordCode" | "invoiceId" | "invoiceNumber" | "subscriptionId" | "invoiceType" | "status" | "periodStart" | "periodEnd" | "issueDate" | "dueDate" | "subtotal" | "discountTotal" | "taxTotal" | "total" | "amountPaid" | "amountCredited" | "balanceDue" | "fxRateToFunctional" | "finalizedAt" | "paidAt" | "voidedAt" | "voidReason" | "writtenOffAt" | "pdfRef" | "notes" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
+export type BillingInvoiceCreationAttributes = Optional<BillingInvoiceAttributes, "recordCode" | "invoiceNumber" | "subscriptionId" | "invoiceType" | "status" | "periodStart" | "periodEnd" | "issueDate" | "dueDate" | "subtotal" | "discountTotal" | "taxTotal" | "total" | "amountPaid" | "amountCredited" | "balanceDue" | "fxRateToFunctional" | "finalizedAt" | "paidAt" | "voidedAt" | "voidReason" | "writtenOffAt" | "pdfRef" | "notes" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
 
 export class BillingInvoiceEntity
   extends Model<BillingInvoiceAttributes, BillingInvoiceCreationAttributes>
   implements BillingInvoiceAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare invoiceId: string
+  declare invoiceId: string | null
   declare invoiceNumber: string | null
   declare billingAccountId: string
   declare legalEntityId: string
@@ -82,20 +78,6 @@ export class BillingInvoiceEntity
 export function initBillingInvoiceEntity(sequelize: Sequelize): typeof BillingInvoiceEntity {
   BillingInvoiceEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -106,8 +88,8 @@ export function initBillingInvoiceEntity(sequelize: Sequelize): typeof BillingIn
       invoiceId: {
         type: DataTypes.TEXT,
         field: 'invoice_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       invoiceNumber: {

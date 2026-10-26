@@ -1,8 +1,6 @@
 
 export type LoginAttemptResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   login_attempt_id: string
   app_user_id?: (string) | null

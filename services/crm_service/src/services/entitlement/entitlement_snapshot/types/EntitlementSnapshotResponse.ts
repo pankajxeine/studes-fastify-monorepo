@@ -1,9 +1,8 @@
 
 export type EntitlementSnapshotResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
+  entitlement_snapshot_id: string
   tenant_application_id: string
   version: number
   access_mode: string

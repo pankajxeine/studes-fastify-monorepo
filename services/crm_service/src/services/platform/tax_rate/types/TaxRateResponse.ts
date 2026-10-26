@@ -1,8 +1,6 @@
 
 export type TaxRateResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   tax_rate_id: string
   jurisdiction_code: string

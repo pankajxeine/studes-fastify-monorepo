@@ -61,7 +61,7 @@ function getBelongsToIncludes(model: any, schema: string) {
 
 export class {{ServiceName}} implements {{ControllerName}} {
 {{#methods}}
-      public async {{methodName}}({{methodParams}}): Promise<{{{returnType}}}> {
+      public async {{methodName}}({{{methodParams}}}): Promise<{{{returnType}}}> {
     try {
 {{#hasModel}}{{#isCrud}}
       // tenant schema comes from request context
@@ -101,26 +101,26 @@ export class {{ServiceName}} implements {{ControllerName}} {
       const row = await model.create(toModelAttributes(input) as any)
       return toApiAttributes<{{returnType}}>(row.get({ plain: true }) as Record<string, unknown>)
 {{/isCreate}}{{#isRead}}
-      const { id } = (request?.params ?? {}) as { id?: string | number }
-      if (id === undefined || id === '') throw httpError(400, 'id is required')
-      const row = await model.findByPk(id{{#hasForeignKeys}}, { include }{{/hasForeignKeys}})
+      const { {{primaryKey}} } = (request?.params ?? {}) as { {{primaryKey}}?: string | number }
+      if ({{primaryKey}} === undefined || {{primaryKey}} === '') throw httpError(400, '{{primaryKey}} is required')
+      const row = await model.findByPk({{primaryKey}}{{#hasForeignKeys}}, { include }{{/hasForeignKeys}})
       if (!row) {
         throw httpError(404, '{{modelKey}} not found')
       }
       return toApiAttributes<{{returnType}}>(row.get({ plain: true }) as Record<string, unknown>)
 {{/isRead}}{{#isUpdate}}
-      const { id } = (request?.params ?? {}) as { id?: string | number }
-      if (id === undefined || id === '') throw httpError(400, 'id is required')
-      const row = await model.findByPk(id{{#hasForeignKeys}}, { include }{{/hasForeignKeys}})
+      const { {{primaryKey}} } = (request?.params ?? {}) as { {{primaryKey}}?: string | number }
+      if ({{primaryKey}} === undefined || {{primaryKey}} === '') throw httpError(400, '{{primaryKey}} is required')
+      const row = await model.findByPk({{primaryKey}}{{#hasForeignKeys}}, { include }{{/hasForeignKeys}})
       if (!row) {
         throw httpError(404, '{{modelKey}} not found')
       }
       await row.update(toModelAttributes(input) as any)
       return toApiAttributes<{{returnType}}>(row.get({ plain: true }) as Record<string, unknown>)
 {{/isUpdate}}{{#isDelete}}
-      const { id } = (request?.params ?? {}) as { id?: string | number }
-      if (id === undefined || id === '') throw httpError(400, 'id is required')
-      const deletedCount = await model.destroy({ where: { id } })
+      const { {{primaryKey}} } = (request?.params ?? {}) as { {{primaryKey}}?: string | number }
+      if ({{primaryKey}} === undefined || {{primaryKey}} === '') throw httpError(400, '{{primaryKey}} is required')
+      const deletedCount = await model.destroy({ where: { {{primaryKeyModelField}}: {{primaryKey}} } })
       if (deletedCount === 0) throw httpError(404, '{{modelKey}} not found')
       return
 {{/isDelete}}{{/isCrud}}{{^isCrud}}

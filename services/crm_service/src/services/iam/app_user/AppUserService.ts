@@ -6,24 +6,9 @@ import type { AppUserController } from './AppUserController'
 import type { ListItem, PaginatedResponse } from '../../../types/PaginatedResponse'
 
 import { verifyDbSchema, verifyDbModel } from '../../../core/helper/db_utils'
+import {toApiAttributes } from '../../../core/helper/api_helper';
 
-function toModelAttributes(input: object): Record<string, unknown> {
-  return Object.fromEntries(
-    Object.entries(input).map(([key, value]) => [
-      key.replace(/_([a-z])/g, (_match, character: string) => character.toUpperCase()),
-      value,
-    ])
-  )
-}
-
-function toApiAttributes<T>(attributes: Record<string, unknown>): T {
-  return Object.fromEntries(
-    Object.entries(attributes).map(([key, value]) => [
-      key.replace(/[A-Z]/g, (character) => `_${character.toLowerCase()}`),
-      value,
-    ])
-  ) as T
-}
+import { toModelAttributes } from '../../../core/helper/api_helper';
 
 function httpError(statusCode: number, message: string): Error & { statusCode: number } {
   return Object.assign(new Error(message), { statusCode })
@@ -92,9 +77,9 @@ export class AppUserService implements AppUserController {
       const models = app.models;
       verifyDbModel(models);
       const model = models.iam_app_user.schema(schema!);
-      const { id } = (request?.params ?? {}) as { id?: string | number }
-      if (id === undefined || id === '') throw httpError(400, 'id is required')
-      const row = await model.findByPk(id)
+      const { app_user_id } = (request?.params ?? {}) as { app_user_id?: string | number }
+      if (app_user_id === undefined || app_user_id === '') throw httpError(400, 'app_user_id is required')
+      const row = await model.findByPk(app_user_id)
       if (!row) {
         throw httpError(404, 'iam_app_user not found')
       }
@@ -114,9 +99,9 @@ export class AppUserService implements AppUserController {
       const models = app.models;
       verifyDbModel(models);
       const model = models.iam_app_user.schema(schema!);
-      const { id } = (request?.params ?? {}) as { id?: string | number }
-      if (id === undefined || id === '') throw httpError(400, 'id is required')
-      const row = await model.findByPk(id)
+      const { app_user_id } = (request?.params ?? {}) as { app_user_id?: string | number }
+      if (app_user_id === undefined || app_user_id === '') throw httpError(400, 'app_user_id is required')
+      const row = await model.findByPk(app_user_id)
       if (!row) {
         throw httpError(404, 'iam_app_user not found')
       }
@@ -137,9 +122,9 @@ export class AppUserService implements AppUserController {
       const models = app.models;
       verifyDbModel(models);
       const model = models.iam_app_user.schema(schema!);
-      const { id } = (request?.params ?? {}) as { id?: string | number }
-      if (id === undefined || id === '') throw httpError(400, 'id is required')
-      const deletedCount = await model.destroy({ where: { id } })
+      const { app_user_id } = (request?.params ?? {}) as { app_user_id?: string | number }
+      if (app_user_id === undefined || app_user_id === '') throw httpError(400, 'app_user_id is required')
+      const deletedCount = await model.destroy({ where: { appUserId: app_user_id } })
       if (deletedCount === 0) throw httpError(404, 'iam_app_user not found')
       return
     } catch (err) {

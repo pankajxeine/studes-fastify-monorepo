@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type SupportQueueAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  queueId?: string
+  queueId: string | null
   queueCode: string
   name: string
   teamId?: string | null
@@ -17,16 +15,14 @@ export type SupportQueueAttributes = {
   updatedBy?: string | null
 }
 
-export type SupportQueueCreationAttributes = Optional<SupportQueueAttributes, "id" | "publicId" | "recordCode" | "queueId" | "teamId" | "applicationId" | "isDefault" | "isActive" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
+export type SupportQueueCreationAttributes = Optional<SupportQueueAttributes, "recordCode" | "teamId" | "applicationId" | "isDefault" | "isActive" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
 
 export class SupportQueueEntity
   extends Model<SupportQueueAttributes, SupportQueueCreationAttributes>
   implements SupportQueueAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare queueId: string
+  declare queueId: string | null
   declare queueCode: string
   declare name: string
   declare teamId: string | null
@@ -42,20 +38,6 @@ export class SupportQueueEntity
 export function initSupportQueueEntity(sequelize: Sequelize): typeof SupportQueueEntity {
   SupportQueueEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -66,8 +48,8 @@ export function initSupportQueueEntity(sequelize: Sequelize): typeof SupportQueu
       queueId: {
         type: DataTypes.TEXT,
         field: 'queue_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       queueCode: {

@@ -1,9 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type PlatformLookupValueAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
+  lookupValueId: string | null
   lookupTypeCode: string
   valueCode: string
   label: string
@@ -13,18 +12,16 @@ export type PlatformLookupValueAttributes = {
   isActive?: string
   createdAt?: Date
   updatedAt?: Date
-  UNIQUE?: string | null
 }
 
-export type PlatformLookupValueCreationAttributes = Optional<PlatformLookupValueAttributes, "id" | "publicId" | "recordCode" | "description" | "metadata" | "sortOrder" | "isActive" | "createdAt" | "updatedAt" | "UNIQUE">
+export type PlatformLookupValueCreationAttributes = Optional<PlatformLookupValueAttributes, "recordCode" | "description" | "metadata" | "sortOrder" | "isActive" | "createdAt" | "updatedAt">
 
 export class PlatformLookupValueEntity
   extends Model<PlatformLookupValueAttributes, PlatformLookupValueCreationAttributes>
   implements PlatformLookupValueAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
+  declare lookupValueId: string | null
   declare lookupTypeCode: string
   declare valueCode: string
   declare label: string
@@ -34,32 +31,24 @@ export class PlatformLookupValueEntity
   declare isActive: string
   declare createdAt: Date
   declare updatedAt: Date
-  declare UNIQUE: string | null
 }
 
 export function initPlatformLookupValueEntity(sequelize: Sequelize): typeof PlatformLookupValueEntity {
   PlatformLookupValueEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
         allowNull: false,
         unique: true,
         defaultValue: Sequelize.literal("core.fn_next_record_code_for_table ('platform_lookup_value')"),
+      },
+      lookupValueId: {
+        type: DataTypes.TEXT,
+        field: 'lookup_value_id',
+        allowNull: true,
+        primaryKey: true,
+        defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       lookupTypeCode: {
         type: DataTypes.TEXT,
@@ -111,11 +100,6 @@ export function initPlatformLookupValueEntity(sequelize: Sequelize): typeof Plat
         field: 'updated_at',
         allowNull: false,
         defaultValue: DataTypes.NOW,
-      },
-      UNIQUE: {
-        type: DataTypes.TEXT,
-        field: 'UNIQUE',
-        allowNull: true,
       }
     },
     {
@@ -123,7 +107,10 @@ export function initPlatformLookupValueEntity(sequelize: Sequelize): typeof Plat
       tableName: 'platform_lookup_value',
       timestamps: true,
       underscored: true,
-      freezeTableName: true
+      freezeTableName: true,
+      indexes: [
+      { unique: true, fields: ['lookup_type_code', 'value_code'] }
+      ]
     }
   )
   return PlatformLookupValueEntity

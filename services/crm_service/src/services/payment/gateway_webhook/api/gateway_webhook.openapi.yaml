@@ -38,17 +38,17 @@ paths:
         '409':
           description: Unique constraint conflict
 
-  /gateway_webhook/{id}:
+  /gateway_webhook/{gateway_webhook_id}:
     get:
       operationId: getGatewayWebhookById
-      summary: Get gateway_webhook by ID
+      summary: Get gateway_webhook by gateway_webhook_id
       parameters:
         - in: path
-          name: id
+          name: gateway_webhook_id
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       responses:
         '200':
           description: gateway_webhook object
@@ -60,14 +60,14 @@ paths:
           description: gateway_webhook not found
     put:
       operationId: updateGatewayWebhook
-      summary: Update gateway_webhook by ID
+      summary: Update gateway_webhook by gateway_webhook_id
       parameters:
         - in: path
-          name: id
+          name: gateway_webhook_id
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       requestBody:
         required: true
         content:
@@ -89,14 +89,14 @@ paths:
           description: Unique constraint conflict
     delete:
       operationId: deleteGatewayWebhook
-      summary: Delete gateway_webhook by ID
+      summary: Delete gateway_webhook by gateway_webhook_id
       parameters:
         - in: path
-          name: id
+          name: gateway_webhook_id
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       responses:
         '204':
           description: Deleted
@@ -177,8 +177,6 @@ components:
     GatewayWebhookResponse:
       type: object
       required:
-        - id
-        - public_id
         - record_code
         - gateway_webhook_id
         - gateway
@@ -189,14 +187,6 @@ components:
         - received_at
       additionalProperties: false
       properties:
-        id:
-          type: integer
-          format: int64
-          readOnly: true
-        public_id:
-          type: string
-          format: uuid
-          readOnly: true
         record_code:
           type: string
           readOnly: true

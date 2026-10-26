@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type BillingCreditNoteAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  creditNoteId?: string
+  creditNoteId: string | null
   creditNoteNumber?: string | null
   invoiceId: string
   amount: string
@@ -17,16 +15,14 @@ export type BillingCreditNoteAttributes = {
   voidedAt?: Date | null
 }
 
-export type BillingCreditNoteCreationAttributes = Optional<BillingCreditNoteAttributes, "id" | "publicId" | "recordCode" | "creditNoteId" | "creditNoteNumber" | "description" | "status" | "issuedAt" | "approvedByUserId" | "voidedAt">
+export type BillingCreditNoteCreationAttributes = Optional<BillingCreditNoteAttributes, "recordCode" | "creditNoteNumber" | "description" | "status" | "issuedAt" | "approvedByUserId" | "voidedAt">
 
 export class BillingCreditNoteEntity
   extends Model<BillingCreditNoteAttributes, BillingCreditNoteCreationAttributes>
   implements BillingCreditNoteAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare creditNoteId: string
+  declare creditNoteId: string | null
   declare creditNoteNumber: string | null
   declare invoiceId: string
   declare amount: string
@@ -42,20 +38,6 @@ export class BillingCreditNoteEntity
 export function initBillingCreditNoteEntity(sequelize: Sequelize): typeof BillingCreditNoteEntity {
   BillingCreditNoteEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -66,8 +48,8 @@ export function initBillingCreditNoteEntity(sequelize: Sequelize): typeof Billin
       creditNoteId: {
         type: DataTypes.TEXT,
         field: 'credit_note_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       creditNoteNumber: {

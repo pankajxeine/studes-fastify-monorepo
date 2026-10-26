@@ -1,8 +1,6 @@
 
 export type AddonResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   addon_id: string
   application_id: string

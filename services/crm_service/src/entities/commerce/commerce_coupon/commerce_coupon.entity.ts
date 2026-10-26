@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type CommerceCouponAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  couponId?: string
+  couponId: string | null
   couponCode: string
   name: string
   discountType: string
@@ -24,16 +22,14 @@ export type CommerceCouponAttributes = {
   updatedBy?: string | null
 }
 
-export type CommerceCouponCreationAttributes = Optional<CommerceCouponAttributes, "id" | "publicId" | "recordCode" | "couponId" | "currencyCode" | "durationMonths" | "maxRedemptions" | "redeemedCount" | "validFrom" | "validTo" | "appliesToPlanIds" | "isActive" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
+export type CommerceCouponCreationAttributes = Optional<CommerceCouponAttributes, "recordCode" | "currencyCode" | "durationMonths" | "maxRedemptions" | "redeemedCount" | "validFrom" | "validTo" | "appliesToPlanIds" | "isActive" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
 
 export class CommerceCouponEntity
   extends Model<CommerceCouponAttributes, CommerceCouponCreationAttributes>
   implements CommerceCouponAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare couponId: string
+  declare couponId: string | null
   declare couponCode: string
   declare name: string
   declare discountType: string
@@ -56,20 +52,6 @@ export class CommerceCouponEntity
 export function initCommerceCouponEntity(sequelize: Sequelize): typeof CommerceCouponEntity {
   CommerceCouponEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -80,8 +62,8 @@ export function initCommerceCouponEntity(sequelize: Sequelize): typeof CommerceC
       couponId: {
         type: DataTypes.TEXT,
         field: 'coupon_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       couponCode: {

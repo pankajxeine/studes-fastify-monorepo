@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type MeteringQuotaAlertAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  quotaAlertId?: string
+  quotaAlertId: string | null
   tenantApplicationId: string
   meterId: string
   periodStart: Date
@@ -15,16 +13,14 @@ export type MeteringQuotaAlertAttributes = {
   acknowledgedAt?: Date | null
 }
 
-export type MeteringQuotaAlertCreationAttributes = Optional<MeteringQuotaAlertAttributes, "id" | "publicId" | "recordCode" | "quotaAlertId" | "triggeredAt" | "acknowledgedAt">
+export type MeteringQuotaAlertCreationAttributes = Optional<MeteringQuotaAlertAttributes, "recordCode" | "triggeredAt" | "acknowledgedAt">
 
 export class MeteringQuotaAlertEntity
   extends Model<MeteringQuotaAlertAttributes, MeteringQuotaAlertCreationAttributes>
   implements MeteringQuotaAlertAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare quotaAlertId: string
+  declare quotaAlertId: string | null
   declare tenantApplicationId: string
   declare meterId: string
   declare periodStart: Date
@@ -38,20 +34,6 @@ export class MeteringQuotaAlertEntity
 export function initMeteringQuotaAlertEntity(sequelize: Sequelize): typeof MeteringQuotaAlertEntity {
   MeteringQuotaAlertEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -62,8 +44,8 @@ export function initMeteringQuotaAlertEntity(sequelize: Sequelize): typeof Meter
       quotaAlertId: {
         type: DataTypes.TEXT,
         field: 'quota_alert_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       tenantApplicationId: {

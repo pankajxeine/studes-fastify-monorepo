@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type CrmOpportunityAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  opportunityId?: string
+  opportunityId: string | null
   opportunityNumber?: string
   accountId: string
   leadId?: string | null
@@ -27,16 +25,14 @@ export type CrmOpportunityAttributes = {
   updatedBy?: string | null
 }
 
-export type CrmOpportunityCreationAttributes = Optional<CrmOpportunityAttributes, "id" | "publicId" | "recordCode" | "opportunityId" | "opportunityNumber" | "leadId" | "dealType" | "stage" | "amount" | "probability" | "expectedCloseDate" | "ownerUserId" | "salesAgentId" | "branchId" | "lostReason" | "closedAt" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
+export type CrmOpportunityCreationAttributes = Optional<CrmOpportunityAttributes, "recordCode" | "opportunityNumber" | "leadId" | "dealType" | "stage" | "amount" | "probability" | "expectedCloseDate" | "ownerUserId" | "salesAgentId" | "branchId" | "lostReason" | "closedAt" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
 
 export class CrmOpportunityEntity
   extends Model<CrmOpportunityAttributes, CrmOpportunityCreationAttributes>
   implements CrmOpportunityAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare opportunityId: string
+  declare opportunityId: string | null
   declare opportunityNumber: string
   declare accountId: string
   declare leadId: string | null
@@ -62,20 +58,6 @@ export class CrmOpportunityEntity
 export function initCrmOpportunityEntity(sequelize: Sequelize): typeof CrmOpportunityEntity {
   CrmOpportunityEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -86,8 +68,8 @@ export function initCrmOpportunityEntity(sequelize: Sequelize): typeof CrmOpport
       opportunityId: {
         type: DataTypes.TEXT,
         field: 'opportunity_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       opportunityNumber: {

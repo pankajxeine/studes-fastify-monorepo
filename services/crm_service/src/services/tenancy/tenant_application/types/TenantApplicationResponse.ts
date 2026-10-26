@@ -1,8 +1,6 @@
 
 export type TenantApplicationResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   tenant_application_id: string
   tenant_id: string

@@ -1,8 +1,6 @@
 
 export type AccessReviewResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   access_review_id: string
   name: string

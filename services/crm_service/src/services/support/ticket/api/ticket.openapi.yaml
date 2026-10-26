@@ -38,17 +38,17 @@ paths:
         '409':
           description: Unique constraint conflict
 
-  /ticket/{id}:
+  /ticket/{ticket_id}:
     get:
       operationId: getTicketById
-      summary: Get ticket by ID
+      summary: Get ticket by ticket_id
       parameters:
         - in: path
-          name: id
+          name: ticket_id
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       responses:
         '200':
           description: ticket object
@@ -60,14 +60,14 @@ paths:
           description: ticket not found
     put:
       operationId: updateTicket
-      summary: Update ticket by ID
+      summary: Update ticket by ticket_id
       parameters:
         - in: path
-          name: id
+          name: ticket_id
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       requestBody:
         required: true
         content:
@@ -89,14 +89,14 @@ paths:
           description: Unique constraint conflict
     delete:
       operationId: deleteTicket
-      summary: Delete ticket by ID
+      summary: Delete ticket by ticket_id
       parameters:
         - in: path
-          name: id
+          name: ticket_id
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       responses:
         '204':
           description: Deleted
@@ -329,8 +329,6 @@ components:
     TicketResponse:
       type: object
       required:
-        - id
-        - public_id
         - record_code
         - ticket_id
         - ticket_number
@@ -352,14 +350,6 @@ components:
         - updated_at
       additionalProperties: false
       properties:
-        id:
-          type: integer
-          format: int64
-          readOnly: true
-        public_id:
-          type: string
-          format: uuid
-          readOnly: true
         record_code:
           type: string
           readOnly: true

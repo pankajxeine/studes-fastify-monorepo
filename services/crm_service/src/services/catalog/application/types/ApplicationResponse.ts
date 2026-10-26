@@ -1,8 +1,6 @@
 
 export type ApplicationResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   application_id: string
   application_code: string

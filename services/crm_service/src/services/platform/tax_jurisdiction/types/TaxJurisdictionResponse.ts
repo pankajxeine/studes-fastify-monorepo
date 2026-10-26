@@ -1,9 +1,8 @@
 
 export type TaxJurisdictionResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
+  tax_jurisdiction_id: string
   jurisdiction_code: string
   country_code: string
   subdivision_code?: (string) | null

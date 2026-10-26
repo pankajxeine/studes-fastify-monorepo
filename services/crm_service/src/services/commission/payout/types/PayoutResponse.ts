@@ -1,8 +1,6 @@
 
 export type PayoutResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   payout_id: string
   sales_agent_id: string

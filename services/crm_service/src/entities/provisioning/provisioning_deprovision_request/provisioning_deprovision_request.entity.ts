@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type ProvisioningDeprovisionRequestAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  deprovisionRequestId?: string
+  deprovisionRequestId: string | null
   tenantId: string
   reason: string
   exportRequested?: string
@@ -19,16 +17,14 @@ export type ProvisioningDeprovisionRequestAttributes = {
   updatedAt?: Date
 }
 
-export type ProvisioningDeprovisionRequestCreationAttributes = Optional<ProvisioningDeprovisionRequestAttributes, "id" | "publicId" | "recordCode" | "deprovisionRequestId" | "exportRequested" | "exportRef" | "retentionUntil" | "status" | "approvedByUserId" | "approvedAt" | "completedAt" | "createdAt" | "updatedAt">
+export type ProvisioningDeprovisionRequestCreationAttributes = Optional<ProvisioningDeprovisionRequestAttributes, "recordCode" | "exportRequested" | "exportRef" | "retentionUntil" | "status" | "approvedByUserId" | "approvedAt" | "completedAt" | "createdAt" | "updatedAt">
 
 export class ProvisioningDeprovisionRequestEntity
   extends Model<ProvisioningDeprovisionRequestAttributes, ProvisioningDeprovisionRequestCreationAttributes>
   implements ProvisioningDeprovisionRequestAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare deprovisionRequestId: string
+  declare deprovisionRequestId: string | null
   declare tenantId: string
   declare reason: string
   declare exportRequested: string
@@ -46,20 +42,6 @@ export class ProvisioningDeprovisionRequestEntity
 export function initProvisioningDeprovisionRequestEntity(sequelize: Sequelize): typeof ProvisioningDeprovisionRequestEntity {
   ProvisioningDeprovisionRequestEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -70,8 +52,8 @@ export function initProvisioningDeprovisionRequestEntity(sequelize: Sequelize): 
       deprovisionRequestId: {
         type: DataTypes.TEXT,
         field: 'deprovision_request_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       tenantId: {

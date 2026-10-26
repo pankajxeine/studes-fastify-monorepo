@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type CrmContactAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  contactId?: string
+  contactId: string | null
   accountId: string
   firstName: string
   lastName: string
@@ -23,16 +21,14 @@ export type CrmContactAttributes = {
   deletedAt?: Date | null
 }
 
-export type CrmContactCreationAttributes = Optional<CrmContactAttributes, "id" | "publicId" | "recordCode" | "contactId" | "phone" | "jobTitle" | "isPrimary" | "isBilling" | "isTechnical" | "marketingConsent" | "preferredLocale" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy" | "deletedAt">
+export type CrmContactCreationAttributes = Optional<CrmContactAttributes, "recordCode" | "phone" | "jobTitle" | "isPrimary" | "isBilling" | "isTechnical" | "marketingConsent" | "preferredLocale" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy" | "deletedAt">
 
 export class CrmContactEntity
   extends Model<CrmContactAttributes, CrmContactCreationAttributes>
   implements CrmContactAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare contactId: string
+  declare contactId: string | null
   declare accountId: string
   declare firstName: string
   declare lastName: string
@@ -54,20 +50,6 @@ export class CrmContactEntity
 export function initCrmContactEntity(sequelize: Sequelize): typeof CrmContactEntity {
   CrmContactEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -78,8 +60,8 @@ export function initCrmContactEntity(sequelize: Sequelize): typeof CrmContactEnt
       contactId: {
         type: DataTypes.TEXT,
         field: 'contact_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       accountId: {

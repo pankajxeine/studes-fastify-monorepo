@@ -38,17 +38,17 @@ paths:
         '409':
           description: Unique constraint conflict
 
-  /payment_allocation/{id}:
+  /payment_allocation/{payment_allocation_id}:
     get:
       operationId: getPaymentAllocationById
-      summary: Get payment_allocation by ID
+      summary: Get payment_allocation by payment_allocation_id
       parameters:
         - in: path
-          name: id
+          name: payment_allocation_id
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       responses:
         '200':
           description: payment_allocation object
@@ -60,14 +60,14 @@ paths:
           description: payment_allocation not found
     put:
       operationId: updatePaymentAllocation
-      summary: Update payment_allocation by ID
+      summary: Update payment_allocation by payment_allocation_id
       parameters:
         - in: path
-          name: id
+          name: payment_allocation_id
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       requestBody:
         required: true
         content:
@@ -89,14 +89,14 @@ paths:
           description: Unique constraint conflict
     delete:
       operationId: deletePaymentAllocation
-      summary: Delete payment_allocation by ID
+      summary: Delete payment_allocation by payment_allocation_id
       parameters:
         - in: path
-          name: id
+          name: payment_allocation_id
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       responses:
         '204':
           description: Deleted
@@ -167,8 +167,6 @@ components:
     PaymentAllocationResponse:
       type: object
       required:
-        - id
-        - public_id
         - record_code
         - payment_allocation_id
         - payment_id
@@ -177,14 +175,6 @@ components:
         - allocated_at
       additionalProperties: false
       properties:
-        id:
-          type: integer
-          format: int64
-          readOnly: true
-        public_id:
-          type: string
-          format: uuid
-          readOnly: true
         record_code:
           type: string
           readOnly: true

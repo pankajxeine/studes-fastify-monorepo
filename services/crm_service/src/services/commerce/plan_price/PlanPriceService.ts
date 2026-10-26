@@ -6,24 +6,9 @@ import type { PlanPriceController } from './PlanPriceController'
 import type { ListItem, PaginatedResponse } from '../../../types/PaginatedResponse'
 
 import { verifyDbSchema, verifyDbModel } from '../../../core/helper/db_utils'
+import {toApiAttributes } from '../../../core/helper/api_helper';
 
-function toModelAttributes(input: object): Record<string, unknown> {
-  return Object.fromEntries(
-    Object.entries(input).map(([key, value]) => [
-      key.replace(/_([a-z])/g, (_match, character: string) => character.toUpperCase()),
-      value,
-    ])
-  )
-}
-
-function toApiAttributes<T>(attributes: Record<string, unknown>): T {
-  return Object.fromEntries(
-    Object.entries(attributes).map(([key, value]) => [
-      key.replace(/[A-Z]/g, (character) => `_${character.toLowerCase()}`),
-      value,
-    ])
-  ) as T
-}
+import { toModelAttributes } from '../../../core/helper/api_helper';
 
 function httpError(statusCode: number, message: string): Error & { statusCode: number } {
   return Object.assign(new Error(message), { statusCode })
@@ -92,9 +77,9 @@ export class PlanPriceService implements PlanPriceController {
       const models = app.models;
       verifyDbModel(models);
       const model = models.commerce_plan_price.schema(schema!);
-      const { id } = (request?.params ?? {}) as { id?: string | number }
-      if (id === undefined || id === '') throw httpError(400, 'id is required')
-      const row = await model.findByPk(id)
+      const { plan_price_id } = (request?.params ?? {}) as { plan_price_id?: string | number }
+      if (plan_price_id === undefined || plan_price_id === '') throw httpError(400, 'plan_price_id is required')
+      const row = await model.findByPk(plan_price_id)
       if (!row) {
         throw httpError(404, 'commerce_plan_price not found')
       }
@@ -114,9 +99,9 @@ export class PlanPriceService implements PlanPriceController {
       const models = app.models;
       verifyDbModel(models);
       const model = models.commerce_plan_price.schema(schema!);
-      const { id } = (request?.params ?? {}) as { id?: string | number }
-      if (id === undefined || id === '') throw httpError(400, 'id is required')
-      const row = await model.findByPk(id)
+      const { plan_price_id } = (request?.params ?? {}) as { plan_price_id?: string | number }
+      if (plan_price_id === undefined || plan_price_id === '') throw httpError(400, 'plan_price_id is required')
+      const row = await model.findByPk(plan_price_id)
       if (!row) {
         throw httpError(404, 'commerce_plan_price not found')
       }
@@ -137,9 +122,9 @@ export class PlanPriceService implements PlanPriceController {
       const models = app.models;
       verifyDbModel(models);
       const model = models.commerce_plan_price.schema(schema!);
-      const { id } = (request?.params ?? {}) as { id?: string | number }
-      if (id === undefined || id === '') throw httpError(400, 'id is required')
-      const deletedCount = await model.destroy({ where: { id } })
+      const { plan_price_id } = (request?.params ?? {}) as { plan_price_id?: string | number }
+      if (plan_price_id === undefined || plan_price_id === '') throw httpError(400, 'plan_price_id is required')
+      const deletedCount = await model.destroy({ where: { planPriceId: plan_price_id } })
       if (deletedCount === 0) throw httpError(404, 'commerce_plan_price not found')
       return
     } catch (err) {

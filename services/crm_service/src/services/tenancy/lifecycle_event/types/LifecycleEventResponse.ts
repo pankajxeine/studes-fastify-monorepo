@@ -1,8 +1,6 @@
 
 export type LifecycleEventResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   lifecycle_event_id: string
   tenant_id: string

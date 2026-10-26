@@ -1,9 +1,8 @@
 
 export type EventResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
+  event_id: string
   event_seq: number
   occurred_at: string
   actor_type: string

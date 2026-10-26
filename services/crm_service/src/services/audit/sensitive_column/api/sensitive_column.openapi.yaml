@@ -38,17 +38,17 @@ paths:
         '409':
           description: Unique constraint conflict
 
-  /sensitive_column/{id}:
+  /sensitive_column/{sensitive_column_id}:
     get:
       operationId: getSensitiveColumnById
-      summary: Get sensitive_column by ID
+      summary: Get sensitive_column by sensitive_column_id
       parameters:
         - in: path
-          name: id
+          name: sensitive_column_id
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       responses:
         '200':
           description: sensitive_column object
@@ -60,14 +60,14 @@ paths:
           description: sensitive_column not found
     put:
       operationId: updateSensitiveColumn
-      summary: Update sensitive_column by ID
+      summary: Update sensitive_column by sensitive_column_id
       parameters:
         - in: path
-          name: id
+          name: sensitive_column_id
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       requestBody:
         required: true
         content:
@@ -89,14 +89,14 @@ paths:
           description: Unique constraint conflict
     delete:
       operationId: deleteSensitiveColumn
-      summary: Delete sensitive_column by ID
+      summary: Delete sensitive_column by sensitive_column_id
       parameters:
         - in: path
-          name: id
+          name: sensitive_column_id
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       responses:
         '204':
           description: Deleted
@@ -146,25 +146,20 @@ components:
     SensitiveColumnResponse:
       type: object
       required:
-        - id
-        - public_id
         - record_code
+        - sensitive_column_id
         - schema_name
         - table_name
         - column_name
         - category
       additionalProperties: false
       properties:
-        id:
-          type: integer
-          format: int64
-          readOnly: true
-        public_id:
-          type: string
-          format: uuid
-          readOnly: true
         record_code:
           type: string
+          readOnly: true
+        sensitive_column_id:
+          type: string
+          format: uuid
           readOnly: true
         schema_name:
           type: string

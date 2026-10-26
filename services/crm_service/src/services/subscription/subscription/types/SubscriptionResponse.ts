@@ -1,8 +1,6 @@
 
 export type SubscriptionResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   subscription_id: string
   subscription_number: string

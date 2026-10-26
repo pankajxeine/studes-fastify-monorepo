@@ -1,9 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type IntegrationIdempotencyKeyAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
+  idempotencyKeyId: string | null
   scope: string
   key: string
   requestHash: string
@@ -11,18 +10,16 @@ export type IntegrationIdempotencyKeyAttributes = {
   responseBody?: unknown | null
   createdAt?: Date
   expiresAt?: Date
-  UNIQUE?: string | null
 }
 
-export type IntegrationIdempotencyKeyCreationAttributes = Optional<IntegrationIdempotencyKeyAttributes, "id" | "publicId" | "recordCode" | "responseCode" | "responseBody" | "createdAt" | "expiresAt" | "UNIQUE">
+export type IntegrationIdempotencyKeyCreationAttributes = Optional<IntegrationIdempotencyKeyAttributes, "recordCode" | "responseCode" | "responseBody" | "createdAt" | "expiresAt">
 
 export class IntegrationIdempotencyKeyEntity
   extends Model<IntegrationIdempotencyKeyAttributes, IntegrationIdempotencyKeyCreationAttributes>
   implements IntegrationIdempotencyKeyAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
+  declare idempotencyKeyId: string | null
   declare scope: string
   declare key: string
   declare requestHash: string
@@ -30,32 +27,24 @@ export class IntegrationIdempotencyKeyEntity
   declare responseBody: unknown | null
   declare createdAt: Date
   declare expiresAt: Date
-  declare UNIQUE: string | null
 }
 
 export function initIntegrationIdempotencyKeyEntity(sequelize: Sequelize): typeof IntegrationIdempotencyKeyEntity {
   IntegrationIdempotencyKeyEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
         allowNull: false,
         unique: true,
         defaultValue: Sequelize.literal("core.fn_next_record_code_for_table ('integration_idempotency_key')"),
+      },
+      idempotencyKeyId: {
+        type: DataTypes.TEXT,
+        field: 'idempotency_key_id',
+        allowNull: true,
+        primaryKey: true,
+        defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       scope: {
         type: DataTypes.STRING(60),
@@ -93,11 +82,6 @@ export function initIntegrationIdempotencyKeyEntity(sequelize: Sequelize): typeo
         field: 'expires_at',
         allowNull: false,
         defaultValue: Sequelize.literal("now() + interval '24 hours'"),
-      },
-      UNIQUE: {
-        type: DataTypes.TEXT,
-        field: 'UNIQUE',
-        allowNull: true,
       }
     },
     {
@@ -105,7 +89,10 @@ export function initIntegrationIdempotencyKeyEntity(sequelize: Sequelize): typeo
       tableName: 'integration_idempotency_key',
       timestamps: false,
       underscored: true,
-      freezeTableName: true
+      freezeTableName: true,
+      indexes: [
+      { unique: true, fields: ['scope'] }
+      ]
     }
   )
   return IntegrationIdempotencyKeyEntity

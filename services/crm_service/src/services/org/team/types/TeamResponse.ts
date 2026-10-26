@@ -1,8 +1,6 @@
 
 export type TeamResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   team_id: string
   team_code: string

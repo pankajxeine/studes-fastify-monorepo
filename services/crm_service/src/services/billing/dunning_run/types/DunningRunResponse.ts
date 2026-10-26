@@ -1,8 +1,6 @@
 
 export type DunningRunResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   dunning_run_id: string
   invoice_id: string

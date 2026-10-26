@@ -1,8 +1,6 @@
 
 export type DeprovisionRequestResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   deprovision_request_id: string
   tenant_id: string

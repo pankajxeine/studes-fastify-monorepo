@@ -38,17 +38,17 @@ paths:
         '409':
           description: Unique constraint conflict
 
-  /subscription_change/{id}:
+  /subscription_change/{subscription_change_id}:
     get:
       operationId: getSubscriptionChangeById
-      summary: Get subscription_change by ID
+      summary: Get subscription_change by subscription_change_id
       parameters:
         - in: path
-          name: id
+          name: subscription_change_id
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       responses:
         '200':
           description: subscription_change object
@@ -60,14 +60,14 @@ paths:
           description: subscription_change not found
     put:
       operationId: updateSubscriptionChange
-      summary: Update subscription_change by ID
+      summary: Update subscription_change by subscription_change_id
       parameters:
         - in: path
-          name: id
+          name: subscription_change_id
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       requestBody:
         required: true
         content:
@@ -89,14 +89,14 @@ paths:
           description: Unique constraint conflict
     delete:
       operationId: deleteSubscriptionChange
-      summary: Delete subscription_change by ID
+      summary: Delete subscription_change by subscription_change_id
       parameters:
         - in: path
-          name: id
+          name: subscription_change_id
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       responses:
         '204':
           description: Deleted
@@ -220,8 +220,6 @@ components:
     SubscriptionChangeResponse:
       type: object
       required:
-        - id
-        - public_id
         - record_code
         - subscription_change_id
         - subscription_id
@@ -230,14 +228,6 @@ components:
         - created_at
       additionalProperties: false
       properties:
-        id:
-          type: integer
-          format: int64
-          readOnly: true
-        public_id:
-          type: string
-          format: uuid
-          readOnly: true
         record_code:
           type: string
           readOnly: true

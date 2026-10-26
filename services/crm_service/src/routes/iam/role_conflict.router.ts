@@ -4,23 +4,23 @@ import { RoleConflictService } from '../../services/iam/role_conflict/RoleConfli
 const RoleConflictRoutes: FastifyPluginAsync = async (app) => {
   const controller = new RoleConflictService()
 
-  app.get('/role_conflict', async (request, reply) => {
+  app.get('/role_conflict', { config: {"adminPermission":"iam.role_conflict.read"} }, async (request, reply) => {
     const result = await controller.listRoleConflict(app, request)
     return reply.send(result)
   })
-  app.post('/role_conflict', async (request, reply) => {
+  app.post('/role_conflict', { config: {"adminPermission":"iam.role_conflict.create"} }, async (request, reply) => {
     const result = await controller.createRoleConflict(app, request.body as any, request)
     return reply.send(result)
   })
-  app.get('/role_conflict/:id', async (request, reply) => {
+  app.get('/role_conflict/:role_conflict_id', { config: {"adminPermission":"iam.role_conflict.read"} }, async (request, reply) => {
     const result = await controller.getRoleConflictById(app, request)
     return reply.send(result)
   })
-  app.put('/role_conflict/:id', async (request, reply) => {
+  app.put('/role_conflict/:role_conflict_id', { config: {"adminPermission":"iam.role_conflict.update"} }, async (request, reply) => {
     const result = await controller.updateRoleConflict(app, request.body as any, request)
     return reply.send(result)
   })
-  app.delete('/role_conflict/:id', async (request, reply) => {
+  app.delete('/role_conflict/:role_conflict_id', { config: {"adminPermission":"iam.role_conflict.delete"} }, async (request, reply) => {
     const result = await controller.deleteRoleConflict(app, request)
     return reply.send(result)
   })

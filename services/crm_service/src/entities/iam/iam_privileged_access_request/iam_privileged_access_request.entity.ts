@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type IamPrivilegedAccessRequestAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  requestId?: string
+  requestId: string | null
   appUserId: string
   roleCode: string
   scopeType?: string
@@ -19,16 +17,14 @@ export type IamPrivilegedAccessRequestAttributes = {
   requestedAt?: Date
 }
 
-export type IamPrivilegedAccessRequestCreationAttributes = Optional<IamPrivilegedAccessRequestAttributes, "id" | "publicId" | "recordCode" | "requestId" | "scopeType" | "scopeId" | "ticketRef" | "status" | "decidedByUserId" | "decidedAt" | "decisionNote" | "requestedAt">
+export type IamPrivilegedAccessRequestCreationAttributes = Optional<IamPrivilegedAccessRequestAttributes, "recordCode" | "scopeType" | "scopeId" | "ticketRef" | "status" | "decidedByUserId" | "decidedAt" | "decisionNote" | "requestedAt">
 
 export class IamPrivilegedAccessRequestEntity
   extends Model<IamPrivilegedAccessRequestAttributes, IamPrivilegedAccessRequestCreationAttributes>
   implements IamPrivilegedAccessRequestAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare requestId: string
+  declare requestId: string | null
   declare appUserId: string
   declare roleCode: string
   declare scopeType: string
@@ -46,20 +42,6 @@ export class IamPrivilegedAccessRequestEntity
 export function initIamPrivilegedAccessRequestEntity(sequelize: Sequelize): typeof IamPrivilegedAccessRequestEntity {
   IamPrivilegedAccessRequestEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -70,8 +52,8 @@ export function initIamPrivilegedAccessRequestEntity(sequelize: Sequelize): type
       requestId: {
         type: DataTypes.TEXT,
         field: 'request_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       appUserId: {

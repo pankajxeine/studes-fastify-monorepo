@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type BillingDunningPolicyAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  dunningPolicyId?: string
+  dunningPolicyId: string | null
   policyCode: string
   name: string
   isDefault?: string
@@ -14,16 +12,14 @@ export type BillingDunningPolicyAttributes = {
   updatedBy?: string | null
 }
 
-export type BillingDunningPolicyCreationAttributes = Optional<BillingDunningPolicyAttributes, "id" | "publicId" | "recordCode" | "dunningPolicyId" | "isDefault" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
+export type BillingDunningPolicyCreationAttributes = Optional<BillingDunningPolicyAttributes, "recordCode" | "isDefault" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
 
 export class BillingDunningPolicyEntity
   extends Model<BillingDunningPolicyAttributes, BillingDunningPolicyCreationAttributes>
   implements BillingDunningPolicyAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare dunningPolicyId: string
+  declare dunningPolicyId: string | null
   declare policyCode: string
   declare name: string
   declare isDefault: string
@@ -36,20 +32,6 @@ export class BillingDunningPolicyEntity
 export function initBillingDunningPolicyEntity(sequelize: Sequelize): typeof BillingDunningPolicyEntity {
   BillingDunningPolicyEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -60,8 +42,8 @@ export function initBillingDunningPolicyEntity(sequelize: Sequelize): typeof Bil
       dunningPolicyId: {
         type: DataTypes.TEXT,
         field: 'dunning_policy_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       policyCode: {

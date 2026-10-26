@@ -1,8 +1,6 @@
 
 export type EnvironmentResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   environment_id: string
   environment_code: string

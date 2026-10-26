@@ -1,9 +1,8 @@
 
 export type ConfigDefinitionResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
+  config_definition_id: string
   config_key: string
   application_id?: (string) | null
   value_type: string

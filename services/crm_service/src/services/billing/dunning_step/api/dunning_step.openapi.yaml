@@ -38,17 +38,17 @@ paths:
         '409':
           description: Unique constraint conflict
 
-  /dunning_step/{id}:
+  /dunning_step/{dunning_step_id}:
     get:
       operationId: getDunningStepById
-      summary: Get dunning_step by ID
+      summary: Get dunning_step by dunning_step_id
       parameters:
         - in: path
-          name: id
+          name: dunning_step_id
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       responses:
         '200':
           description: dunning_step object
@@ -60,14 +60,14 @@ paths:
           description: dunning_step not found
     put:
       operationId: updateDunningStep
-      summary: Update dunning_step by ID
+      summary: Update dunning_step by dunning_step_id
       parameters:
         - in: path
-          name: id
+          name: dunning_step_id
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       requestBody:
         required: true
         content:
@@ -89,14 +89,14 @@ paths:
           description: Unique constraint conflict
     delete:
       operationId: deleteDunningStep
-      summary: Delete dunning_step by ID
+      summary: Delete dunning_step by dunning_step_id
       parameters:
         - in: path
-          name: id
+          name: dunning_step_id
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       responses:
         '204':
           description: Deleted
@@ -168,25 +168,20 @@ components:
     DunningStepResponse:
       type: object
       required:
-        - id
-        - public_id
         - record_code
+        - dunning_step_id
         - dunning_policy_id
         - step_no
         - days_after_due
         - action
       additionalProperties: false
       properties:
-        id:
-          type: integer
-          format: int64
-          readOnly: true
-        public_id:
-          type: string
-          format: uuid
-          readOnly: true
         record_code:
           type: string
+          readOnly: true
+        dunning_step_id:
+          type: string
+          format: uuid
           readOnly: true
         dunning_policy_id:
           type: string

@@ -1,8 +1,6 @@
 
 export type TemplateResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   template_id: string
   template_code: string

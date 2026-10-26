@@ -38,17 +38,17 @@ paths:
         '409':
           description: Unique constraint conflict
 
-  /opportunity/{id}:
+  /opportunity/{opportunity_id}:
     get:
       operationId: getOpportunityById
-      summary: Get opportunity by ID
+      summary: Get opportunity by opportunity_id
       parameters:
         - in: path
-          name: id
+          name: opportunity_id
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       responses:
         '200':
           description: opportunity object
@@ -60,14 +60,14 @@ paths:
           description: opportunity not found
     put:
       operationId: updateOpportunity
-      summary: Update opportunity by ID
+      summary: Update opportunity by opportunity_id
       parameters:
         - in: path
-          name: id
+          name: opportunity_id
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       requestBody:
         required: true
         content:
@@ -89,14 +89,14 @@ paths:
           description: Unique constraint conflict
     delete:
       operationId: deleteOpportunity
-      summary: Delete opportunity by ID
+      summary: Delete opportunity by opportunity_id
       parameters:
         - in: path
-          name: id
+          name: opportunity_id
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       responses:
         '204':
           description: Deleted
@@ -248,8 +248,6 @@ components:
     OpportunityResponse:
       type: object
       required:
-        - id
-        - public_id
         - record_code
         - opportunity_id
         - opportunity_number
@@ -264,14 +262,6 @@ components:
         - updated_at
       additionalProperties: false
       properties:
-        id:
-          type: integer
-          format: int64
-          readOnly: true
-        public_id:
-          type: string
-          format: uuid
-          readOnly: true
         record_code:
           type: string
           readOnly: true

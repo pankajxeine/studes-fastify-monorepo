@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type PaymentPaymentMethodAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  paymentMethodId?: string
+  paymentMethodId: string | null
   billingAccountId: string
   gateway: string
   gatewayCustomerRef: string
@@ -23,16 +21,14 @@ export type PaymentPaymentMethodAttributes = {
   updatedBy?: string | null
 }
 
-export type PaymentPaymentMethodCreationAttributes = Optional<PaymentPaymentMethodAttributes, "id" | "publicId" | "recordCode" | "paymentMethodId" | "brand" | "last4" | "expMonth" | "expYear" | "fingerprint" | "isDefault" | "status" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
+export type PaymentPaymentMethodCreationAttributes = Optional<PaymentPaymentMethodAttributes, "recordCode" | "brand" | "last4" | "expMonth" | "expYear" | "fingerprint" | "isDefault" | "status" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
 
 export class PaymentPaymentMethodEntity
   extends Model<PaymentPaymentMethodAttributes, PaymentPaymentMethodCreationAttributes>
   implements PaymentPaymentMethodAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare paymentMethodId: string
+  declare paymentMethodId: string | null
   declare billingAccountId: string
   declare gateway: string
   declare gatewayCustomerRef: string
@@ -54,20 +50,6 @@ export class PaymentPaymentMethodEntity
 export function initPaymentPaymentMethodEntity(sequelize: Sequelize): typeof PaymentPaymentMethodEntity {
   PaymentPaymentMethodEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -78,8 +60,8 @@ export function initPaymentPaymentMethodEntity(sequelize: Sequelize): typeof Pay
       paymentMethodId: {
         type: DataTypes.TEXT,
         field: 'payment_method_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       billingAccountId: {

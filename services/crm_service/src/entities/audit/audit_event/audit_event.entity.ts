@@ -1,11 +1,10 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type AuditEventAttributes = {
-  id?: string | number
-  publicId?: string
   recordCode?: string
+  eventId: string
   eventSeq?: string | number
-  occurredAt?: Date
+  occurredAt: Date
   actorType: string
   actorId?: string | null
   actorIp?: string | null
@@ -22,18 +21,15 @@ export type AuditEventAttributes = {
   reason?: string | null
   prevHash?: Buffer | null
   rowHash: string
-  UNIQUE?: string | null
 }
 
-export type AuditEventCreationAttributes = Optional<AuditEventAttributes, "id" | "publicId" | "recordCode" | "eventSeq" | "occurredAt" | "actorId" | "actorIp" | "requestId" | "impersonatingTenantId" | "tenantId" | "entityId" | "changedColumns" | "oldValues" | "newValues" | "reason" | "prevHash" | "UNIQUE">
+export type AuditEventCreationAttributes = Optional<AuditEventAttributes, "recordCode" | "eventSeq" | "actorId" | "actorIp" | "requestId" | "impersonatingTenantId" | "tenantId" | "entityId" | "changedColumns" | "oldValues" | "newValues" | "reason" | "prevHash">
 
 export class AuditEventEntity
   extends Model<AuditEventAttributes, AuditEventCreationAttributes>
-  implements AuditEventAttributes
-{
-  declare id: string | number
-  declare publicId: string
+  implements AuditEventAttributes {
   declare recordCode: string
+  declare eventId: string
   declare eventSeq: string | number
   declare occurredAt: Date
   declare actorType: string
@@ -52,30 +48,23 @@ export class AuditEventEntity
   declare reason: string | null
   declare prevHash: Buffer | null
   declare rowHash: string
-  declare UNIQUE: string | null
 }
 
 export function initAuditEventEntity(sequelize: Sequelize): typeof AuditEventEntity {
   AuditEventEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: false,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
         allowNull: false,
         defaultValue: Sequelize.literal("core.fn_next_record_code_for_table ('audit_event')"),
+      },
+      eventId: {
+        type: DataTypes.TEXT,
+        field: 'event_id',
+        allowNull: false,
+        primaryKey: true,
+        defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       eventSeq: {
         type: DataTypes.BIGINT,
@@ -169,11 +158,6 @@ export function initAuditEventEntity(sequelize: Sequelize): typeof AuditEventEnt
         type: DataTypes.TEXT,
         field: 'row_hash',
         allowNull: false,
-      },
-      UNIQUE: {
-        type: DataTypes.TEXT,
-        field: 'UNIQUE',
-        allowNull: true,
       }
     },
     {
@@ -183,7 +167,9 @@ export function initAuditEventEntity(sequelize: Sequelize): typeof AuditEventEnt
       underscored: true,
       freezeTableName: true,
       indexes: [
-      { unique: true, fields: ['id', 'occurred_at'] }
+        { unique: true, fields: ['event_seq', 'occurred_at'] },
+        { unique: true, fields: ['event_id', 'occurred_at'] },
+        { unique: true, fields: ['record_code', 'occurred_at'] }
       ]
     }
   )

@@ -6,24 +6,9 @@ import type { DeliveryAttemptController } from './DeliveryAttemptController'
 import type { ListItem, PaginatedResponse } from '../../../types/PaginatedResponse'
 
 import { verifyDbSchema, verifyDbModel } from '../../../core/helper/db_utils'
+import {toApiAttributes } from '../../../core/helper/api_helper';
 
-function toModelAttributes(input: object): Record<string, unknown> {
-  return Object.fromEntries(
-    Object.entries(input).map(([key, value]) => [
-      key.replace(/_([a-z])/g, (_match, character: string) => character.toUpperCase()),
-      value,
-    ])
-  )
-}
-
-function toApiAttributes<T>(attributes: Record<string, unknown>): T {
-  return Object.fromEntries(
-    Object.entries(attributes).map(([key, value]) => [
-      key.replace(/[A-Z]/g, (character) => `_${character.toLowerCase()}`),
-      value,
-    ])
-  ) as T
-}
+import { toModelAttributes } from '../../../core/helper/api_helper';
 
 function httpError(statusCode: number, message: string): Error & { statusCode: number } {
   return Object.assign(new Error(message), { statusCode })
@@ -92,9 +77,9 @@ export class DeliveryAttemptService implements DeliveryAttemptController {
       const models = app.models;
       verifyDbModel(models);
       const model = models.notify_delivery_attempt.schema(schema!);
-      const { id } = (request?.params ?? {}) as { id?: string | number }
-      if (id === undefined || id === '') throw httpError(400, 'id is required')
-      const row = await model.findByPk(id)
+      const { delivery_attempt_id } = (request?.params ?? {}) as { delivery_attempt_id?: string | number }
+      if (delivery_attempt_id === undefined || delivery_attempt_id === '') throw httpError(400, 'delivery_attempt_id is required')
+      const row = await model.findByPk(delivery_attempt_id)
       if (!row) {
         throw httpError(404, 'notify_delivery_attempt not found')
       }
@@ -114,9 +99,9 @@ export class DeliveryAttemptService implements DeliveryAttemptController {
       const models = app.models;
       verifyDbModel(models);
       const model = models.notify_delivery_attempt.schema(schema!);
-      const { id } = (request?.params ?? {}) as { id?: string | number }
-      if (id === undefined || id === '') throw httpError(400, 'id is required')
-      const row = await model.findByPk(id)
+      const { delivery_attempt_id } = (request?.params ?? {}) as { delivery_attempt_id?: string | number }
+      if (delivery_attempt_id === undefined || delivery_attempt_id === '') throw httpError(400, 'delivery_attempt_id is required')
+      const row = await model.findByPk(delivery_attempt_id)
       if (!row) {
         throw httpError(404, 'notify_delivery_attempt not found')
       }
@@ -137,9 +122,9 @@ export class DeliveryAttemptService implements DeliveryAttemptController {
       const models = app.models;
       verifyDbModel(models);
       const model = models.notify_delivery_attempt.schema(schema!);
-      const { id } = (request?.params ?? {}) as { id?: string | number }
-      if (id === undefined || id === '') throw httpError(400, 'id is required')
-      const deletedCount = await model.destroy({ where: { id } })
+      const { delivery_attempt_id } = (request?.params ?? {}) as { delivery_attempt_id?: string | number }
+      if (delivery_attempt_id === undefined || delivery_attempt_id === '') throw httpError(400, 'delivery_attempt_id is required')
+      const deletedCount = await model.destroy({ where: { deliveryAttemptId: delivery_attempt_id } })
       if (deletedCount === 0) throw httpError(404, 'notify_delivery_attempt not found')
       return
     } catch (err) {

@@ -1,55 +1,44 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type IamRolePermissionAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
+  rolePermissionId: string | null
   roleCode: string
   permissionCode: string
   createdAt?: Date
   createdBy?: string | null
-  UNIQUE?: string | null
 }
 
-export type IamRolePermissionCreationAttributes = Optional<IamRolePermissionAttributes, "id" | "publicId" | "recordCode" | "createdAt" | "createdBy" | "UNIQUE">
+export type IamRolePermissionCreationAttributes = Optional<IamRolePermissionAttributes, "recordCode" | "createdAt" | "createdBy">
 
 export class IamRolePermissionEntity
   extends Model<IamRolePermissionAttributes, IamRolePermissionCreationAttributes>
   implements IamRolePermissionAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
+  declare rolePermissionId: string | null
   declare roleCode: string
   declare permissionCode: string
   declare createdAt: Date
   declare createdBy: string | null
-  declare UNIQUE: string | null
 }
 
 export function initIamRolePermissionEntity(sequelize: Sequelize): typeof IamRolePermissionEntity {
   IamRolePermissionEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
         allowNull: false,
         unique: true,
         defaultValue: Sequelize.literal("core.fn_next_record_code_for_table ('iam_role_permission')"),
+      },
+      rolePermissionId: {
+        type: DataTypes.TEXT,
+        field: 'role_permission_id',
+        allowNull: true,
+        primaryKey: true,
+        defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       roleCode: {
         type: DataTypes.TEXT,
@@ -77,11 +66,6 @@ export function initIamRolePermissionEntity(sequelize: Sequelize): typeof IamRol
         type: DataTypes.UUID,
         field: 'created_by',
         allowNull: true,
-      },
-      UNIQUE: {
-        type: DataTypes.TEXT,
-        field: 'UNIQUE',
-        allowNull: true,
       }
     },
     {
@@ -89,7 +73,10 @@ export function initIamRolePermissionEntity(sequelize: Sequelize): typeof IamRol
       tableName: 'iam_role_permission',
       timestamps: false,
       underscored: true,
-      freezeTableName: true
+      freezeTableName: true,
+      indexes: [
+      { unique: true, fields: ['role_code', 'permission_code'] }
+      ]
     }
   )
   return IamRolePermissionEntity

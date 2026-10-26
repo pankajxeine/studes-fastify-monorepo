@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type CommercePlanAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  planId?: string
+  planId: string | null
   applicationId: string
   planCode: string
   name: string
@@ -18,16 +16,14 @@ export type CommercePlanAttributes = {
   updatedBy?: string | null
 }
 
-export type CommercePlanCreationAttributes = Optional<CommercePlanAttributes, "id" | "publicId" | "recordCode" | "planId" | "description" | "isPublic" | "isActive" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
+export type CommercePlanCreationAttributes = Optional<CommercePlanAttributes, "recordCode" | "description" | "isPublic" | "isActive" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
 
 export class CommercePlanEntity
   extends Model<CommercePlanAttributes, CommercePlanCreationAttributes>
   implements CommercePlanAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare planId: string
+  declare planId: string | null
   declare applicationId: string
   declare planCode: string
   declare name: string
@@ -44,20 +40,6 @@ export class CommercePlanEntity
 export function initCommercePlanEntity(sequelize: Sequelize): typeof CommercePlanEntity {
   CommercePlanEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -68,8 +50,8 @@ export function initCommercePlanEntity(sequelize: Sequelize): typeof CommercePla
       planId: {
         type: DataTypes.TEXT,
         field: 'plan_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       applicationId: {

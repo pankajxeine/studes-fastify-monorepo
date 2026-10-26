@@ -1,8 +1,6 @@
 
 export type OutletResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   outlet_id: string
   tenant_application_id: string

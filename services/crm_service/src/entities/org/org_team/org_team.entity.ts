@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type OrgTeamAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  teamId?: string
+  teamId: string | null
   teamCode: string
   name: string
   function: string
@@ -17,16 +15,14 @@ export type OrgTeamAttributes = {
   updatedBy?: string | null
 }
 
-export type OrgTeamCreationAttributes = Optional<OrgTeamAttributes, "id" | "publicId" | "recordCode" | "teamId" | "branchId" | "leadUserId" | "isActive" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
+export type OrgTeamCreationAttributes = Optional<OrgTeamAttributes, "recordCode" | "branchId" | "leadUserId" | "isActive" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
 
 export class OrgTeamEntity
   extends Model<OrgTeamAttributes, OrgTeamCreationAttributes>
   implements OrgTeamAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare teamId: string
+  declare teamId: string | null
   declare teamCode: string
   declare name: string
   declare function: string
@@ -42,20 +38,6 @@ export class OrgTeamEntity
 export function initOrgTeamEntity(sequelize: Sequelize): typeof OrgTeamEntity {
   OrgTeamEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -66,8 +48,8 @@ export function initOrgTeamEntity(sequelize: Sequelize): typeof OrgTeamEntity {
       teamId: {
         type: DataTypes.TEXT,
         field: 'team_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       teamCode: {

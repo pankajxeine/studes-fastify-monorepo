@@ -38,17 +38,17 @@ paths:
         '409':
           description: Unique constraint conflict
 
-  /addon_price/{id}:
+  /addon_price/{addon_price_id}:
     get:
       operationId: getAddonPriceById
-      summary: Get addon_price by ID
+      summary: Get addon_price by addon_price_id
       parameters:
         - in: path
-          name: id
+          name: addon_price_id
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       responses:
         '200':
           description: addon_price object
@@ -60,14 +60,14 @@ paths:
           description: addon_price not found
     put:
       operationId: updateAddonPrice
-      summary: Update addon_price by ID
+      summary: Update addon_price by addon_price_id
       parameters:
         - in: path
-          name: id
+          name: addon_price_id
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       requestBody:
         required: true
         content:
@@ -89,14 +89,14 @@ paths:
           description: Unique constraint conflict
     delete:
       operationId: deleteAddonPrice
-      summary: Delete addon_price by ID
+      summary: Delete addon_price by addon_price_id
       parameters:
         - in: path
-          name: id
+          name: addon_price_id
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       responses:
         '204':
           description: Deleted
@@ -157,8 +157,6 @@ components:
     AddonPriceResponse:
       type: object
       required:
-        - id
-        - public_id
         - record_code
         - addon_price_id
         - addon_version_id
@@ -169,14 +167,6 @@ components:
         - created_at
       additionalProperties: false
       properties:
-        id:
-          type: integer
-          format: int64
-          readOnly: true
-        public_id:
-          type: string
-          format: uuid
-          readOnly: true
         record_code:
           type: string
           readOnly: true

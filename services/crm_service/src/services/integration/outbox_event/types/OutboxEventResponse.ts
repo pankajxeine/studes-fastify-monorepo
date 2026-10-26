@@ -1,8 +1,6 @@
 
 export type OutboxEventResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   event_id: string
   aggregate_type: string

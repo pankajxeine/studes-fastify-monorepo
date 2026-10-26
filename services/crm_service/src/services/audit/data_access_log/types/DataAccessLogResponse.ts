@@ -1,8 +1,6 @@
 
 export type DataAccessLogResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   data_access_log_id: string
   app_user_id?: (string) | null

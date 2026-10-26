@@ -1,9 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type NotifyChannelProviderAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
+  channelProviderId: string | null
   providerCode: string
   channel: string
   config?: unknown
@@ -14,15 +13,14 @@ export type NotifyChannelProviderAttributes = {
   updatedAt?: Date
 }
 
-export type NotifyChannelProviderCreationAttributes = Optional<NotifyChannelProviderAttributes, "id" | "publicId" | "recordCode" | "config" | "secretRef" | "priority" | "isActive" | "createdAt" | "updatedAt">
+export type NotifyChannelProviderCreationAttributes = Optional<NotifyChannelProviderAttributes, "recordCode" | "config" | "secretRef" | "priority" | "isActive" | "createdAt" | "updatedAt">
 
 export class NotifyChannelProviderEntity
   extends Model<NotifyChannelProviderAttributes, NotifyChannelProviderCreationAttributes>
   implements NotifyChannelProviderAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
+  declare channelProviderId: string | null
   declare providerCode: string
   declare channel: string
   declare config: unknown
@@ -36,26 +34,19 @@ export class NotifyChannelProviderEntity
 export function initNotifyChannelProviderEntity(sequelize: Sequelize): typeof NotifyChannelProviderEntity {
   NotifyChannelProviderEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
         allowNull: false,
         unique: true,
         defaultValue: Sequelize.literal("core.fn_next_record_code_for_table ('notify_channel_provider')"),
+      },
+      channelProviderId: {
+        type: DataTypes.TEXT,
+        field: 'channel_provider_id',
+        allowNull: true,
+        primaryKey: true,
+        defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       providerCode: {
         type: DataTypes.TEXT,

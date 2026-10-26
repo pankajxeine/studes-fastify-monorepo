@@ -1,8 +1,6 @@
 
 export type UserSessionResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   user_session_id: string
   app_user_id: string

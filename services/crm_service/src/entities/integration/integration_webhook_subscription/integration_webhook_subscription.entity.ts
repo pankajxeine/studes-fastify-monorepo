@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type IntegrationWebhookSubscriptionAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  webhookSubscriptionId?: string
+  webhookSubscriptionId: string | null
   ownerType: string
   tenantId?: string | null
   applicationId?: string | null
@@ -20,16 +18,14 @@ export type IntegrationWebhookSubscriptionAttributes = {
   updatedBy?: string | null
 }
 
-export type IntegrationWebhookSubscriptionCreationAttributes = Optional<IntegrationWebhookSubscriptionAttributes, "id" | "publicId" | "recordCode" | "webhookSubscriptionId" | "tenantId" | "applicationId" | "isActive" | "consecutiveFailures" | "disabledAt" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
+export type IntegrationWebhookSubscriptionCreationAttributes = Optional<IntegrationWebhookSubscriptionAttributes, "recordCode" | "tenantId" | "applicationId" | "isActive" | "consecutiveFailures" | "disabledAt" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
 
 export class IntegrationWebhookSubscriptionEntity
   extends Model<IntegrationWebhookSubscriptionAttributes, IntegrationWebhookSubscriptionCreationAttributes>
   implements IntegrationWebhookSubscriptionAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare webhookSubscriptionId: string
+  declare webhookSubscriptionId: string | null
   declare ownerType: string
   declare tenantId: string | null
   declare applicationId: string | null
@@ -48,32 +44,18 @@ export class IntegrationWebhookSubscriptionEntity
 export function initIntegrationWebhookSubscriptionEntity(sequelize: Sequelize): typeof IntegrationWebhookSubscriptionEntity {
   IntegrationWebhookSubscriptionEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
         allowNull: false,
         unique: true,
-        defaultValue: Sequelize.literal("core.fn_next_record_code_for_table ('integration_webhook_subscription')"),
+        defaultValue: Sequelize.literal("core.fn_next_record_code_for_table (\r\n        'integration_webhook_subscription'\r\n    )"),
       },
       webhookSubscriptionId: {
         type: DataTypes.TEXT,
         field: 'webhook_subscription_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       ownerType: {

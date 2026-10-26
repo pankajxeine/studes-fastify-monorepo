@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type AuditConsentAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  consentId?: string
+  consentId: string | null
   subjectType: string
   subjectId: string
   purpose: string
@@ -16,16 +14,14 @@ export type AuditConsentAttributes = {
   withdrawnAt?: Date | null
 }
 
-export type AuditConsentCreationAttributes = Optional<AuditConsentAttributes, "id" | "publicId" | "recordCode" | "consentId" | "evidenceRef" | "capturedAt" | "withdrawnAt">
+export type AuditConsentCreationAttributes = Optional<AuditConsentAttributes, "recordCode" | "evidenceRef" | "capturedAt" | "withdrawnAt">
 
 export class AuditConsentEntity
   extends Model<AuditConsentAttributes, AuditConsentCreationAttributes>
   implements AuditConsentAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare consentId: string
+  declare consentId: string | null
   declare subjectType: string
   declare subjectId: string
   declare purpose: string
@@ -40,20 +36,6 @@ export class AuditConsentEntity
 export function initAuditConsentEntity(sequelize: Sequelize): typeof AuditConsentEntity {
   AuditConsentEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -64,8 +46,8 @@ export function initAuditConsentEntity(sequelize: Sequelize): typeof AuditConsen
       consentId: {
         type: DataTypes.TEXT,
         field: 'consent_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       subjectType: {

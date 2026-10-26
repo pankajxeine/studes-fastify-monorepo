@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type PlatformEnvironmentAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  environmentId?: string
+  environmentId: string | null
   environmentCode: string
   regionCode: string
   kind?: string
@@ -18,16 +16,14 @@ export type PlatformEnvironmentAttributes = {
   updatedBy?: string | null
 }
 
-export type PlatformEnvironmentCreationAttributes = Optional<PlatformEnvironmentAttributes, "id" | "publicId" | "recordCode" | "environmentId" | "kind" | "tenancyModel" | "endpointUrl" | "maxTenants" | "status" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
+export type PlatformEnvironmentCreationAttributes = Optional<PlatformEnvironmentAttributes, "recordCode" | "kind" | "tenancyModel" | "endpointUrl" | "maxTenants" | "status" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
 
 export class PlatformEnvironmentEntity
   extends Model<PlatformEnvironmentAttributes, PlatformEnvironmentCreationAttributes>
   implements PlatformEnvironmentAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare environmentId: string
+  declare environmentId: string | null
   declare environmentCode: string
   declare regionCode: string
   declare kind: string
@@ -44,20 +40,6 @@ export class PlatformEnvironmentEntity
 export function initPlatformEnvironmentEntity(sequelize: Sequelize): typeof PlatformEnvironmentEntity {
   PlatformEnvironmentEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -68,8 +50,8 @@ export function initPlatformEnvironmentEntity(sequelize: Sequelize): typeof Plat
       environmentId: {
         type: DataTypes.TEXT,
         field: 'environment_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       environmentCode: {

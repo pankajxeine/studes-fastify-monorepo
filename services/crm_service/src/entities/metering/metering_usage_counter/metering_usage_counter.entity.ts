@@ -1,9 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type MeteringUsageCounterAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
+  usageCounterId: string | null
   tenantApplicationId: string
   meterId: string
   periodStart: Date
@@ -11,18 +10,16 @@ export type MeteringUsageCounterAttributes = {
   quantity?: number
   lastEventAt: Date
   updatedAt?: Date
-  UNIQUE?: string | null
 }
 
-export type MeteringUsageCounterCreationAttributes = Optional<MeteringUsageCounterAttributes, "id" | "publicId" | "recordCode" | "quantity" | "updatedAt" | "UNIQUE">
+export type MeteringUsageCounterCreationAttributes = Optional<MeteringUsageCounterAttributes, "recordCode" | "quantity" | "updatedAt">
 
 export class MeteringUsageCounterEntity
   extends Model<MeteringUsageCounterAttributes, MeteringUsageCounterCreationAttributes>
   implements MeteringUsageCounterAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
+  declare usageCounterId: string | null
   declare tenantApplicationId: string
   declare meterId: string
   declare periodStart: Date
@@ -30,32 +27,24 @@ export class MeteringUsageCounterEntity
   declare quantity: number
   declare lastEventAt: Date
   declare updatedAt: Date
-  declare UNIQUE: string | null
 }
 
 export function initMeteringUsageCounterEntity(sequelize: Sequelize): typeof MeteringUsageCounterEntity {
   MeteringUsageCounterEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
         allowNull: false,
         unique: true,
         defaultValue: Sequelize.literal("core.fn_next_record_code_for_table ('metering_usage_counter')"),
+      },
+      usageCounterId: {
+        type: DataTypes.TEXT,
+        field: 'usage_counter_id',
+        allowNull: true,
+        primaryKey: true,
+        defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       tenantApplicationId: {
         type: DataTypes.TEXT,
@@ -96,11 +85,6 @@ export function initMeteringUsageCounterEntity(sequelize: Sequelize): typeof Met
         field: 'updated_at',
         allowNull: false,
         defaultValue: DataTypes.NOW,
-      },
-      UNIQUE: {
-        type: DataTypes.TEXT,
-        field: 'UNIQUE',
-        allowNull: true,
       }
     },
     {
@@ -108,7 +92,10 @@ export function initMeteringUsageCounterEntity(sequelize: Sequelize): typeof Met
       tableName: 'metering_usage_counter',
       timestamps: false,
       underscored: true,
-      freezeTableName: true
+      freezeTableName: true,
+      indexes: [
+      { unique: true, fields: ['tenant_application_id', 'meter_id', 'period_start'] }
+      ]
     }
   )
   return MeteringUsageCounterEntity

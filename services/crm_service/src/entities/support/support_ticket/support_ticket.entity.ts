@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type SupportTicketAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  ticketId?: string
+  ticketId: string | null
   ticketNumber?: string
   tenantId?: string | null
   accountId: string
@@ -37,16 +35,14 @@ export type SupportTicketAttributes = {
   updatedBy?: string | null
 }
 
-export type SupportTicketCreationAttributes = Optional<SupportTicketAttributes, "id" | "publicId" | "recordCode" | "ticketId" | "ticketNumber" | "tenantId" | "contactId" | "applicationId" | "moduleId" | "priority" | "status" | "assigneeUserId" | "firstRespondedAt" | "resolvedAt" | "closedAt" | "slaPausedAt" | "firstResponseBreached" | "resolutionBreached" | "reopenedCount" | "parentTicketId" | "externalRef" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
+export type SupportTicketCreationAttributes = Optional<SupportTicketAttributes, "recordCode" | "ticketNumber" | "tenantId" | "contactId" | "applicationId" | "moduleId" | "priority" | "status" | "assigneeUserId" | "firstRespondedAt" | "resolvedAt" | "closedAt" | "slaPausedAt" | "firstResponseBreached" | "resolutionBreached" | "reopenedCount" | "parentTicketId" | "externalRef" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
 
 export class SupportTicketEntity
   extends Model<SupportTicketAttributes, SupportTicketCreationAttributes>
   implements SupportTicketAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare ticketId: string
+  declare ticketId: string | null
   declare ticketNumber: string
   declare tenantId: string | null
   declare accountId: string
@@ -82,20 +78,6 @@ export class SupportTicketEntity
 export function initSupportTicketEntity(sequelize: Sequelize): typeof SupportTicketEntity {
   SupportTicketEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -106,8 +88,8 @@ export function initSupportTicketEntity(sequelize: Sequelize): typeof SupportTic
       ticketId: {
         type: DataTypes.TEXT,
         field: 'ticket_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       ticketNumber: {

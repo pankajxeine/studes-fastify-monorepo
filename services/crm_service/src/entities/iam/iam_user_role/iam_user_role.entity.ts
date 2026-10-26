@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type IamUserRoleAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  userRoleId?: string
+  userRoleId: string | null
   appUserId: string
   roleCode: string
   scopeType?: string
@@ -24,16 +22,14 @@ export type IamUserRoleAttributes = {
   updatedBy?: string | null
 }
 
-export type IamUserRoleCreationAttributes = Optional<IamUserRoleAttributes, "id" | "publicId" | "recordCode" | "userRoleId" | "scopeType" | "scopeId" | "validFrom" | "validTo" | "grantSource" | "sourceRefId" | "grantedByUserId" | "grantedAt" | "revokedAt" | "revokedByUserId" | "revokeReason" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
+export type IamUserRoleCreationAttributes = Optional<IamUserRoleAttributes, "recordCode" | "scopeType" | "scopeId" | "validFrom" | "validTo" | "grantSource" | "sourceRefId" | "grantedByUserId" | "grantedAt" | "revokedAt" | "revokedByUserId" | "revokeReason" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
 
 export class IamUserRoleEntity
   extends Model<IamUserRoleAttributes, IamUserRoleCreationAttributes>
   implements IamUserRoleAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare userRoleId: string
+  declare userRoleId: string | null
   declare appUserId: string
   declare roleCode: string
   declare scopeType: string
@@ -56,20 +52,6 @@ export class IamUserRoleEntity
 export function initIamUserRoleEntity(sequelize: Sequelize): typeof IamUserRoleEntity {
   IamUserRoleEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -80,8 +62,8 @@ export function initIamUserRoleEntity(sequelize: Sequelize): typeof IamUserRoleE
       userRoleId: {
         type: DataTypes.TEXT,
         field: 'user_role_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       appUserId: {

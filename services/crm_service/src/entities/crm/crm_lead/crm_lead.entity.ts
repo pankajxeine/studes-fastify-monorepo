@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type CrmLeadAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  leadId?: string
+  leadId: string | null
   leadNumber?: string
   source: string
   campaignId?: string | null
@@ -29,16 +27,14 @@ export type CrmLeadAttributes = {
   updatedBy?: string | null
 }
 
-export type CrmLeadCreationAttributes = Optional<CrmLeadAttributes, "id" | "publicId" | "recordCode" | "leadId" | "leadNumber" | "campaignId" | "phone" | "countryCode" | "industryCode" | "interestedApplicationId" | "status" | "score" | "ownerUserId" | "salesAgentId" | "branchId" | "convertedAccountId" | "convertedAt" | "disqualifyReason" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
+export type CrmLeadCreationAttributes = Optional<CrmLeadAttributes, "recordCode" | "leadNumber" | "campaignId" | "phone" | "countryCode" | "industryCode" | "interestedApplicationId" | "status" | "score" | "ownerUserId" | "salesAgentId" | "branchId" | "convertedAccountId" | "convertedAt" | "disqualifyReason" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
 
 export class CrmLeadEntity
   extends Model<CrmLeadAttributes, CrmLeadCreationAttributes>
   implements CrmLeadAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare leadId: string
+  declare leadId: string | null
   declare leadNumber: string
   declare source: string
   declare campaignId: string | null
@@ -66,20 +62,6 @@ export class CrmLeadEntity
 export function initCrmLeadEntity(sequelize: Sequelize): typeof CrmLeadEntity {
   CrmLeadEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -90,8 +72,8 @@ export function initCrmLeadEntity(sequelize: Sequelize): typeof CrmLeadEntity {
       leadId: {
         type: DataTypes.TEXT,
         field: 'lead_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       leadNumber: {

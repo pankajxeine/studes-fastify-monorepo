@@ -1,8 +1,6 @@
 
 export type GatewayWebhookResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   gateway_webhook_id: string
   gateway: string

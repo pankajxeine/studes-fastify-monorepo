@@ -1,9 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type EntitlementEntitlementSnapshotAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
+  entitlementSnapshotId: string | null
   tenantApplicationId: string
   version: string | number
   accessMode: string
@@ -14,15 +13,14 @@ export type EntitlementEntitlementSnapshotAttributes = {
   computedAt?: Date
 }
 
-export type EntitlementEntitlementSnapshotCreationAttributes = Optional<EntitlementEntitlementSnapshotAttributes, "id" | "publicId" | "recordCode" | "computedAt">
+export type EntitlementEntitlementSnapshotCreationAttributes = Optional<EntitlementEntitlementSnapshotAttributes, "recordCode" | "computedAt">
 
 export class EntitlementEntitlementSnapshotEntity
   extends Model<EntitlementEntitlementSnapshotAttributes, EntitlementEntitlementSnapshotCreationAttributes>
   implements EntitlementEntitlementSnapshotAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
+  declare entitlementSnapshotId: string | null
   declare tenantApplicationId: string
   declare version: string | number
   declare accessMode: string
@@ -36,26 +34,19 @@ export class EntitlementEntitlementSnapshotEntity
 export function initEntitlementEntitlementSnapshotEntity(sequelize: Sequelize): typeof EntitlementEntitlementSnapshotEntity {
   EntitlementEntitlementSnapshotEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
         allowNull: false,
         unique: true,
         defaultValue: Sequelize.literal("core.fn_next_record_code_for_table (\r\n        'entitlement_entitlement_snapshot'\r\n    )"),
+      },
+      entitlementSnapshotId: {
+        type: DataTypes.TEXT,
+        field: 'entitlement_snapshot_id',
+        allowNull: true,
+        primaryKey: true,
+        defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       tenantApplicationId: {
         type: DataTypes.TEXT,

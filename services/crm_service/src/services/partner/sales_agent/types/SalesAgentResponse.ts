@@ -1,8 +1,6 @@
 
 export type SalesAgentResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   sales_agent_id: string
   agent_code: string

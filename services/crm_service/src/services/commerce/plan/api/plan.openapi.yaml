@@ -38,17 +38,17 @@ paths:
         '409':
           description: Unique constraint conflict
 
-  /plan/{id}:
+  /plan/{plan_id}:
     get:
       operationId: getPlanById
-      summary: Get plan by ID
+      summary: Get plan by plan_id
       parameters:
         - in: path
-          name: id
+          name: plan_id
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       responses:
         '200':
           description: plan object
@@ -60,14 +60,14 @@ paths:
           description: plan not found
     put:
       operationId: updatePlan
-      summary: Update plan by ID
+      summary: Update plan by plan_id
       parameters:
         - in: path
-          name: id
+          name: plan_id
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       requestBody:
         required: true
         content:
@@ -89,14 +89,14 @@ paths:
           description: Unique constraint conflict
     delete:
       operationId: deletePlan
-      summary: Delete plan by ID
+      summary: Delete plan by plan_id
       parameters:
         - in: path
-          name: id
+          name: plan_id
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       responses:
         '204':
           description: Deleted
@@ -173,8 +173,6 @@ components:
     PlanResponse:
       type: object
       required:
-        - id
-        - public_id
         - record_code
         - plan_id
         - application_id
@@ -187,14 +185,6 @@ components:
         - updated_at
       additionalProperties: false
       properties:
-        id:
-          type: integer
-          format: int64
-          readOnly: true
-        public_id:
-          type: string
-          format: uuid
-          readOnly: true
         record_code:
           type: string
           readOnly: true

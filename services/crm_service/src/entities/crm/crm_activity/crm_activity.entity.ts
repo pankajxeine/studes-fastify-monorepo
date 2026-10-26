@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type CrmActivityAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  activityId?: string
+  activityId: string | null
   activityType: string
   subject: string
   body?: string | null
@@ -19,16 +17,14 @@ export type CrmActivityAttributes = {
   updatedBy?: string | null
 }
 
-export type CrmActivityCreationAttributes = Optional<CrmActivityAttributes, "id" | "publicId" | "recordCode" | "activityId" | "body" | "dueAt" | "completedAt" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
+export type CrmActivityCreationAttributes = Optional<CrmActivityAttributes, "recordCode" | "body" | "dueAt" | "completedAt" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
 
 export class CrmActivityEntity
   extends Model<CrmActivityAttributes, CrmActivityCreationAttributes>
   implements CrmActivityAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare activityId: string
+  declare activityId: string | null
   declare activityType: string
   declare subject: string
   declare body: string | null
@@ -46,20 +42,6 @@ export class CrmActivityEntity
 export function initCrmActivityEntity(sequelize: Sequelize): typeof CrmActivityEntity {
   CrmActivityEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -70,8 +52,8 @@ export function initCrmActivityEntity(sequelize: Sequelize): typeof CrmActivityE
       activityId: {
         type: DataTypes.TEXT,
         field: 'activity_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       activityType: {

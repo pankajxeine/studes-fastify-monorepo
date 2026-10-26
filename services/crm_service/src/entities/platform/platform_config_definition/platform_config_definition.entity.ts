@@ -1,9 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type PlatformConfigDefinitionAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
+  configDefinitionId: string | null
   configKey: string
   applicationId?: string | null
   valueType: string
@@ -19,15 +18,14 @@ export type PlatformConfigDefinitionAttributes = {
   updatedBy?: string | null
 }
 
-export type PlatformConfigDefinitionCreationAttributes = Optional<PlatformConfigDefinitionAttributes, "id" | "publicId" | "recordCode" | "applicationId" | "jsonSchema" | "defaultValue" | "isTenantOverridable" | "isSecret" | "isActive" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
+export type PlatformConfigDefinitionCreationAttributes = Optional<PlatformConfigDefinitionAttributes, "recordCode" | "applicationId" | "jsonSchema" | "defaultValue" | "isTenantOverridable" | "isSecret" | "isActive" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
 
 export class PlatformConfigDefinitionEntity
   extends Model<PlatformConfigDefinitionAttributes, PlatformConfigDefinitionCreationAttributes>
   implements PlatformConfigDefinitionAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
+  declare configDefinitionId: string | null
   declare configKey: string
   declare applicationId: string | null
   declare valueType: string
@@ -46,26 +44,19 @@ export class PlatformConfigDefinitionEntity
 export function initPlatformConfigDefinitionEntity(sequelize: Sequelize): typeof PlatformConfigDefinitionEntity {
   PlatformConfigDefinitionEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
         allowNull: false,
         unique: true,
         defaultValue: Sequelize.literal("core.fn_next_record_code_for_table ('platform_config_definition')"),
+      },
+      configDefinitionId: {
+        type: DataTypes.TEXT,
+        field: 'config_definition_id',
+        allowNull: true,
+        primaryKey: true,
+        defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       configKey: {
         type: DataTypes.TEXT,

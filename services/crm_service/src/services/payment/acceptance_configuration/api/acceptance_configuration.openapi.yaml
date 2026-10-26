@@ -38,17 +38,17 @@ paths:
         '409':
           description: Unique constraint conflict
 
-  /acceptance_configuration/{id}:
+  /acceptance_configuration/{acceptance_configuration_id}:
     get:
       operationId: getAcceptanceConfigurationById
-      summary: Get acceptance_configuration by ID
+      summary: Get acceptance_configuration by acceptance_configuration_id
       parameters:
         - in: path
-          name: id
+          name: acceptance_configuration_id
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       responses:
         '200':
           description: acceptance_configuration object
@@ -60,14 +60,14 @@ paths:
           description: acceptance_configuration not found
     put:
       operationId: updateAcceptanceConfiguration
-      summary: Update acceptance_configuration by ID
+      summary: Update acceptance_configuration by acceptance_configuration_id
       parameters:
         - in: path
-          name: id
+          name: acceptance_configuration_id
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       requestBody:
         required: true
         content:
@@ -89,14 +89,14 @@ paths:
           description: Unique constraint conflict
     delete:
       operationId: deleteAcceptanceConfiguration
-      summary: Delete acceptance_configuration by ID
+      summary: Delete acceptance_configuration by acceptance_configuration_id
       parameters:
         - in: path
-          name: id
+          name: acceptance_configuration_id
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       responses:
         '204':
           description: Deleted
@@ -273,8 +273,6 @@ components:
     AcceptanceConfigurationResponse:
       type: object
       required:
-        - id
-        - public_id
         - record_code
         - acceptance_configuration_id
         - tenant_application_id
@@ -290,14 +288,6 @@ components:
         - updated_at
       additionalProperties: false
       properties:
-        id:
-          type: integer
-          format: int64
-          readOnly: true
-        public_id:
-          type: string
-          format: uuid
-          readOnly: true
         record_code:
           type: string
           readOnly: true

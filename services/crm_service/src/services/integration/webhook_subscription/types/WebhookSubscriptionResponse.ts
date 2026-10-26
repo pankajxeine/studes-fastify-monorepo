@@ -1,8 +1,6 @@
 
 export type WebhookSubscriptionResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   webhook_subscription_id: string
   owner_type: string

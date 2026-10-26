@@ -1,9 +1,8 @@
 
 export type UsageCounterResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
+  usage_counter_id: string
   tenant_application_id: string
   meter_id: string
   period_start: string

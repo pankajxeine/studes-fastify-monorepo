@@ -1,9 +1,8 @@
 
 export type JobStepTemplateResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
+  job_step_template_id: string
   job_type: string
   step_no: number
   step_code: string

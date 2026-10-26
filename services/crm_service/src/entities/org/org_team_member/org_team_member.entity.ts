@@ -1,9 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type OrgTeamMemberAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
+  teamMemberId: string | null
   teamId: string
   appUserId: string
   memberRole?: string
@@ -11,18 +10,16 @@ export type OrgTeamMemberAttributes = {
   validTo?: Date | null
   createdAt?: Date
   createdBy?: string | null
-  UNIQUE?: string | null
 }
 
-export type OrgTeamMemberCreationAttributes = Optional<OrgTeamMemberAttributes, "id" | "publicId" | "recordCode" | "memberRole" | "validFrom" | "validTo" | "createdAt" | "createdBy" | "UNIQUE">
+export type OrgTeamMemberCreationAttributes = Optional<OrgTeamMemberAttributes, "recordCode" | "memberRole" | "validFrom" | "validTo" | "createdAt" | "createdBy">
 
 export class OrgTeamMemberEntity
   extends Model<OrgTeamMemberAttributes, OrgTeamMemberCreationAttributes>
   implements OrgTeamMemberAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
+  declare teamMemberId: string | null
   declare teamId: string
   declare appUserId: string
   declare memberRole: string
@@ -30,32 +27,24 @@ export class OrgTeamMemberEntity
   declare validTo: Date | null
   declare createdAt: Date
   declare createdBy: string | null
-  declare UNIQUE: string | null
 }
 
 export function initOrgTeamMemberEntity(sequelize: Sequelize): typeof OrgTeamMemberEntity {
   OrgTeamMemberEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
         allowNull: false,
         unique: true,
         defaultValue: Sequelize.literal("core.fn_next_record_code_for_table ('org_team_member')"),
+      },
+      teamMemberId: {
+        type: DataTypes.TEXT,
+        field: 'team_member_id',
+        allowNull: true,
+        primaryKey: true,
+        defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       teamId: {
         type: DataTypes.TEXT,
@@ -97,11 +86,6 @@ export function initOrgTeamMemberEntity(sequelize: Sequelize): typeof OrgTeamMem
         type: DataTypes.UUID,
         field: 'created_by',
         allowNull: true,
-      },
-      UNIQUE: {
-        type: DataTypes.TEXT,
-        field: 'UNIQUE',
-        allowNull: true,
       }
     },
     {
@@ -109,7 +93,10 @@ export function initOrgTeamMemberEntity(sequelize: Sequelize): typeof OrgTeamMem
       tableName: 'org_team_member',
       timestamps: false,
       underscored: true,
-      freezeTableName: true
+      freezeTableName: true,
+      indexes: [
+      { unique: true, fields: ['team_id', 'app_user_id', 'valid_from'] }
+      ]
     }
   )
   return OrgTeamMemberEntity

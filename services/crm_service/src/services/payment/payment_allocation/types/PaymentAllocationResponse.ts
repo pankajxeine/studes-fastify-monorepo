@@ -1,8 +1,6 @@
 
 export type PaymentAllocationResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   payment_allocation_id: string
   payment_id: string

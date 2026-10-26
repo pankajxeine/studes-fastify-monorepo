@@ -4,11 +4,11 @@ import { HealthService } from '../../services/health/HealthService'
 const HealthRoutes: FastifyPluginAsync = async (app) => {
   const controller = new HealthService()
 
-  app.get('/health', async (request, reply) => {
+  app.get('/health', { config: {"isPublic":true} }, async (request, reply) => {
     const result = await controller.authHealth(app, request)
     return reply.send(result)
   })
-  app.get('/health/db', async (request, reply) => {
+  app.get('/health/db', { config: {"isPublic":true} }, async (request, reply) => {
     const result = await controller.authHealthDb(app, request)
     return reply.send(result)
   })

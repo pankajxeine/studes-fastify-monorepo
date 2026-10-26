@@ -1,8 +1,6 @@
 
 export type ApprovalRuleResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   approval_rule_id: string
   step_no: number

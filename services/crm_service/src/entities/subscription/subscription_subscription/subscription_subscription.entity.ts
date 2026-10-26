@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type SubscriptionSubscriptionAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  subscriptionId?: string
+  subscriptionId: string | null
   subscriptionNumber?: string
   tenantApplicationId: string
   billingAccountId: string
@@ -31,16 +29,14 @@ export type SubscriptionSubscriptionAttributes = {
   updatedBy?: string | null
 }
 
-export type SubscriptionSubscriptionCreationAttributes = Optional<SubscriptionSubscriptionAttributes, "id" | "publicId" | "recordCode" | "subscriptionId" | "subscriptionNumber" | "quoteId" | "quantity" | "discountPercent" | "trialEndsAt" | "startedAt" | "graceUntil" | "cancelAt" | "cancelledAt" | "cancelReason" | "autoRenew" | "contractRef" | "salesAgentId" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
+export type SubscriptionSubscriptionCreationAttributes = Optional<SubscriptionSubscriptionAttributes, "recordCode" | "subscriptionNumber" | "quoteId" | "quantity" | "discountPercent" | "trialEndsAt" | "startedAt" | "graceUntil" | "cancelAt" | "cancelledAt" | "cancelReason" | "autoRenew" | "contractRef" | "salesAgentId" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
 
 export class SubscriptionSubscriptionEntity
   extends Model<SubscriptionSubscriptionAttributes, SubscriptionSubscriptionCreationAttributes>
   implements SubscriptionSubscriptionAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare subscriptionId: string
+  declare subscriptionId: string | null
   declare subscriptionNumber: string
   declare tenantApplicationId: string
   declare billingAccountId: string
@@ -70,20 +66,6 @@ export class SubscriptionSubscriptionEntity
 export function initSubscriptionSubscriptionEntity(sequelize: Sequelize): typeof SubscriptionSubscriptionEntity {
   SubscriptionSubscriptionEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -94,8 +76,8 @@ export function initSubscriptionSubscriptionEntity(sequelize: Sequelize): typeof
       subscriptionId: {
         type: DataTypes.TEXT,
         field: 'subscription_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       subscriptionNumber: {

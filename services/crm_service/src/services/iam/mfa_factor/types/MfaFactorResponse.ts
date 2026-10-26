@@ -1,8 +1,6 @@
 
 export type MfaFactorResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   mfa_factor_id: string
   app_user_id: string

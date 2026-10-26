@@ -1,59 +1,48 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type IamRoleConflictAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
+  roleConflictId: string | null
   roleCodeA: string
   roleCodeB: string
   severity?: string
   rationale: string
   createdAt?: Date
   createdBy?: string | null
-  UNIQUE?: string | null
 }
 
-export type IamRoleConflictCreationAttributes = Optional<IamRoleConflictAttributes, "id" | "publicId" | "recordCode" | "severity" | "createdAt" | "createdBy" | "UNIQUE">
+export type IamRoleConflictCreationAttributes = Optional<IamRoleConflictAttributes, "recordCode" | "severity" | "createdAt" | "createdBy">
 
 export class IamRoleConflictEntity
   extends Model<IamRoleConflictAttributes, IamRoleConflictCreationAttributes>
   implements IamRoleConflictAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
+  declare roleConflictId: string | null
   declare roleCodeA: string
   declare roleCodeB: string
   declare severity: string
   declare rationale: string
   declare createdAt: Date
   declare createdBy: string | null
-  declare UNIQUE: string | null
 }
 
 export function initIamRoleConflictEntity(sequelize: Sequelize): typeof IamRoleConflictEntity {
   IamRoleConflictEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
         allowNull: false,
         unique: true,
         defaultValue: Sequelize.literal("core.fn_next_record_code_for_table ('iam_role_conflict')"),
+      },
+      roleConflictId: {
+        type: DataTypes.TEXT,
+        field: 'role_conflict_id',
+        allowNull: true,
+        primaryKey: true,
+        defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       roleCodeA: {
         type: DataTypes.TEXT,
@@ -92,11 +81,6 @@ export function initIamRoleConflictEntity(sequelize: Sequelize): typeof IamRoleC
         type: DataTypes.UUID,
         field: 'created_by',
         allowNull: true,
-      },
-      UNIQUE: {
-        type: DataTypes.TEXT,
-        field: 'UNIQUE',
-        allowNull: true,
       }
     },
     {
@@ -104,7 +88,10 @@ export function initIamRoleConflictEntity(sequelize: Sequelize): typeof IamRoleC
       tableName: 'iam_role_conflict',
       timestamps: false,
       underscored: true,
-      freezeTableName: true
+      freezeTableName: true,
+      indexes: [
+      { unique: true, fields: ['role_code_a', 'role_code_b'] }
+      ]
     }
   )
   return IamRoleConflictEntity

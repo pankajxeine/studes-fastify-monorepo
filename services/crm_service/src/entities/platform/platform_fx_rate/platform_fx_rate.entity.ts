@@ -1,59 +1,48 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type PlatformFxRateAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
+  fxRateId: string | null
   baseCurrencyCode: string
   quoteCurrencyCode: string
   rateDate: string
   rate: number
   source?: string
   createdAt?: Date
-  UNIQUE?: string | null
 }
 
-export type PlatformFxRateCreationAttributes = Optional<PlatformFxRateAttributes, "id" | "publicId" | "recordCode" | "source" | "createdAt" | "UNIQUE">
+export type PlatformFxRateCreationAttributes = Optional<PlatformFxRateAttributes, "recordCode" | "source" | "createdAt">
 
 export class PlatformFxRateEntity
   extends Model<PlatformFxRateAttributes, PlatformFxRateCreationAttributes>
   implements PlatformFxRateAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
+  declare fxRateId: string | null
   declare baseCurrencyCode: string
   declare quoteCurrencyCode: string
   declare rateDate: string
   declare rate: number
   declare source: string
   declare createdAt: Date
-  declare UNIQUE: string | null
 }
 
 export function initPlatformFxRateEntity(sequelize: Sequelize): typeof PlatformFxRateEntity {
   PlatformFxRateEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
         allowNull: false,
         unique: true,
         defaultValue: Sequelize.literal("core.fn_next_record_code_for_table ('platform_fx_rate')"),
+      },
+      fxRateId: {
+        type: DataTypes.TEXT,
+        field: 'fx_rate_id',
+        allowNull: true,
+        primaryKey: true,
+        defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       baseCurrencyCode: {
         type: DataTypes.TEXT,
@@ -88,11 +77,6 @@ export function initPlatformFxRateEntity(sequelize: Sequelize): typeof PlatformF
         field: 'created_at',
         allowNull: false,
         defaultValue: DataTypes.NOW,
-      },
-      UNIQUE: {
-        type: DataTypes.TEXT,
-        field: 'UNIQUE',
-        allowNull: true,
       }
     },
     {
@@ -100,7 +84,10 @@ export function initPlatformFxRateEntity(sequelize: Sequelize): typeof PlatformF
       tableName: 'platform_fx_rate',
       timestamps: false,
       underscored: true,
-      freezeTableName: true
+      freezeTableName: true,
+      indexes: [
+      { unique: true, fields: ['base_currency_code', 'quote_currency_code', 'rate_date'] }
+      ]
     }
   )
   return PlatformFxRateEntity

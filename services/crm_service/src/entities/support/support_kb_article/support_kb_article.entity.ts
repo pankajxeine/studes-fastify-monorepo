@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type SupportKbArticleAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  kbArticleId?: string
+  kbArticleId: string | null
   slug: string
   applicationId?: string | null
   moduleId?: string | null
@@ -20,16 +18,14 @@ export type SupportKbArticleAttributes = {
   updatedAt?: Date
 }
 
-export type SupportKbArticleCreationAttributes = Optional<SupportKbArticleAttributes, "id" | "publicId" | "recordCode" | "kbArticleId" | "applicationId" | "moduleId" | "locale" | "status" | "visibility" | "versionNo" | "publishedAt" | "createdAt" | "updatedAt">
+export type SupportKbArticleCreationAttributes = Optional<SupportKbArticleAttributes, "recordCode" | "applicationId" | "moduleId" | "locale" | "status" | "visibility" | "versionNo" | "publishedAt" | "createdAt" | "updatedAt">
 
 export class SupportKbArticleEntity
   extends Model<SupportKbArticleAttributes, SupportKbArticleCreationAttributes>
   implements SupportKbArticleAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare kbArticleId: string
+  declare kbArticleId: string | null
   declare slug: string
   declare applicationId: string | null
   declare moduleId: string | null
@@ -48,20 +44,6 @@ export class SupportKbArticleEntity
 export function initSupportKbArticleEntity(sequelize: Sequelize): typeof SupportKbArticleEntity {
   SupportKbArticleEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -72,8 +54,8 @@ export function initSupportKbArticleEntity(sequelize: Sequelize): typeof Support
       kbArticleId: {
         type: DataTypes.TEXT,
         field: 'kb_article_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       slug: {

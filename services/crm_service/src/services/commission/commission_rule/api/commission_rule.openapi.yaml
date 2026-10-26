@@ -38,17 +38,17 @@ paths:
         '409':
           description: Unique constraint conflict
 
-  /commission_rule/{id}:
+  /commission_rule/{commission_rule_id}:
     get:
       operationId: getCommissionRuleById
-      summary: Get commission_rule by ID
+      summary: Get commission_rule by commission_rule_id
       parameters:
         - in: path
-          name: id
+          name: commission_rule_id
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       responses:
         '200':
           description: commission_rule object
@@ -60,14 +60,14 @@ paths:
           description: commission_rule not found
     put:
       operationId: updateCommissionRule
-      summary: Update commission_rule by ID
+      summary: Update commission_rule by commission_rule_id
       parameters:
         - in: path
-          name: id
+          name: commission_rule_id
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       requestBody:
         required: true
         content:
@@ -89,14 +89,14 @@ paths:
           description: Unique constraint conflict
     delete:
       operationId: deleteCommissionRule
-      summary: Delete commission_rule by ID
+      summary: Delete commission_rule by commission_rule_id
       parameters:
         - in: path
-          name: id
+          name: commission_rule_id
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       responses:
         '204':
           description: Deleted
@@ -199,8 +199,6 @@ components:
     CommissionRuleResponse:
       type: object
       required:
-        - id
-        - public_id
         - record_code
         - commission_rule_id
         - commission_plan_id
@@ -212,14 +210,6 @@ components:
         - created_at
       additionalProperties: false
       properties:
-        id:
-          type: integer
-          format: int64
-          readOnly: true
-        public_id:
-          type: string
-          format: uuid
-          readOnly: true
         record_code:
           type: string
           readOnly: true

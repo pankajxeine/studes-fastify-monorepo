@@ -1,8 +1,6 @@
 
 export type QuotaAlertResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   quota_alert_id: string
   tenant_application_id: string

@@ -6,24 +6,9 @@ import type { ContactController } from './ContactController'
 import type { ListItem, PaginatedResponse } from '../../../types/PaginatedResponse'
 
 import { verifyDbSchema, verifyDbModel } from '../../../core/helper/db_utils'
+import {toApiAttributes } from '../../../core/helper/api_helper';
 
-function toModelAttributes(input: object): Record<string, unknown> {
-  return Object.fromEntries(
-    Object.entries(input).map(([key, value]) => [
-      key.replace(/_([a-z])/g, (_match, character: string) => character.toUpperCase()),
-      value,
-    ])
-  )
-}
-
-function toApiAttributes<T>(attributes: Record<string, unknown>): T {
-  return Object.fromEntries(
-    Object.entries(attributes).map(([key, value]) => [
-      key.replace(/[A-Z]/g, (character) => `_${character.toLowerCase()}`),
-      value,
-    ])
-  ) as T
-}
+import { toModelAttributes } from '../../../core/helper/api_helper';
 
 function httpError(statusCode: number, message: string): Error & { statusCode: number } {
   return Object.assign(new Error(message), { statusCode })
@@ -92,9 +77,9 @@ export class ContactService implements ContactController {
       const models = app.models;
       verifyDbModel(models);
       const model = models.crm_contact.schema(schema!);
-      const { id } = (request?.params ?? {}) as { id?: string | number }
-      if (id === undefined || id === '') throw httpError(400, 'id is required')
-      const row = await model.findByPk(id)
+      const { contact_id } = (request?.params ?? {}) as { contact_id?: string | number }
+      if (contact_id === undefined || contact_id === '') throw httpError(400, 'contact_id is required')
+      const row = await model.findByPk(contact_id)
       if (!row) {
         throw httpError(404, 'crm_contact not found')
       }
@@ -114,9 +99,9 @@ export class ContactService implements ContactController {
       const models = app.models;
       verifyDbModel(models);
       const model = models.crm_contact.schema(schema!);
-      const { id } = (request?.params ?? {}) as { id?: string | number }
-      if (id === undefined || id === '') throw httpError(400, 'id is required')
-      const row = await model.findByPk(id)
+      const { contact_id } = (request?.params ?? {}) as { contact_id?: string | number }
+      if (contact_id === undefined || contact_id === '') throw httpError(400, 'contact_id is required')
+      const row = await model.findByPk(contact_id)
       if (!row) {
         throw httpError(404, 'crm_contact not found')
       }
@@ -137,9 +122,9 @@ export class ContactService implements ContactController {
       const models = app.models;
       verifyDbModel(models);
       const model = models.crm_contact.schema(schema!);
-      const { id } = (request?.params ?? {}) as { id?: string | number }
-      if (id === undefined || id === '') throw httpError(400, 'id is required')
-      const deletedCount = await model.destroy({ where: { id } })
+      const { contact_id } = (request?.params ?? {}) as { contact_id?: string | number }
+      if (contact_id === undefined || contact_id === '') throw httpError(400, 'contact_id is required')
+      const deletedCount = await model.destroy({ where: { contactId: contact_id } })
       if (deletedCount === 0) throw httpError(404, 'crm_contact not found')
       return
     } catch (err) {

@@ -43,24 +43,17 @@ function createMetricsPlugin(options = {}) {
     return (0, fastify_plugin_1.default)(async (app) => {
         const register = new client.Registry();
         client.collectDefaultMetrics({ register });
-        const labelNames = options.includeTenant ? ['method', 'route', 'status', 'tenant'] : ['method', 'route', 'status'];
         const httpDuration = new client.Histogram({
             name: 'http_request_duration_ms',
             help: 'Duration of HTTP requests in ms',
-            labelNames,
+            labelNames: ['method', 'route', 'status'],
             registers: [register]
         });
         app.addHook('onResponse', async (request, reply) => {
             const route = request.routeOptions?.url ?? request.url;
-            if (options.includeTenant) {
-                const tenant = request.tenant?.slug ?? 'unknown';
-                httpDuration.labels(request.method, route, String(reply.statusCode), tenant).observe(reply.elapsedTime);
-            }
-            else {
-                httpDuration.labels(request.method, route, String(reply.statusCode)).observe(reply.elapsedTime);
-            }
+            httpDuration.labels(request.method, route, String(reply.statusCode)).observe(reply.elapsedTime);
         });
-        app.get(options.path ?? '/metrics', { config: { requireTenant: options.requireTenant ?? false, requireAuth: options.requireAuth ?? false } }, async (_req, reply) => {
+        app.get(options.path ?? '/metrics', { config: { isPublic: options.isPublic ?? false } }, async (_req, reply) => {
             reply.header('content-type', register.contentType);
             return register.metrics();
         });

@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type CrmCampaignAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  campaignId?: string
+  campaignId: string | null
   campaignCode: string
   name: string
   channel: string
@@ -20,16 +18,14 @@ export type CrmCampaignAttributes = {
   updatedBy?: string | null
 }
 
-export type CrmCampaignCreationAttributes = Optional<CrmCampaignAttributes, "id" | "publicId" | "recordCode" | "campaignId" | "applicationId" | "endDate" | "budgetAmount" | "currencyCode" | "ownerUserId" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
+export type CrmCampaignCreationAttributes = Optional<CrmCampaignAttributes, "recordCode" | "applicationId" | "endDate" | "budgetAmount" | "currencyCode" | "ownerUserId" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
 
 export class CrmCampaignEntity
   extends Model<CrmCampaignAttributes, CrmCampaignCreationAttributes>
   implements CrmCampaignAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare campaignId: string
+  declare campaignId: string | null
   declare campaignCode: string
   declare name: string
   declare channel: string
@@ -48,20 +44,6 @@ export class CrmCampaignEntity
 export function initCrmCampaignEntity(sequelize: Sequelize): typeof CrmCampaignEntity {
   CrmCampaignEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -72,8 +54,8 @@ export function initCrmCampaignEntity(sequelize: Sequelize): typeof CrmCampaignE
       campaignId: {
         type: DataTypes.TEXT,
         field: 'campaign_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       campaignCode: {

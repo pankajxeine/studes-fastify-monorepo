@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type CrmAccountAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  accountId?: string
+  accountId: string | null
   accountNumber?: string
   accountType?: string
   legalName: string
@@ -27,16 +25,14 @@ export type CrmAccountAttributes = {
   deletedAt?: Date | null
 }
 
-export type CrmAccountCreationAttributes = Optional<CrmAccountAttributes, "id" | "publicId" | "recordCode" | "accountId" | "accountNumber" | "accountType" | "industryCode" | "taxId" | "website" | "employeeBand" | "billingAddress" | "ownerUserId" | "branchId" | "territoryId" | "salesAgentId" | "parentAccountId" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy" | "deletedAt">
+export type CrmAccountCreationAttributes = Optional<CrmAccountAttributes, "recordCode" | "accountNumber" | "accountType" | "industryCode" | "taxId" | "website" | "employeeBand" | "billingAddress" | "ownerUserId" | "branchId" | "territoryId" | "salesAgentId" | "parentAccountId" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy" | "deletedAt">
 
 export class CrmAccountEntity
   extends Model<CrmAccountAttributes, CrmAccountCreationAttributes>
   implements CrmAccountAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare accountId: string
+  declare accountId: string | null
   declare accountNumber: string
   declare accountType: string
   declare legalName: string
@@ -62,20 +58,6 @@ export class CrmAccountEntity
 export function initCrmAccountEntity(sequelize: Sequelize): typeof CrmAccountEntity {
   CrmAccountEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -86,8 +68,8 @@ export function initCrmAccountEntity(sequelize: Sequelize): typeof CrmAccountEnt
       accountId: {
         type: DataTypes.TEXT,
         field: 'account_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       accountNumber: {

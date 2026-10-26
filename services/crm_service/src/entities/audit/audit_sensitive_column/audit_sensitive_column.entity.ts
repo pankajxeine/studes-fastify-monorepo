@@ -1,55 +1,44 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type AuditSensitiveColumnAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
+  sensitiveColumnId: string | null
   schemaName: string
   tableName: string
   columnName: string
   category: string
-  UNIQUE?: string | null
 }
 
-export type AuditSensitiveColumnCreationAttributes = Optional<AuditSensitiveColumnAttributes, "id" | "publicId" | "recordCode" | "UNIQUE">
+export type AuditSensitiveColumnCreationAttributes = Optional<AuditSensitiveColumnAttributes, "recordCode">
 
 export class AuditSensitiveColumnEntity
   extends Model<AuditSensitiveColumnAttributes, AuditSensitiveColumnCreationAttributes>
   implements AuditSensitiveColumnAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
+  declare sensitiveColumnId: string | null
   declare schemaName: string
   declare tableName: string
   declare columnName: string
   declare category: string
-  declare UNIQUE: string | null
 }
 
 export function initAuditSensitiveColumnEntity(sequelize: Sequelize): typeof AuditSensitiveColumnEntity {
   AuditSensitiveColumnEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
         allowNull: false,
         unique: true,
         defaultValue: Sequelize.literal("core.fn_next_record_code_for_table ('audit_sensitive_column')"),
+      },
+      sensitiveColumnId: {
+        type: DataTypes.TEXT,
+        field: 'sensitive_column_id',
+        allowNull: true,
+        primaryKey: true,
+        defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       schemaName: {
         type: DataTypes.TEXT,
@@ -70,11 +59,6 @@ export function initAuditSensitiveColumnEntity(sequelize: Sequelize): typeof Aud
         type: DataTypes.STRING(12),
         field: 'category',
         allowNull: false,
-      },
-      UNIQUE: {
-        type: DataTypes.TEXT,
-        field: 'UNIQUE',
-        allowNull: true,
       }
     },
     {
@@ -82,7 +66,10 @@ export function initAuditSensitiveColumnEntity(sequelize: Sequelize): typeof Aud
       tableName: 'audit_sensitive_column',
       timestamps: false,
       underscored: true,
-      freezeTableName: true
+      freezeTableName: true,
+      indexes: [
+      { unique: true, fields: ['schema_name', 'table_name', 'column_name'] }
+      ]
     }
   )
   return AuditSensitiveColumnEntity

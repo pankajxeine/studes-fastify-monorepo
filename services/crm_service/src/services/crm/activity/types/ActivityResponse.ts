@@ -1,8 +1,6 @@
 
 export type ActivityResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   activity_id: string
   activity_type: string

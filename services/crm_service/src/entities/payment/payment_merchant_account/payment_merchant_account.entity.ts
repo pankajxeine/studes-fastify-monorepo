@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type PaymentMerchantAccountAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  merchantAccountId?: string
+  merchantAccountId: string | null
   tenantApplicationId: string
   name: string
   providerCode: string
@@ -20,16 +18,14 @@ export type PaymentMerchantAccountAttributes = {
   updatedAt?: Date
 }
 
-export type PaymentMerchantAccountCreationAttributes = Optional<PaymentMerchantAccountAttributes, "id" | "publicId" | "recordCode" | "merchantAccountId" | "environment" | "settlementAccountRef" | "status" | "verifiedAt" | "createdAt" | "updatedAt">
+export type PaymentMerchantAccountCreationAttributes = Optional<PaymentMerchantAccountAttributes, "recordCode" | "environment" | "settlementAccountRef" | "status" | "verifiedAt" | "createdAt" | "updatedAt">
 
 export class PaymentMerchantAccountEntity
   extends Model<PaymentMerchantAccountAttributes, PaymentMerchantAccountCreationAttributes>
   implements PaymentMerchantAccountAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare merchantAccountId: string
+  declare merchantAccountId: string | null
   declare tenantApplicationId: string
   declare name: string
   declare providerCode: string
@@ -48,20 +44,6 @@ export class PaymentMerchantAccountEntity
 export function initPaymentMerchantAccountEntity(sequelize: Sequelize): typeof PaymentMerchantAccountEntity {
   PaymentMerchantAccountEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -72,8 +54,8 @@ export function initPaymentMerchantAccountEntity(sequelize: Sequelize): typeof P
       merchantAccountId: {
         type: DataTypes.TEXT,
         field: 'merchant_account_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       tenantApplicationId: {

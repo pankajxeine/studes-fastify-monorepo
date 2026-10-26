@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type IamMfaFactorAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  mfaFactorId?: string
+  mfaFactorId: string | null
   appUserId: string
   kind: string
   label?: string | null
@@ -18,16 +16,14 @@ export type IamMfaFactorAttributes = {
   createdBy?: string | null
 }
 
-export type IamMfaFactorCreationAttributes = Optional<IamMfaFactorAttributes, "id" | "publicId" | "recordCode" | "mfaFactorId" | "label" | "webauthnCredentialId" | "isPrimary" | "verifiedAt" | "lastUsedAt" | "revokedAt" | "createdAt" | "createdBy">
+export type IamMfaFactorCreationAttributes = Optional<IamMfaFactorAttributes, "recordCode" | "label" | "webauthnCredentialId" | "isPrimary" | "verifiedAt" | "lastUsedAt" | "revokedAt" | "createdAt" | "createdBy">
 
 export class IamMfaFactorEntity
   extends Model<IamMfaFactorAttributes, IamMfaFactorCreationAttributes>
   implements IamMfaFactorAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare mfaFactorId: string
+  declare mfaFactorId: string | null
   declare appUserId: string
   declare kind: string
   declare label: string | null
@@ -44,20 +40,6 @@ export class IamMfaFactorEntity
 export function initIamMfaFactorEntity(sequelize: Sequelize): typeof IamMfaFactorEntity {
   IamMfaFactorEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -68,8 +50,8 @@ export function initIamMfaFactorEntity(sequelize: Sequelize): typeof IamMfaFacto
       mfaFactorId: {
         type: DataTypes.TEXT,
         field: 'mfa_factor_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       appUserId: {

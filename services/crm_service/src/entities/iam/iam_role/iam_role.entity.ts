@@ -1,9 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type IamRoleAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
+  roleId: string | null
   roleCode: string
   name: string
   description?: string | null
@@ -22,15 +21,14 @@ export type IamRoleAttributes = {
   updatedBy?: string | null
 }
 
-export type IamRoleCreationAttributes = Optional<IamRoleAttributes, "id" | "publicId" | "recordCode" | "description" | "allowedScopes" | "allowedUserTypes" | "isPrivileged" | "requiresMfa" | "maxGrantDays" | "isSystem" | "sortOrder" | "isActive" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
+export type IamRoleCreationAttributes = Optional<IamRoleAttributes, "recordCode" | "description" | "allowedScopes" | "allowedUserTypes" | "isPrivileged" | "requiresMfa" | "maxGrantDays" | "isSystem" | "sortOrder" | "isActive" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
 
 export class IamRoleEntity
   extends Model<IamRoleAttributes, IamRoleCreationAttributes>
   implements IamRoleAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
+  declare roleId: string | null
   declare roleCode: string
   declare name: string
   declare description: string | null
@@ -52,26 +50,19 @@ export class IamRoleEntity
 export function initIamRoleEntity(sequelize: Sequelize): typeof IamRoleEntity {
   IamRoleEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
         allowNull: false,
         unique: true,
         defaultValue: Sequelize.literal("core.fn_next_record_code_for_table ('iam_role')"),
+      },
+      roleId: {
+        type: DataTypes.TEXT,
+        field: 'role_id',
+        allowNull: true,
+        primaryKey: true,
+        defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       roleCode: {
         type: DataTypes.TEXT,

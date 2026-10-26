@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type SupportEscalationRuleAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  escalationRuleId?: string
+  escalationRuleId: string | null
   queueId?: string | null
   priority?: string | null
   metric: string
@@ -17,16 +15,14 @@ export type SupportEscalationRuleAttributes = {
   createdBy?: string | null
 }
 
-export type SupportEscalationRuleCreationAttributes = Optional<SupportEscalationRuleAttributes, "id" | "publicId" | "recordCode" | "escalationRuleId" | "queueId" | "priority" | "minutesBeforeBreach" | "targetUserId" | "targetQueueId" | "isActive" | "createdAt" | "createdBy">
+export type SupportEscalationRuleCreationAttributes = Optional<SupportEscalationRuleAttributes, "recordCode" | "queueId" | "priority" | "minutesBeforeBreach" | "targetUserId" | "targetQueueId" | "isActive" | "createdAt" | "createdBy">
 
 export class SupportEscalationRuleEntity
   extends Model<SupportEscalationRuleAttributes, SupportEscalationRuleCreationAttributes>
   implements SupportEscalationRuleAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare escalationRuleId: string
+  declare escalationRuleId: string | null
   declare queueId: string | null
   declare priority: string | null
   declare metric: string
@@ -42,20 +38,6 @@ export class SupportEscalationRuleEntity
 export function initSupportEscalationRuleEntity(sequelize: Sequelize): typeof SupportEscalationRuleEntity {
   SupportEscalationRuleEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -66,8 +48,8 @@ export function initSupportEscalationRuleEntity(sequelize: Sequelize): typeof Su
       escalationRuleId: {
         type: DataTypes.TEXT,
         field: 'escalation_rule_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       queueId: {

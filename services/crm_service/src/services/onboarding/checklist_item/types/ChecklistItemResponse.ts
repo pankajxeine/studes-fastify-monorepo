@@ -1,9 +1,8 @@
 
 export type ChecklistItemResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
+  checklist_item_id: string
   request_id: string
   item_code: string
   title: string

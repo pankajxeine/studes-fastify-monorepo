@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type OrgBranchAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  branchId?: string
+  branchId: string | null
   branchCode: string
   name: string
   legalEntityId: string
@@ -21,16 +19,14 @@ export type OrgBranchAttributes = {
   updatedBy?: string | null
 }
 
-export type OrgBranchCreationAttributes = Optional<OrgBranchAttributes, "id" | "publicId" | "recordCode" | "branchId" | "territoryId" | "address" | "calendarId" | "managerUserId" | "isActive" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
+export type OrgBranchCreationAttributes = Optional<OrgBranchAttributes, "recordCode" | "territoryId" | "address" | "calendarId" | "managerUserId" | "isActive" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
 
 export class OrgBranchEntity
   extends Model<OrgBranchAttributes, OrgBranchCreationAttributes>
   implements OrgBranchAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare branchId: string
+  declare branchId: string | null
   declare branchCode: string
   declare name: string
   declare legalEntityId: string
@@ -50,20 +46,6 @@ export class OrgBranchEntity
 export function initOrgBranchEntity(sequelize: Sequelize): typeof OrgBranchEntity {
   OrgBranchEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -74,8 +56,8 @@ export function initOrgBranchEntity(sequelize: Sequelize): typeof OrgBranchEntit
       branchId: {
         type: DataTypes.TEXT,
         field: 'branch_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       branchCode: {

@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type CrmQuoteAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  quoteId?: string
+  quoteId: string | null
   quoteNumber?: string
   opportunityId: string
   accountId: string
@@ -28,16 +26,14 @@ export type CrmQuoteAttributes = {
   updatedBy?: string | null
 }
 
-export type CrmQuoteCreationAttributes = Optional<CrmQuoteAttributes, "id" | "publicId" | "recordCode" | "quoteId" | "quoteNumber" | "status" | "subtotal" | "discountTotal" | "total" | "maxDiscountPercent" | "couponId" | "terms" | "approvedByUserId" | "approvedAt" | "sentAt" | "acceptedAt" | "acceptedByContactId" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
+export type CrmQuoteCreationAttributes = Optional<CrmQuoteAttributes, "recordCode" | "quoteNumber" | "status" | "subtotal" | "discountTotal" | "total" | "maxDiscountPercent" | "couponId" | "terms" | "approvedByUserId" | "approvedAt" | "sentAt" | "acceptedAt" | "acceptedByContactId" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
 
 export class CrmQuoteEntity
   extends Model<CrmQuoteAttributes, CrmQuoteCreationAttributes>
   implements CrmQuoteAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare quoteId: string
+  declare quoteId: string | null
   declare quoteNumber: string
   declare opportunityId: string
   declare accountId: string
@@ -64,20 +60,6 @@ export class CrmQuoteEntity
 export function initCrmQuoteEntity(sequelize: Sequelize): typeof CrmQuoteEntity {
   CrmQuoteEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -88,8 +70,8 @@ export function initCrmQuoteEntity(sequelize: Sequelize): typeof CrmQuoteEntity 
       quoteId: {
         type: DataTypes.TEXT,
         field: 'quote_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       quoteNumber: {

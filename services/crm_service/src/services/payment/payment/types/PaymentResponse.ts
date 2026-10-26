@@ -1,8 +1,6 @@
 
 export type PaymentResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   payment_id: string
   payment_number: string

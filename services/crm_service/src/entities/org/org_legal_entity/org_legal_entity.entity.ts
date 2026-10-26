@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type OrgLegalEntityAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  legalEntityId?: string
+  legalEntityId: string | null
   legalEntityCode: string
   legalName: string
   countryCode: string
@@ -19,16 +17,14 @@ export type OrgLegalEntityAttributes = {
   updatedBy?: string | null
 }
 
-export type OrgLegalEntityCreationAttributes = Optional<OrgLegalEntityAttributes, "id" | "publicId" | "recordCode" | "legalEntityId" | "taxRegistrationNo" | "isActive" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
+export type OrgLegalEntityCreationAttributes = Optional<OrgLegalEntityAttributes, "recordCode" | "taxRegistrationNo" | "isActive" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
 
 export class OrgLegalEntityEntity
   extends Model<OrgLegalEntityAttributes, OrgLegalEntityCreationAttributes>
   implements OrgLegalEntityAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare legalEntityId: string
+  declare legalEntityId: string | null
   declare legalEntityCode: string
   declare legalName: string
   declare countryCode: string
@@ -46,20 +42,6 @@ export class OrgLegalEntityEntity
 export function initOrgLegalEntityEntity(sequelize: Sequelize): typeof OrgLegalEntityEntity {
   OrgLegalEntityEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -70,8 +52,8 @@ export function initOrgLegalEntityEntity(sequelize: Sequelize): typeof OrgLegalE
       legalEntityId: {
         type: DataTypes.TEXT,
         field: 'legal_entity_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       legalEntityCode: {

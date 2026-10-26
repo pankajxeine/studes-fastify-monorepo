@@ -1,8 +1,6 @@
 
 export type CommissionLedgerResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   entry_id: string
   sales_agent_id: string

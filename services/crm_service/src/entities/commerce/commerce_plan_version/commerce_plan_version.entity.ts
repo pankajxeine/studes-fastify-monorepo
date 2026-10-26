@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type CommercePlanVersionAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  planVersionId?: string
+  planVersionId: string | null
   planId: string
   versionNo: number
   status?: string
@@ -22,16 +20,14 @@ export type CommercePlanVersionAttributes = {
   updatedBy?: string | null
 }
 
-export type CommercePlanVersionCreationAttributes = Optional<CommercePlanVersionAttributes, "id" | "publicId" | "recordCode" | "planVersionId" | "status" | "trialDays" | "graceDays" | "minTermMonths" | "slaPolicyId" | "notes" | "publishedAt" | "publishedByUserId" | "retiredAt" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
+export type CommercePlanVersionCreationAttributes = Optional<CommercePlanVersionAttributes, "recordCode" | "status" | "trialDays" | "graceDays" | "minTermMonths" | "slaPolicyId" | "notes" | "publishedAt" | "publishedByUserId" | "retiredAt" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
 
 export class CommercePlanVersionEntity
   extends Model<CommercePlanVersionAttributes, CommercePlanVersionCreationAttributes>
   implements CommercePlanVersionAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare planVersionId: string
+  declare planVersionId: string | null
   declare planId: string
   declare versionNo: number
   declare status: string
@@ -52,20 +48,6 @@ export class CommercePlanVersionEntity
 export function initCommercePlanVersionEntity(sequelize: Sequelize): typeof CommercePlanVersionEntity {
   CommercePlanVersionEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -76,8 +58,8 @@ export function initCommercePlanVersionEntity(sequelize: Sequelize): typeof Comm
       planVersionId: {
         type: DataTypes.TEXT,
         field: 'plan_version_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       planId: {

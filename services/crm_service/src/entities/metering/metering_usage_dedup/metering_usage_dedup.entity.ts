@@ -1,53 +1,42 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type MeteringUsageDedupAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
+  usageDedupId: string | null
   tenantApplicationId: string
   idempotencyKey: string
   receivedAt?: Date
-  UNIQUE?: string | null
 }
 
-export type MeteringUsageDedupCreationAttributes = Optional<MeteringUsageDedupAttributes, "id" | "publicId" | "recordCode" | "receivedAt" | "UNIQUE">
+export type MeteringUsageDedupCreationAttributes = Optional<MeteringUsageDedupAttributes, "recordCode" | "receivedAt">
 
 export class MeteringUsageDedupEntity
   extends Model<MeteringUsageDedupAttributes, MeteringUsageDedupCreationAttributes>
   implements MeteringUsageDedupAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
+  declare usageDedupId: string | null
   declare tenantApplicationId: string
   declare idempotencyKey: string
   declare receivedAt: Date
-  declare UNIQUE: string | null
 }
 
 export function initMeteringUsageDedupEntity(sequelize: Sequelize): typeof MeteringUsageDedupEntity {
   MeteringUsageDedupEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
         allowNull: false,
         unique: true,
         defaultValue: Sequelize.literal("core.fn_next_record_code_for_table ('metering_usage_dedup')"),
+      },
+      usageDedupId: {
+        type: DataTypes.TEXT,
+        field: 'usage_dedup_id',
+        allowNull: true,
+        primaryKey: true,
+        defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       tenantApplicationId: {
         type: DataTypes.TEXT,
@@ -64,11 +53,6 @@ export function initMeteringUsageDedupEntity(sequelize: Sequelize): typeof Meter
         field: 'received_at',
         allowNull: false,
         defaultValue: DataTypes.NOW,
-      },
-      UNIQUE: {
-        type: DataTypes.TEXT,
-        field: 'UNIQUE',
-        allowNull: true,
       }
     },
     {
@@ -76,7 +60,10 @@ export function initMeteringUsageDedupEntity(sequelize: Sequelize): typeof Meter
       tableName: 'metering_usage_dedup',
       timestamps: false,
       underscored: true,
-      freezeTableName: true
+      freezeTableName: true,
+      indexes: [
+      { unique: true, fields: ['tenant_application_id', 'idempotency_key'] }
+      ]
     }
   )
   return MeteringUsageDedupEntity

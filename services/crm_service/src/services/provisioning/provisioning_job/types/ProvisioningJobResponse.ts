@@ -1,8 +1,6 @@
 
 export type ProvisioningJobResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   job_id: string
   tenant_application_id: string

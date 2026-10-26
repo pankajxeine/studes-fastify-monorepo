@@ -1,8 +1,6 @@
 
 export type KycDocumentResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   kyc_document_id: string
   account_id: string

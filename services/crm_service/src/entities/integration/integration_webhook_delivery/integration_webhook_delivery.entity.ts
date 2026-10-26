@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type IntegrationWebhookDeliveryAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  webhookDeliveryId?: string
+  webhookDeliveryId: string | null
   webhookSubscriptionId: string
   eventId: string
   status?: string
@@ -16,16 +14,14 @@ export type IntegrationWebhookDeliveryAttributes = {
   lastError?: string | null
 }
 
-export type IntegrationWebhookDeliveryCreationAttributes = Optional<IntegrationWebhookDeliveryAttributes, "id" | "publicId" | "recordCode" | "webhookDeliveryId" | "status" | "attempts" | "nextAttemptAt" | "responseCode" | "responseMs" | "deliveredAt" | "lastError">
+export type IntegrationWebhookDeliveryCreationAttributes = Optional<IntegrationWebhookDeliveryAttributes, "recordCode" | "status" | "attempts" | "nextAttemptAt" | "responseCode" | "responseMs" | "deliveredAt" | "lastError">
 
 export class IntegrationWebhookDeliveryEntity
   extends Model<IntegrationWebhookDeliveryAttributes, IntegrationWebhookDeliveryCreationAttributes>
   implements IntegrationWebhookDeliveryAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare webhookDeliveryId: string
+  declare webhookDeliveryId: string | null
   declare webhookSubscriptionId: string
   declare eventId: string
   declare status: string
@@ -40,32 +36,18 @@ export class IntegrationWebhookDeliveryEntity
 export function initIntegrationWebhookDeliveryEntity(sequelize: Sequelize): typeof IntegrationWebhookDeliveryEntity {
   IntegrationWebhookDeliveryEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
         allowNull: false,
         unique: true,
-        defaultValue: Sequelize.literal("core.fn_next_record_code_for_table ('integration_webhook_delivery')"),
+        defaultValue: Sequelize.literal("core.fn_next_record_code_for_table (\r\n        'integration_webhook_delivery'\r\n    )"),
       },
       webhookDeliveryId: {
         type: DataTypes.TEXT,
         field: 'webhook_delivery_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       webhookSubscriptionId: {

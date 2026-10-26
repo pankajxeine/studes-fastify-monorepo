@@ -38,17 +38,17 @@ paths:
         '409':
           description: Unique constraint conflict
 
-  /event/{id}:
+  /event/{event_id}:
     get:
       operationId: getEventById
-      summary: Get event by ID
+      summary: Get event by event_id
       parameters:
         - in: path
-          name: id
+          name: event_id
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       responses:
         '200':
           description: event object
@@ -60,14 +60,14 @@ paths:
           description: event not found
     put:
       operationId: updateEvent
-      summary: Update event by ID
+      summary: Update event by event_id
       parameters:
         - in: path
-          name: id
+          name: event_id
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       requestBody:
         required: true
         content:
@@ -89,14 +89,14 @@ paths:
           description: Unique constraint conflict
     delete:
       operationId: deleteEvent
-      summary: Delete event by ID
+      summary: Delete event by event_id
       parameters:
         - in: path
-          name: id
+          name: event_id
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       responses:
         '204':
           description: Deleted
@@ -240,9 +240,8 @@ components:
     EventResponse:
       type: object
       required:
-        - id
-        - public_id
         - record_code
+        - event_id
         - event_seq
         - occurred_at
         - actor_type
@@ -252,16 +251,12 @@ components:
         - row_hash
       additionalProperties: false
       properties:
-        id:
-          type: integer
-          format: int64
-          readOnly: true
-        public_id:
-          type: string
-          format: uuid
-          readOnly: true
         record_code:
           type: string
+          readOnly: true
+        event_id:
+          type: string
+          format: uuid
           readOnly: true
         event_seq:
           type: integer

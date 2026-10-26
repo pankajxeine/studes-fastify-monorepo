@@ -1,8 +1,6 @@
 
 export type CouponResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   coupon_id: string
   coupon_code: string

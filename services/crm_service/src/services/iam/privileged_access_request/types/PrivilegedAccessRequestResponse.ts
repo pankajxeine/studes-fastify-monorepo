@@ -1,8 +1,6 @@
 
 export type PrivilegedAccessRequestResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   request_id: string
   app_user_id: string

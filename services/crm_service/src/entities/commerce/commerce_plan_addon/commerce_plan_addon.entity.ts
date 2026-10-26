@@ -1,51 +1,40 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type CommercePlanAddonAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
+  planAddonId: string | null
   planVersionId: string
   addonId: string
-  UNIQUE?: string | null
 }
 
-export type CommercePlanAddonCreationAttributes = Optional<CommercePlanAddonAttributes, "id" | "publicId" | "recordCode" | "UNIQUE">
+export type CommercePlanAddonCreationAttributes = Optional<CommercePlanAddonAttributes, "recordCode">
 
 export class CommercePlanAddonEntity
   extends Model<CommercePlanAddonAttributes, CommercePlanAddonCreationAttributes>
   implements CommercePlanAddonAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
+  declare planAddonId: string | null
   declare planVersionId: string
   declare addonId: string
-  declare UNIQUE: string | null
 }
 
 export function initCommercePlanAddonEntity(sequelize: Sequelize): typeof CommercePlanAddonEntity {
   CommercePlanAddonEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
         allowNull: false,
         unique: true,
         defaultValue: Sequelize.literal("core.fn_next_record_code_for_table ('commerce_plan_addon')"),
+      },
+      planAddonId: {
+        type: DataTypes.TEXT,
+        field: 'plan_addon_id',
+        allowNull: true,
+        primaryKey: true,
+        defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       planVersionId: {
         type: DataTypes.TEXT,
@@ -59,11 +48,6 @@ export function initCommercePlanAddonEntity(sequelize: Sequelize): typeof Commer
         field: 'addon_id',
         allowNull: false,
         references: { model: 'commerce_addon', key: 'addon_id' },
-      },
-      UNIQUE: {
-        type: DataTypes.TEXT,
-        field: 'UNIQUE',
-        allowNull: true,
       }
     },
     {
@@ -71,7 +55,10 @@ export function initCommercePlanAddonEntity(sequelize: Sequelize): typeof Commer
       tableName: 'commerce_plan_addon',
       timestamps: false,
       underscored: true,
-      freezeTableName: true
+      freezeTableName: true,
+      indexes: [
+      { unique: true, fields: ['plan_version_id', 'addon_id'] }
+      ]
     }
   )
   return CommercePlanAddonEntity

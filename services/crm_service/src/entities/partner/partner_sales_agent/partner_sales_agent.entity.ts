@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type PartnerSalesAgentAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  salesAgentId?: string
+  salesAgentId: string | null
   agentCode: string
   agentType: string
   appUserId?: string | null
@@ -30,16 +28,14 @@ export type PartnerSalesAgentAttributes = {
   updatedBy?: string | null
 }
 
-export type PartnerSalesAgentCreationAttributes = Optional<PartnerSalesAgentAttributes, "id" | "publicId" | "recordCode" | "salesAgentId" | "appUserId" | "phone" | "territoryId" | "branchId" | "parentAgentId" | "tier" | "status" | "taxId" | "payoutAccountRef" | "kycVerifiedAt" | "contractStart" | "contractEnd" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
+export type PartnerSalesAgentCreationAttributes = Optional<PartnerSalesAgentAttributes, "recordCode" | "appUserId" | "phone" | "territoryId" | "branchId" | "parentAgentId" | "tier" | "status" | "taxId" | "payoutAccountRef" | "kycVerifiedAt" | "contractStart" | "contractEnd" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
 
 export class PartnerSalesAgentEntity
   extends Model<PartnerSalesAgentAttributes, PartnerSalesAgentCreationAttributes>
   implements PartnerSalesAgentAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare salesAgentId: string
+  declare salesAgentId: string | null
   declare agentCode: string
   declare agentType: string
   declare appUserId: string | null
@@ -68,20 +64,6 @@ export class PartnerSalesAgentEntity
 export function initPartnerSalesAgentEntity(sequelize: Sequelize): typeof PartnerSalesAgentEntity {
   PartnerSalesAgentEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -92,8 +74,8 @@ export function initPartnerSalesAgentEntity(sequelize: Sequelize): typeof Partne
       salesAgentId: {
         type: DataTypes.TEXT,
         field: 'sales_agent_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       agentCode: {

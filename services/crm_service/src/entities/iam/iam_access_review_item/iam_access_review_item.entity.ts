@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type IamAccessReviewItemAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  accessReviewItemId?: string
+  accessReviewItemId: string | null
   accessReviewId: string
   userRoleId: string
   reviewerUserId: string
@@ -13,16 +11,14 @@ export type IamAccessReviewItemAttributes = {
   comment?: string | null
 }
 
-export type IamAccessReviewItemCreationAttributes = Optional<IamAccessReviewItemAttributes, "id" | "publicId" | "recordCode" | "accessReviewItemId" | "decision" | "decidedAt" | "comment">
+export type IamAccessReviewItemCreationAttributes = Optional<IamAccessReviewItemAttributes, "recordCode" | "decision" | "decidedAt" | "comment">
 
 export class IamAccessReviewItemEntity
   extends Model<IamAccessReviewItemAttributes, IamAccessReviewItemCreationAttributes>
   implements IamAccessReviewItemAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare accessReviewItemId: string
+  declare accessReviewItemId: string | null
   declare accessReviewId: string
   declare userRoleId: string
   declare reviewerUserId: string
@@ -34,20 +30,6 @@ export class IamAccessReviewItemEntity
 export function initIamAccessReviewItemEntity(sequelize: Sequelize): typeof IamAccessReviewItemEntity {
   IamAccessReviewItemEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -58,8 +40,8 @@ export function initIamAccessReviewItemEntity(sequelize: Sequelize): typeof IamA
       accessReviewItemId: {
         type: DataTypes.TEXT,
         field: 'access_review_item_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       accessReviewId: {

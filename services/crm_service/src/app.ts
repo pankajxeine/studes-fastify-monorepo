@@ -3,6 +3,7 @@ import envPlugin from './plugins/env'
 import dbPlugin from './plugins/db'
 import requestPlugin from './plugins/request'
 import authPlugin from './plugins/auth'
+import adminAuthPlugin from './plugins/admin-auth'
 import {
   createMetricsPlugin,
   registerErrorHandler,
@@ -46,7 +47,8 @@ export async function buildApp(): Promise<FastifyInstance> {
   await fastify.register(dbPlugin)
   await fastify.register(requestPlugin)
   await fastify.register(authPlugin)
-  await fastify.register(createMetricsPlugin({ includeTenant: true }))
+  await fastify.register(adminAuthPlugin)
+  await fastify.register(createMetricsPlugin())
 
   registerErrorHandler(fastify, { includeZod: true })
   // registerGeneratedRoutes(fastify) // Automatically register routes from the routes directory

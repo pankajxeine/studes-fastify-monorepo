@@ -1,8 +1,6 @@
 
 export type MerchantAccountResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   merchant_account_id: string
   tenant_application_id: string

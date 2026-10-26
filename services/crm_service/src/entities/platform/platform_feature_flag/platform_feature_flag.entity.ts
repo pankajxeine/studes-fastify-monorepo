@@ -1,9 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type PlatformFeatureFlagAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
+  featureFlagId: string | null
   flagKey: string
   description: string
   isEnabled?: string
@@ -14,15 +13,14 @@ export type PlatformFeatureFlagAttributes = {
   updatedBy?: string | null
 }
 
-export type PlatformFeatureFlagCreationAttributes = Optional<PlatformFeatureFlagAttributes, "id" | "publicId" | "recordCode" | "isEnabled" | "rolloutPercent" | "rules" | "createdAt" | "updatedAt" | "updatedBy">
+export type PlatformFeatureFlagCreationAttributes = Optional<PlatformFeatureFlagAttributes, "recordCode" | "isEnabled" | "rolloutPercent" | "rules" | "createdAt" | "updatedAt" | "updatedBy">
 
 export class PlatformFeatureFlagEntity
   extends Model<PlatformFeatureFlagAttributes, PlatformFeatureFlagCreationAttributes>
   implements PlatformFeatureFlagAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
+  declare featureFlagId: string | null
   declare flagKey: string
   declare description: string
   declare isEnabled: string
@@ -36,26 +34,19 @@ export class PlatformFeatureFlagEntity
 export function initPlatformFeatureFlagEntity(sequelize: Sequelize): typeof PlatformFeatureFlagEntity {
   PlatformFeatureFlagEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
         allowNull: false,
         unique: true,
         defaultValue: Sequelize.literal("core.fn_next_record_code_for_table ('platform_feature_flag')"),
+      },
+      featureFlagId: {
+        type: DataTypes.TEXT,
+        field: 'feature_flag_id',
+        allowNull: true,
+        primaryKey: true,
+        defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       flagKey: {
         type: DataTypes.TEXT,

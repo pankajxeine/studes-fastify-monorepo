@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type CommissionCommissionPlanAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  commissionPlanId?: string
+  commissionPlanId: string | null
   planCode: string
   name: string
   currencyCode: string
@@ -18,16 +16,14 @@ export type CommissionCommissionPlanAttributes = {
   updatedBy?: string | null
 }
 
-export type CommissionCommissionPlanCreationAttributes = Optional<CommissionCommissionPlanAttributes, "id" | "publicId" | "recordCode" | "commissionPlanId" | "clawbackDays" | "validTo" | "isActive" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
+export type CommissionCommissionPlanCreationAttributes = Optional<CommissionCommissionPlanAttributes, "recordCode" | "clawbackDays" | "validTo" | "isActive" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
 
 export class CommissionCommissionPlanEntity
   extends Model<CommissionCommissionPlanAttributes, CommissionCommissionPlanCreationAttributes>
   implements CommissionCommissionPlanAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare commissionPlanId: string
+  declare commissionPlanId: string | null
   declare planCode: string
   declare name: string
   declare currencyCode: string
@@ -44,20 +40,6 @@ export class CommissionCommissionPlanEntity
 export function initCommissionCommissionPlanEntity(sequelize: Sequelize): typeof CommissionCommissionPlanEntity {
   CommissionCommissionPlanEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -68,8 +50,8 @@ export function initCommissionCommissionPlanEntity(sequelize: Sequelize): typeof
       commissionPlanId: {
         type: DataTypes.TEXT,
         field: 'commission_plan_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       planCode: {

@@ -1,8 +1,6 @@
 
 export type AcceptanceConfigurationResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   acceptance_configuration_id: string
   tenant_application_id: string

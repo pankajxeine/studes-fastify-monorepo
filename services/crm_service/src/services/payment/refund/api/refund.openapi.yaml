@@ -38,17 +38,17 @@ paths:
         '409':
           description: Unique constraint conflict
 
-  /refund/{id}:
+  /refund/{refund_id}:
     get:
       operationId: getRefundById
-      summary: Get refund by ID
+      summary: Get refund by refund_id
       parameters:
         - in: path
-          name: id
+          name: refund_id
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       responses:
         '200':
           description: refund object
@@ -60,14 +60,14 @@ paths:
           description: refund not found
     put:
       operationId: updateRefund
-      summary: Update refund by ID
+      summary: Update refund by refund_id
       parameters:
         - in: path
-          name: id
+          name: refund_id
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       requestBody:
         required: true
         content:
@@ -89,14 +89,14 @@ paths:
           description: Unique constraint conflict
     delete:
       operationId: deleteRefund
-      summary: Delete refund by ID
+      summary: Delete refund by refund_id
       parameters:
         - in: path
-          name: id
+          name: refund_id
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       responses:
         '204':
           description: Deleted
@@ -200,8 +200,6 @@ components:
     RefundResponse:
       type: object
       required:
-        - id
-        - public_id
         - record_code
         - refund_id
         - payment_id
@@ -213,14 +211,6 @@ components:
         - updated_at
       additionalProperties: false
       properties:
-        id:
-          type: integer
-          format: int64
-          readOnly: true
-        public_id:
-          type: string
-          format: uuid
-          readOnly: true
         record_code:
           type: string
           readOnly: true

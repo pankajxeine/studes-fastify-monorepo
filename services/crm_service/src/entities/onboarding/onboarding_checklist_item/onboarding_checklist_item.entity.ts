@@ -1,9 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type OnboardingChecklistItemAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
+  checklistItemId: string | null
   requestId: string
   itemCode: string
   title: string
@@ -12,18 +11,16 @@ export type OnboardingChecklistItemAttributes = {
   completedByUserId?: string | null
   completedAt?: Date | null
   note?: string | null
-  UNIQUE?: string | null
 }
 
-export type OnboardingChecklistItemCreationAttributes = Optional<OnboardingChecklistItemAttributes, "id" | "publicId" | "recordCode" | "isMandatory" | "status" | "completedByUserId" | "completedAt" | "note" | "UNIQUE">
+export type OnboardingChecklistItemCreationAttributes = Optional<OnboardingChecklistItemAttributes, "recordCode" | "isMandatory" | "status" | "completedByUserId" | "completedAt" | "note">
 
 export class OnboardingChecklistItemEntity
   extends Model<OnboardingChecklistItemAttributes, OnboardingChecklistItemCreationAttributes>
   implements OnboardingChecklistItemAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
+  declare checklistItemId: string | null
   declare requestId: string
   declare itemCode: string
   declare title: string
@@ -32,32 +29,24 @@ export class OnboardingChecklistItemEntity
   declare completedByUserId: string | null
   declare completedAt: Date | null
   declare note: string | null
-  declare UNIQUE: string | null
 }
 
 export function initOnboardingChecklistItemEntity(sequelize: Sequelize): typeof OnboardingChecklistItemEntity {
   OnboardingChecklistItemEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
         allowNull: false,
         unique: true,
         defaultValue: Sequelize.literal("core.fn_next_record_code_for_table ('onboarding_checklist_item')"),
+      },
+      checklistItemId: {
+        type: DataTypes.TEXT,
+        field: 'checklist_item_id',
+        allowNull: true,
+        primaryKey: true,
+        defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       requestId: {
         type: DataTypes.TEXT,
@@ -103,11 +92,6 @@ export function initOnboardingChecklistItemEntity(sequelize: Sequelize): typeof 
         type: DataTypes.TEXT,
         field: 'note',
         allowNull: true,
-      },
-      UNIQUE: {
-        type: DataTypes.TEXT,
-        field: 'UNIQUE',
-        allowNull: true,
       }
     },
     {
@@ -115,7 +99,10 @@ export function initOnboardingChecklistItemEntity(sequelize: Sequelize): typeof 
       tableName: 'onboarding_checklist_item',
       timestamps: false,
       underscored: true,
-      freezeTableName: true
+      freezeTableName: true,
+      indexes: [
+      { unique: true, fields: ['request_id', 'item_code'] }
+      ]
     }
   )
   return OnboardingChecklistItemEntity

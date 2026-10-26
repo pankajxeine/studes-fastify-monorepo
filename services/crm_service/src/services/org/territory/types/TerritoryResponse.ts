@@ -1,8 +1,6 @@
 
 export type TerritoryResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   territory_id: string
   territory_code: string

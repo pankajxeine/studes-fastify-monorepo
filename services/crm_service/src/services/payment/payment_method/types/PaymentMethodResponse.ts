@@ -1,8 +1,6 @@
 
 export type PaymentMethodResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   payment_method_id: string
   billing_account_id: string

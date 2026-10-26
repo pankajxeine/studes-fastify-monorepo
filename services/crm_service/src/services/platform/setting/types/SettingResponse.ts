@@ -1,9 +1,8 @@
 
 export type SettingResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
+  setting_id: string
   setting_key: string
   value: unknown
   description?: (string) | null

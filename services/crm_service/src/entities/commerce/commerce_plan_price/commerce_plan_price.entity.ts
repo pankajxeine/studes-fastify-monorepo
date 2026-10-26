@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type CommercePlanPriceAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  planPriceId?: string
+  planPriceId: string | null
   planVersionId: string
   priceBookId: string
   billingPeriod: string
@@ -17,16 +15,14 @@ export type CommercePlanPriceAttributes = {
   createdBy?: string | null
 }
 
-export type CommercePlanPriceCreationAttributes = Optional<CommercePlanPriceAttributes, "id" | "publicId" | "recordCode" | "planPriceId" | "tiers" | "setupFee" | "isActive" | "createdAt" | "createdBy">
+export type CommercePlanPriceCreationAttributes = Optional<CommercePlanPriceAttributes, "recordCode" | "tiers" | "setupFee" | "isActive" | "createdAt" | "createdBy">
 
 export class CommercePlanPriceEntity
   extends Model<CommercePlanPriceAttributes, CommercePlanPriceCreationAttributes>
   implements CommercePlanPriceAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare planPriceId: string
+  declare planPriceId: string | null
   declare planVersionId: string
   declare priceBookId: string
   declare billingPeriod: string
@@ -42,20 +38,6 @@ export class CommercePlanPriceEntity
 export function initCommercePlanPriceEntity(sequelize: Sequelize): typeof CommercePlanPriceEntity {
   CommercePlanPriceEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -66,8 +48,8 @@ export function initCommercePlanPriceEntity(sequelize: Sequelize): typeof Commer
       planPriceId: {
         type: DataTypes.TEXT,
         field: 'plan_price_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       planVersionId: {

@@ -143,7 +143,7 @@ function typeFromRequestBody(body: any): string | null {
   if (!body || !body.content) return null
   const content = body.content['application/json']
   if (!content || !content.schema) return null
-  return tsTypeFromSchema(content.schema)
+  return tsTypeFromSchema(content.schema).trim()
 }
 
 function listSpecFiles(apiDir: string): string[] {
@@ -210,6 +210,15 @@ function operationNameFromPath(method: string, routePath: string): string {
 
 function toRoutePath(pathKey: string): string {
   return pathKey.replace(/{/g, ':').replace(/}/g, '')
+}
+
+function getPathParameterName(pathKey: string, operation: any): string | null {
+  const placeholders = [...pathKey.matchAll(/\{([^}]+)\}/g)].map(match => match[1])
+  if (placeholders.length !== 1) return null
+
+  const declaredParameters = Array.isArray(operation?.parameters) ? operation.parameters : []
+  const declared = declaredParameters.find((parameter: any) => parameter?.in === 'path' && parameter.name === placeholders[0])
+  return declared?.name ?? placeholders[0]
 }
 
 function getServiceName(dirPath: string): string {
@@ -547,6 +556,23 @@ function writeGeneratorFiles(
         const httpMethod = lower
         const routePath = toRoutePath(pathKey)
         const crudAction = crudActionFromOperation(httpMethod, routePath)
+        const permissionModule = getRouteGroup(baseDir, parentDir) ?? 'crm'
+        const permissionAction = httpMethod === 'get'
+          ? 'read'
+          : httpMethod === 'post'
+            ? 'create'
+            : httpMethod === 'delete'
+              ? 'delete'
+              : 'update'
+        const routeConfig = operation['x-fastify-config'] && typeof operation['x-fastify-config'] === 'object'
+          ? { ...operation['x-fastify-config'] }
+          : {}
+        const declaredPermission = typeof operation['x-admin-permission'] === 'string'
+          ? operation['x-admin-permission']
+          : undefined
+        if (routeConfig.isPublic !== true) {
+          routeConfig.adminPermission ??= declaredPermission ?? `${permissionModule}.${moduleName}.${permissionAction}`
+        }
         const returnType = crudAction === 'list'
           ? `PaginatedResponse<ListItem<${responseType}>>`
           : responseType
@@ -588,14 +614,16 @@ function writeGeneratorFiles(
         methodImpl.isUpdate = crudAction === 'update'
         methodImpl.isDelete = crudAction === 'delete'
         methodImpl.isCrud = crudAction !== 'custom'
+        methodImpl.primaryKey = getPathParameterName(pathKey, operation)
+        methodImpl.primaryKeyModelField = methodImpl.primaryKey
+          ? toLowerCamelCase(methodImpl.primaryKey)
+          : null
         routeDefs.push({
           operationId,
           httpMethod,
           path: routePath,
           hasInput,
-          routeOptions: operation['x-fastify-config']
-            ? `{ config: ${JSON.stringify(operation['x-fastify-config'])} }, `
-            : '',
+          routeOptions: `{ config: ${JSON.stringify(routeConfig)} }, `,
         })
       }
     }

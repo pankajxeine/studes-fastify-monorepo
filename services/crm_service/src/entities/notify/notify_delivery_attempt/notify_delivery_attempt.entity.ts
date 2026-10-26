@@ -1,9 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type NotifyDeliveryAttemptAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
+  deliveryAttemptId: string | null
   notificationId: string
   attemptNo: number
   providerCode: string
@@ -11,18 +10,16 @@ export type NotifyDeliveryAttemptAttributes = {
   status: string
   error?: string | null
   attemptedAt?: Date
-  UNIQUE?: string | null
 }
 
-export type NotifyDeliveryAttemptCreationAttributes = Optional<NotifyDeliveryAttemptAttributes, "id" | "publicId" | "recordCode" | "providerMessageId" | "error" | "attemptedAt" | "UNIQUE">
+export type NotifyDeliveryAttemptCreationAttributes = Optional<NotifyDeliveryAttemptAttributes, "recordCode" | "providerMessageId" | "error" | "attemptedAt">
 
 export class NotifyDeliveryAttemptEntity
   extends Model<NotifyDeliveryAttemptAttributes, NotifyDeliveryAttemptCreationAttributes>
   implements NotifyDeliveryAttemptAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
+  declare deliveryAttemptId: string | null
   declare notificationId: string
   declare attemptNo: number
   declare providerCode: string
@@ -30,32 +27,24 @@ export class NotifyDeliveryAttemptEntity
   declare status: string
   declare error: string | null
   declare attemptedAt: Date
-  declare UNIQUE: string | null
 }
 
 export function initNotifyDeliveryAttemptEntity(sequelize: Sequelize): typeof NotifyDeliveryAttemptEntity {
   NotifyDeliveryAttemptEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
         allowNull: false,
         unique: true,
         defaultValue: Sequelize.literal("core.fn_next_record_code_for_table ('notify_delivery_attempt')"),
+      },
+      deliveryAttemptId: {
+        type: DataTypes.TEXT,
+        field: 'delivery_attempt_id',
+        allowNull: true,
+        primaryKey: true,
+        defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       notificationId: {
         type: DataTypes.TEXT,
@@ -95,11 +84,6 @@ export function initNotifyDeliveryAttemptEntity(sequelize: Sequelize): typeof No
         field: 'attempted_at',
         allowNull: false,
         defaultValue: DataTypes.NOW,
-      },
-      UNIQUE: {
-        type: DataTypes.TEXT,
-        field: 'UNIQUE',
-        allowNull: true,
       }
     },
     {
@@ -107,7 +91,10 @@ export function initNotifyDeliveryAttemptEntity(sequelize: Sequelize): typeof No
       tableName: 'notify_delivery_attempt',
       timestamps: false,
       underscored: true,
-      freezeTableName: true
+      freezeTableName: true,
+      indexes: [
+      { unique: true, fields: ['notification_id', 'attempt_no'] }
+      ]
     }
   )
   return NotifyDeliveryAttemptEntity

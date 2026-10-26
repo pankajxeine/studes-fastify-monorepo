@@ -1,9 +1,8 @@
 
 export type ProvisioningStepResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
+  provisioning_step_id: string
   job_id: string
   step_no: number
   step_code: string

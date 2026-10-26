@@ -1,8 +1,6 @@
 
 export type ConsentResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   consent_id: string
   subject_type: string

@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type CatalogModuleAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  moduleId?: string
+  moduleId: string | null
   applicationId: string
   moduleCode: string
   name: string
@@ -19,16 +17,14 @@ export type CatalogModuleAttributes = {
   updatedBy?: string | null
 }
 
-export type CatalogModuleCreationAttributes = Optional<CatalogModuleAttributes, "id" | "publicId" | "recordCode" | "moduleId" | "description" | "category" | "isCore" | "isActive" | "sortOrder" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
+export type CatalogModuleCreationAttributes = Optional<CatalogModuleAttributes, "recordCode" | "description" | "category" | "isCore" | "isActive" | "sortOrder" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
 
 export class CatalogModuleEntity
   extends Model<CatalogModuleAttributes, CatalogModuleCreationAttributes>
   implements CatalogModuleAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare moduleId: string
+  declare moduleId: string | null
   declare applicationId: string
   declare moduleCode: string
   declare name: string
@@ -46,20 +42,6 @@ export class CatalogModuleEntity
 export function initCatalogModuleEntity(sequelize: Sequelize): typeof CatalogModuleEntity {
   CatalogModuleEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -70,8 +52,8 @@ export function initCatalogModuleEntity(sequelize: Sequelize): typeof CatalogMod
       moduleId: {
         type: DataTypes.TEXT,
         field: 'module_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       applicationId: {

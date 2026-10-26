@@ -1,9 +1,8 @@
 
 export type PermissionResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
+  permission_id: string
   permission_code: string
   module: string
   resource: string

@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type NotifyTemplateVersionAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  templateVersionId?: string
+  templateVersionId: string | null
   templateId: string
   versionNo: number
   status?: string
@@ -15,16 +13,14 @@ export type NotifyTemplateVersionAttributes = {
   updatedAt?: Date
 }
 
-export type NotifyTemplateVersionCreationAttributes = Optional<NotifyTemplateVersionAttributes, "id" | "publicId" | "recordCode" | "templateVersionId" | "status" | "publishedAt" | "publishedByUserId" | "createdAt" | "createdBy" | "updatedAt">
+export type NotifyTemplateVersionCreationAttributes = Optional<NotifyTemplateVersionAttributes, "recordCode" | "status" | "publishedAt" | "publishedByUserId" | "createdAt" | "createdBy" | "updatedAt">
 
 export class NotifyTemplateVersionEntity
   extends Model<NotifyTemplateVersionAttributes, NotifyTemplateVersionCreationAttributes>
   implements NotifyTemplateVersionAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare templateVersionId: string
+  declare templateVersionId: string | null
   declare templateId: string
   declare versionNo: number
   declare status: string
@@ -38,20 +34,6 @@ export class NotifyTemplateVersionEntity
 export function initNotifyTemplateVersionEntity(sequelize: Sequelize): typeof NotifyTemplateVersionEntity {
   NotifyTemplateVersionEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -62,8 +44,8 @@ export function initNotifyTemplateVersionEntity(sequelize: Sequelize): typeof No
       templateVersionId: {
         type: DataTypes.TEXT,
         field: 'template_version_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       templateId: {

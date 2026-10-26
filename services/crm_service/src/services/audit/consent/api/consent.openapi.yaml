@@ -38,17 +38,17 @@ paths:
         '409':
           description: Unique constraint conflict
 
-  /consent/{id}:
+  /consent/{consent_id}:
     get:
       operationId: getConsentById
-      summary: Get consent by ID
+      summary: Get consent by consent_id
       parameters:
         - in: path
-          name: id
+          name: consent_id
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       responses:
         '200':
           description: consent object
@@ -60,14 +60,14 @@ paths:
           description: consent not found
     put:
       operationId: updateConsent
-      summary: Update consent by ID
+      summary: Update consent by consent_id
       parameters:
         - in: path
-          name: id
+          name: consent_id
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       requestBody:
         required: true
         content:
@@ -89,14 +89,14 @@ paths:
           description: Unique constraint conflict
     delete:
       operationId: deleteConsent
-      summary: Delete consent by ID
+      summary: Delete consent by consent_id
       parameters:
         - in: path
-          name: id
+          name: consent_id
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       responses:
         '204':
           description: Deleted
@@ -189,8 +189,6 @@ components:
     ConsentResponse:
       type: object
       required:
-        - id
-        - public_id
         - record_code
         - consent_id
         - subject_type
@@ -202,14 +200,6 @@ components:
         - captured_at
       additionalProperties: false
       properties:
-        id:
-          type: integer
-          format: int64
-          readOnly: true
-        public_id:
-          type: string
-          format: uuid
-          readOnly: true
         record_code:
           type: string
           readOnly: true

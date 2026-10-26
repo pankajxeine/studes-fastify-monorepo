@@ -1,8 +1,6 @@
 
 export type CommissionRuleResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   commission_rule_id: string
   commission_plan_id: string

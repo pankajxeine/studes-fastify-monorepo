@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type PaymentRefundAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  refundId?: string
+  refundId: string | null
   paymentId: string
   amount: string
   reason: string
@@ -19,16 +17,14 @@ export type PaymentRefundAttributes = {
   updatedAt?: Date
 }
 
-export type PaymentRefundCreationAttributes = Optional<PaymentRefundAttributes, "id" | "publicId" | "recordCode" | "refundId" | "status" | "approvedByUserId" | "approvedAt" | "gatewayRefundRef" | "processedAt" | "failureMessage" | "createdAt" | "updatedAt">
+export type PaymentRefundCreationAttributes = Optional<PaymentRefundAttributes, "recordCode" | "status" | "approvedByUserId" | "approvedAt" | "gatewayRefundRef" | "processedAt" | "failureMessage" | "createdAt" | "updatedAt">
 
 export class PaymentRefundEntity
   extends Model<PaymentRefundAttributes, PaymentRefundCreationAttributes>
   implements PaymentRefundAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare refundId: string
+  declare refundId: string | null
   declare paymentId: string
   declare amount: string
   declare reason: string
@@ -46,20 +42,6 @@ export class PaymentRefundEntity
 export function initPaymentRefundEntity(sequelize: Sequelize): typeof PaymentRefundEntity {
   PaymentRefundEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -70,8 +52,8 @@ export function initPaymentRefundEntity(sequelize: Sequelize): typeof PaymentRef
       refundId: {
         type: DataTypes.TEXT,
         field: 'refund_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       paymentId: {

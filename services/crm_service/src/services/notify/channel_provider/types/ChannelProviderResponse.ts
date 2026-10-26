@@ -1,9 +1,8 @@
 
 export type ChannelProviderResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
+  channel_provider_id: string
   provider_code: string
   channel: string
   config: unknown

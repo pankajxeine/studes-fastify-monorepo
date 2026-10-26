@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type PaymentGatewayWebhookAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  gatewayWebhookId?: string
+  gatewayWebhookId: string | null
   gateway: string
   eventId: string
   eventType: string
@@ -15,16 +13,14 @@ export type PaymentGatewayWebhookAttributes = {
   error?: string | null
 }
 
-export type PaymentGatewayWebhookCreationAttributes = Optional<PaymentGatewayWebhookAttributes, "id" | "publicId" | "recordCode" | "gatewayWebhookId" | "receivedAt" | "processedAt" | "error">
+export type PaymentGatewayWebhookCreationAttributes = Optional<PaymentGatewayWebhookAttributes, "recordCode" | "receivedAt" | "processedAt" | "error">
 
 export class PaymentGatewayWebhookEntity
   extends Model<PaymentGatewayWebhookAttributes, PaymentGatewayWebhookCreationAttributes>
   implements PaymentGatewayWebhookAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare gatewayWebhookId: string
+  declare gatewayWebhookId: string | null
   declare gateway: string
   declare eventId: string
   declare eventType: string
@@ -38,20 +34,6 @@ export class PaymentGatewayWebhookEntity
 export function initPaymentGatewayWebhookEntity(sequelize: Sequelize): typeof PaymentGatewayWebhookEntity {
   PaymentGatewayWebhookEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -62,8 +44,8 @@ export function initPaymentGatewayWebhookEntity(sequelize: Sequelize): typeof Pa
       gatewayWebhookId: {
         type: DataTypes.TEXT,
         field: 'gateway_webhook_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       gateway: {

@@ -1,9 +1,8 @@
 
 export type RoleResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
+  role_id: string
   role_code: string
   name: string
   description?: (string) | null

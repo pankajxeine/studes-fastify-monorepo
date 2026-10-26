@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type CommissionPayoutAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  payoutId?: string
+  payoutId: string | null
   salesAgentId: string
   periodStart: string
   periodEnd: string
@@ -23,16 +21,14 @@ export type CommissionPayoutAttributes = {
   updatedBy?: string | null
 }
 
-export type CommissionPayoutCreationAttributes = Optional<CommissionPayoutAttributes, "id" | "publicId" | "recordCode" | "payoutId" | "grossAmount" | "taxWithheld" | "netAmount" | "status" | "approvedByUserId" | "approvedAt" | "paidAt" | "paymentRef" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
+export type CommissionPayoutCreationAttributes = Optional<CommissionPayoutAttributes, "recordCode" | "grossAmount" | "taxWithheld" | "netAmount" | "status" | "approvedByUserId" | "approvedAt" | "paidAt" | "paymentRef" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
 
 export class CommissionPayoutEntity
   extends Model<CommissionPayoutAttributes, CommissionPayoutCreationAttributes>
   implements CommissionPayoutAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare payoutId: string
+  declare payoutId: string | null
   declare salesAgentId: string
   declare periodStart: string
   declare periodEnd: string
@@ -54,20 +50,6 @@ export class CommissionPayoutEntity
 export function initCommissionPayoutEntity(sequelize: Sequelize): typeof CommissionPayoutEntity {
   CommissionPayoutEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -78,8 +60,8 @@ export function initCommissionPayoutEntity(sequelize: Sequelize): typeof Commiss
       payoutId: {
         type: DataTypes.TEXT,
         field: 'payout_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       salesAgentId: {

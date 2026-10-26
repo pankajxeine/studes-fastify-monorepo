@@ -38,17 +38,17 @@ paths:
         '409':
           description: Unique constraint conflict
 
-  /app_user/{id}:
+  /app_user/{app_user_id}:
     get:
       operationId: getAppUserById
-      summary: Get app_user by ID
+      summary: Get app_user by app_user_id
       parameters:
         - in: path
-          name: id
+          name: app_user_id
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       responses:
         '200':
           description: app_user object
@@ -60,14 +60,14 @@ paths:
           description: app_user not found
     put:
       operationId: updateAppUser
-      summary: Update app_user by ID
+      summary: Update app_user by app_user_id
       parameters:
         - in: path
-          name: id
+          name: app_user_id
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       requestBody:
         required: true
         content:
@@ -89,14 +89,14 @@ paths:
           description: Unique constraint conflict
     delete:
       operationId: deleteAppUser
-      summary: Delete app_user by ID
+      summary: Delete app_user by app_user_id
       parameters:
         - in: path
-          name: id
+          name: app_user_id
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       responses:
         '204':
           description: Deleted
@@ -313,8 +313,6 @@ components:
     AppUserResponse:
       type: object
       required:
-        - id
-        - public_id
         - record_code
         - app_user_id
         - user_type
@@ -332,14 +330,6 @@ components:
         - updated_at
       additionalProperties: false
       properties:
-        id:
-          type: integer
-          format: int64
-          readOnly: true
-        public_id:
-          type: string
-          format: uuid
-          readOnly: true
         record_code:
           type: string
           readOnly: true

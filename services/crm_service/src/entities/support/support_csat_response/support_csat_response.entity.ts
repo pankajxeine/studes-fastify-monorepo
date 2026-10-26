@@ -1,24 +1,22 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type SupportCsatResponseAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
+  csatResponseId: string | null
   ticketId: string
   score: number
   comment?: string | null
   respondedAt?: Date
 }
 
-export type SupportCsatResponseCreationAttributes = Optional<SupportCsatResponseAttributes, "id" | "publicId" | "recordCode" | "comment" | "respondedAt">
+export type SupportCsatResponseCreationAttributes = Optional<SupportCsatResponseAttributes, "recordCode" | "comment" | "respondedAt">
 
 export class SupportCsatResponseEntity
   extends Model<SupportCsatResponseAttributes, SupportCsatResponseCreationAttributes>
   implements SupportCsatResponseAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
+  declare csatResponseId: string | null
   declare ticketId: string
   declare score: number
   declare comment: string | null
@@ -28,26 +26,19 @@ export class SupportCsatResponseEntity
 export function initSupportCsatResponseEntity(sequelize: Sequelize): typeof SupportCsatResponseEntity {
   SupportCsatResponseEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
         allowNull: false,
         unique: true,
         defaultValue: Sequelize.literal("core.fn_next_record_code_for_table ('support_csat_response')"),
+      },
+      csatResponseId: {
+        type: DataTypes.TEXT,
+        field: 'csat_response_id',
+        allowNull: true,
+        primaryKey: true,
+        defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       ticketId: {
         type: DataTypes.TEXT,

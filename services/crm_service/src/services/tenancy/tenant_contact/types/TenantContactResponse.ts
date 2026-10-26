@@ -1,9 +1,8 @@
 
 export type TenantContactResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
+  tenant_contact_id: string
   tenant_id: string
   contact_id: string
   contact_role: string

@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type IamAppUserAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  appUserId?: string
+  appUserId: string | null
   userType?: string
   username: string
   email: string
@@ -36,16 +34,14 @@ export type IamAppUserAttributes = {
   deletedAt?: Date | null
 }
 
-export type IamAppUserCreationAttributes = Optional<IamAppUserAttributes, "id" | "publicId" | "recordCode" | "appUserId" | "userType" | "phone" | "employeeCode" | "passwordHash" | "ssoProvider" | "ssoSubject" | "status" | "defaultScopeType" | "defaultScopeId" | "managerUserId" | "lastLoginAt" | "failedLoginCount" | "lockedUntil" | "passwordChangedAt" | "mustChangePassword" | "isMfaEnabled" | "locale" | "timezone" | "invitedAt" | "activatedAt" | "deactivatedAt" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy" | "deletedAt">
+export type IamAppUserCreationAttributes = Optional<IamAppUserAttributes, "recordCode" | "userType" | "phone" | "employeeCode" | "passwordHash" | "ssoProvider" | "ssoSubject" | "status" | "defaultScopeType" | "defaultScopeId" | "managerUserId" | "lastLoginAt" | "failedLoginCount" | "lockedUntil" | "passwordChangedAt" | "mustChangePassword" | "isMfaEnabled" | "locale" | "timezone" | "invitedAt" | "activatedAt" | "deactivatedAt" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy" | "deletedAt">
 
 export class IamAppUserEntity
   extends Model<IamAppUserAttributes, IamAppUserCreationAttributes>
   implements IamAppUserAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare appUserId: string
+  declare appUserId: string | null
   declare userType: string
   declare username: string
   declare email: string
@@ -80,20 +76,6 @@ export class IamAppUserEntity
 export function initIamAppUserEntity(sequelize: Sequelize): typeof IamAppUserEntity {
   IamAppUserEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -104,8 +86,8 @@ export function initIamAppUserEntity(sequelize: Sequelize): typeof IamAppUserEnt
       appUserId: {
         type: DataTypes.TEXT,
         field: 'app_user_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       userType: {

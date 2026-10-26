@@ -1,8 +1,6 @@
 
 export type PosTerminalResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   pos_terminal_id: string
   tenant_application_id: string

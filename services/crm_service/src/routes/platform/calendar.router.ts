@@ -4,23 +4,23 @@ import { CalendarService } from '../../services/platform/calendar/CalendarServic
 const CalendarRoutes: FastifyPluginAsync = async (app) => {
   const controller = new CalendarService()
 
-  app.get('/calendar', async (request, reply) => {
+  app.get('/calendar', { config: {"adminPermission":"platform.calendar.read"} }, async (request, reply) => {
     const result = await controller.listCalendar(app, request)
     return reply.send(result)
   })
-  app.post('/calendar', async (request, reply) => {
+  app.post('/calendar', { config: {"adminPermission":"platform.calendar.create"} }, async (request, reply) => {
     const result = await controller.createCalendar(app, request.body as any, request)
     return reply.send(result)
   })
-  app.get('/calendar/:id', async (request, reply) => {
+  app.get('/calendar/:calendar_id', { config: {"adminPermission":"platform.calendar.read"} }, async (request, reply) => {
     const result = await controller.getCalendarById(app, request)
     return reply.send(result)
   })
-  app.put('/calendar/:id', async (request, reply) => {
+  app.put('/calendar/:calendar_id', { config: {"adminPermission":"platform.calendar.update"} }, async (request, reply) => {
     const result = await controller.updateCalendar(app, request.body as any, request)
     return reply.send(result)
   })
-  app.delete('/calendar/:id', async (request, reply) => {
+  app.delete('/calendar/:calendar_id', { config: {"adminPermission":"platform.calendar.delete"} }, async (request, reply) => {
     const result = await controller.deleteCalendar(app, request)
     return reply.send(result)
   })

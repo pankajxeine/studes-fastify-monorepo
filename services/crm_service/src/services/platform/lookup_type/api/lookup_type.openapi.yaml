@@ -38,17 +38,17 @@ paths:
         '409':
           description: Unique constraint conflict
 
-  /lookup_type/{id}:
+  /lookup_type/{lookup_type_id}:
     get:
       operationId: getLookupTypeById
-      summary: Get lookup_type by ID
+      summary: Get lookup_type by lookup_type_id
       parameters:
         - in: path
-          name: id
+          name: lookup_type_id
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       responses:
         '200':
           description: lookup_type object
@@ -60,14 +60,14 @@ paths:
           description: lookup_type not found
     put:
       operationId: updateLookupType
-      summary: Update lookup_type by ID
+      summary: Update lookup_type by lookup_type_id
       parameters:
         - in: path
-          name: id
+          name: lookup_type_id
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       requestBody:
         required: true
         content:
@@ -89,14 +89,14 @@ paths:
           description: Unique constraint conflict
     delete:
       operationId: deleteLookupType
-      summary: Delete lookup_type by ID
+      summary: Delete lookup_type by lookup_type_id
       parameters:
         - in: path
-          name: id
+          name: lookup_type_id
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       responses:
         '204':
           description: Deleted
@@ -146,9 +146,8 @@ components:
     LookupTypeResponse:
       type: object
       required:
-        - id
-        - public_id
         - record_code
+        - lookup_type_id
         - lookup_type_code
         - name
         - is_system
@@ -156,16 +155,12 @@ components:
         - updated_at
       additionalProperties: false
       properties:
-        id:
-          type: integer
-          format: int64
-          readOnly: true
-        public_id:
-          type: string
-          format: uuid
-          readOnly: true
         record_code:
           type: string
+          readOnly: true
+        lookup_type_id:
+          type: string
+          format: uuid
           readOnly: true
         lookup_type_code:
           type: string

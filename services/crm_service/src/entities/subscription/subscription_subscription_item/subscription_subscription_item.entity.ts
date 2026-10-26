@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type SubscriptionSubscriptionItemAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  subscriptionItemId?: string
+  subscriptionItemId: string | null
   subscriptionId: string
   addonPriceId: string
   quantity?: number
@@ -16,16 +14,14 @@ export type SubscriptionSubscriptionItemAttributes = {
   updatedBy?: string | null
 }
 
-export type SubscriptionSubscriptionItemCreationAttributes = Optional<SubscriptionSubscriptionItemAttributes, "id" | "publicId" | "recordCode" | "subscriptionItemId" | "quantity" | "validFrom" | "validTo" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
+export type SubscriptionSubscriptionItemCreationAttributes = Optional<SubscriptionSubscriptionItemAttributes, "recordCode" | "quantity" | "validFrom" | "validTo" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
 
 export class SubscriptionSubscriptionItemEntity
   extends Model<SubscriptionSubscriptionItemAttributes, SubscriptionSubscriptionItemCreationAttributes>
   implements SubscriptionSubscriptionItemAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare subscriptionItemId: string
+  declare subscriptionItemId: string | null
   declare subscriptionId: string
   declare addonPriceId: string
   declare quantity: number
@@ -40,20 +36,6 @@ export class SubscriptionSubscriptionItemEntity
 export function initSubscriptionSubscriptionItemEntity(sequelize: Sequelize): typeof SubscriptionSubscriptionItemEntity {
   SubscriptionSubscriptionItemEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -64,8 +46,8 @@ export function initSubscriptionSubscriptionItemEntity(sequelize: Sequelize): ty
       subscriptionItemId: {
         type: DataTypes.TEXT,
         field: 'subscription_item_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       subscriptionId: {

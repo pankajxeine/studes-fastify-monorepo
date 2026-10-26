@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type IamLoginAttemptAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  loginAttemptId?: string
+  loginAttemptId: string | null
   appUserId?: string | null
   usernameEntered: string
   authMethod?: string
@@ -17,16 +15,14 @@ export type IamLoginAttemptAttributes = {
   riskScore?: number | null
 }
 
-export type IamLoginAttemptCreationAttributes = Optional<IamLoginAttemptAttributes, "id" | "publicId" | "recordCode" | "loginAttemptId" | "appUserId" | "authMethod" | "attemptedAt" | "failureReason" | "ipAddress" | "geoCountry" | "userAgent" | "riskScore">
+export type IamLoginAttemptCreationAttributes = Optional<IamLoginAttemptAttributes, "recordCode" | "appUserId" | "authMethod" | "attemptedAt" | "failureReason" | "ipAddress" | "geoCountry" | "userAgent" | "riskScore">
 
 export class IamLoginAttemptEntity
   extends Model<IamLoginAttemptAttributes, IamLoginAttemptCreationAttributes>
   implements IamLoginAttemptAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare loginAttemptId: string
+  declare loginAttemptId: string | null
   declare appUserId: string | null
   declare usernameEntered: string
   declare authMethod: string
@@ -42,20 +38,6 @@ export class IamLoginAttemptEntity
 export function initIamLoginAttemptEntity(sequelize: Sequelize): typeof IamLoginAttemptEntity {
   IamLoginAttemptEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -66,8 +48,8 @@ export function initIamLoginAttemptEntity(sequelize: Sequelize): typeof IamLogin
       loginAttemptId: {
         type: DataTypes.TEXT,
         field: 'login_attempt_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       appUserId: {

@@ -1,8 +1,6 @@
 
 export type NotificationResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   notification_id: string
   template_version_id: string

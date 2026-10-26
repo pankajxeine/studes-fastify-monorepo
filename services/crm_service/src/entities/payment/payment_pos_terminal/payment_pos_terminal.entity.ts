@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type PaymentPosTerminalAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  posTerminalId?: string
+  posTerminalId: string | null
   tenantApplicationId: string
   outletId: string
   merchantAccountId: string
@@ -22,16 +20,14 @@ export type PaymentPosTerminalAttributes = {
   updatedAt?: Date
 }
 
-export type PaymentPosTerminalCreationAttributes = Optional<PaymentPosTerminalAttributes, "id" | "publicId" | "recordCode" | "posTerminalId" | "manufacturer" | "model" | "connectionType" | "pairingSecretRef" | "status" | "pairedAt" | "lastSeenAt" | "createdAt" | "updatedAt">
+export type PaymentPosTerminalCreationAttributes = Optional<PaymentPosTerminalAttributes, "recordCode" | "manufacturer" | "model" | "connectionType" | "pairingSecretRef" | "status" | "pairedAt" | "lastSeenAt" | "createdAt" | "updatedAt">
 
 export class PaymentPosTerminalEntity
   extends Model<PaymentPosTerminalAttributes, PaymentPosTerminalCreationAttributes>
   implements PaymentPosTerminalAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare posTerminalId: string
+  declare posTerminalId: string | null
   declare tenantApplicationId: string
   declare outletId: string
   declare merchantAccountId: string
@@ -52,20 +48,6 @@ export class PaymentPosTerminalEntity
 export function initPaymentPosTerminalEntity(sequelize: Sequelize): typeof PaymentPosTerminalEntity {
   PaymentPosTerminalEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -76,8 +58,8 @@ export function initPaymentPosTerminalEntity(sequelize: Sequelize): typeof Payme
       posTerminalId: {
         type: DataTypes.TEXT,
         field: 'pos_terminal_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       tenantApplicationId: {

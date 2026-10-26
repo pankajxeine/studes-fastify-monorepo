@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type PaymentPaymentAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  paymentId?: string
+  paymentId: string | null
   paymentNumber?: string
   billingAccountId: string
   paymentMethodId?: string | null
@@ -27,16 +25,14 @@ export type PaymentPaymentAttributes = {
   updatedBy?: string | null
 }
 
-export type PaymentPaymentCreationAttributes = Optional<PaymentPaymentAttributes, "id" | "publicId" | "recordCode" | "paymentId" | "paymentNumber" | "paymentMethodId" | "gatewayPaymentRef" | "feeAmount" | "amountRefunded" | "status" | "receivedAt" | "capturedAt" | "failureCode" | "failureMessage" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
+export type PaymentPaymentCreationAttributes = Optional<PaymentPaymentAttributes, "recordCode" | "paymentNumber" | "paymentMethodId" | "gatewayPaymentRef" | "feeAmount" | "amountRefunded" | "status" | "receivedAt" | "capturedAt" | "failureCode" | "failureMessage" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
 
 export class PaymentPaymentEntity
   extends Model<PaymentPaymentAttributes, PaymentPaymentCreationAttributes>
   implements PaymentPaymentAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare paymentId: string
+  declare paymentId: string | null
   declare paymentNumber: string
   declare billingAccountId: string
   declare paymentMethodId: string | null
@@ -62,20 +58,6 @@ export class PaymentPaymentEntity
 export function initPaymentPaymentEntity(sequelize: Sequelize): typeof PaymentPaymentEntity {
   PaymentPaymentEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -86,8 +68,8 @@ export function initPaymentPaymentEntity(sequelize: Sequelize): typeof PaymentPa
       paymentId: {
         type: DataTypes.TEXT,
         field: 'payment_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       paymentNumber: {

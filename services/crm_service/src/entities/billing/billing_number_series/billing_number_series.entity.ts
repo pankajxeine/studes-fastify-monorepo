@@ -1,59 +1,48 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type BillingNumberSeriesAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
+  numberSeriesId: string | null
   legalEntityId: string
   documentType: string
   fiscalYear: number
   prefix: string
   nextNumber?: string | number
   padding?: number
-  UNIQUE?: string | null
 }
 
-export type BillingNumberSeriesCreationAttributes = Optional<BillingNumberSeriesAttributes, "id" | "publicId" | "recordCode" | "nextNumber" | "padding" | "UNIQUE">
+export type BillingNumberSeriesCreationAttributes = Optional<BillingNumberSeriesAttributes, "recordCode" | "nextNumber" | "padding">
 
 export class BillingNumberSeriesEntity
   extends Model<BillingNumberSeriesAttributes, BillingNumberSeriesCreationAttributes>
   implements BillingNumberSeriesAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
+  declare numberSeriesId: string | null
   declare legalEntityId: string
   declare documentType: string
   declare fiscalYear: number
   declare prefix: string
   declare nextNumber: string | number
   declare padding: number
-  declare UNIQUE: string | null
 }
 
 export function initBillingNumberSeriesEntity(sequelize: Sequelize): typeof BillingNumberSeriesEntity {
   BillingNumberSeriesEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
         allowNull: false,
         unique: true,
         defaultValue: Sequelize.literal("core.fn_next_record_code_for_table ('billing_number_series')"),
+      },
+      numberSeriesId: {
+        type: DataTypes.TEXT,
+        field: 'number_series_id',
+        allowNull: true,
+        primaryKey: true,
+        defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       legalEntityId: {
         type: DataTypes.TEXT,
@@ -87,11 +76,6 @@ export function initBillingNumberSeriesEntity(sequelize: Sequelize): typeof Bill
         field: 'padding',
         allowNull: false,
         defaultValue: 6,
-      },
-      UNIQUE: {
-        type: DataTypes.TEXT,
-        field: 'UNIQUE',
-        allowNull: true,
       }
     },
     {
@@ -99,7 +83,10 @@ export function initBillingNumberSeriesEntity(sequelize: Sequelize): typeof Bill
       tableName: 'billing_number_series',
       timestamps: false,
       underscored: true,
-      freezeTableName: true
+      freezeTableName: true,
+      indexes: [
+      { unique: true, fields: ['legal_entity_id', 'document_type', 'fiscal_year'] }
+      ]
     }
   )
   return BillingNumberSeriesEntity

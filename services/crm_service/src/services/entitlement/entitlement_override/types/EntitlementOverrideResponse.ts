@@ -1,8 +1,6 @@
 
 export type EntitlementOverrideResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   override_id: string
   tenant_application_id: string

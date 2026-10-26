@@ -1,8 +1,6 @@
 
 export type SubscriptionChangeResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   subscription_change_id: string
   subscription_id: string

@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type PaymentAcceptanceConfigurationAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  acceptanceConfigurationId?: string
+  acceptanceConfigurationId: string | null
   tenantApplicationId: string
   outletId: string
   modeCode: string
@@ -25,16 +23,14 @@ export type PaymentAcceptanceConfigurationAttributes = {
   updatedAt?: Date
 }
 
-export type PaymentAcceptanceConfigurationCreationAttributes = Optional<PaymentAcceptanceConfigurationAttributes, "id" | "publicId" | "recordCode" | "acceptanceConfigurationId" | "merchantAccountId" | "posTerminalId" | "upiFlow" | "upiVpa" | "upiVerifiedAt" | "minimumAmount" | "maximumAmount" | "captureMode" | "isEnabled" | "validFrom" | "validTo" | "createdAt" | "updatedAt">
+export type PaymentAcceptanceConfigurationCreationAttributes = Optional<PaymentAcceptanceConfigurationAttributes, "recordCode" | "merchantAccountId" | "posTerminalId" | "upiFlow" | "upiVpa" | "upiVerifiedAt" | "minimumAmount" | "maximumAmount" | "captureMode" | "isEnabled" | "validFrom" | "validTo" | "createdAt" | "updatedAt">
 
 export class PaymentAcceptanceConfigurationEntity
   extends Model<PaymentAcceptanceConfigurationAttributes, PaymentAcceptanceConfigurationCreationAttributes>
   implements PaymentAcceptanceConfigurationAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare acceptanceConfigurationId: string
+  declare acceptanceConfigurationId: string | null
   declare tenantApplicationId: string
   declare outletId: string
   declare modeCode: string
@@ -58,32 +54,18 @@ export class PaymentAcceptanceConfigurationEntity
 export function initPaymentAcceptanceConfigurationEntity(sequelize: Sequelize): typeof PaymentAcceptanceConfigurationEntity {
   PaymentAcceptanceConfigurationEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
         allowNull: false,
         unique: true,
-        defaultValue: Sequelize.literal("core.fn_next_record_code_for_table ('payment_acceptance_configuration')"),
+        defaultValue: Sequelize.literal("core.fn_next_record_code_for_table (\r\n        'payment_acceptance_configuration'\r\n    )"),
       },
       acceptanceConfigurationId: {
         type: DataTypes.TEXT,
         field: 'acceptance_configuration_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       tenantApplicationId: {

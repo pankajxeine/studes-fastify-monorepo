@@ -1,9 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type PlatformCurrencyAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
+  currencyId: string | null
   currencyCode: string
   name: string
   symbol?: string | null
@@ -13,15 +12,14 @@ export type PlatformCurrencyAttributes = {
   updatedAt?: Date
 }
 
-export type PlatformCurrencyCreationAttributes = Optional<PlatformCurrencyAttributes, "id" | "publicId" | "recordCode" | "symbol" | "minorUnits" | "isActive" | "createdAt" | "updatedAt">
+export type PlatformCurrencyCreationAttributes = Optional<PlatformCurrencyAttributes, "recordCode" | "symbol" | "minorUnits" | "isActive" | "createdAt" | "updatedAt">
 
 export class PlatformCurrencyEntity
   extends Model<PlatformCurrencyAttributes, PlatformCurrencyCreationAttributes>
   implements PlatformCurrencyAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
+  declare currencyId: string | null
   declare currencyCode: string
   declare name: string
   declare symbol: string | null
@@ -34,26 +32,19 @@ export class PlatformCurrencyEntity
 export function initPlatformCurrencyEntity(sequelize: Sequelize): typeof PlatformCurrencyEntity {
   PlatformCurrencyEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
         allowNull: false,
         unique: true,
         defaultValue: Sequelize.literal("core.fn_next_record_code_for_table ('platform_currency')"),
+      },
+      currencyId: {
+        type: DataTypes.TEXT,
+        field: 'currency_id',
+        allowNull: true,
+        primaryKey: true,
+        defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       currencyCode: {
         type: DataTypes.TEXT,

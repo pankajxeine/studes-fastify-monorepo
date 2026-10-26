@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type CommissionCommissionRuleAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  commissionRuleId?: string
+  commissionRuleId: string | null
   commissionPlanId: string
   hierarchyDepth?: number
   applicationId?: string | null
@@ -18,16 +16,14 @@ export type CommissionCommissionRuleAttributes = {
   createdBy?: string | null
 }
 
-export type CommissionCommissionRuleCreationAttributes = Optional<CommissionCommissionRuleAttributes, "id" | "publicId" | "recordCode" | "commissionRuleId" | "hierarchyDepth" | "applicationId" | "planId" | "lineTypes" | "fromMonth" | "toMonth" | "priority" | "createdAt" | "createdBy">
+export type CommissionCommissionRuleCreationAttributes = Optional<CommissionCommissionRuleAttributes, "recordCode" | "hierarchyDepth" | "applicationId" | "planId" | "lineTypes" | "fromMonth" | "toMonth" | "priority" | "createdAt" | "createdBy">
 
 export class CommissionCommissionRuleEntity
   extends Model<CommissionCommissionRuleAttributes, CommissionCommissionRuleCreationAttributes>
   implements CommissionCommissionRuleAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare commissionRuleId: string
+  declare commissionRuleId: string | null
   declare commissionPlanId: string
   declare hierarchyDepth: number
   declare applicationId: string | null
@@ -44,20 +40,6 @@ export class CommissionCommissionRuleEntity
 export function initCommissionCommissionRuleEntity(sequelize: Sequelize): typeof CommissionCommissionRuleEntity {
   CommissionCommissionRuleEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -68,8 +50,8 @@ export function initCommissionCommissionRuleEntity(sequelize: Sequelize): typeof
       commissionRuleId: {
         type: DataTypes.TEXT,
         field: 'commission_rule_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       commissionPlanId: {

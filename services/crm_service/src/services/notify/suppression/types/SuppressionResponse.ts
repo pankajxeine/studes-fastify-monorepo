@@ -1,9 +1,8 @@
 
 export type SuppressionResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
+  suppression_id: string
   channel: string
   address: string
   reason: string

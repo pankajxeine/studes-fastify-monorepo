@@ -1,26 +1,22 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type CommercePlanItemAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  planItemId?: string
+  planItemId: string | null
   planVersionId: string
   moduleId: string
   featureId?: string | null
   value?: unknown | null
 }
 
-export type CommercePlanItemCreationAttributes = Optional<CommercePlanItemAttributes, "id" | "publicId" | "recordCode" | "planItemId" | "featureId" | "value">
+export type CommercePlanItemCreationAttributes = Optional<CommercePlanItemAttributes, "recordCode" | "featureId" | "value">
 
 export class CommercePlanItemEntity
   extends Model<CommercePlanItemAttributes, CommercePlanItemCreationAttributes>
   implements CommercePlanItemAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare planItemId: string
+  declare planItemId: string | null
   declare planVersionId: string
   declare moduleId: string
   declare featureId: string | null
@@ -30,20 +26,6 @@ export class CommercePlanItemEntity
 export function initCommercePlanItemEntity(sequelize: Sequelize): typeof CommercePlanItemEntity {
   CommercePlanItemEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -54,8 +36,8 @@ export function initCommercePlanItemEntity(sequelize: Sequelize): typeof Commerc
       planItemId: {
         type: DataTypes.TEXT,
         field: 'plan_item_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       planVersionId: {

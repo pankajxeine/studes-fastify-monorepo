@@ -1,26 +1,22 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type CommerceAddonItemAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  addonItemId?: string
+  addonItemId: string | null
   addonVersionId: string
   moduleId: string
   featureId?: string | null
   value?: unknown | null
 }
 
-export type CommerceAddonItemCreationAttributes = Optional<CommerceAddonItemAttributes, "id" | "publicId" | "recordCode" | "addonItemId" | "featureId" | "value">
+export type CommerceAddonItemCreationAttributes = Optional<CommerceAddonItemAttributes, "recordCode" | "featureId" | "value">
 
 export class CommerceAddonItemEntity
   extends Model<CommerceAddonItemAttributes, CommerceAddonItemCreationAttributes>
   implements CommerceAddonItemAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare addonItemId: string
+  declare addonItemId: string | null
   declare addonVersionId: string
   declare moduleId: string
   declare featureId: string | null
@@ -30,20 +26,6 @@ export class CommerceAddonItemEntity
 export function initCommerceAddonItemEntity(sequelize: Sequelize): typeof CommerceAddonItemEntity {
   CommerceAddonItemEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -54,8 +36,8 @@ export function initCommerceAddonItemEntity(sequelize: Sequelize): typeof Commer
       addonItemId: {
         type: DataTypes.TEXT,
         field: 'addon_item_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       addonVersionId: {

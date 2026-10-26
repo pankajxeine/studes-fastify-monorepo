@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type PaymentOutletAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  outletId?: string
+  outletId: string | null
   tenantApplicationId: string
   outletCode: string
   name: string
@@ -14,16 +12,14 @@ export type PaymentOutletAttributes = {
   updatedAt?: Date
 }
 
-export type PaymentOutletCreationAttributes = Optional<PaymentOutletAttributes, "id" | "publicId" | "recordCode" | "outletId" | "timezone" | "isActive" | "createdAt" | "updatedAt">
+export type PaymentOutletCreationAttributes = Optional<PaymentOutletAttributes, "recordCode" | "timezone" | "isActive" | "createdAt" | "updatedAt">
 
 export class PaymentOutletEntity
   extends Model<PaymentOutletAttributes, PaymentOutletCreationAttributes>
   implements PaymentOutletAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare outletId: string
+  declare outletId: string | null
   declare tenantApplicationId: string
   declare outletCode: string
   declare name: string
@@ -36,20 +32,6 @@ export class PaymentOutletEntity
 export function initPaymentOutletEntity(sequelize: Sequelize): typeof PaymentOutletEntity {
   PaymentOutletEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -60,8 +42,8 @@ export function initPaymentOutletEntity(sequelize: Sequelize): typeof PaymentOut
       outletId: {
         type: DataTypes.TEXT,
         field: 'outlet_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       tenantApplicationId: {

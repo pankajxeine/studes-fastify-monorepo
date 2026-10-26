@@ -1,8 +1,6 @@
 
 export type CalendarResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   calendar_id: string
   calendar_code: string

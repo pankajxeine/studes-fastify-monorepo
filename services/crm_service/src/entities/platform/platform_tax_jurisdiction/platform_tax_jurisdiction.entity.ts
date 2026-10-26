@@ -1,9 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type PlatformTaxJurisdictionAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
+  taxJurisdictionId: string | null
   jurisdictionCode: string
   countryCode: string
   subdivisionCode?: string | null
@@ -13,15 +12,14 @@ export type PlatformTaxJurisdictionAttributes = {
   updatedAt?: Date
 }
 
-export type PlatformTaxJurisdictionCreationAttributes = Optional<PlatformTaxJurisdictionAttributes, "id" | "publicId" | "recordCode" | "subdivisionCode" | "createdAt" | "updatedAt">
+export type PlatformTaxJurisdictionCreationAttributes = Optional<PlatformTaxJurisdictionAttributes, "recordCode" | "subdivisionCode" | "createdAt" | "updatedAt">
 
 export class PlatformTaxJurisdictionEntity
   extends Model<PlatformTaxJurisdictionAttributes, PlatformTaxJurisdictionCreationAttributes>
   implements PlatformTaxJurisdictionAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
+  declare taxJurisdictionId: string | null
   declare jurisdictionCode: string
   declare countryCode: string
   declare subdivisionCode: string | null
@@ -34,26 +32,19 @@ export class PlatformTaxJurisdictionEntity
 export function initPlatformTaxJurisdictionEntity(sequelize: Sequelize): typeof PlatformTaxJurisdictionEntity {
   PlatformTaxJurisdictionEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
         allowNull: false,
         unique: true,
         defaultValue: Sequelize.literal("core.fn_next_record_code_for_table ('platform_tax_jurisdiction')"),
+      },
+      taxJurisdictionId: {
+        type: DataTypes.TEXT,
+        field: 'tax_jurisdiction_id',
+        allowNull: true,
+        primaryKey: true,
+        defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       jurisdictionCode: {
         type: DataTypes.TEXT,

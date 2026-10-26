@@ -1,8 +1,6 @@
 
 export type QuoteResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   quote_id: string
   quote_number: string

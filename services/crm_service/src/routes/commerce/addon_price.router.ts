@@ -4,23 +4,23 @@ import { AddonPriceService } from '../../services/commerce/addon_price/AddonPric
 const AddonPriceRoutes: FastifyPluginAsync = async (app) => {
   const controller = new AddonPriceService()
 
-  app.get('/addon_price', async (request, reply) => {
+  app.get('/addon_price', { config: {"adminPermission":"commerce.addon_price.read"} }, async (request, reply) => {
     const result = await controller.listAddonPrice(app, request)
     return reply.send(result)
   })
-  app.post('/addon_price', async (request, reply) => {
+  app.post('/addon_price', { config: {"adminPermission":"commerce.addon_price.create"} }, async (request, reply) => {
     const result = await controller.createAddonPrice(app, request.body as any, request)
     return reply.send(result)
   })
-  app.get('/addon_price/:id', async (request, reply) => {
+  app.get('/addon_price/:addon_price_id', { config: {"adminPermission":"commerce.addon_price.read"} }, async (request, reply) => {
     const result = await controller.getAddonPriceById(app, request)
     return reply.send(result)
   })
-  app.put('/addon_price/:id', async (request, reply) => {
+  app.put('/addon_price/:addon_price_id', { config: {"adminPermission":"commerce.addon_price.update"} }, async (request, reply) => {
     const result = await controller.updateAddonPrice(app, request.body as any, request)
     return reply.send(result)
   })
-  app.delete('/addon_price/:id', async (request, reply) => {
+  app.delete('/addon_price/:addon_price_id', { config: {"adminPermission":"commerce.addon_price.delete"} }, async (request, reply) => {
     const result = await controller.deleteAddonPrice(app, request)
     return reply.send(result)
   })

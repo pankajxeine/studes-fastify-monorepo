@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type IamPasswordResetTokenAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  passwordResetTokenId?: string
+  passwordResetTokenId: string | null
   appUserId: string
   tokenHash: string
   channel?: string
@@ -16,16 +14,14 @@ export type IamPasswordResetTokenAttributes = {
   invalidatedAt?: Date | null
 }
 
-export type IamPasswordResetTokenCreationAttributes = Optional<IamPasswordResetTokenAttributes, "id" | "publicId" | "recordCode" | "passwordResetTokenId" | "channel" | "requestedAt" | "requestedIp" | "issuedByUserId" | "usedAt" | "invalidatedAt">
+export type IamPasswordResetTokenCreationAttributes = Optional<IamPasswordResetTokenAttributes, "recordCode" | "channel" | "requestedAt" | "requestedIp" | "issuedByUserId" | "usedAt" | "invalidatedAt">
 
 export class IamPasswordResetTokenEntity
   extends Model<IamPasswordResetTokenAttributes, IamPasswordResetTokenCreationAttributes>
   implements IamPasswordResetTokenAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare passwordResetTokenId: string
+  declare passwordResetTokenId: string | null
   declare appUserId: string
   declare tokenHash: string
   declare channel: string
@@ -40,20 +36,6 @@ export class IamPasswordResetTokenEntity
 export function initIamPasswordResetTokenEntity(sequelize: Sequelize): typeof IamPasswordResetTokenEntity {
   IamPasswordResetTokenEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -64,8 +46,8 @@ export function initIamPasswordResetTokenEntity(sequelize: Sequelize): typeof Ia
       passwordResetTokenId: {
         type: DataTypes.TEXT,
         field: 'password_reset_token_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       appUserId: {

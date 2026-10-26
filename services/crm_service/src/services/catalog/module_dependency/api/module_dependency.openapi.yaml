@@ -38,17 +38,17 @@ paths:
         '409':
           description: Unique constraint conflict
 
-  /module_dependency/{id}:
+  /module_dependency/{module_dependency_id}:
     get:
       operationId: getModuleDependencyById
-      summary: Get module_dependency by ID
+      summary: Get module_dependency by module_dependency_id
       parameters:
         - in: path
-          name: id
+          name: module_dependency_id
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       responses:
         '200':
           description: module_dependency object
@@ -60,14 +60,14 @@ paths:
           description: module_dependency not found
     put:
       operationId: updateModuleDependency
-      summary: Update module_dependency by ID
+      summary: Update module_dependency by module_dependency_id
       parameters:
         - in: path
-          name: id
+          name: module_dependency_id
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       requestBody:
         required: true
         content:
@@ -89,14 +89,14 @@ paths:
           description: Unique constraint conflict
     delete:
       operationId: deleteModuleDependency
-      summary: Delete module_dependency by ID
+      summary: Delete module_dependency by module_dependency_id
       parameters:
         - in: path
-          name: id
+          name: module_dependency_id
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       responses:
         '204':
           description: Deleted
@@ -136,23 +136,18 @@ components:
     ModuleDependencyResponse:
       type: object
       required:
-        - id
-        - public_id
         - record_code
+        - module_dependency_id
         - module_id
         - requires_module_id
       additionalProperties: false
       properties:
-        id:
-          type: integer
-          format: int64
-          readOnly: true
-        public_id:
-          type: string
-          format: uuid
-          readOnly: true
         record_code:
           type: string
+          readOnly: true
+        module_dependency_id:
+          type: string
+          format: uuid
           readOnly: true
         module_id:
           type: string

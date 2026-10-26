@@ -1,9 +1,8 @@
 
 export type DeliveryAttemptResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
+  delivery_attempt_id: string
   notification_id: string
   attempt_no: number
   provider_code: string

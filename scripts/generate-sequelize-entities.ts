@@ -357,43 +357,49 @@ function parseTable(statement: string): Table | null {
   const foreignKeys: ForeignKey[] = [];
   const indexes: { fields: string[]; unique?: boolean }[] = [];
   const primaryKeyColumns = new Set<string>();
-  const uniqueColumns = new Set<string>();
-
   for (const part of splitTopLevel(body)) {
-    const column = parseColumn(part);
-    if (column && !/^(PRIMARY|CONSTRAINT)$/i.test(column.name)) {
-      columns.push(column);
-      const referenceMatch = part.match(/references\s+((?:"[^"]+"|`[^`]+`|[\w$]+)(?:\s*\.\s*(?:"[^"]+"|`[^`]+`|[\w$]+))?)\s*\(([^)]+)\)/i)
-      if (referenceMatch) {
-        const targetTable = unquoteIdentifier(referenceMatch[1].split('.').pop() ?? referenceMatch[1])
-        const targetColumn = unquoteIdentifier(referenceMatch[2].split(',')[0])
-        foreignKeys.push({
-          column: column.name,
-          model: targetTable,
-          key: targetColumn,
-          onDelete: part.match(/on\s+delete\s+(cascade|set\s+null|set\s+default|restrict|no\s+action)/i)?.[1]?.replace(/\s+/g, ' ').toUpperCase(),
-          onUpdate: part.match(/on\s+update\s+(cascade|set\s+null|set\s+default|restrict|no\s+action)/i)?.[1]?.replace(/\s+/g, ' ').toUpperCase(),
-        })
-      }
-      continue;
-    }
+    const tableConstraint = part.replace(/^\s*constraint\s+(?:"[^"]+"|`[^`]+`|[\w$]+)\s+/i, '')
 
-    // PRIMARY KEY (col1, col2)
-    if (/^primary\s+key\b/i.test(part)) {
+    // PRIMARY KEY (col1, col2), including named constraints.
+    if (/^primary\s+key\b/i.test(tableConstraint)) {
       const names = extractIdentifiers(part);
       names.forEach(name => primaryKeyColumns.add(name));
       indexes.push({ fields: names, unique: true });
       continue;
     }
 
-    // UNIQUE (col1, col2)
-    if (/unique\b/i.test(part)) {
+    // Handle UNIQUE before parsing columns, otherwise a table-level UNIQUE
+    // constraint is incorrectly emitted as a column named "UNIQUE".
+    if (/^unique\b/i.test(tableConstraint)) {
       const names = extractIdentifiers(part);
       indexes.push({ fields: names, unique: true });
       continue;
     }
 
-    foreignKeys.push(...parseForeignKeyDefinitions(part))
+    if (/^foreign\s+key\b/i.test(tableConstraint)) {
+      foreignKeys.push(...parseForeignKeyDefinitions(tableConstraint))
+      continue
+    }
+
+    // Other table constraints do not define model columns.
+    if (/^(?:check|exclude)\b/i.test(tableConstraint)) continue
+
+    const column = parseColumn(part);
+    if (!column) continue;
+    columns.push(column);
+
+    const referenceMatch = part.match(/references\s+((?:"[^"]+"|`[^`]+`|[\w$]+)(?:\s*\.\s*(?:"[^"]+"|`[^`]+`|[\w$]+))?)\s*\(([^)]+)\)/i)
+    if (referenceMatch) {
+      const targetTable = unquoteIdentifier(referenceMatch[1].split('.').pop() ?? referenceMatch[1])
+      const targetColumn = unquoteIdentifier(referenceMatch[2].split(',')[0])
+      foreignKeys.push({
+        column: column.name,
+        model: targetTable,
+        key: targetColumn,
+        onDelete: part.match(/on\s+delete\s+(cascade|set\s+null|set\s+default|restrict|no\s+action)/i)?.[1]?.replace(/\s+/g, ' ').toUpperCase(),
+        onUpdate: part.match(/on\s+update\s+(cascade|set\s+null|set\s+default|restrict|no\s+action)/i)?.[1]?.replace(/\s+/g, ' ').toUpperCase(),
+      })
+    }
   }
 
   // Apply PK/Unique flags
@@ -449,13 +455,13 @@ function renderEntity(table: Table, schemaName?: string): string {
   const usesParanoidDeletes = hasDeletedAt && usesTimestamps;
 
   const attributes = table.columns.map(col => {
-    const optional = col.allowNull || col.defaultValue || col.autoIncrement ? '?' : '';
+    const optional = !col.primaryKey && (col.allowNull || col.defaultValue || col.autoIncrement) ? '?' : '';
     const nullable = col.allowNull ? ' | null' : '';
     return `  ${toCamelCase(col.name)}${optional}: ${tsTypeFor(col.sqlType)}${nullable}`;
   }).join('\n');
 
   const creationOptional = table.columns
-    .filter(col => col.allowNull || col.defaultValue || col.autoIncrement)
+    .filter(col => !col.primaryKey && (col.allowNull || col.defaultValue || col.autoIncrement))
     .map(col => `"${toCamelCase(col.name)}"`)
     .join(' | ') || 'never';
 

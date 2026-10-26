@@ -1,8 +1,6 @@
 
 export type PlanPriceResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   plan_price_id: string
   plan_version_id: string

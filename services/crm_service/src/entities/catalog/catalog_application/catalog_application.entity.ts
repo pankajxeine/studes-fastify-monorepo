@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type CatalogApplicationAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  applicationId?: string
+  applicationId: string | null
   applicationCode: string
   name: string
   description?: string | null
@@ -21,16 +19,14 @@ export type CatalogApplicationAttributes = {
   updatedBy?: string | null
 }
 
-export type CatalogApplicationCreationAttributes = Optional<CatalogApplicationAttributes, "id" | "publicId" | "recordCode" | "applicationId" | "description" | "supportsCustomDomain" | "tenancyModel" | "snapshotTtlSec" | "graceDaysDefault" | "isActive" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
+export type CatalogApplicationCreationAttributes = Optional<CatalogApplicationAttributes, "recordCode" | "description" | "supportsCustomDomain" | "tenancyModel" | "snapshotTtlSec" | "graceDaysDefault" | "isActive" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
 
 export class CatalogApplicationEntity
   extends Model<CatalogApplicationAttributes, CatalogApplicationCreationAttributes>
   implements CatalogApplicationAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare applicationId: string
+  declare applicationId: string | null
   declare applicationCode: string
   declare name: string
   declare description: string | null
@@ -50,20 +46,6 @@ export class CatalogApplicationEntity
 export function initCatalogApplicationEntity(sequelize: Sequelize): typeof CatalogApplicationEntity {
   CatalogApplicationEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -74,8 +56,8 @@ export function initCatalogApplicationEntity(sequelize: Sequelize): typeof Catal
       applicationId: {
         type: DataTypes.TEXT,
         field: 'application_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       applicationCode: {

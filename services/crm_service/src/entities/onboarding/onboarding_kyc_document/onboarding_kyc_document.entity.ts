@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type OnboardingKycDocumentAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  kycDocumentId?: string
+  kycDocumentId: string | null
   accountId: string
   requestId?: string | null
   docType: string
@@ -20,16 +18,14 @@ export type OnboardingKycDocumentAttributes = {
   updatedBy?: string | null
 }
 
-export type OnboardingKycDocumentCreationAttributes = Optional<OnboardingKycDocumentAttributes, "id" | "publicId" | "recordCode" | "kycDocumentId" | "requestId" | "status" | "verifiedByUserId" | "verifiedAt" | "rejectionReason" | "expiresOn" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
+export type OnboardingKycDocumentCreationAttributes = Optional<OnboardingKycDocumentAttributes, "recordCode" | "requestId" | "status" | "verifiedByUserId" | "verifiedAt" | "rejectionReason" | "expiresOn" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
 
 export class OnboardingKycDocumentEntity
   extends Model<OnboardingKycDocumentAttributes, OnboardingKycDocumentCreationAttributes>
   implements OnboardingKycDocumentAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare kycDocumentId: string
+  declare kycDocumentId: string | null
   declare accountId: string
   declare requestId: string | null
   declare docType: string
@@ -48,20 +44,6 @@ export class OnboardingKycDocumentEntity
 export function initOnboardingKycDocumentEntity(sequelize: Sequelize): typeof OnboardingKycDocumentEntity {
   OnboardingKycDocumentEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -72,8 +54,8 @@ export function initOnboardingKycDocumentEntity(sequelize: Sequelize): typeof On
       kycDocumentId: {
         type: DataTypes.TEXT,
         field: 'kyc_document_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       accountId: {

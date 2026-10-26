@@ -1,9 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type IamPermissionAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
+  permissionId: string | null
   permissionCode: string
   module: string
   resource: string
@@ -20,15 +19,14 @@ export type IamPermissionAttributes = {
   updatedBy?: string | null
 }
 
-export type IamPermissionCreationAttributes = Optional<IamPermissionAttributes, "id" | "publicId" | "recordCode" | "description" | "isSensitive" | "requiresMfa" | "sortOrder" | "isActive" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
+export type IamPermissionCreationAttributes = Optional<IamPermissionAttributes, "recordCode" | "description" | "isSensitive" | "requiresMfa" | "sortOrder" | "isActive" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
 
 export class IamPermissionEntity
   extends Model<IamPermissionAttributes, IamPermissionCreationAttributes>
   implements IamPermissionAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
+  declare permissionId: string | null
   declare permissionCode: string
   declare module: string
   declare resource: string
@@ -48,26 +46,19 @@ export class IamPermissionEntity
 export function initIamPermissionEntity(sequelize: Sequelize): typeof IamPermissionEntity {
   IamPermissionEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
         allowNull: false,
         unique: true,
         defaultValue: Sequelize.literal("core.fn_next_record_code_for_table ('iam_permission')"),
+      },
+      permissionId: {
+        type: DataTypes.TEXT,
+        field: 'permission_id',
+        allowNull: true,
+        primaryKey: true,
+        defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       permissionCode: {
         type: DataTypes.TEXT,

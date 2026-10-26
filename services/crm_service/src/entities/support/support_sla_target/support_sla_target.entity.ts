@@ -1,55 +1,44 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type SupportSlaTargetAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
+  slaTargetId: string | null
   slaPolicyId: string
   priority: string
   firstResponseMinutes: number
   resolutionMinutes: number
-  UNIQUE?: string | null
 }
 
-export type SupportSlaTargetCreationAttributes = Optional<SupportSlaTargetAttributes, "id" | "publicId" | "recordCode" | "UNIQUE">
+export type SupportSlaTargetCreationAttributes = Optional<SupportSlaTargetAttributes, "recordCode">
 
 export class SupportSlaTargetEntity
   extends Model<SupportSlaTargetAttributes, SupportSlaTargetCreationAttributes>
   implements SupportSlaTargetAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
+  declare slaTargetId: string | null
   declare slaPolicyId: string
   declare priority: string
   declare firstResponseMinutes: number
   declare resolutionMinutes: number
-  declare UNIQUE: string | null
 }
 
 export function initSupportSlaTargetEntity(sequelize: Sequelize): typeof SupportSlaTargetEntity {
   SupportSlaTargetEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
         allowNull: false,
         unique: true,
         defaultValue: Sequelize.literal("core.fn_next_record_code_for_table ('support_sla_target')"),
+      },
+      slaTargetId: {
+        type: DataTypes.TEXT,
+        field: 'sla_target_id',
+        allowNull: true,
+        primaryKey: true,
+        defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       slaPolicyId: {
         type: DataTypes.TEXT,
@@ -72,11 +61,6 @@ export function initSupportSlaTargetEntity(sequelize: Sequelize): typeof Support
         type: DataTypes.INTEGER,
         field: 'resolution_minutes',
         allowNull: false,
-      },
-      UNIQUE: {
-        type: DataTypes.TEXT,
-        field: 'UNIQUE',
-        allowNull: true,
       }
     },
     {
@@ -84,7 +68,10 @@ export function initSupportSlaTargetEntity(sequelize: Sequelize): typeof Support
       tableName: 'support_sla_target',
       timestamps: false,
       underscored: true,
-      freezeTableName: true
+      freezeTableName: true,
+      indexes: [
+      { unique: true, fields: ['sla_policy_id', 'priority'] }
+      ]
     }
   )
   return SupportSlaTargetEntity

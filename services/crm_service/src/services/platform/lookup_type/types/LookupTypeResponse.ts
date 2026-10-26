@@ -1,9 +1,8 @@
 
 export type LookupTypeResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
+  lookup_type_id: string
   lookup_type_code: string
   name: string
   description?: (string) | null

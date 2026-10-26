@@ -1,8 +1,6 @@
 
 export type ApiClientResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   api_client_id: string
   name: string

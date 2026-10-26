@@ -267,6 +267,7 @@ function columnToOpenAPI(col: Column): string {
 function generateTableOpenAPI(table: Table, moduleName: string): string {
   const schemaName = `${toPascalCase(moduleName)}Response`;
   const schemas = generateSchemas(table, moduleName);
+  const primaryKeyName = getPrimaryKey(table).name;
 
   return `openapi: 3.0.0
 x-sql-table: ${table.name}
@@ -308,13 +309,13 @@ paths:
         '409':
           description: Unique constraint conflict
 
-  /${moduleName}/{id}:
+  /${moduleName}/{${primaryKeyName}}:
     get:
-      operationId: ${buildOperationId(moduleName, 'get', `/${moduleName}/{id}`)}
-      summary: Get ${moduleName} by ID
+      operationId: ${buildOperationId(moduleName, 'get', `/${moduleName}/{${primaryKeyName}}`)}
+      summary: Get ${moduleName} by ${primaryKeyName}
       parameters:
         - in: path
-          name: id
+          name: ${primaryKeyName}
           required: true
           schema:
 ${pathParameterSchema(table)}
@@ -328,11 +329,11 @@ ${pathParameterSchema(table)}
         '404':
           description: ${moduleName} not found
     put:
-      operationId: ${buildOperationId(moduleName, 'put', `/${moduleName}/{id}`)}
-      summary: Update ${moduleName} by ID
+      operationId: ${buildOperationId(moduleName, 'put', `/${moduleName}/{${primaryKeyName}}`)}
+      summary: Update ${moduleName} by ${primaryKeyName}
       parameters:
         - in: path
-          name: id
+          name: ${primaryKeyName}
           required: true
           schema:
 ${pathParameterSchema(table)}
@@ -356,11 +357,11 @@ ${pathParameterSchema(table)}
         '409':
           description: Unique constraint conflict
     delete:
-      operationId: ${buildOperationId(moduleName, 'delete', `/${moduleName}/{id}`)}
-      summary: Delete ${moduleName} by ID
+      operationId: ${buildOperationId(moduleName, 'delete', `/${moduleName}/{${primaryKeyName}}`)}
+      summary: Delete ${moduleName} by ${primaryKeyName}
       parameters:
         - in: path
-          name: id
+          name: ${primaryKeyName}
           required: true
           schema:
 ${pathParameterSchema(table)}
@@ -381,7 +382,7 @@ function buildOperationId(tableName: string, method: string, pathKey: string): s
 
   switch (method.toLowerCase()) {
     case 'get':
-      if (pathKey.includes('{id}')) return `get${pascal}ById`;
+      if (/\{[^}]+\}/.test(pathKey)) return `get${pascal}ById`;
       return `list${pascal}`;
     case 'post':
       return `create${pascal}`;
@@ -432,10 +433,15 @@ function pgTypeToOpenAPI(pgType: string): { type: string; format?: string } {
 }
 
 function pathParameterSchema(table: Table): string {
-  const key = table.columns.find(column => column.isPrimaryKey) ?? table.columns.find(column => column.name === 'id');
-  if (!key) return '            type: string';
+  const key = getPrimaryKey(table);
   const mapped = pgTypeToOpenAPI(key.type);
   return [`            type: ${mapped.type || 'object'}`, ...(mapped.format ? [`            format: ${mapped.format}`] : [])].join('\n');
+}
+
+function getPrimaryKey(table: Table): Column {
+  const primaryKey = table.columns.find(column => column.isPrimaryKey);
+  if (!primaryKey) throw new Error(`Table "${table.name}" does not declare a primary key`);
+  return primaryKey;
 }
 
 const args = process.argv.slice(2);

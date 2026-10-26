@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type IamUserSessionAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  userSessionId?: string
+  userSessionId: string | null
   appUserId: string
   tokenHash: string
   scopeType?: string
@@ -24,16 +22,14 @@ export type IamUserSessionAttributes = {
   endReason?: string | null
 }
 
-export type IamUserSessionCreationAttributes = Optional<IamUserSessionAttributes, "id" | "publicId" | "recordCode" | "userSessionId" | "scopeType" | "scopeId" | "authMethod" | "mfaVerifiedAt" | "impersonatingTenantId" | "impersonationReason" | "clientType" | "ipAddress" | "userAgent" | "startedAt" | "lastSeenAt" | "endedAt" | "endReason">
+export type IamUserSessionCreationAttributes = Optional<IamUserSessionAttributes, "recordCode" | "scopeType" | "scopeId" | "authMethod" | "mfaVerifiedAt" | "impersonatingTenantId" | "impersonationReason" | "clientType" | "ipAddress" | "userAgent" | "startedAt" | "lastSeenAt" | "endedAt" | "endReason">
 
 export class IamUserSessionEntity
   extends Model<IamUserSessionAttributes, IamUserSessionCreationAttributes>
   implements IamUserSessionAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare userSessionId: string
+  declare userSessionId: string | null
   declare appUserId: string
   declare tokenHash: string
   declare scopeType: string
@@ -56,20 +52,6 @@ export class IamUserSessionEntity
 export function initIamUserSessionEntity(sequelize: Sequelize): typeof IamUserSessionEntity {
   IamUserSessionEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -80,8 +62,8 @@ export function initIamUserSessionEntity(sequelize: Sequelize): typeof IamUserSe
       userSessionId: {
         type: DataTypes.TEXT,
         field: 'user_session_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       appUserId: {

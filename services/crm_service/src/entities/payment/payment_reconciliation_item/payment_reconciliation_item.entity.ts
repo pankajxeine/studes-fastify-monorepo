@@ -1,9 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type PaymentReconciliationItemAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
+  reconciliationItemId: string | null
   reconciliationBatchId: string
   gatewayPaymentRef: string
   paymentId?: string | null
@@ -11,18 +10,16 @@ export type PaymentReconciliationItemAttributes = {
   feeAmount?: string
   status: string
   note?: string | null
-  UNIQUE?: string | null
 }
 
-export type PaymentReconciliationItemCreationAttributes = Optional<PaymentReconciliationItemAttributes, "id" | "publicId" | "recordCode" | "paymentId" | "feeAmount" | "note" | "UNIQUE">
+export type PaymentReconciliationItemCreationAttributes = Optional<PaymentReconciliationItemAttributes, "recordCode" | "paymentId" | "feeAmount" | "note">
 
 export class PaymentReconciliationItemEntity
   extends Model<PaymentReconciliationItemAttributes, PaymentReconciliationItemCreationAttributes>
   implements PaymentReconciliationItemAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
+  declare reconciliationItemId: string | null
   declare reconciliationBatchId: string
   declare gatewayPaymentRef: string
   declare paymentId: string | null
@@ -30,32 +27,24 @@ export class PaymentReconciliationItemEntity
   declare feeAmount: string
   declare status: string
   declare note: string | null
-  declare UNIQUE: string | null
 }
 
 export function initPaymentReconciliationItemEntity(sequelize: Sequelize): typeof PaymentReconciliationItemEntity {
   PaymentReconciliationItemEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
         allowNull: false,
         unique: true,
         defaultValue: Sequelize.literal("core.fn_next_record_code_for_table ('payment_reconciliation_item')"),
+      },
+      reconciliationItemId: {
+        type: DataTypes.TEXT,
+        field: 'reconciliation_item_id',
+        allowNull: true,
+        primaryKey: true,
+        defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       reconciliationBatchId: {
         type: DataTypes.TEXT,
@@ -95,11 +84,6 @@ export function initPaymentReconciliationItemEntity(sequelize: Sequelize): typeo
         type: DataTypes.TEXT,
         field: 'note',
         allowNull: true,
-      },
-      UNIQUE: {
-        type: DataTypes.TEXT,
-        field: 'UNIQUE',
-        allowNull: true,
       }
     },
     {
@@ -107,7 +91,10 @@ export function initPaymentReconciliationItemEntity(sequelize: Sequelize): typeo
       tableName: 'payment_reconciliation_item',
       timestamps: false,
       underscored: true,
-      freezeTableName: true
+      freezeTableName: true,
+      indexes: [
+      { unique: true, fields: ['reconciliation_batch_id', 'gateway_payment_ref'] }
+      ]
     }
   )
   return PaymentReconciliationItemEntity

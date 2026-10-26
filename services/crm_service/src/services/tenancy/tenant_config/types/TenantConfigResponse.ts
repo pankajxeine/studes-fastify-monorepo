@@ -1,9 +1,8 @@
 
 export type TenantConfigResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
+  tenant_config_id: string
   tenant_application_id: string
   config_key: string
   value: unknown

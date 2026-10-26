@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type NotifyNotificationAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  notificationId?: string
+  notificationId: string | null
   templateVersionId: string
   locale: string
   channel: string
@@ -23,16 +21,14 @@ export type NotifyNotificationAttributes = {
   updatedAt?: Date
 }
 
-export type NotifyNotificationCreationAttributes = Optional<NotifyNotificationAttributes, "id" | "publicId" | "recordCode" | "notificationId" | "tenantId" | "relatedType" | "relatedId" | "status" | "priority" | "scheduledAt" | "sentAt" | "deliveredAt" | "createdAt" | "updatedAt">
+export type NotifyNotificationCreationAttributes = Optional<NotifyNotificationAttributes, "recordCode" | "tenantId" | "relatedType" | "relatedId" | "status" | "priority" | "scheduledAt" | "sentAt" | "deliveredAt" | "createdAt" | "updatedAt">
 
 export class NotifyNotificationEntity
   extends Model<NotifyNotificationAttributes, NotifyNotificationCreationAttributes>
   implements NotifyNotificationAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare notificationId: string
+  declare notificationId: string | null
   declare templateVersionId: string
   declare locale: string
   declare channel: string
@@ -54,20 +50,6 @@ export class NotifyNotificationEntity
 export function initNotifyNotificationEntity(sequelize: Sequelize): typeof NotifyNotificationEntity {
   NotifyNotificationEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -78,8 +60,8 @@ export function initNotifyNotificationEntity(sequelize: Sequelize): typeof Notif
       notificationId: {
         type: DataTypes.TEXT,
         field: 'notification_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       templateVersionId: {

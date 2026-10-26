@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type CommissionCommissionLedgerAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  entryId?: string
+  entryId: string | null
   salesAgentId: string
   entryType: string
   amount: string
@@ -25,16 +23,14 @@ export type CommissionCommissionLedgerAttributes = {
   createdAt?: Date
 }
 
-export type CommissionCommissionLedgerCreationAttributes = Optional<CommissionCommissionLedgerAttributes, "id" | "publicId" | "recordCode" | "entryId" | "basisAmount" | "ratePercent" | "hierarchyDepth" | "commissionRuleId" | "invoiceLineId" | "paymentAllocationId" | "reversesEntryId" | "status" | "earnedAt" | "approvedByUserId" | "approvedAt" | "payoutId" | "note" | "createdAt">
+export type CommissionCommissionLedgerCreationAttributes = Optional<CommissionCommissionLedgerAttributes, "recordCode" | "basisAmount" | "ratePercent" | "hierarchyDepth" | "commissionRuleId" | "invoiceLineId" | "paymentAllocationId" | "reversesEntryId" | "status" | "earnedAt" | "approvedByUserId" | "approvedAt" | "payoutId" | "note" | "createdAt">
 
 export class CommissionCommissionLedgerEntity
   extends Model<CommissionCommissionLedgerAttributes, CommissionCommissionLedgerCreationAttributes>
   implements CommissionCommissionLedgerAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare entryId: string
+  declare entryId: string | null
   declare salesAgentId: string
   declare entryType: string
   declare amount: string
@@ -58,32 +54,18 @@ export class CommissionCommissionLedgerEntity
 export function initCommissionCommissionLedgerEntity(sequelize: Sequelize): typeof CommissionCommissionLedgerEntity {
   CommissionCommissionLedgerEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
         allowNull: false,
         unique: true,
-        defaultValue: Sequelize.literal("core.fn_next_record_code_for_table ('commission_commission_ledger')"),
+        defaultValue: Sequelize.literal("core.fn_next_record_code_for_table (\r\n        'commission_commission_ledger'\r\n    )"),
       },
       entryId: {
         type: DataTypes.TEXT,
         field: 'entry_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       salesAgentId: {

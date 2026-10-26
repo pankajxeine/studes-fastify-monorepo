@@ -1,9 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type PlatformRegionAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
+  regionId: string | null
   regionCode: string
   name: string
   cloudProvider: string
@@ -14,15 +13,14 @@ export type PlatformRegionAttributes = {
   updatedAt?: Date
 }
 
-export type PlatformRegionCreationAttributes = Optional<PlatformRegionAttributes, "id" | "publicId" | "recordCode" | "isActive" | "createdAt" | "updatedAt">
+export type PlatformRegionCreationAttributes = Optional<PlatformRegionAttributes, "recordCode" | "isActive" | "createdAt" | "updatedAt">
 
 export class PlatformRegionEntity
   extends Model<PlatformRegionAttributes, PlatformRegionCreationAttributes>
   implements PlatformRegionAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
+  declare regionId: string | null
   declare regionCode: string
   declare name: string
   declare cloudProvider: string
@@ -36,26 +34,19 @@ export class PlatformRegionEntity
 export function initPlatformRegionEntity(sequelize: Sequelize): typeof PlatformRegionEntity {
   PlatformRegionEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
         allowNull: false,
         unique: true,
         defaultValue: Sequelize.literal("core.fn_next_record_code_for_table ('platform_region')"),
+      },
+      regionId: {
+        type: DataTypes.TEXT,
+        field: 'region_id',
+        allowNull: true,
+        primaryKey: true,
+        defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       regionCode: {
         type: DataTypes.TEXT,

@@ -29,32 +29,57 @@ export default fp(async (app) => {
     const hostname = (request.hostname || '').toLowerCase()
     const baseDomain = (app.env?.TENANT_BASE_DOMAIN ?? process.env.TENANT_BASE_DOMAIN ?? 'localtest.me').toLowerCase()
 
-    let tenantIdOrSlug: string | undefined
-    let from: 'header' | 'subdomain' | undefined
-
     const subdomain = hostname.endsWith(`.${baseDomain}`)
       ? hostname.slice(0, -1 * (baseDomain.length + 1))
       : undefined
 
-    if (precedence === 'header_then_subdomain') {
-      tenantIdOrSlug = headerTenantId || headerTenantSlug || subdomain
-      from = headerTenantId || headerTenantSlug ? 'header' : subdomain ? 'subdomain' : undefined
+    const headerTenant = headerTenantId || headerTenantSlug
+    let tenantIdOrSlug: string | undefined
+    let from: 'header' | 'subdomain' | 'domain' | undefined
+    let resolvedTenant: { id: string; slug: string; schema_name: string } | undefined
+
+    if (precedence === 'header_then_subdomain' && headerTenant) {
+      tenantIdOrSlug = headerTenant
+      from = 'header'
     } else {
-      tenantIdOrSlug = subdomain || headerTenantId || headerTenantSlug
-      from = subdomain ? 'subdomain' : headerTenantId || headerTenantSlug ? 'header' : undefined
+      const domainResult = await app.pg.query(
+        `select t.id, t.slug, t.schema_name
+           from public.tenant_domains d
+           join public.tenants t on t.id = d.tenant_id
+          where lower(d.domain) = $1
+            and d.domain_type = 'tenant'
+            and d.application_code = 'school'
+            and d.is_active
+            and t.status = 'active'
+          limit 1`,
+        [hostname],
+      )
+
+      if (domainResult.rowCount) {
+        resolvedTenant = domainResult.rows[0]
+        from = 'domain'
+      } else if (precedence === 'header_then_subdomain') {
+        tenantIdOrSlug = subdomain
+        from = subdomain ? 'subdomain' : undefined
+      } else {
+        tenantIdOrSlug = subdomain || headerTenant
+        from = subdomain ? 'subdomain' : headerTenant ? 'header' : undefined
+      }
     }
 
-    if (!tenantIdOrSlug) {
+    if (!tenantIdOrSlug && !resolvedTenant) {
       reply.code(400)
       throw new Error('Tenant not specified')
     }
 
     const client = await app.pg.connect()
     try {
-      const tenantResult = await client.query(
-        `select id, slug, schema_name from public.tenants where id::text = $1 or slug = $1 limit 1`,
-        [tenantIdOrSlug]
-      )
+      const tenantResult = resolvedTenant
+        ? { rowCount: 1, rows: [resolvedTenant] }
+        : await client.query(
+          `select id, slug, schema_name from public.tenants where (id::text = $1 or slug = $1) and status = 'active' limit 1`,
+          [tenantIdOrSlug],
+        )
 
       if (tenantResult.rowCount === 0) {
         reply.code(404)
@@ -62,6 +87,9 @@ export default fp(async (app) => {
       }
 
       const tenant = tenantResult.rows[0]
+      if (!/^[a-z_][a-z0-9_]{0,62}$/.test(tenant.schema_name)) {
+        throw new Error('Tenant organization has an invalid schema configuration')
+      }
       // One database, isolated schemas. schema_name comes from the trusted
       // control-plane registry, never directly from the request.
       await client.query(`select set_config('search_path', format('%I, public', $1), false)`, [tenant.schema_name])
@@ -102,7 +130,7 @@ declare module 'fastify' {
       id: string
       slug: string
       schema: string
-      resolvedBy: 'header' | 'subdomain'
+      resolvedBy: 'header' | 'subdomain' | 'domain'
     }
     db: import('pg').PoolClient | null
     dbSchema: string | null

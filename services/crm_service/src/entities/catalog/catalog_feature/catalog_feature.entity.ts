@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type CatalogFeatureAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  featureId?: string
+  featureId: string | null
   moduleId: string
   featureCode: string
   name: string
@@ -23,16 +21,14 @@ export type CatalogFeatureAttributes = {
   updatedBy?: string | null
 }
 
-export type CatalogFeatureCreationAttributes = Optional<CatalogFeatureAttributes, "id" | "publicId" | "recordCode" | "featureId" | "description" | "unit" | "defaultValue" | "resetPeriod" | "enforcement" | "overageAllowed" | "isActive" | "sortOrder" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
+export type CatalogFeatureCreationAttributes = Optional<CatalogFeatureAttributes, "recordCode" | "description" | "unit" | "defaultValue" | "resetPeriod" | "enforcement" | "overageAllowed" | "isActive" | "sortOrder" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
 
 export class CatalogFeatureEntity
   extends Model<CatalogFeatureAttributes, CatalogFeatureCreationAttributes>
   implements CatalogFeatureAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare featureId: string
+  declare featureId: string | null
   declare moduleId: string
   declare featureCode: string
   declare name: string
@@ -54,20 +50,6 @@ export class CatalogFeatureEntity
 export function initCatalogFeatureEntity(sequelize: Sequelize): typeof CatalogFeatureEntity {
   CatalogFeatureEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -78,8 +60,8 @@ export function initCatalogFeatureEntity(sequelize: Sequelize): typeof CatalogFe
       featureId: {
         type: DataTypes.TEXT,
         field: 'feature_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       moduleId: {

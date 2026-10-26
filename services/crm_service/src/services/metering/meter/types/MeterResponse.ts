@@ -1,8 +1,6 @@
 
 export type MeterResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   meter_id: string
   feature_id: string

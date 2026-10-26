@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type CrmQuoteLineAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  quoteLineId?: string
+  quoteLineId: string | null
   quoteId: string
   lineNo: number
   planPriceId?: string | null
@@ -16,16 +14,14 @@ export type CrmQuoteLineAttributes = {
   netAmount?: string | null
 }
 
-export type CrmQuoteLineCreationAttributes = Optional<CrmQuoteLineAttributes, "id" | "publicId" | "recordCode" | "quoteLineId" | "planPriceId" | "addonPriceId" | "quantity" | "discountPercent" | "netAmount">
+export type CrmQuoteLineCreationAttributes = Optional<CrmQuoteLineAttributes, "recordCode" | "planPriceId" | "addonPriceId" | "quantity" | "discountPercent" | "netAmount">
 
 export class CrmQuoteLineEntity
   extends Model<CrmQuoteLineAttributes, CrmQuoteLineCreationAttributes>
   implements CrmQuoteLineAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare quoteLineId: string
+  declare quoteLineId: string | null
   declare quoteId: string
   declare lineNo: number
   declare planPriceId: string | null
@@ -40,20 +36,6 @@ export class CrmQuoteLineEntity
 export function initCrmQuoteLineEntity(sequelize: Sequelize): typeof CrmQuoteLineEntity {
   CrmQuoteLineEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -64,8 +46,8 @@ export function initCrmQuoteLineEntity(sequelize: Sequelize): typeof CrmQuoteLin
       quoteLineId: {
         type: DataTypes.TEXT,
         field: 'quote_line_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       quoteId: {

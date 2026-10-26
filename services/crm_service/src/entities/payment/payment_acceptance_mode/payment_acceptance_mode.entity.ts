@@ -1,24 +1,22 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type PaymentAcceptanceModeAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
+  acceptanceModeId: string | null
   modeCode: string
   name: string
   requiresGateway: string
   isActive?: string
 }
 
-export type PaymentAcceptanceModeCreationAttributes = Optional<PaymentAcceptanceModeAttributes, "id" | "publicId" | "recordCode" | "isActive">
+export type PaymentAcceptanceModeCreationAttributes = Optional<PaymentAcceptanceModeAttributes, "recordCode" | "isActive">
 
 export class PaymentAcceptanceModeEntity
   extends Model<PaymentAcceptanceModeAttributes, PaymentAcceptanceModeCreationAttributes>
   implements PaymentAcceptanceModeAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
+  declare acceptanceModeId: string | null
   declare modeCode: string
   declare name: string
   declare requiresGateway: string
@@ -28,26 +26,19 @@ export class PaymentAcceptanceModeEntity
 export function initPaymentAcceptanceModeEntity(sequelize: Sequelize): typeof PaymentAcceptanceModeEntity {
   PaymentAcceptanceModeEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
         allowNull: false,
         unique: true,
         defaultValue: Sequelize.literal("core.fn_next_record_code_for_table ('payment_acceptance_mode')"),
+      },
+      acceptanceModeId: {
+        type: DataTypes.TEXT,
+        field: 'acceptance_mode_id',
+        allowNull: true,
+        primaryKey: true,
+        defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       modeCode: {
         type: DataTypes.TEXT,

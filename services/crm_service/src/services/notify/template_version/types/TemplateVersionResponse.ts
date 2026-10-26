@@ -1,8 +1,6 @@
 
 export type TemplateVersionResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   template_version_id: string
   template_id: string

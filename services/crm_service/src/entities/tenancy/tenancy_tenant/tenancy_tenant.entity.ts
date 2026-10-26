@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type TenancyTenantAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  tenantId?: string
+  tenantId: string | null
   tenantCode: string
   customerAccountId: string
   legalName: string
@@ -30,16 +28,14 @@ export type TenancyTenantAttributes = {
   updatedBy?: string | null
 }
 
-export type TenancyTenantCreationAttributes = Optional<TenancyTenantAttributes, "id" | "publicId" | "recordCode" | "tenantId" | "status" | "timezone" | "defaultLocale" | "owningBranchId" | "salesAgentId" | "isSandbox" | "parentTenantId" | "legalHold" | "suspendedReason" | "activatedAt" | "cancelledAt" | "purgeAfter" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
+export type TenancyTenantCreationAttributes = Optional<TenancyTenantAttributes, "recordCode" | "status" | "timezone" | "defaultLocale" | "owningBranchId" | "salesAgentId" | "isSandbox" | "parentTenantId" | "legalHold" | "suspendedReason" | "activatedAt" | "cancelledAt" | "purgeAfter" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
 
 export class TenancyTenantEntity
   extends Model<TenancyTenantAttributes, TenancyTenantCreationAttributes>
   implements TenancyTenantAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare tenantId: string
+  declare tenantId: string | null
   declare tenantCode: string
   declare customerAccountId: string
   declare legalName: string
@@ -68,20 +64,6 @@ export class TenancyTenantEntity
 export function initTenancyTenantEntity(sequelize: Sequelize): typeof TenancyTenantEntity {
   TenancyTenantEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -92,8 +74,8 @@ export function initTenancyTenantEntity(sequelize: Sequelize): typeof TenancyTen
       tenantId: {
         type: DataTypes.TEXT,
         field: 'tenant_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       tenantCode: {

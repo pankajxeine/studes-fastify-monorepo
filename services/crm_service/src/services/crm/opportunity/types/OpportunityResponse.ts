@@ -1,8 +1,6 @@
 
 export type OpportunityResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   opportunity_id: string
   opportunity_number: string

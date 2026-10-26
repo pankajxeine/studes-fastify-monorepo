@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type SupportSlaPolicyAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  slaPolicyId?: string
+  slaPolicyId: string | null
   policyCode: string
   name: string
   calendarId: string
@@ -15,16 +13,14 @@ export type SupportSlaPolicyAttributes = {
   updatedBy?: string | null
 }
 
-export type SupportSlaPolicyCreationAttributes = Optional<SupportSlaPolicyAttributes, "id" | "publicId" | "recordCode" | "slaPolicyId" | "isDefault" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
+export type SupportSlaPolicyCreationAttributes = Optional<SupportSlaPolicyAttributes, "recordCode" | "isDefault" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
 
 export class SupportSlaPolicyEntity
   extends Model<SupportSlaPolicyAttributes, SupportSlaPolicyCreationAttributes>
   implements SupportSlaPolicyAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare slaPolicyId: string
+  declare slaPolicyId: string | null
   declare policyCode: string
   declare name: string
   declare calendarId: string
@@ -38,20 +34,6 @@ export class SupportSlaPolicyEntity
 export function initSupportSlaPolicyEntity(sequelize: Sequelize): typeof SupportSlaPolicyEntity {
   SupportSlaPolicyEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -62,8 +44,8 @@ export function initSupportSlaPolicyEntity(sequelize: Sequelize): typeof Support
       slaPolicyId: {
         type: DataTypes.TEXT,
         field: 'sla_policy_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       policyCode: {

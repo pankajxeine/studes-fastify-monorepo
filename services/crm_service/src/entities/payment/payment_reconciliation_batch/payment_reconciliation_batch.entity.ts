@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type PaymentReconciliationBatchAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  reconciliationBatchId?: string
+  reconciliationBatchId: string | null
   gateway: string
   settlementRef: string
   settlementDate: string
@@ -18,16 +16,14 @@ export type PaymentReconciliationBatchAttributes = {
   createdAt?: Date
 }
 
-export type PaymentReconciliationBatchCreationAttributes = Optional<PaymentReconciliationBatchAttributes, "id" | "publicId" | "recordCode" | "reconciliationBatchId" | "feeAmount" | "status" | "closedByUserId" | "closedAt" | "createdAt">
+export type PaymentReconciliationBatchCreationAttributes = Optional<PaymentReconciliationBatchAttributes, "recordCode" | "feeAmount" | "status" | "closedByUserId" | "closedAt" | "createdAt">
 
 export class PaymentReconciliationBatchEntity
   extends Model<PaymentReconciliationBatchAttributes, PaymentReconciliationBatchCreationAttributes>
   implements PaymentReconciliationBatchAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare reconciliationBatchId: string
+  declare reconciliationBatchId: string | null
   declare gateway: string
   declare settlementRef: string
   declare settlementDate: string
@@ -44,32 +40,18 @@ export class PaymentReconciliationBatchEntity
 export function initPaymentReconciliationBatchEntity(sequelize: Sequelize): typeof PaymentReconciliationBatchEntity {
   PaymentReconciliationBatchEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
         allowNull: false,
         unique: true,
-        defaultValue: Sequelize.literal("core.fn_next_record_code_for_table ('payment_reconciliation_batch')"),
+        defaultValue: Sequelize.literal("core.fn_next_record_code_for_table (\r\n        'payment_reconciliation_batch'\r\n    )"),
       },
       reconciliationBatchId: {
         type: DataTypes.TEXT,
         field: 'reconciliation_batch_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       gateway: {

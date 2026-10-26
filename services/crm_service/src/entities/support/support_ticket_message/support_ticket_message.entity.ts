@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type SupportTicketMessageAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  ticketMessageId?: string
+  ticketMessageId: string | null
   ticketId: string
   authorType: string
   authorUserId?: string | null
@@ -16,16 +14,14 @@ export type SupportTicketMessageAttributes = {
   createdAt?: Date
 }
 
-export type SupportTicketMessageCreationAttributes = Optional<SupportTicketMessageAttributes, "id" | "publicId" | "recordCode" | "ticketMessageId" | "authorUserId" | "authorContactId" | "isInternal" | "channel" | "attachments" | "createdAt">
+export type SupportTicketMessageCreationAttributes = Optional<SupportTicketMessageAttributes, "recordCode" | "authorUserId" | "authorContactId" | "isInternal" | "channel" | "attachments" | "createdAt">
 
 export class SupportTicketMessageEntity
   extends Model<SupportTicketMessageAttributes, SupportTicketMessageCreationAttributes>
   implements SupportTicketMessageAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare ticketMessageId: string
+  declare ticketMessageId: string | null
   declare ticketId: string
   declare authorType: string
   declare authorUserId: string | null
@@ -40,20 +36,6 @@ export class SupportTicketMessageEntity
 export function initSupportTicketMessageEntity(sequelize: Sequelize): typeof SupportTicketMessageEntity {
   SupportTicketMessageEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -64,8 +46,8 @@ export function initSupportTicketMessageEntity(sequelize: Sequelize): typeof Sup
       ticketMessageId: {
         type: DataTypes.TEXT,
         field: 'ticket_message_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       ticketId: {

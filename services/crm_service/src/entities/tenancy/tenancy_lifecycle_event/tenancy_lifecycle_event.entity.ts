@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type TenancyLifecycleEventAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  lifecycleEventId?: string
+  lifecycleEventId: string | null
   tenantId: string
   tenantApplicationId?: string | null
   fromStatus?: string | null
@@ -14,16 +12,14 @@ export type TenancyLifecycleEventAttributes = {
   occurredAt?: Date
 }
 
-export type TenancyLifecycleEventCreationAttributes = Optional<TenancyLifecycleEventAttributes, "id" | "publicId" | "recordCode" | "lifecycleEventId" | "tenantApplicationId" | "fromStatus" | "reason" | "actorUserId" | "occurredAt">
+export type TenancyLifecycleEventCreationAttributes = Optional<TenancyLifecycleEventAttributes, "recordCode" | "tenantApplicationId" | "fromStatus" | "reason" | "actorUserId" | "occurredAt">
 
 export class TenancyLifecycleEventEntity
   extends Model<TenancyLifecycleEventAttributes, TenancyLifecycleEventCreationAttributes>
   implements TenancyLifecycleEventAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare lifecycleEventId: string
+  declare lifecycleEventId: string | null
   declare tenantId: string
   declare tenantApplicationId: string | null
   declare fromStatus: string | null
@@ -36,20 +32,6 @@ export class TenancyLifecycleEventEntity
 export function initTenancyLifecycleEventEntity(sequelize: Sequelize): typeof TenancyLifecycleEventEntity {
   TenancyLifecycleEventEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -60,8 +42,8 @@ export function initTenancyLifecycleEventEntity(sequelize: Sequelize): typeof Te
       lifecycleEventId: {
         type: DataTypes.TEXT,
         field: 'lifecycle_event_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       tenantId: {

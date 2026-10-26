@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type AuditDataAccessLogAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  dataAccessLogId?: string
+  dataAccessLogId: string | null
   appUserId?: string | null
   tenantId?: string | null
   resource: string
@@ -14,16 +12,14 @@ export type AuditDataAccessLogAttributes = {
   accessedAt?: Date
 }
 
-export type AuditDataAccessLogCreationAttributes = Optional<AuditDataAccessLogAttributes, "id" | "publicId" | "recordCode" | "dataAccessLogId" | "appUserId" | "tenantId" | "recordId" | "fields" | "accessedAt">
+export type AuditDataAccessLogCreationAttributes = Optional<AuditDataAccessLogAttributes, "recordCode" | "appUserId" | "tenantId" | "recordId" | "fields" | "accessedAt">
 
 export class AuditDataAccessLogEntity
   extends Model<AuditDataAccessLogAttributes, AuditDataAccessLogCreationAttributes>
   implements AuditDataAccessLogAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare dataAccessLogId: string
+  declare dataAccessLogId: string | null
   declare appUserId: string | null
   declare tenantId: string | null
   declare resource: string
@@ -36,20 +32,6 @@ export class AuditDataAccessLogEntity
 export function initAuditDataAccessLogEntity(sequelize: Sequelize): typeof AuditDataAccessLogEntity {
   AuditDataAccessLogEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -60,8 +42,8 @@ export function initAuditDataAccessLogEntity(sequelize: Sequelize): typeof Audit
       dataAccessLogId: {
         type: DataTypes.TEXT,
         field: 'data_access_log_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       appUserId: {

@@ -1,8 +1,6 @@
 
 export type KbArticleResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   kb_article_id: string
   slug: string

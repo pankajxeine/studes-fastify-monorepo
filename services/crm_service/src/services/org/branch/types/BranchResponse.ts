@@ -1,8 +1,6 @@
 
 export type BranchResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   branch_id: string
   branch_code: string

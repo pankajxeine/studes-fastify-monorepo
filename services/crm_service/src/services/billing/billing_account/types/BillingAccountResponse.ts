@@ -1,8 +1,6 @@
 
 export type BillingAccountResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   billing_account_id: string
   account_id: string

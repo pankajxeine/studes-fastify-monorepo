@@ -1,9 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type ProvisioningProvisioningStepAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
+  provisioningStepId: string | null
   jobId: string
   stepNo: number
   stepCode: string
@@ -14,18 +13,16 @@ export type ProvisioningProvisioningStepAttributes = {
   finishedAt?: Date | null
   output?: unknown | null
   error?: string | null
-  UNIQUE?: string | null
 }
 
-export type ProvisioningProvisioningStepCreationAttributes = Optional<ProvisioningProvisioningStepAttributes, "id" | "publicId" | "recordCode" | "compensationStepCode" | "status" | "attempts" | "startedAt" | "finishedAt" | "output" | "error" | "UNIQUE">
+export type ProvisioningProvisioningStepCreationAttributes = Optional<ProvisioningProvisioningStepAttributes, "recordCode" | "compensationStepCode" | "status" | "attempts" | "startedAt" | "finishedAt" | "output" | "error">
 
 export class ProvisioningProvisioningStepEntity
   extends Model<ProvisioningProvisioningStepAttributes, ProvisioningProvisioningStepCreationAttributes>
   implements ProvisioningProvisioningStepAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
+  declare provisioningStepId: string | null
   declare jobId: string
   declare stepNo: number
   declare stepCode: string
@@ -36,32 +33,24 @@ export class ProvisioningProvisioningStepEntity
   declare finishedAt: Date | null
   declare output: unknown | null
   declare error: string | null
-  declare UNIQUE: string | null
 }
 
 export function initProvisioningProvisioningStepEntity(sequelize: Sequelize): typeof ProvisioningProvisioningStepEntity {
   ProvisioningProvisioningStepEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
         allowNull: false,
         unique: true,
         defaultValue: Sequelize.literal("core.fn_next_record_code_for_table (\r\n        'provisioning_provisioning_step'\r\n    )"),
+      },
+      provisioningStepId: {
+        type: DataTypes.TEXT,
+        field: 'provisioning_step_id',
+        allowNull: true,
+        primaryKey: true,
+        defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       jobId: {
         type: DataTypes.TEXT,
@@ -116,11 +105,6 @@ export function initProvisioningProvisioningStepEntity(sequelize: Sequelize): ty
         type: DataTypes.TEXT,
         field: 'error',
         allowNull: true,
-      },
-      UNIQUE: {
-        type: DataTypes.TEXT,
-        field: 'UNIQUE',
-        allowNull: true,
       }
     },
     {
@@ -128,7 +112,10 @@ export function initProvisioningProvisioningStepEntity(sequelize: Sequelize): ty
       tableName: 'provisioning_provisioning_step',
       timestamps: false,
       underscored: true,
-      freezeTableName: true
+      freezeTableName: true,
+      indexes: [
+      { unique: true, fields: ['job_id', 'step_no'] }
+      ]
     }
   )
   return ProvisioningProvisioningStepEntity

@@ -1,8 +1,6 @@
 
 export type AddonPriceResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   addon_price_id: string
   addon_version_id: string

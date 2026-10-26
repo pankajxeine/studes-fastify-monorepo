@@ -1,9 +1,8 @@
 
 export type FeatureFlagResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
+  feature_flag_id: string
   flag_key: string
   description: string
   is_enabled: boolean

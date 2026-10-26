@@ -8,6 +8,8 @@ paths:
   /health:
     get:
       operationId: authHealth
+      x-fastify-config:
+        isPublic: true
       responses:
         '200':
           description: OK
@@ -18,6 +20,8 @@ paths:
   /health/db:
     get:
       operationId: authHealthDb
+      x-fastify-config:
+        isPublic: true
       responses:
         '200':
           description: OK

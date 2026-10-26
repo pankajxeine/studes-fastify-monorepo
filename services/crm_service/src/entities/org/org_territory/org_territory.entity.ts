@@ -1,10 +1,8 @@
 import { DataTypes, Model, Sequelize, Optional } from 'sequelize'
 
 export type OrgTerritoryAttributes = {
-  id?: string | number | null
-  publicId?: string
   recordCode?: string
-  territoryId?: string
+  territoryId: string | null
   territoryCode: string
   name: string
   parentTerritoryId?: string | null
@@ -16,16 +14,14 @@ export type OrgTerritoryAttributes = {
   updatedBy?: string | null
 }
 
-export type OrgTerritoryCreationAttributes = Optional<OrgTerritoryAttributes, "id" | "publicId" | "recordCode" | "territoryId" | "parentTerritoryId" | "countryCodes" | "isActive" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
+export type OrgTerritoryCreationAttributes = Optional<OrgTerritoryAttributes, "recordCode" | "parentTerritoryId" | "countryCodes" | "isActive" | "createdAt" | "createdBy" | "updatedAt" | "updatedBy">
 
 export class OrgTerritoryEntity
   extends Model<OrgTerritoryAttributes, OrgTerritoryCreationAttributes>
   implements OrgTerritoryAttributes
 {
-  declare id: string | number | null
-  declare publicId: string
   declare recordCode: string
-  declare territoryId: string
+  declare territoryId: string | null
   declare territoryCode: string
   declare name: string
   declare parentTerritoryId: string | null
@@ -40,20 +36,6 @@ export class OrgTerritoryEntity
 export function initOrgTerritoryEntity(sequelize: Sequelize): typeof OrgTerritoryEntity {
   OrgTerritoryEntity.init(
     {
-      id: {
-        type: DataTypes.BIGINT,
-        field: 'id',
-        allowNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      publicId: {
-        type: DataTypes.TEXT,
-        field: 'public_id',
-        allowNull: false,
-        unique: true,
-        defaultValue: Sequelize.literal("gen_random_uuid ()"),
-      },
       recordCode: {
         type: DataTypes.TEXT,
         field: 'record_code',
@@ -64,8 +46,8 @@ export function initOrgTerritoryEntity(sequelize: Sequelize): typeof OrgTerritor
       territoryId: {
         type: DataTypes.TEXT,
         field: 'territory_id',
-        allowNull: false,
-        unique: true,
+        allowNull: true,
+        primaryKey: true,
         defaultValue: Sequelize.literal("gen_random_uuid ()"),
       },
       territoryCode: {

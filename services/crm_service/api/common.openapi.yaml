@@ -5,6 +5,50 @@ info:
 servers:
   - url: http://localhost:3001
 paths:
+  /cpanel/organizations:
+    post:
+      operationId: onboardCrmOrganization
+      x-fastify-config:
+        adminPermission: cpanel.organization.create
+        adminRequiredRole: super_admin
+      summary: Register a pre-provisioned CRM organization
+      description: Root cPanel super administrators only. The organization schema must already exist.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, slug, schema_name, domain]
+              properties:
+                name: { type: string, minLength: 1, maxLength: 200 }
+                slug: { type: string, pattern: '^[a-z][a-z0-9-]{1,62}$' }
+                schema_name: { type: string, pattern: '^[a-z_][a-z0-9_]{0,62}$' }
+                domain: { type: string, format: hostname }
+                db_name: { type: string, maxLength: 63 }
+                title: { type: string, maxLength: 200 }
+                description: { type: string, maxLength: 1000 }
+                api_endpoint: { type: string, format: uri }
+                web_endpoint: { type: string, format: uri }
+                logo_url: { type: string, format: uri }
+                favicon_url: { type: string, format: uri }
+                images:
+                  type: array
+                  items: { type: string, format: uri }
+                config:
+                  type: object
+                  additionalProperties: true
+      responses:
+        '201':
+          description: CRM organization registered
+        '400':
+          description: Invalid input or schema is not provisioned
+        '401':
+          description: CRM administrator authentication required
+        '403':
+          description: Root cPanel super administrator permission required
+        '409':
+          description: Slug, schema, or domain already registered
   /cpanelroutes/:domain?:
     get:
       operationId: cpanelRouteDomain
@@ -12,11 +56,15 @@ paths:
         isPublic: true
       responses:
         '200':
-          description: OK
+          description: Public bootstrap configuration for the requested host
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/GetCpanelRouteDomainResponse'
+        '400':
+          description: The requested hostname is invalid
+        '404':
+          description: No active route is configured for this hostname
 components:
   schemas:
     GetCpanelRouteDomainResponse:
@@ -26,13 +74,51 @@ components:
           type: string
         domain_type:
           type: string
+          enum: [tenant, cpanel, crm]
+        application_code:
+          type: string
+        tenant_id:
+          type: string
+          format: uuid
+          nullable: true
+        tenant_application_id:
+          type: string
+          format: uuid
+          nullable: true
+        db_name:
+          type: string
+          nullable: true
+        slug:
+          type: string
         domain_shortcode:
           type: string
+        name:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+          nullable: true
         api_endpoint:
           type: string
+          nullable: true
+        web_endpoint:
+          type: string
+          nullable: true
+        logo_url:
+          type: string
+          nullable: true
+        favicon_url:
+          type: string
+          nullable: true
+        images:
+          type: array
+          items:
+            type: string
+        config:
+          type: object
+          additionalProperties: true
         settings:
           type: object
-          additionalProperties:
-            type: string
-        
-      required: [domain]
+          additionalProperties: true
+      required: [domain, domain_type, application_code, slug, name, title, images, config]

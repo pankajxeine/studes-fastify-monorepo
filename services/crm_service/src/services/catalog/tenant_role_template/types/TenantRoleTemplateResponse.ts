@@ -1,9 +1,8 @@
 
 export type TenantRoleTemplateResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
+  tenant_role_template_id: string
   application_id: string
   role_code: string
   name: string

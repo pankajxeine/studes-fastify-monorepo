@@ -38,17 +38,17 @@ paths:
         '409':
           description: Unique constraint conflict
 
-  /entitlement_override/{id}:
+  /entitlement_override/{override_id}:
     get:
       operationId: getEntitlementOverrideById
-      summary: Get entitlement_override by ID
+      summary: Get entitlement_override by override_id
       parameters:
         - in: path
-          name: id
+          name: override_id
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       responses:
         '200':
           description: entitlement_override object
@@ -60,14 +60,14 @@ paths:
           description: entitlement_override not found
     put:
       operationId: updateEntitlementOverride
-      summary: Update entitlement_override by ID
+      summary: Update entitlement_override by override_id
       parameters:
         - in: path
-          name: id
+          name: override_id
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       requestBody:
         required: true
         content:
@@ -89,14 +89,14 @@ paths:
           description: Unique constraint conflict
     delete:
       operationId: deleteEntitlementOverride
-      summary: Delete entitlement_override by ID
+      summary: Delete entitlement_override by override_id
       parameters:
         - in: path
-          name: id
+          name: override_id
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       responses:
         '204':
           description: Deleted
@@ -223,8 +223,6 @@ components:
     EntitlementOverrideResponse:
       type: object
       required:
-        - id
-        - public_id
         - record_code
         - override_id
         - tenant_application_id
@@ -239,14 +237,6 @@ components:
         - updated_at
       additionalProperties: false
       properties:
-        id:
-          type: integer
-          format: int64
-          readOnly: true
-        public_id:
-          type: string
-          format: uuid
-          readOnly: true
         record_code:
           type: string
           readOnly: true

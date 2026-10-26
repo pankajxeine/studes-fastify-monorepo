@@ -1,8 +1,6 @@
 
 export type UsageEventResponse = 
 {
-  id: number
-  public_id: string
   record_code: string
   usage_event_id: string
   tenant_application_id: string
