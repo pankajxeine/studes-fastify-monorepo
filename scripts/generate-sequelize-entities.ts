@@ -551,8 +551,23 @@ function renderIndex(tables: Table[]): string {
     .join(',\n')
 
   const tableNames = new Set(tables.map((table) => table.name.toLowerCase()))
-  const belongsToAliases = new Map<string, Set<string>>()
-  const hasManyAliases = new Map<string, Set<string>>()
+  // const belongsToAliases = new Map<string, Set<string>>()
+  // const hasManyAliases = new Map<string, Set<string>>()
+
+  const reservedAliases = new Map<string, Set<string>>(
+    tables.map((table) => [table.name, new Set(table.columns.map((column) => toCamelCase(column.name)))])
+  )
+
+  const allocateAlias = (table: Table, preferred: string, fallback: string): string => {
+    const reserved = reservedAliases.get(table.name)!
+    let alias = preferred
+    if (reserved.has(alias)) alias = fallback
+    const base = alias
+    let suffix = 2
+    while (reserved.has(alias)) alias = `${base}${suffix++}`
+    reserved.add(alias)
+    return alias
+  }
   const associationLines: string[] = []
   for (const table of tables) {
     for (const foreignKey of table.foreignKeys) {
@@ -561,20 +576,23 @@ function renderIndex(tables: Table[]): string {
 
       const foreignKeyAttribute = toCamelCase(foreignKey.column)
       const targetKeyAttribute = toCamelCase(foreignKey.key)
-      const baseAlias = toLowerCamelCase(foreignKey.column.replace(/_id$/i, '')) || toLowerCamelCase(target.name)
-      const sourceAliases = belongsToAliases.get(table.name) ?? new Set<string>()
-      const belongsToAlias = sourceAliases.has(baseAlias) ? `${baseAlias}${toPascalCase(target.name)}` : baseAlias
-      sourceAliases.add(belongsToAlias)
-      belongsToAliases.set(table.name, sourceAliases)
+      // const baseAlias = toLowerCamelCase(foreignKey.column.replace(/_id$/i, '')) || toLowerCamelCase(target.name)
+      // const sourceAliases = belongsToAliases.get(table.name) ?? new Set<string>()
+      // const belongsToAlias = sourceAliases.has(baseAlias) ? `${baseAlias}${toPascalCase(target.name)}` : baseAlias
+      // sourceAliases.add(belongsToAlias)
+      // belongsToAliases.set(table.name, sourceAliases)
 
-      const targetAliases = hasManyAliases.get(target.name) ?? new Set<string>()
+      // const targetAliases = hasManyAliases.get(target.name) ?? new Set<string>()
+      const baseAlias = toLowerCamelCase(foreignKey.column).replace(/(?:Id|Code)$/, '') || toLowerCamelCase(target.name)
+      const belongsToAlias = allocateAlias(table, baseAlias, `${baseAlias}${toPascalCase(target.name)}`)
       const reverseBaseAlias = toLowerCamelCase(table.name)
-      const hasManyAlias = targetAliases.has(reverseBaseAlias)
-        ? `${reverseBaseAlias}By${toPascalCase(foreignKey.column)}`
-        : reverseBaseAlias
-      targetAliases.add(hasManyAlias)
-      hasManyAliases.set(target.name, targetAliases)
+      // const hasManyAlias = targetAliases.has(reverseBaseAlias)
+      //   ? `${reverseBaseAlias}By${toPascalCase(foreignKey.column)}`
+      //   : reverseBaseAlias
+      // targetAliases.add(hasManyAlias)
+      // hasManyAliases.set(target.name, targetAliases)
 
+      const hasManyAlias = allocateAlias(target, reverseBaseAlias, `${reverseBaseAlias}By${toPascalCase(foreignKey.column)}`)
       const options = [
         `foreignKey: '${foreignKeyAttribute}'`,
         `targetKey: '${targetKeyAttribute}'`,

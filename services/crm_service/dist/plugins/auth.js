@@ -15,7 +15,11 @@ exports.default = (0, fastify_plugin_1.default)(async (app) => {
     if (!cookieSecret) {
         throw new Error('SESSION_COOKIE_SECRET is required');
     }
-    await app.register(jwt_1.default, { secret: jwtSecret });
+    await app.register(jwt_1.default, {
+        secret: jwtSecret,
+        sign: { algorithm: 'HS256', iss: 'studes-crm', aud: 'crm-admin' },
+        verify: { algorithms: ['HS256'], allowedIss: 'studes-crm', allowedAud: 'crm-admin' },
+    });
     await app.register(cookie_1.default, {
         secret: cookieSecret,
         hook: 'onRequest'

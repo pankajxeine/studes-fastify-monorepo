@@ -13,7 +13,11 @@ export default fp(async (app) => {
     throw new Error('SESSION_COOKIE_SECRET is required')
   }
 
-  await app.register(jwt, { secret: jwtSecret })
+  await app.register(jwt, {
+    secret: jwtSecret,
+    sign: { algorithm: 'HS256', iss: 'studes-crm', aud: 'crm-admin' },
+    verify: { algorithms: ['HS256'], allowedIss: 'studes-crm', allowedAud: 'crm-admin' },
+  })
   await app.register(cookie, {
     secret: cookieSecret,
     hook: 'onRequest'

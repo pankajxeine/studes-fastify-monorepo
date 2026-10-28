@@ -19,7 +19,7 @@ type AdminRow = {
 
 type SessionRow = { user_session_id: string; app_user_id: string }
 type AdminCredentials = { username?: string; email?: string; password: string }
-
+type AdminClaims = { sub?: unknown; sid?: unknown; audiance?: unknown; iss?: unknown; aud?: unknown; org?: unknown };
 const DUMMY_HASH_PROMISE = hash(randomBytes(32).toString('hex'), 12)
 const REFRESH_COOKIE_PATH = '/auth/admin'
 
@@ -27,21 +27,23 @@ export class AdminAuthService {
   async login(app: FastifyInstance, request: FastifyRequest, rawInput: unknown) {
     const input = this.parseCredentials(rawInput)
     const login = (input.email ?? input.username!).trim()
-    const schema = this.schema(app)
+    const schema = this.schema(request)
     const recentFailures = await app.db!.query<{ count: string }>(
       `SELECT count(*)::text AS count FROM ${schema}.iam_login_attempt
         WHERE ip_address = CAST(:ipAddress AS inet) AND NOT is_success
           AND attempted_at > now() - interval '15 minutes'`,
-      { replacements: { ipAddress: request.ip } , type: QueryTypes.SELECT }
+      { replacements: { ipAddress: request.ip }, type: QueryTypes.SELECT }
     )
     if (Number(recentFailures[0]?.count ?? 0) >= 30) {
       throw Object.assign(new Error('Too many sign-in attempts'), { statusCode: 429, code: 'RATE_LIMITED' })
     }
     await app.db!.query(
       `UPDATE ${schema}.iam_app_user SET status = 'active', locked_until = NULL, failed_login_count = 0
-        WHERE user_type = 'staff' AND status = 'locked' AND locked_until <= now() AND deleted_at IS NULL`
+        WHERE user_type = 'staff' AND status = 'locked' AND locked_until <= now() AND deleted_at IS NULL
+        AND (lower(email::text) = lower(:login) OR lower(username) = lower(:login))`,
+      { replacements: { login } }
     )
-    const user = await this.findUser(app, login)
+    const user = await this.findUser(app, request, login)
     const passwordHash = user?.password_hash ?? await DUMMY_HASH_PROMISE
     const passwordMatches = await compare(input.password, passwordHash).catch(() => false)
     const locked = user?.status === 'locked'
@@ -53,12 +55,13 @@ export class AdminAuthService {
       throw new UnauthorizedError('Invalid credentials')
     }
 
-    if (user.is_mfa_enabled || user.requires_mfa) {
-      // MFA secrets are held by a KMS/vault reference in iam_mfa_factor. Do not
-      // issue a session until a verifier backed by that secret store is wired in.
-      await this.recordAttempt(app, request, user.app_user_id, login, false, 'mfa_failed')
-      throw new UnauthorizedError('Invalid credentials')
-    }
+    // TODO Implement MFA Enabled logic
+    // if (user.is_mfa_enabled || user.requires_mfa) {
+    //   // MFA secrets are held by a KMS/vault reference in iam_mfa_factor. Do not
+    //   // issue a session until a verifier backed by that secret store is wired in.
+    //   await this.recordAttempt(app, request, user.app_user_id, login, false, 'mfa_failed')
+    //   throw new UnauthorizedError('Invalid credentials')
+    // }
 
     const refreshToken = randomBytes(32).toString('base64url')
     const tokenHash = this.sha256(refreshToken)
@@ -73,17 +76,19 @@ export class AdminAuthService {
                  LEAST(now() + interval '30 minutes', now() + make_interval(secs => :seconds)),
                  now() + make_interval(secs => :seconds))
          RETURNING user_session_id::text, app_user_id::text`,
-        { replacements: { userId: user.app_user_id, tokenHash, ipAddress: request.ip || null,
-          userAgent: request.headers['user-agent']?.slice(0, 1000) ?? null, seconds: absoluteSeconds },
-          type: QueryTypes.SELECT, transaction }
+        {
+          replacements: {
+            userId: user.app_user_id, tokenHash, ipAddress: request.ip || null,
+            userAgent: request.headers['user-agent']?.slice(0, 1000) ?? null, seconds: absoluteSeconds
+          },
+          type: QueryTypes.SELECT, transaction
+        }
       )
       await this.recordAttempt(app, request, user.app_user_id, login, true, null, transaction)
-      await transaction.commit()
       const session = sessions[0]
-      const accessToken = app.jwt.sign(
-        { sub: user.app_user_id, audience: 'admin', sid: session.user_session_id },
-        { expiresIn: app.env.JWT_EXPIRY, issuer: 'studes-crm', audience: 'crm-admin' }
-      )
+      if (!session) throw new Error('Failed to create administration session')
+      const accessToken = this.accessToken(app, request, session)
+      await transaction.commit();
       return {
         accessToken,
         expiresIn: app.env.JWT_EXPIRY,
@@ -91,7 +96,7 @@ export class AdminAuthService {
         user: { id: user.app_user_id, username: user.username, email: user.email, full_name: user.full_name }
       }
     } catch (error) {
-      if (!transaction.finished) await transaction.rollback()
+      await transaction.rollback()
       throw error
     }
   }
@@ -103,35 +108,36 @@ export class AdminAuthService {
     const transaction = await app.db!.transaction()
     try {
       const rows = await app.db!.query<SessionRow>(
-        `UPDATE ${this.schema(app)}.iam_user_session s
-            SET token_hash = :newHash,
-                last_seen_at = now(),
-                idle_expires_at = LEAST(s.expires_at, now() + interval '30 minutes')
-           FROM ${this.schema(app)}.iam_app_user u
-          WHERE s.token_hash = :oldHash
-            AND s.app_user_id = u.app_user_id
-            AND s.ended_at IS NULL
-            AND s.expires_at > now()
-            AND s.idle_expires_at > now()
-            AND u.status = 'active' AND u.deleted_at IS NULL
-            AND (
-              (NOT u.is_mfa_enabled AND NOT EXISTS (
-                SELECT 1 FROM ${this.schema(app)}.iam_user_role ur
-                JOIN ${this.schema(app)}.iam_role r ON r.role_code = ur.role_code
-                WHERE ur.app_user_id = u.app_user_id AND ur.revoked_at IS NULL
-                  AND now() >= ur.valid_from AND (ur.valid_to IS NULL OR now() < ur.valid_to)
-                  AND r.is_active AND (r.requires_mfa OR r.is_privileged)
-              )) OR s.mfa_verified_at >= now() - interval '15 minutes'
-            )
-          RETURNING s.user_session_id::text, s.app_user_id::text`,
-        { replacements: { oldHash: this.sha256(oldToken), newHash: this.sha256(newToken) },
-          type: QueryTypes.SELECT, transaction }
+        `UPDATE ${this.schema(request)}.iam_user_session AS s
+          SET
+              token_hash = :newHash,
+              last_seen_at = now(),
+              idle_expires_at = LEAST(
+                  s.expires_at,
+                  now() + interval '30 minutes'
+              )
+              FROM ${this.schema(request)}.iam_app_user AS u
+              WHERE s.token_hash = :oldHash
+                AND s.app_user_id = u.app_user_id
+                AND s.ended_at IS NULL
+                AND s.expires_at > now()
+                AND s.idle_expires_at > now()
+                AND u.status = 'active'
+                AND u.deleted_at IS NULL
+              RETURNING
+                s.user_session_id::text,
+                s.app_user_id::text;`,
+        {
+          replacements: { oldHash: this.sha256(oldToken), newHash: this.sha256(newToken) },
+          type: QueryTypes.SELECT, transaction
+        }
       )
       if (!rows[0]) throw new UnauthorizedError('Refresh session is invalid or expired')
+      const accessToken = this.accessToken(app, request, rows[0])
       await transaction.commit()
-      return { accessToken: this.accessToken(app, rows[0]), expiresIn: app.env.JWT_EXPIRY, refreshToken: newToken }
+      return { accessToken, expiresIn: app.env.JWT_EXPIRY, refreshToken: newToken }
     } catch (error) {
-      if (!transaction.finished) await transaction.rollback()
+      await transaction.rollback()
       throw error
     }
   }
@@ -141,13 +147,13 @@ export class AdminAuthService {
     const sid = (request.user as any)?.sid
     if (sid) {
       await app.db!.query(
-        `UPDATE ${this.schema(app)}.iam_user_session SET ended_at = now(), end_reason = 'logout'
+        `UPDATE ${this.schema(request)}.iam_user_session SET ended_at = now(), end_reason = 'logout'
           WHERE user_session_id = :sid AND ended_at IS NULL`,
         { replacements: { sid } }
       )
     } else if (refreshToken) {
       await app.db!.query(
-        `UPDATE ${this.schema(app)}.iam_user_session SET ended_at = now(), end_reason = 'logout'
+        `UPDATE ${this.schema(request)}.iam_user_session SET ended_at = now(), end_reason = 'logout'
           WHERE token_hash = :tokenHash AND ended_at IS NULL`,
         { replacements: { tokenHash: this.sha256(refreshToken) } }
       )
@@ -160,31 +166,42 @@ export class AdminAuthService {
       throw new UnauthorizedError('CRM administrator session is required')
     }
     const sessions = await app.db!.query<SessionRow>(
-      `UPDATE ${this.schema(app)}.iam_user_session s
-          SET last_seen_at = now(), idle_expires_at = LEAST(s.expires_at, now() + interval '30 minutes')
-         FROM ${this.schema(app)}.iam_app_user u
-        WHERE s.user_session_id = :sid AND s.app_user_id = :userId
-          AND s.ended_at IS NULL AND s.expires_at > now() AND s.idle_expires_at > now()
-          AND u.app_user_id = s.app_user_id AND u.status = 'active' AND u.deleted_at IS NULL
-          AND (
-            (NOT u.is_mfa_enabled AND NOT EXISTS (
-              SELECT 1 FROM ${this.schema(app)}.iam_user_role ur
-              JOIN ${this.schema(app)}.iam_role r ON r.role_code = ur.role_code
-              WHERE ur.app_user_id = u.app_user_id AND ur.revoked_at IS NULL
-                AND now() >= ur.valid_from AND (ur.valid_to IS NULL OR now() < ur.valid_to)
-                AND r.is_active AND (r.requires_mfa OR r.is_privileged)
-            )) OR s.mfa_verified_at >= now() - interval '15 minutes'
+      `UPDATE ${this.schema(request)}.iam_user_session s
+        SET last_seen_at = now(),
+          idle_expires_at = LEAST(
+              s.expires_at,
+              now() + interval '30 minutes'
           )
-        RETURNING s.user_session_id::text, s.app_user_id::text`,
+        FROM ${this.schema(request)}.iam_app_user u
+        WHERE s.user_session_id = :sid
+          AND s.app_user_id = :userId
+          AND s.ended_at IS NULL
+          AND s.expires_at > now()
+          AND s.idle_expires_at > now()
+          AND u.app_user_id = s.app_user_id
+          AND u.status = 'active'
+          AND u.deleted_at IS NULL
+        RETURNING
+            s.user_session_id::text,
+            s.app_user_id::text;`,
       { replacements: { sid: claims.sid, userId: claims.sub }, type: QueryTypes.SELECT }
     )
     if (!sessions[0]) throw new UnauthorizedError('CRM administrator session is invalid or expired')
     return sessions[0]
   }
 
-  async authorize(app: FastifyInstance, userId: string, permissionCode: string, scopeType = 'global', scopeId: string | null = null) {
+  async authorize(
+    app: FastifyInstance,
+    request: FastifyRequest,
+    userId: string,
+    permissionCode: string,
+    scopeType = 'global',
+    scopeId: string | null = null,
+    requiredRole?: string) {
+
+
     const rows = await app.db!.query<{ allowed: boolean }>(
-      `SELECT ${this.schema(app)}.iam_fn_user_has_permission(CAST(:userId AS uuid), :permissionCode, CAST(:scopeType AS core.scope_type), CAST(:scopeId AS uuid)) AS allowed`,
+      `SELECT ${this.schema(request)}.iam_fn_user_has_permission(CAST(:userId AS uuid), :permissionCode, CAST(:scopeType AS core.scope_type), CAST(:scopeId AS uuid)) AS allowed`,
       { replacements: { userId, permissionCode, scopeType, scopeId }, type: QueryTypes.SELECT }
     )
     if (!rows[0]?.allowed) throw new ForbiddenError('Insufficient permission')
@@ -211,17 +228,17 @@ export class AdminAuthService {
     }
   }
 
-  private async findUser(app: FastifyInstance, login: string) {
+  private async findUser(app: FastifyInstance, request: FastifyRequest, login: string) {
     const users = await app.db!.query<AdminRow>(
       `SELECT u.app_user_id::text, u.username, u.email::text, u.full_name, u.password_hash,
               u.status::text, u.locked_until, u.is_mfa_enabled,
               EXISTS (
-                SELECT 1 FROM ${this.schema(app)}.iam_user_role ur JOIN ${this.schema(app)}.iam_role r ON r.role_code = ur.role_code
+                SELECT 1 FROM ${this.schema(request)}.iam_user_role ur JOIN ${this.schema(request)}.iam_role r ON r.role_code = ur.role_code
                  WHERE ur.app_user_id = u.app_user_id AND ur.revoked_at IS NULL
                    AND now() >= ur.valid_from AND (ur.valid_to IS NULL OR now() < ur.valid_to)
                    AND r.is_active AND (r.requires_mfa OR r.is_privileged)
               ) AS requires_mfa
-         FROM ${this.schema(app)}.iam_app_user u
+         FROM ${this.schema(request)}.iam_app_user u
         WHERE u.user_type = 'staff' AND u.deleted_at IS NULL
           AND (lower(u.email::text) = lower(:login) OR lower(u.username) = lower(:login))
         LIMIT 1`,
@@ -230,14 +247,27 @@ export class AdminAuthService {
     return users[0]
   }
 
-  private async recordAttempt(app: FastifyInstance, request: FastifyRequest, userId: string | null,
-    login: string, success: boolean, failureReason: string | null, transaction?: Transaction) {
+  private async recordAttempt(
+    app: FastifyInstance,
+    request: FastifyRequest,
+    userId: string | null,
+    login: string,
+    success: boolean,
+    failureReason: string | null,
+    transaction?: Transaction
+  ) {
     await app.db!.query(
-      `INSERT INTO ${this.schema(app)}.iam_login_attempt (app_user_id, username_entered, auth_method, is_success, failure_reason, ip_address, user_agent)
+      `
+      SET LOCAL search_path TO ${this.schema(request)}, core;
+      INSERT INTO ${this.schema(request)}.iam_login_attempt (app_user_id, username_entered, auth_method, is_success, failure_reason, ip_address, user_agent)
        VALUES (:userId, :login, 'password', :success, :failureReason, :ipAddress, :userAgent)`,
-      { replacements: { userId, login: login.slice(0, 254), success, failureReason,
-        ipAddress: request.ip || null, userAgent: request.headers['user-agent']?.slice(0, 1000) ?? null },
-        ...(transaction ? { transaction } : {}) }
+      {
+        replacements: {
+          userId, login: login.slice(0, 254), success, failureReason,
+          ipAddress: request.ip || null, userAgent: request.headers['user-agent']?.slice(0, 1000) ?? null
+        },
+        ...(transaction ? { transaction } : {})
+      }
     )
   }
 
@@ -252,14 +282,31 @@ export class AdminAuthService {
     return { email, username, password: value.password }
   }
 
-  private accessToken(app: FastifyInstance, session: SessionRow) {
-    return app.jwt.sign({ sub: session.app_user_id, audience: 'admin', sid: session.user_session_id },
-      { expiresIn: app.env.JWT_EXPIRY, issuer: 'studes-crm', audience: 'crm-admin' })
+  private accessToken(app: FastifyInstance, request: FastifyRequest, session: SessionRow) {
+    return app.jwt.sign({
+      sub: session.app_user_id,
+      audience: 'admin',
+      sid: session.user_session_id,
+      //org: request.organization!.id,
+    }, {
+      expiresIn: app.env.JWT_EXPIRY,
+      iss: 'studes-crm',
+      aud: 'crm-admin'
+    })
   }
 
   private sha256(value: string) { return createHash('sha256').update(value).digest('hex') }
 
-  private schema(app: FastifyInstance) { return escapeIdentifier(app.env.DEFAULT_CPANEL_SCHEMA) }
+  private schema(request: FastifyRequest) {
+    // if (!request.dbSchema || !request.organization || request.dbSchema !== request.organization.schema) {
+    //   throw new UnauthorizedError('CRM organization context is required');
+    // }
+
+    if (!request.dbSchema) {
+      throw new UnauthorizedError('CRM organization context is required');
+    }
+    return escapeIdentifier(request.dbSchema)
+  }
 
   private expiryMilliseconds(value: string) {
     const match = /^(\d+)([smhd])$/.exec(value)

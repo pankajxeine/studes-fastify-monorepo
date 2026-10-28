@@ -50,7 +50,7 @@ export function associateGeneratedModels(models: GeneratedModels): void {
   models.payment_outlet.hasMany(models.payment_pos_terminal, { as: 'paymentPosTerminal', foreignKey: 'tenantApplicationId', sourceKey: 'tenantApplicationId' })
   models.payment_pos_terminal.belongsTo(models.payment_merchant_account, { as: 'tenantApplicationPaymentMerchantAccount', foreignKey: 'tenantApplicationId', targetKey: 'tenantApplicationId' })
   models.payment_merchant_account.hasMany(models.payment_pos_terminal, { as: 'paymentPosTerminal', foreignKey: 'tenantApplicationId', sourceKey: 'tenantApplicationId' })
-  models.payment_acceptance_configuration.belongsTo(models.payment_acceptance_mode, { as: 'modeCode', foreignKey: 'modeCode', targetKey: 'modeCode' })
+  models.payment_acceptance_configuration.belongsTo(models.payment_acceptance_mode, { as: 'mode', foreignKey: 'modeCode', targetKey: 'modeCode' })
   models.payment_acceptance_mode.hasMany(models.payment_acceptance_configuration, { as: 'paymentAcceptanceConfiguration', foreignKey: 'modeCode', sourceKey: 'modeCode' })
   models.payment_acceptance_configuration.belongsTo(models.payment_outlet, { as: 'tenantApplication', foreignKey: 'tenantApplicationId', targetKey: 'tenantApplicationId' })
   models.payment_outlet.hasMany(models.payment_acceptance_configuration, { as: 'paymentAcceptanceConfiguration', foreignKey: 'tenantApplicationId', sourceKey: 'tenantApplicationId' })

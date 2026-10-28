@@ -11,7 +11,7 @@ export default fp(async (app) => {
         PORT: { type: 'string', default: '3001' },
         LOG_LEVEL: { type: 'string', default: 'info' },
         DATABASE_URL: { type: 'string' },
-        DEFAULT_CPANEL_SCHEMA: { type: 'string', default: 'demo_cpanel' },
+        DEFAULT_CPANEL_SCHEMA: { type: 'string', default: 'test_cpanel' },
         CORS_ORIGIN: { type: 'string', default: '*' },
         JWT_SECRET: { type: 'string' },
         JWT_REFRESH_SECRET: { type: 'string' },

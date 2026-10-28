@@ -13,20 +13,6 @@ const adminRouteConfigSchema = z.object({
   adminScopeIdParam: z.string().min(1).optional(),
 })
 
-type AdminPermissionGrant = {
-  code: string
-  scopeType: string
-  scopeId: string | null
-}
-
-type AdminTokenClaims = {
-  sub?: string
-  sid?: string
-  audience?: string
-  roles?: unknown
-  permissions?: unknown
-}
-
 async function authenticateAdminRequest(
   request: FastifyRequest,
   reply: FastifyReply,
@@ -34,30 +20,18 @@ async function authenticateAdminRequest(
 ) {
   await jwtAuthGuard(request, reply)
 
-  const claims = request.user as AdminTokenClaims
-  if (claims?.audience !== 'admin') {
-    throw new UnauthorizedError('This service only accepts CRM administrator sessions')
-  }
-
-  await auth.authenticateRequest(request.server, request)
-  return claims
+  return auth.authenticateRequest(request.server, request)
 }
 
-function authorizeAdminRequest(
+async function authorizeAdminRequest(
   request: FastifyRequest,
-  claims: AdminTokenClaims,
+  userId: string,
   config: z.infer<typeof adminRouteConfigSchema>,
+  auth: AdminAuthService
 ) {
   const permission = config.adminPermission
   if (!permission) {
     throw new ForbiddenError('Route is missing CRM authorization metadata')
-  }
-
-  if (!Array.isArray(claims.roles) || !Array.isArray(claims.permissions)) {
-    throw new UnauthorizedError('CRM authorization claims are missing or invalid')
-  }
-  if (config.adminRequiredRole && !claims.roles.includes(config.adminRequiredRole)) {
-    throw new ForbiddenError('Required CRM administrator role is missing')
   }
 
   const scopeType = config.adminScopeType ?? 'global'
@@ -72,14 +46,8 @@ function authorizeAdminRequest(
     throw new ForbiddenError('A scope ID is required for this route')
   }
 
-  const allowed = (claims.permissions as AdminPermissionGrant[]).some((grant) =>
-    grant && grant.code === permission && (
-      (grant.scopeType === 'global' && grant.scopeId === null) ||
-      (grant.scopeType === scopeType && grant.scopeId === (scopeId ?? null))
-    )
-  )
 
-  if (!allowed) throw new ForbiddenError('Insufficient permission')
+  await auth.authorize(request.server, request, userId, permission, scopeType, scopeId ?? null, config.adminRequiredRole)
 }
 
 export default fp(async (app) => {
@@ -90,9 +58,8 @@ export default fp(async (app) => {
     const config = adminRouteConfigSchema.parse(request.routeOptions.config ?? {})
     if (config.isPublic) return
 
-    const claims = await authenticateAdminRequest(request, reply, adminAuth)
+    const session = await authenticateAdminRequest(request, reply, adminAuth)
     request.userType = 'admin'
-    authorizeAdminRequest(request, claims, config)
   })
 })
 

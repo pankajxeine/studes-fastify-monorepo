@@ -27,7 +27,8 @@ export type AuditEventCreationAttributes = Optional<AuditEventAttributes, "recor
 
 export class AuditEventEntity
   extends Model<AuditEventAttributes, AuditEventCreationAttributes>
-  implements AuditEventAttributes {
+  implements AuditEventAttributes
+{
   declare recordCode: string
   declare eventId: string
   declare eventSeq: string | number
@@ -167,9 +168,9 @@ export function initAuditEventEntity(sequelize: Sequelize): typeof AuditEventEnt
       underscored: true,
       freezeTableName: true,
       indexes: [
-        { unique: true, fields: ['event_seq', 'occurred_at'] },
-        { unique: true, fields: ['event_id', 'occurred_at'] },
-        { unique: true, fields: ['record_code', 'occurred_at'] }
+      { unique: true, fields: ['event_seq', 'occurred_at'] },
+      { unique: true, fields: ['event_id', 'occurred_at'] },
+      { unique: true, fields: ['record_code', 'occurred_at'] }
       ]
     }
   )

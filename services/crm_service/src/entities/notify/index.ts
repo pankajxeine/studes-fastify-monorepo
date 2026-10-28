@@ -39,6 +39,6 @@ export function associateGeneratedModels(models: GeneratedModels): void {
   models.notify_template_version.hasMany(models.notify_notification, { as: 'notifyNotification', foreignKey: 'templateVersionId', sourceKey: 'templateVersionId' })
   models.notify_delivery_attempt.belongsTo(models.notify_notification, { as: 'notification', foreignKey: 'notificationId', targetKey: 'notificationId', onDelete: 'CASCADE' })
   models.notify_notification.hasMany(models.notify_delivery_attempt, { as: 'notifyDeliveryAttempt', foreignKey: 'notificationId', sourceKey: 'notificationId', onDelete: 'CASCADE' })
-  models.notify_delivery_attempt.belongsTo(models.notify_channel_provider, { as: 'providerCode', foreignKey: 'providerCode', targetKey: 'providerCode' })
+  models.notify_delivery_attempt.belongsTo(models.notify_channel_provider, { as: 'provider', foreignKey: 'providerCode', targetKey: 'providerCode' })
   models.notify_channel_provider.hasMany(models.notify_delivery_attempt, { as: 'notifyDeliveryAttempt', foreignKey: 'providerCode', sourceKey: 'providerCode' })
 }
